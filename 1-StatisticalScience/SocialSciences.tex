@@ -1,0 +1,594 @@
+\documentclass[uplatex,dvipdfmx]{jsreport}
+\title{社会科学の概観}
+\author{司馬博文}
+\date{\today}
+\pagestyle{headings} \setcounter{secnumdepth}{4}
+%\input{/Users/Hirofumi Shiba/NatureOfStatistics/preamble_no_fonts.tex}
+%\input{/Users/hirofumi.shiba48/NatureOfStatistics/preamble_no_fonts.tex}
+\input{/Users/hirof/NatureOfStatistics/preamble_no_fonts.tex}
+\usepackage[math]{anttor}
+\begin{document}
+\tableofcontents
+
+\chapter{経済史}
+
+\begin{quotation}
+    経済を市場の集合と定義し，市場における価格理論を考えるのがミクロ経済学の主題で，数理経済学といったときはこれを指すことが多い．
+\end{quotation}
+
+\section{価格理論}
+
+\subsection{一般均衡理論}
+
+\begin{history}[Léon Walras 1834-1910]
+    エコールポリテクニークで数学に失敗して2浪目も入れなかったが，記述言語として数学を採用して，市場の集まりとして経済を捉える視点はその後の基礎となる．
+\end{history}
+
+\subsection{現代価格理論}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    世界恐慌以後，シカゴ大学ではCowles委員会設立の他に，価格理論(ミクロの中心)の完成がSamuelsonとHicksによって見られた．
+\end{tcolorbox}
+
+\begin{history}[Paul Anthony Samuelson 15-09 米]
+    『経済分析の基礎』\cite{Samuelson}で「名声」を得て，『経済学』で「富」を得たという．
+    シカゴの学部で価格理論を，Harvard大学院で数学を学ぶ．
+\end{history}
+
+\begin{history}[John Richard Hicks 04-89 英]
+    『価値と資本』(1939)は『経済分析の基礎』\cite{Samuelson}とともに，ミクロ経済学を確立した．
+\end{history}
+
+\chapter{計量経済学}
+
+\section{枠組み}
+
+\subsection{過程}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    GDP, 消費，投資などのマクロ量．
+    株価・為替レートなどのファイナンスの量は，
+    トレンド成分が事前に予測困難な場合が多い．
+    そこでこれらを計量的に扱うとき，過程の実現として統計的模型を措定することになる．
+\end{tcolorbox}
+
+\subsection{ミクロ消費}
+
+\begin{definition}\mbox{}
+    \begin{enumerate}
+        \item $\R^n$を財空間，その実行可能な部分集合$X\subset\R^n$を\textbf{消費集合}という．
+        \item $X$上の関数$U\in\Map(X,\R)$を\textbf{効用関数}という．効用関数は$X$上に選好関係を定める．
+    \end{enumerate}
+\end{definition}
+
+\subsection{生産}
+
+\begin{definition}\mbox{}
+    \begin{enumerate}
+        \item 財空間の部分集合$Y\subset\R^n$を\textbf{生産集合}という．各成分は正ならば財の産出量，負ならば投入量を表す．$0\in Y$な凸集合という仮定が置かれる．
+        \item 価格$p\in\R^n$に対して，$S(p):=\Brace{y\in Y\mid\forall_{z\in Y}\;p^\top y\ge p\top z}$を\textbf{供給集合}といい，この対応$\R^n\to P(\R^n)$を\textbf{供給関数}という．
+        \item 一方で，$\R^n$内にグラフを持つ関数を用いて，生産性を捉えることもできる．$k\le n$に対して，必要財と産出財との対応を表す関数$f:\R^k_+\to\R_+$を\textbf{生産関数}という．生産関数は凹性を持つ．
+    \end{enumerate}
+\end{definition}
+
+\chapter{構造方程式模型}
+
+\begin{quotation}
+    伝統的なマクロ計量模型は「変数$Z$を管理することで，$Y$が確率的に管理できるとき，$Z$は$Y$の原因である」\cite{Wold-Strotz60}として構成されている．
+    Pearlの貢献はこれに対する計算機科学分野からの革命と認識できる．
+\end{quotation}
+
+\section{構造方程式模型}
+
+\subsection{歴史的経緯}
+
+\begin{history}[Jöreskog 35- スウェーデン]
+    潜在変数を持つ因子分析模型(測定方程式模型という\cite{豊田秀樹-実践編})は，相関関係の有無を判別するが，因果関係は明らかにできない．
+    パス解析はこれを可能にするが，可観測量しか扱えない（現代ではパス解析を，その双方向性を強調して\textbf{同時方程式}という）．
+    そこで，この２つを兼ね備えた手法として(図示した時は端的にそう見える)，
+    経済学と心理統計学で使われていた模型を１つの枠組みにまとめたというのが
+    Karl Gustav Jöreskogであり，ETSの統計顧問かつPrincetonの客員教授であった．
+    Sörbomと共にLISRELの著者であり，Uppsala大学でWoldに指導を受け，そのまま教授である．
+
+    因子分析模型における最尤推定量の数値計算法を導出し，その伝道師となることを使命としていた．
+    ETSとPrincetonにいた際に，相関構造分析に用いる線型模型の枠組みを作った．
+    一般化した理由の一つとして，LISRELなる統計プログラムの貢献は大きい\cite{Grimm-Yarnold}．
+    ただし，LISRELはその線型な特殊化であり，分かりやすさから一般化には貢献したが，構造方程式全体の広がり・裾の広さについて，誤解も生みやすい．
+\end{history}
+
+\begin{history}[名称の変化]
+    Jöreskog以前の特に重要なアイデアは\cite{Bock-Bargmann66}が与えた．
+    当時は共分散構造分析と呼ばれていたが，Sörbom (1974)が平均値も構造化して一般化したために，
+    必ずしも良い名称とは言えなくなった．
+    現在はSEM (Structural Equation Model with latent variables)という名称が一般的であるようである．
+    事実，母数の推定が最終目標であり，共分散構造の分析はその手段であるという点でも，後者で呼びたいところである．
+\end{history}
+
+\begin{remarks}[抽象概念に数理的な定義を与える枠組みとしてのSEM]
+    そもそも社会科学・人文科学・行動科学は「構成概念」によって理解することを目指す．
+    これは，複雑に込み入った社会的現象をうまく説明する虚構であるが，
+    構造方程式における潜在変数として数学的な定義を得ることになる．
+    すなわち，実証的な社会科学とは，SEMの構成と検証が中心になる．
+\end{remarks}
+
+\subsection{枠組み}
+
+\begin{definition}
+    回帰関係に矢印を加える行為が，模型の因果模型化の第一段階である．
+    \begin{enumerate}
+        \item 変数間の直接的因果効果は矢印で表される．
+        \item 有向線分の終点とならない変数，すなわち，方程式の左辺に一度も現れない潜在変数を\textbf{外生変数}という．独立変数ともいう．
+        \item 変数誤差とは，各可観測量に刺さる空からの矢印で，観測誤差を含め，種々の影響を一つに代表させたものである．
+        \item 潜在変数は楕円で，その指標(可観測量)は長方形で囲って図示される．
+        潜在変数は因子，これに因果関係によって関連づけられる可観測量を指標ともいう．
+    \end{enumerate}
+\end{definition}
+\begin{application}
+    SEMの射程は，従来の因子分析・テスト理論・行動遺伝学の模型・多相データ解析・実験計画・質的データ解析・多変量解析・パス解析・時系列解析を包含する．
+\end{application}
+\begin{example}[LISRELでの変数の分類]\mbox{}
+    \begin{enumerate}
+        \item 潜在変数は，その内生・外生の別によって，$\eta,\xi$で表す．
+        \item 指標は，その従属性・独立性の別によって，$y,x$で表す．
+        \item 従属指標の誤差を$\ep$，独立指標の誤差を$\delta$で表す．
+        \item 
+    \end{enumerate}
+\end{example}
+\begin{example}
+    Jöreskog, SörbomによるLISRELの他に，
+    \begin{enumerate}
+        \item \cite{McArdle-McDonald84}によるRAM (Reticular Action Model)
+        \item \cite{Bentler-Weeks80}によるEQS (Equations model)
+    \end{enumerate}
+    などがある．
+\end{example}
+
+\subsection{種々の模型化}
+
+\begin{model}[RAMによる模型化]
+    \[t=\al_0+At+u,\qquad(t=(f,x)^\top\in\R^{n_1+n_2},\al_0\in\R,u\in\R^n)\]
+    \begin{enumerate}
+        \item ベクトル$f\in\R^{n_1}$を構成概念(=潜在変数)，$x\in\R^{n_2}$が指標(=可観測量)である．併せた$t$を\textbf{構造変数}という．
+        \item $u$は外生変数で，2つの残差$u=(d^\top,e^\top)^\top$からなる．
+    \end{enumerate}
+    すなわち，上の式は次のようにも表せる：
+    \[\vctr{f}{x}=\al_0+\mtrx{A_a}{A_d}{A_b}{A_c}\vctr{f}{x}+\vctr{d}{e}.\]
+    \begin{enumerate}
+        \item 観測値$t$を模型の母数$A$を用いて表したplug-inの形を通じて，$E[t],\Cov[t]$をそれぞれ$A$で記述したものを，期待値構造，共分散構造という．
+    \end{enumerate}
+\end{model}
+
+\begin{model}[EQSによる模型化]
+    RAMは構造変数に対して，外生変数を対置した．
+    一方で，内生変数と外生変数に分解するのがEQSである．
+    その結果，内生変数が両辺に登場し得る．
+    \[t_0=\al_0+A_0t_0+\Gamma_0u\]
+    \begin{enumerate}
+        \item $t_0$は内生変数と観測変数を並べたベクトルである．
+        \item $A_0$は内生変数から内生変数への，$\Gamma_0$は外生変数から外生変数への寄与率を表す．
+    \end{enumerate}
+\end{model}
+
+\begin{model}[LISRELによる模型化]
+    RAMにおいて，構成概念ベクトル$f$をさらに外生的なものと内生的なものに分ける：$f=(\xi^\top\;\eta^\top)$．すると，構造方程式の特に構成概念間の部分を
+    \[\eta=\al_\eta+B_+\eta+\Gamma\xi+d_\eta\]
+    と表せる．
+\end{model}
+
+\section{構造方程式模型の例}
+
+
+\begin{example}[労働経済学の例：賃金-教育の方程式]
+    $W\in\R_+$を賃金，$E$を教育年数とする．
+    $LW:=\log W$に対して，線型回帰
+    \[\r{LW}=\al+\beta \r{E}+\b{\delta}^\top\b{z}+u,\qquad u\sim (0,\sigma_u),\al,\beta\in\R.\]
+    を考えることが多い．ただし，$\b{z}$はその他の説明変数とし，$\Cov[E,u]=0$を満たすように取れているとする．
+    ここからあとは統計解析の議論になるが，果たして経済学としてこの模型で満足かといえば，全く違う．
+    教育レベルがシグナルとなって，これが賃金を上げているのかもしれない（中間変数）．
+    あるいは操作変数が存在するかもしれない．
+    \begin{enumerate}
+        \item \cite{Griliches76}は全米パネル調査(Natoinal Longitudinal Survey)のパネルデータを用いて上述研究を行った．
+        $\b{z}$から取り分け，操作変数の候補としてIQを選択した．
+        ただし，$LW, E, IQ$を同時に説明する潜在変数$A$を仮定して，これが誤差とバイアス(IQと$A$の\textbf{変数誤差}と呼ばれている)を持って
+        \[\mathrm{IQ}=\phi+A+\eta,\qquad\phi\in\R,\eta\sim(0,\sigma_\eta).\]
+        とモデルした．
+        これに対して，TSLSを適用した．
+        \item \cite{Angrist-Krueger91}はcensusに基づく大データを用いて分析した．
+        米国では胃一定の年齢に達するまで学校からの離脱は原則許されない州が多い．
+        そこで，誕生日が操作変数になっており，教育年数と賃金水準に別個の効果を持っていることを発表した．
+        上述のような模型からTSLS, Wald推定量をはじめ，複数の推定法による推定量がほぼ等しかったことにより妥当性を主張した．
+        \item これに対して，\cite{Bound-Jaeger-Baker95}は古典的な構造方程式模型は，次のいずれかを満たすと，OLS, TSLSは漸近的に強いバイアスを持ってしまうことを示した．
+        \begin{enumerate}
+            \item 操作変数・説明変数のいずれも説明力が弱い時
+            \item 説明変数・操作変数の数が多い時
+        \end{enumerate}
+        これにより，模型の面でも，解析手法の面でも疑問が残ったわけである．
+    \end{enumerate}
+\end{example}
+
+\begin{example}[マクロ経済学の例：マクロ消費関数は構造方程式模型である]
+    マクロな所得と消費の過程$(Y_i,C_i)_{i\in[n]}$に対して，
+    \[C_i=\al+\beta Y_i+u_i\qquad(\al,\beta\in\R,u_i\sim(0,\sigma_i))\]
+    とモデル化する．実は，2つの過程$(Y_i),(C_i)$の従属性の構造(経年の上昇トレンドと，季節・景気循環による定常的構造)により，
+    この時点でもう線型回帰模型ではない．
+    これが単なる大量に連立された回帰模型とみなせるには，定常性が必要である（別の時刻のデータに依らない）．
+    定常性の検出には，「和分」の概念が用いられる．
+    \begin{enumerate}
+        \item \cite{Engle-Granger87}は初めて本格的にこの模型を考察した．
+        \[\log C_i-\al-\beta\log Y_i=u_i\]
+        と変換し直した時，$u_i$には定常性を仮定できることを指摘した．
+        すなわち，この左辺が和分過程になり，
+        組$(Y_i,C_i)$が\textbf{共和分関係}にあることを見つけた．
+        \item 一般論として，次はGDP恒等式と呼ばれる：
+        \[Y_i-C_i-I_i=O(\ep_i).\]
+        右辺の意味は知らない，小さいということである．
+        $I_i$は投資である．このような基本原則の集合体を\textbf{国民経済計算}という．
+    \end{enumerate}
+\end{example}
+
+\begin{definition}[integration, co-integration]\mbox{}
+    \begin{enumerate}
+        \item 過程$(X_n)$が\textbf{$n$次の和分過程}であるとは，
+        $n$階の差分過程を取ると定常的になることをいう．
+        \item 過程$(X_n),(Y_n)$にある線型結合$\al_1 X_t+\al_2 Y_t$が存在して，これが和分過程となるとき，\textbf{共和分関係}があるという．
+    \end{enumerate}
+\end{definition}
+
+\begin{history}
+    1970s年代の計量経済学の「大荒れの10年」を経て，
+    共和分は時系列解析の分野で，擬似回帰を回避する目的で構想された概念で，これがマクロ計量模型にも積極的に取り入れられるようになった．
+    こうして段々と垣根が崩れていった．
+\end{history}
+
+\section{GLS推定法}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    SEMにおいては，OLSの他に，GLS, TSLSなどの母数推定法が存在する．
+\end{tcolorbox}
+
+\section{変数選択}
+
+\begin{history}
+    1970sは計量経済学者の「大荒れの70年代」\cite{Hendry-Alchemy80}であった．
+    このとき改めて，外生・内生変数の区別(すなわち因果連鎖に関して置かれる仮定)は多分に主観的であるという批判が高まった．
+    Hendryは特に，計量模型が識別不能であるときに，外生変数を加えることでそれを回復しようとする
+    試みに対して，その恣意性を批判した．そこで変数選択の枠組みで再注目されたのがGranger因果\cite{Granger69}である\cite{統計と社会経済分析2-思想と方法}．
+\end{history}
+
+\begin{definition}
+    定常過程$X,Y$がそれぞれ自己回帰模型に従うとする．
+    適切な仮定を課すことで，OSL推定量は漸近有効になる．
+    この模型の係数の推定量を代入することで得る代入推定量$\wh{X},\wh{Y}$が，それぞれ互いのもう一方の情報を使わないとき，\textbf{Granger因果がない}という．
+\end{definition}
+
+\chapter{人類と統計}
+
+\section{学問と統計}
+
+\begin{history}[ICPSR 62-]
+    Inter-university Consortium for Political and Social Researchと呼ばれるdistributor．
+\end{history}
+
+\begin{example}\mbox{}
+    \begin{description}
+        \item[MDRC(Manpower Demonstration Research Corporation)] Ford基金と6つの政府機関が共同で創立した(74)．2003年からは名称をMDRCに変更して元の長い方は捨てた．
+        社会プログラムにおけるランダム割り当ての普及の先駆者である．
+        NSWDの政策評価が，1990sの政策の指針になった．
+        \item[司法計画室(Office of Justice Programs)] 次のように移り変わり，84年のJustice Assistance Actのにより計画室となる．
+        \begin{enumerate}
+            \item Office of Law Enforcement Assistance (1965–1968)
+            \item Law Enforcement Assistance Administration (LEAA) (1968-82) by Omnibus Crime Control and Safe Streets Act (68)．Lyndon Johnsonのwar on crimeの主な政策．
+            \item Office of Justice Assistance, Research, and Statistics (1982–1984)
+        \end{enumerate}
+        \item[Mathematica] 政府機関を相手にデータを提供している，Princetonにあるコンサル会社．
+        1930sにSamuel G. Bartonが創業したIndustrial Surveys Company→Market Research Corporation of Americaからスピンオフした．
+        初代社長はOskar Morgenstern (von Neumannとゲーム理論の基礎を築いた人)で，殆どPrinceton大学の数学者・経済学者により運営されていたという．
+        68年にはNew Jersey Income Maintenance Experiment，
+    \end{description}
+\end{example}
+
+\subsection{National Supported Work Demonstration}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    １万人が参加した，1年以上の就業体験プログラム．
+\end{tcolorbox}
+
+\begin{description}
+    \item[表題] National Supported Work Evaluation Study, 1975-1979: Public Use Files
+    \item[管轄] United States Department of Justice(アメリカ合衆国司法省). Bureau of Justice Statistics(司法統計局)．
+    \item[概要] 前科者，薬物中毒既往者，被生活保護(AFDC)給付女性，学校中退者からなる，従来から雇用問題に悩んだ群への経時的プログラムである"National Supported Work Demonstration project"の政策評価．
+    \item[NSWD project] 政府の助成金による(subsidized)15ヶ所で行われたプログラムで，1年から1年半に支援を受けた状態での就業体験が，本来の意味での就職に助けになるかの政策．
+    6つの政府機関からの代表者，実験実行者，実行箇所の役員を含む175名を含む会議が1974に行われ，そこで計画が定まり，
+    6月からの半年間の予算が19都市に分配され，うち13ヶ所が，1975年の5月から7月の間に実験を開始した．
+    1976年に追加で2ヶ所実験を開始した．
+    うち1ヶ所は中断されたが，実験は合計で4年続き，合計で１万人が参加した．
+    \item[Evaluation Study] MDRC(Monpower Destration Research Corporation)と司法計画省(Office of Justice Programs)が1980年に発表した研究． 
+    結果，AFDC受給者に顕著に，薬物中毒既往者に大きく，就業率の増加と所得の改善が見られたという．しかし前科者には少しの効果しか認められず，学校中退者には長期的な効果はなかった．
+\end{description}
+
+8~14が1~7の上位互換なのでこの後半しか使わない．
+そのうちDS8の8,11,12,14のみ使う．
+\begin{description}
+    \item[8] Baseline．共変量など．
+    \item[11] １年経過後の結果変数．
+    \item[12] １年半経過後の結果変数．
+    \item[14] ３年経過後の結果変数．
+\end{description}
+
+\subsection{Job Corps Study}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    113265, JC (最大のRCT)の実験データ．
+    American Economic Reviewの論文Does the Job Corps Work?\cite{JobCorps}に使われた．
+\end{tcolorbox}
+
+労働省によって
+16から24歳の国民に提供される職業訓練はJob Corpsと呼ばれる．
+
+\begin{description}
+    \item[表題] National Job Corps Study.
+    \item[研究主体] MPR: Mathematica Policy Research, Inc.はPrincetonにあるコンサル会社．
+    \item[Job Corps] 毎年16から24歳の6万人に就業支援を与える予算が労働省にある．93年以来，MPRがこの政策評価をしている．
+    そしてなんと1994年12月からの約1年間，9409人の応募者を対象にCRTを行ったのである！
+    その後15409人を４年毎に追跡調査した．
+    すると，「この調子で効果が持続すれば，このプログラムに掛けた予算の倍の利益が出る見通しである」と結論づけることができた．
+    1993から2003までMPRはこの調子で，Social Security and Unemployment Insuranceのデータから追跡調査し，その結果\cite{JobCorps}は労働省によって公開された．
+    しかしこの結果があまり持て囃されず，たまにWebから削除されたりするのは，サーベイでのデータとtax recordsでのデータが一致しないことによる．
+    MDRCも同じ問題に悩んでいる．
+    特に前科をもつ男の子で多いという．
+    もしtax recordsを信頼するならば，全体としてJob Corpsは社会に利益を与えるとは言えない．
+    一方で若者へのJob Corpsはやはり利益が大きい．
+\end{description}
+
+
+\subsection{PSID}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    最長のパネルデータ．
+\end{tcolorbox}
+
+\begin{description}
+    \item[概要] 5000家庭，18000人の1968年以来の追跡データ．低所得家庭に関する追加分データもある．
+    \begin{enumerate}
+        \item 子孫への追跡調査，1997/99調査と2017/19調査で移民を追加したため，9000家庭，26000人に到達．
+        \item 1968から97までは毎年，以後は2年毎に．
+    \end{enumerate}
+    \item[スピンオフ] PSIDの家庭の中から特定の小標本に注目した．
+    \begin{enumerate}
+        \item CDS (Child Development Supplement)：97-07に5年毎に子供を中心に追跡調査．2014-からも始まっており，全く同じ質問様式で，今度は17歳以下の標本全員を対象としている．唾液もとっている．
+        \item TAS (Transposition into Adulthood Supplement)：05-から2年毎に，18-28の
+    \end{enumerate}
+    \item[データ構造] \begin{description}
+        \item[single-year family file] 当該年度に記録された事項を，家庭毎にまとめた．family Interview Numberというのが毎年付けられる．
+        特に，1968 family Interview NumberはER30001．
+        \item[cross-year individual file] Person NumberがER30002．
+    \end{description}
+\end{description}
+
+
+\section{国家と統計}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    2005年のデータ
+\end{tcolorbox}
+
+\subsection{米国}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    Statistical Programs of the United States Government FY 2005. Office of Management and Budget．
+    政府の統計に従事する人が1万人いる．日本は2000弱．
+\end{tcolorbox}
+
+大統領府行政管理予算庁首席統計官(Chief Statistician)が担当．
+
+\begin{description}
+    \item[商務省] センサス局(Bureau of the Census)にフルタイムで5000人．経済分析局(Bureau of Economic Analysis)に500人．
+    \item[労働省] 労働統計局(Bureau of Labor Statistics)に2500人．
+    \item[農務省] 国立農業統計サービス局(National Agricultural Statistics Service)に1000人，経済研究サービス局(Economic Research Service)に500人．
+    \item[保健福祉省] 国立保健統計センター(National Center for Health Statistics)に500人．
+    \item[エネルギー省] エネルギー情報局(Energy Information Administration)に400人．
+    \item[運輸省] 運輸統計局に150人．
+    \item[司法省] 司法統計局(Bureau of Justice Statistics)にフルタイムで50人の職員が．
+\end{description}
+
+\section{官庁統計}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    
+\end{tcolorbox}
+
+\begin{remarks}
+    \cite{統計と社会経済分析2-思想と方法}の第二章ではHindessから始まって，社会科学の中での統計学の認識論を展開し「社会の中での統計のメディア論的な役割の解明が必要」としている．
+    Hindessの官庁統計論の超克として，\cite{Desrosières93}以来，統計とは統治のための技術的装置であると理解されていることを踏まえた上で，
+    次のように議論する：
+    \begin{quote}
+        一般に，統計は近代主権国家の形成と国民形成のための政治的・イデオロギー的装置として機能したのである．
+        統計の認識論的価値も，これらの機能との関連で評価されるべきものなのである．
+        だとすれば，社会科学としての統計学は，《利用者》という水準にとどまることはできず，
+        統計の生産者の水準にも関わらなけらばならないだろうし，
+        統計の生産と流通と利用に効果を及ぼし，かつ統計の生産と流通と利用の諸過程によって作用を受ける社会体の
+        諸実践に構成的に関与する社会的な場に定位し，
+        統計的実践の社会的働きを「批評的に」評価できる統計学を我々は実践しなければならないのである．
+    \end{quote}
+    これを「公民権のための統計学」と著者は呼ぶ．
+\end{remarks}
+
+\subsection{RadStatsと蜷川統計学}
+
+\begin{history}[Barry Hindess 39-19 英 と RadStats]
+    長年Liverpoolで社会学教授を務め，晩年はAustralia国立大学で．彼のbooklet 『社会学における官庁統計の利用』\cite{Hindess73}
+    はRadStatsグループを1975発足させた(70人だったという\cite{RadStats05})．
+    その\href{https://www.radstats.org.uk/}{website}には次の一節がある．
+    \begin{quote}
+        We believe that statistics can be used to support radical campaigns for
+        progressive social change. Statistics should inform, not drive policies.
+        Social problems should not be disguised by technical language.
+    \end{quote}
+    これは，1968年に，生物兵器の開発研究への懸念から科学の責任を問うという理念でBertrand RussellとClick, BraggとJulian Huxleyら科学者がBSSRS (British Society for Social Responsibility in Science)
+    を創設したことに刺激を受けてのことである（が，現在も続くのはRadStatsのみ）．
+    実際，多くのメンバーは被っていたという\cite{RadStats05}．
+    メーリングリスト，メディア，出版物，年次会議などを通じて，官庁統計と政策決定について考え議論する場を持つ\cite{The_Radical_Statistics_Group}．
+    そもそも1970sは，第二次世界大戦後から準備しつつあった統計による政策決定の試みなどが花を咲かせた時期で，学術界では統計的なポストが増え，また官庁での統計部門が大きく増え，
+    さらに産業界では製薬会社を中心にして統計学者は引っ張りだこであった時期であった．
+    英国らしいというべきか，同時に統計の使われ方，政治家による引用のされ方に強く疑問を持つ流れも拡大した．
+    Radical Philosophy, Radical Midwivesなども同時期にできた．
+    ただし，Radical Statisticsとは何か，あるいはその歴史の振り返りなどは，今の所ないという\cite{The_Radical_Statistics_Group}．
+    ただし，RadStats Issue 90 \cite{RadStats05}では
+\end{history}
+
+\begin{history}[蜷川虎三 97-81]
+    日本での官庁統計とその問題点の認識は，蜷川統計学が大きい．
+    \cite{蜷川虎三-PhD}で統計利用の基本的問題を議論し，京都大学教授を務めるも，45年に戦争責任を自覚し辞職．
+    その後政治家に転身して京都府知事も務める．
+    ここで蜷川が経済学者という事実は肝要である．
+    Keynes経済学以後は，国家の経済・社会的施策の総過程に対するマクロ的視点からの管理という文脈が前面に出たことにより，官庁統計に関する関心が高く，
+    経済・社会の全体論的な把握の最も肝心な手段との位置付けから不備や誤りは厳しく批判された．
+    一方で，より普遍的な立場から分析・批判する見解が出てこず，Hindess官庁統計論との大きな違いとなっている\cite{統計と社会経済分析2-思想と方法}．
+    もう一つの大きな違いはドイツ社会統計学(社会学の中の統計学)の批判的読解から形成された点であるという．
+    ドイツでは経済は社会の中に埋め込まれた形で理解されることが多く，資本主義後進国としてのドイツが国家主導の上からの資本主義化のための思想的準備・国家に奉仕する官学としての側面が強かった．
+    蜷川は，官学としての側面を批判し，いわば統計利用を民主化する形で社会統計学を再構築しようとした．
+\end{history}
+
+\subsection{英国労働党と21世紀の統計学}
+
+\begin{history}
+    \begin{enumerate}
+        \item 英国の社会統計学者Claus Moserにより，1960s年代に政府と一体になって統計制度の機能の再点検がなされた．
+        その結果，中央統計局(CSO)は統計管理に関してより強い権限を持ち，政府統計サービスなる教育の機能も持つ機関が設立された．
+        \item 一方で，1980sにサッチャー政権下で統計制度が見直されたとき，結果的には「統計抑圧政策」となった．
+        Derek RaynerなるMarks \& Spencer CEOに見直しの責任権が渡され，「情報は公表を第一義的な使命として作成されるべきではない。それは、
+        何よりも政府が自らの業務に必要なために集められるべきである」ということを旨とするRayner Doctorineが主軸となり，CSOでは予算も人員も3割以上削減された\cite{森博美-戦後イギリス統計機構の展開}．
+        \item すると統計の質が落ちた．86年から87年にかけて特に問題とされたのが、国民経済計算の各勘定の計数の間
+        の不突合であった．88年度上半期には、生産統計が年率6\%の
+        成長を計上したのに対し、GDP統計によればわずか2.5\%しか成長していないという信じ
+        がたい乖離が発生した．
+        \item これを反発力として1990sに復活する．今度はStephen Pickfordらがreviewをまとめ，「データを提供する各省庁やイングランド銀行との連携に欠ける」「そもそも内部組織にて国民経済計算の作成に対応できていない」
+        「利用者が許容で
+        きる統計の誤差の範囲についての認識がCSOに欠けている」として，対応として「統計業務のCSOの移管とそれに伴った人員移動」を提示し，CSOは170人から一気に1000人を超える．
+        続いて大蔵大臣もChancellor's initiativeとして，統計の質の改善に大きく予算をつけた．またCSOは英国で57番目の執行庁(Executive Agency)となった．
+        \item 2000sは英国労働党"Tony" Blairの政権である．議会に提出された\cite{HMTreasury-Statistics_A_Matter_Of_Trust}では，全国民的な(national)，そして気高さ(integrity)の2つを原則として，
+        公開性と信頼性を重視する政策方針を統計についても発表した．
+    \end{enumerate}
+\end{history}
+
+
+\section{産業と統計}
+
+\subsection{抜き取り検査}
+
+\begin{history}[抜き取り検査統計化の歴史]
+    大量生産が加速するにつれて，大量検査は納期・原価の面で不可能になった．
+    そこで抜き取り検査(Sampling inspection)が開始された．
+    \begin{enumerate}
+        \item OC (Operating Characteristic)曲線を描いて，消費者危険・生産者危険を指定する方式であった．
+        Bell電話研究所では25年以来研究されており，平均出検品質 AOQ (Average Outgoing Quality)が主に関心のある統計量であった．
+        \item しかしこの古典的な取り組みでは，経済計算の観点がなく，継続的取引や顧客重視という経営実践を反映していなかった．
+        そこでまず，
+        \cite{Dodge-Roming}の「数値表」によって統計化されたが，
+        不合格ロットの全数検査では同様のコスト面で難点を持ち，
+        工程平均不良率の推定には検査に先立つ実験計画が必要であった\cite{統計と社会経済分析2-思想と方法}．
+        しかし，統計的な品質保証の面では大事であった．
+        \item ここから前進するには，検査方式・手法の改良よりも，真の問題は生産者の工程管理であることに注目する必要があった．管理図は統計的管理状態を達成するために統計的管理を用いる，という二重の図式が特徴的で，
+        対象をロットではなく工程そのものに抽象化されたのが特徴である．
+        現在も，さらに経営管理そのものに管理図の考え方を応用する流れがある
+    \end{enumerate}
+\end{history}
+
+\begin{history}[Hawthorne実験を通じた経営学との交差]
+    Western Electricは1905年からHawthorne工場を持っており，電気業界の当時の懸念「タングステン製のフィラメントの発明による効果的な照明が電力需要の低下を招くかもしれない」
+    から，同工場で作業中の照明と効率の関係についてMITに1923年から委託研究を行っていた．
+    なんとこの研究の結果得た仮説は「労働者の作業能率は、客観的な職場環境よりも職場における個人の人間関係や目標意識に左右されるのではないか」
+    ということであった！
+    この実験に途中から参加していたHarvard大学経営大学院のGeorge Mayoは「組織における人間関係論」を展開した．
+\end{history}
+
+\begin{history}[Walter Shewhart 91-67 米]
+    1926年に，Bell研究所での研究結果を現場に適用するために，DodgeとShewhartはHawthorne工場に視察に行く．
+    Shewhartにとってはこれが初めてであった．
+    このときに2人を案内したのが検査部にいたJuranである．
+    Demingは1925年からYaleの博士過程生で，Hawthorne工場での短期間研究活動でShewhardの知遇を得る．
+\end{history}
+
+\section{技術と統計}
+
+\subsection{SAS}
+
+\begin{description}
+    \item[拡張子] \texttt{.sas7bdat}, \texttt{.xpt}のバイナリデータ．仕様が公開されているのは後者．
+    \item[Pythonとの連携] 
+    \begin{enumerate}
+        \item \href{https://pypi.org/project/sas7bdat/}{sas7bdatパッケージ}で行える．
+        \begin{lstlisting}
+            from sas7bdat import SAS7BDAT as SAS
+            with SAS('test.sas7bdat') as file:
+            b = file.to_data_frame()
+            print(b)
+            print("--変数型-------------------------")
+            print(b.dtypes)
+        \end{lstlisting}
+        \item pandasで読み込める．
+        \begin{lstlisting}
+            import pandas as pd
+    
+            a=pd.read_sas("class.xpt",encoding='UTF-8')
+    
+            print(a)
+            print("--変数型-------------------------")
+            print(a.dtypes)
+        \end{lstlisting}
+    \end{enumerate}
+    \item[開発者] SAS Instituteが販売．
+\end{description}
+
+\subsection{Stata}
+
+\begin{description}
+    \item[拡張子] \texttt{.dta}．
+    \item[Pythonとの連携] \begin{enumerate}
+        \item pandasに\texttt{pd.read\_stata()}がある．
+        \item \href{https://www.statsmodels.org/stable/index.html}{StatsModelsパッケージ}は安定している．
+        \begin{lstlisting}
+            import statsmodels.iolib.foreign as smio
+            from pandas import DataFrame
+            arr = smio.genfromdta('input.dta')
+            frame = DataFrame.from_records(arr)
+        \end{lstlisting}
+    \end{enumerate}
+    \item[Rとの連携] gretlはStata, SPSSのデータを，R, LaTeXに出力することが出来る．
+    \item[開発者] StataCorpが開発(85)．
+    比較的安価な製品でフルGUIで使える．
+    日本の代理店はLightStone社から購入可能であるが、直接Stata本社のホームページから購入も可能である。 
+\end{description}
+
+\subsection{SPSS}
+
+\begin{description}
+    \item[開発者] IBMの統計ソフトウェア．コミュニティ版がPSPP．
+\end{description}
+
+\subsection{Struts}
+
+\begin{description}
+    \item[拡張子] \texttt{.do}．ソフトウェアStrutsで作成されたファイル．
+    \item[開発者] Javaベースのソフトウェアを開発している「Jakartaプロジェクト」が開発したアプリケーションフレームワーク．
+    \item[挙動] Strutsで作成されたこの拡張子「.do」のファイルは、URLを指定してアクションサーブレットを呼び出し、
+    アクションサーブレットがURLからアクション名を取得することで関連したアクションフォーム・アクションクラスを呼び出し（コール）ます。
+    ブラウザから直接Strutsのアプリケーションを開きたい場合は、「.do」が明示的に指定される必要があります。
+    \item[開発環境] Apache TomcatはJakarta specificationに沿ったオープンソースの実装．なお，Jakarta EEはJava EEの進化版．
+\end{description}
+
+
+\chapter{参考文献}
+
+\bibliography{../StatisticalSciences.bib,../SocialSciences.bib,../mathematics.bib,../statistics.bib}
+
+\end{document}

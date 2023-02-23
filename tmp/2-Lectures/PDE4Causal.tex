@@ -1,0 +1,2619 @@
+\documentclass[uplatex,dvipdfmx]{jsreport}
+\title{これからの因果推論のための数学}
+\author{あの\footnote{e-mail address : anomath57@gmail.com\\URL : \url{https://anomath.com/}}}
+\date{\today}
+\pagestyle{headings}\setcounter{secnumdepth}{4}
+\input{/Users/Hirofumi Shiba/NatureOfStatistics/preamble_no_fonts.tex}
+%\input{/Users/hirofumi.shiba48/NatureOfStatistics/preamble_no_fonts.tex}
+%\input{/Users/hirof/NatureOfStatistics/preamble_no_fonts.tex}
+\usepackage[math]{anttor}
+\begin{document}
+\tableofcontents
+
+\chapter{偏微分方程式論}
+
+\section{微分作用素の定義}
+
+\begin{definition}[関数に対する微分]
+    $U\osub\R^n$上の関数$u:U\to\R$について，
+    \begin{enumerate}
+        \item 勾配を
+        \[Du=\paren{\pp{u}{x_1},\cdots,\pp{u}{x_n}}.\]
+        で表す．$D$の代わりに$\nabla,\grad$が用いられることも多い．
+        \item $\nu\in\R^n$方向の微分を
+        \[\pp{u}{\nu}:=Du\cdot\nu\]
+        で表す．
+        \item Hesse行列を
+        \[D^2u=\begin{pmatrix}\pp{^2u}{x_1^2}&\cdots&\pp{^2u}{x_1\partial x_n}\\\vdots&\ddots&\vdots\\\pp{^2u}{x_n\partial x_1}&\cdots&\pp{^2u}{x_n^2}\end{pmatrix}\]
+        で表す．
+        \item Laplacianを
+        \[\Lap u:=\tr(D^2u)=sum_{i=1}^nu_{x_ix_i}.\]
+        で表す．
+        \item $\al\in\N^n$を多重指数，$\abs{\al}:=\al_1+\cdots+\al_n$をその次数という．これについても同様に，
+        \[D^\al u:=\pp{^{\abs{\al}}u}{x_1^{\al_1}\cdots\partial x^{\al_n}_n}.\]
+        と定める．
+        \item 一般の$k\in\N$について，
+        \[D^ku:=(D^\al u)_{\abs{\al}=k}.\]
+        を$k$階の偏導関数の組とする．$k=2$のときについてのHesse行列$D^2u$の定義と整合的であることに注意．
+    \end{enumerate}
+\end{definition}
+
+\begin{definition}[ベクトル場に対する微分]
+    $U\osub\R^n$上のベクトル場$u:U\to\R^n$について，
+    \begin{enumerate}
+        \item $Du$は勾配行列，あるいはJacobi行列ともいうを表す：
+        \[Du=\begin{pmatrix}\pp{u^1}{x_1}&\cdots&\pp{u^1}{x_n}\\\vdots&\ddots&\vdots\\\pp{u^n}{x_1}&\cdots&\pp{u^n}{x_n}\end{pmatrix}\]
+        \item 発散を
+        \[\div u=\pp{u^1}{x^1}+\cdots+\pp{u^n}{x^n}=\tr(Du)\]
+        で表す．
+    \end{enumerate}
+\end{definition}
+
+\begin{proposition}[多重指数を用いた微分法則の表記]\label{prop-chain-rule}
+    $U\osub\R^n$について，
+    \begin{enumerate}
+        \item 連鎖律：$v\in C^1(U)$について，
+        \[\dd{v(x_1(t),\cdots,x_n(t))}{t}=\pp{v}{x_1}\pp{x_1}{t}+\cdots+\pp{v}{x_n}\pp{v_n}{t}=Dv(x_1(t),\cdots,x_n(t))\cdot Dx(t).\]
+        \item Leibniz則：$u,v\in C^1(U)$について，
+        \[D^\al(uv)=\sum_{\beta\le\al}\comb{\al}{\beta}D^\beta uD^{\al-\beta}v.\]
+        \item 多項定理：
+        \[(x_1+\cdots+x_n)^k=\sum_{\abs{\al}=k}\comb{\abs{\al}}{\al}x^\al.\]
+        \item Taylor展開：
+        $(x_1+\cdots+x_n)^k=\sum_{\abs{\al}=k}\frac{\abs{\al}!}{\al_1!\cdots\al_n!}x_1^{\al_1}\cdots x_n^{\al_n}$を$\sum_{\abs{\al}=k}\frac{\abs{\al}!}{\al!}x^\al$と表すと，Taylor展開は次のように表せる：
+    \[u(x)=\sum_{k=0}^\infty\sum_{\abs{\al}=k}\frac{D^\al u(0)}{\al!}x^\al.\]
+    \end{enumerate}
+\end{proposition}
+
+\section{偏微分方程式の種類}
+
+\subsection{線型PDEと非線型PDE}
+
+\begin{definition}[PDE: partial differential equation]
+    写像$F:\R^{n^k}\times\R^{n^{k-1}}\times\cdots\times\R^n\times\R\times U\to\R$が定める，
+    未知関数$u:U\to\R$についての
+    \[F(D^ku(x),D^{k-1}u(x),\cdots,Du(x),u(x),x)=0,\qquad(n\ge 2).\]
+    という形の条件を\textbf{$k$階の偏微分方程式}という．
+\end{definition}
+
+\begin{definition}[linearity, homogenity, principle part]
+    $F$を未知関数$u$とその導関数$D^ku,D^{k-1}u,\cdots,Du,u$に依存する部分$L(D^ku,D^{k-1}u,\cdots,Du,u)=:Lu$と，
+    $u$に依存せず$x$のみに依存した既知の形を持つ部分$f$とに分解して考える：
+    \[F(D^ku(x),\cdots,u(x),x)=L(D^ku(x),\cdots,u(x))-f(x)=0.\]
+    \begin{enumerate}
+        \item $F$がその$k+1$個の引数$D^ku(x),D^{k-1}u(x),\cdots,Du(x),u(x)$に関して線型であるとき，すなわち，線型作用素
+        \[L:=\sum_{\abs{\al}\le k}a_\al(x)D^\al\]
+        について
+        \[Lu(x)=\sum_{\abs{\al}\le k}a_\al(x)D^\al u(x)=f(x),\qquad f:U\to\R\;:u\text{に依らない既知関数}\]
+        という表示を持つとき，これを\textbf{線型PDE}という．
+        \item さらに$f=0$を満たすとき，$F$は\textbf{斉次}であるという．
+        \item $L$は$C^k(U)$上の線型作用素である．$L$の最高階の部分を\textbf{主要部}という．
+    \end{enumerate}
+\end{definition}
+
+\begin{definition}[quasilinear, semilinear, fully nonlinear]
+    非線型PDEについて，
+    \begin{enumerate}
+        \item 最高階の項が線型であるとき，すなわち，次の表示を持つとき，\textbf{準線型PDE}\footnote{Lagrangeの偏微分方程式ともいう．これは特性曲線法が系統的に使えるクラスであるためである．}という：
+        \[\sum_{\abs{\al}=k}a_\al(D^{k-1}u,\cdots,Du,u,x)D^\al u+F(D^{k-1}u,D^{k-2}u,\cdots,Du,u,x)=0.\]
+        \item さらに，最高階の項の係数が低階項$u,Du,\cdots,D^{k-1}u$に依存せずに$a_\al(x)$と表せるとき，\textbf{半線型PDE}という．
+        \item $F$が最高階の項に対しても非線型のとき，\textbf{完全非線型}という．
+    \end{enumerate}
+\end{definition}
+
+\begin{problem}
+    次の$\R^n\times\R$内の関数$u(x,t)$に関する方程式は線型・準線型・半線型・完全非線型のいずれであるか？
+    \begin{enumerate}
+        \item 極小曲面の方程式：
+        \[\paren{1+\paren{\pp{u}{y}}^2}\pp{^2u}{x^2}-2\pp{u}{x}\pp{u}{y}\pp{^2u}{x\partial y}+\paren{1+\paren{\pp{u}{x}}^2}\pp{^2u}{y^2}=0.\]
+        \item 反応拡散方程式：
+        \[u_t-\Lap u=u^p.\]
+        \item 多孔質媒質方程式：
+        \[u_t-\Lap(u^m)=0.\]
+        \item 非線型Poisson方程式：
+        \[-\Lap u=f(u).\]
+        \item Hamilton-Jacobi方程式：
+        \[u_t+\abs{Du}^2=f(x,t).\]
+        \item 平均曲率流方程式：
+        \[u_t-\div\paren{\frac{Du}{\abs{Du}}}\abs{Du}=0.\]
+        \item Monge-Ampere方程式：
+        \[\det(D^2u)=f.\]
+    \end{enumerate}
+\end{problem}
+\begin{Proof}[\underline{\bf【解】}]\mbox{}
+    \begin{enumerate}
+        \item いずれの項も最高次数である2階の項であり，係数は$u$の情報を含んでいるため，準線型．
+        \item $p\ne1$のとき方程式は非線型で，最高次項$-\Lap u$は定数係数であるから半線型．$p=1$のときは線型．
+        \item $m\ne0,1$であるとき，方程式は非線型で，
+        \[u_t-\Lap(u^m)=u_t-\sum_{i=1}^n\Paren{m(m-1)u^{m-2}u^2_{x_i}+mu^{m-1}u_{x_ix_i}}.\]
+        と変形できるが，最高階$u_{x_ix_i}$の項の係数は$u$を含み，準線型．
+        $m=0,1$のときは線型．
+        \item $f$が線型でない限り方程式は非線型で，半線型．
+        \item \[u_t+\abs{Du}^2=u_t+\sum_{i=1}^nu_{x_i}^2=f(x,t).\]
+        と変形でき，最高階の$u_{x_i}$に関して非線型であるから，完全非線型．
+        \item 左辺第二項を書き下すことを考える．$\frac{Du}{\abs{Du}}$の第$i$成分$\frac{u_{x_i}}{\abs{Du}}$の微分は
+        \[\pp{}{x_i}\paren{\frac{u_{x_i}}{\sqrt{u_{x_1}^2+\cdots+u_{x_n}^2}}}=\frac{1}{\abs{Du}}+\frac{u_{x_i}^2u_{x_ix_i}}{\abs{Du}^3}.\]
+        より，
+        \[\div\paren{\frac{Du}{\abs{Du}}}\abs{Du}=n+\frac{1}{\abs{Du}^2}\sum_{i=1}^nu_{x_i}^2u_{x_ix_i}.\]
+        と変形出来る．最高階の$u_{x_ix_i}$の係数は$u$を含み，準線型．
+        \item $n=1$のとき線型．$n=2$のとき，
+        \[\det(D^2u)=u_{x_1x_1}u_{x_2x_2}-u_{x_1x_2}u_{x_2x_1}\]
+        となるが，一般の$n>1$について
+        方程式の左辺は$u$の2階偏導関数の$n$個の積を含むから，完全非線型．
+    \end{enumerate}
+\end{Proof}
+
+\subsection{2階線型PDEの分類と例}
+
+\begin{definition}[2階線型PDEの\cite{Petrovsky}の分類]
+    2階線型PDEの主要部が，ある行列$A\in M_n(\R)$を用いて
+    \[\sum_{i,j\in[n]}a_{ij}(Du,u,x)\pp{^2u}{x_i\partial x_j}=(\del_{x_1}\;\cdots\;\del_{x_n})A \begin{pmatrix}\del_{x_1}\\\vdots\\\del_{x_n}\end{pmatrix}u\]
+    と表せるとする．
+    \begin{enumerate}
+        \item $A$の固有値$\lambda_1,\cdots,\lambda_k>0,\lambda_{k+1},\cdots,\lambda_{k+l}<0,\lambda_{k+l+1},\cdots\lambda_n=0$について，
+        \[\sum_{i\in[k]}u_{\eta_i\eta_j}-\sum_{i\in[l]}u_{\eta_i\eta_j}+F(Du,x)=0,\qquad\eta_j:=\frac{\ep_j}{\sqrt{\abs{\lambda_j}}}.\]
+        という形の表示を\textbf{標準形}という．
+        \item $A$は可逆とする：$k+l=n$．
+        \begin{enumerate}
+            \item $A$の固有値が同符号のとき，\textbf{楕円型}(elliptic)という．
+            \item $A$の固有値が一つだけ異符号のものを持つとき，\textbf{双曲型}(hyperbolic)という．
+            \item $A$の符号数$(k,l)$が$k,l\ge 2$を満たすとき，\textbf{超双曲型}(ultra hyperbolic)という．
+        \end{enumerate}
+        \item $A$が$0$を固有値として持つとき，\textbf{(広義の)放物型}(parabolic)という．
+        \item さらに，固有値$0$の重複度は$1$で，
+        他の固有値は同符号，
+        さらに対応する変数の１階の項が標準形において消えないとき，\textbf{狭義の放物型}という．
+    \end{enumerate}
+\end{definition}
+
+\begin{example}[領域によって型は変化し得る，型を持たないものもある]\mbox{}
+    \begin{enumerate}
+        \item 次の2次元の2階PDEは，$D=ac-b^2$が正ならば楕円型，負ならば双曲型，零ならば広義放物型となる：
+        \[au_{xx}+2bu_{xy}+cu_{yy}+du_x+eu_y+fu=0.\]
+        \item $u_{xx}+yu_{yy}=0$は，$\Brace{(x,y)\in\R^2\mid y>0}$で楕円形，$\Brace{(x,y)\in\R^2\mid y<0}$で双曲型，$\Brace{(x,y)\in\R^2\mid y=0}$で広義放物型となる．このような場合，解の性質を体系的に解析することは非常に難しい．
+        \item Schrodinger方程式
+        \[iu_t+\Lap u=0.\]
+        はどの型にも分類できない．
+    \end{enumerate}
+\end{example}
+
+\begin{problem}
+    次の2階線型偏微分方程式を分類せよ：
+    \begin{enumerate}
+        \item $u_{xx}+4u_{xy}+u_{yy}-u_x+2u_y-3u=0$．
+        \item $u_{xx}+u_{yy}+2u_{zz}-2u_{xy}+u_x+u_y=0$．
+    \end{enumerate}
+\end{problem}
+\begin{Proof}[\underline{\bf【解】}]\mbox{}
+    \begin{enumerate}
+        \item 主要部は
+        \[u_{xx}+4u_{xy}+u_{yy}=(\partial_x\;\del_y)\mtrx{1}{2}{2}{1}\vctr{\del_x}{\del_y}u\]
+        と表せるが，$\smtrx{1}{2}{2}{1}$の固有多項式は
+        \[\Phi(t)=(1-t)^2-4=(t-3)(t+1).\]
+        であるから，ただ一つだけ符号が違うため，双曲型．
+        \item 主要部は
+        \[u_{xx}+u_{yy}+2u_{zz}-2u_{xy}=(\del_x\;\del_y\;\del_z)\begin{pmatrix}1&-1&0\\-1&1&0\\0&0&2\end{pmatrix}\begin{pmatrix}\del_x\\\del_y\\\del_z\end{pmatrix}u.\]
+        と表せるが，この固有多項式は
+        \[\Phi(t)=(1-t)^2(2-t)-(2-t)=-(2-t)^2t\]
+        より，$0$を固有値に持つから広義の放物型．
+        さらに，ただ一つだけ固有値$0$を持ち，他の固有値の符号が等しい．加えて，
+        \[u_{xx}+u_{yy}+2u_{zz}-2u_{xy}=(\del_x\;\del_y\;\del_z)\begin{pmatrix}-1/\sqrt{2}&0&1/\sqrt{2}\\1/\sqrt{2}&0&1/\sqrt{2}\\0&1&0\end{pmatrix}\begin{pmatrix}2&0&0\\0&2&0\\0&0&0\end{pmatrix}\begin{pmatrix}-1/\sqrt{2}&0&1/\sqrt{2}\\1/\sqrt{2}&0&1/\sqrt{2}\\0&1&0\end{pmatrix}^\top\begin{pmatrix}\del_x\\\del_y\\\del_z\end{pmatrix}u\]
+        という変換に対して，残りの項は
+        \[u_x+u_y=\sqrt{2}u_Z,\qquad Z=(x\;y\;z)\begin{pmatrix}1/\sqrt{2}\\1/\sqrt{2}\\0\end{pmatrix}\]
+        と表せ，2階の項が消えている変数$Z$の1階の項は消えていないから，狭義の放物型である．
+    \end{enumerate}
+\end{Proof}
+
+\section{$\R^n$上の部分積分}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=]
+    発散定理は，「微分の積分」の計算法を単位法線ベクトルの言葉で与えているという意味で，$\R^n$上への微積分学の基本定理の一般化である．
+\end{tcolorbox}
+
+\begin{theorem}[(Ostrogradsky-)Gauss-Green]\label{thm-Gauss-Green}
+    $\Om\osub\R^n$を有界領域，$\partial\Om$を区分的$C^1$-級とする．
+    \begin{enumerate}
+        \item 関数$u\in C^1(\o{U})$について，
+        \[\forall_{i\in[n]}\;\int_Uu_{x_i}dx=\int_{\partial U}u\nu^idS.\]
+        \item ベクトル値関数$u\in C^1(\o{U};\R^n)$について，
+        \[\int_U\div (u)dx=\int_{\partial U}u\cdot \nu\;dS.\]
+    \end{enumerate}
+\end{theorem}
+\begin{history}
+    Gauss (1839)以前にGreen (1828), Ostrogradskii (1831)も発表していたため，その名前も入れて呼ぶことがある．
+\end{history}
+
+\subsection{Gauss-Greenの定理の系}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    $\R^n$上の部分積分は，その座標方向$i\in[n]$の境界$\partial U$の単位法線ベクトル$\b{\nu}$の成分$\nu^i$を考慮に入れねばならないが，そこだけが相違点である．
+\end{tcolorbox}
+
+\begin{corollary}[成分毎の部分積分公式]\label{cor-partial-integral}
+    $u,v\in C^1(\o{U})$について，
+    \[\tcboxmath{\forall_{i\in[n]}\quad\int_Uu_{x_i}vdx=-\int_Uuv_{x_i}dx+\int_{\partial U}uv\nu^idS.}\]
+\end{corollary}
+\begin{Proof}
+    積$uv\in C^1(\o{U})$についてGauss-Greenの定理\ref{thm-Gauss-Green}を用いると，
+    \begin{align*}
+        \forall_{i\in[n]}\quad\int_U(uv)_{x_i}dx=\int_{\partial U}uv\nu^idS.
+    \end{align*}
+\end{Proof}
+
+\begin{corollary}[Greenの恒等式]\label{cor-Green-identity}
+    $u,v\in C^2(\o{U})$について，次が成り立つ：
+    \begin{enumerate}\setcounter{enumi}{-1}
+        \item Laplacianに対する部分積分公式：
+        \[\tcboxmath{\int_U\Lap udx=\int_{\partial U}\pp{u}{\nu}dS.}\]
+        \item 勾配の内積に対する部分積分公式：
+        \[\tcboxmath{\int_U(Dv|Du)dx=-\int_Uu\Lap vdx+\int_{\partial U}\pp{v}{\nu}udS.}\]
+        \item 対称化された部分積分公式
+        \[\tcboxmath{\int_U(u\Lap v-v\Lap u)dx=\int_{\partial U}\paren{u\pp{v}{\nu}-v\pp{u}{\nu}}dS.}\]
+    \end{enumerate}
+\end{corollary}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item 
+        $\div(Du)=\Lap u$に注意して，
+        ベクトル値関数$Du$に関するGauss-Greenの定理\ref{thm-Gauss-Green}(2)から直接：
+        \[\int_U\div(Du)dx=\int_{\partial U}Du\cdot\b{\nu}dS=\int_{\partial U}\pp{u}{\b{\nu}}dS.\]
+        \item $u_{x_i}v_{x_i}$に関して部分積分を考えると，
+        \[\int_{U}u_{x_i}v_{x_i}dx=-\int_Uuv_{x_ix_i}dx+\int_{\partial U}uv_{x_i}\nu^idS.\]
+        これを$i\in[n]$について足し合わせたものである．
+        \item (2)の$u,v$を入れ替えると，
+        \[\int_UDu\cdot Dvdx=-\int_Uv\Lap udx+\int_{\partial U}\pp{u}{\nu}vdS\]
+        を得る．(2)の辺々から引くと，
+        \[0=\int_U(v\Lap u-u\Lap v)dx+\int_{\partial U}\paren{\pp{v}{\nu}u-\pp{u}{\nu}v}dS.\]
+    \end{enumerate}
+\end{Proof}
+
+\subsection{領域が変数を持つ積分の微分}
+
+\begin{theorem}[積分領域が動く積分に対する微分\footnote{\cite{Evans} Appendix C.4}]\label{thm-differentiation-of-integral-on-moving-region}
+    $U_\tau\subset\R^n$を滑らかな境界を持つ領域の滑らかな族，
+    $\partial U_\tau$の各点の速度ベクトルを$\b{v}$で表す．
+    このとき，任意の滑らかな関数$f\in C^1(\R^n\times\R)$に対して，
+    \[\dd{}{\tau}\int_{U_\tau}fdx=\int_{\partial U_\tau}f\b{v}\cdot\nu dS+\int_{U_\tau}f_\tau dx.\]
+\end{theorem}
+\begin{history}
+    $n=2$ではLeibnizの微分則，$n=3$ではReynolds transport theorem
+    と呼ばれ，連続体力学の分野で知られていた．
+\end{history}
+
+\begin{example}\label{exp-moving-region-appeared-in-N-C-WE}
+    非斉次な波動方程式の零化された初期値問題のDuhamelの原理による解公式\ref{thm-solution-to-N-C-WE-in-Rn}において，次の計算を行なった，
+    \[u(x,t):=\int^t_0u(x,t;s)ds\paren{=\int^1_0u(x,t;tr)tdr}.\]
+    このとき，上の定理によると，
+    \[u_t(x,t)=u(x,t;t)+\int^t_0u_t(x,t;s)ds.\]
+    実際，微分の定義に戻ってみると，
+    \begin{align*}
+        u_t(x,t)&=\lim_{h\to0}\frac{u(x,t+h)-u(x,t)}{h}\\
+        &=\lim_{h\to0}\frac{1}{h}\paren{\int^{t+h}_0u(x,t+h;s)ds-\int^t_0u(x,t;s)ds}\\
+        &=\lim_{h\to0}\frac{1}{h}\int^{t+h}_hu(x,t+h;s)ds+\lim_{h\to0}\int^t_0\frac{u(x,t+h;s)-u(x,t;s)}{h}ds\\
+        &=\lim_{h\to0}\frac{1}{h}\int^{t+h}_t\Paren{u(x,t;s)+hu_t(x,t;s)+O(h^2)}ds+\int^t_0u_t(x,t;s)ds.
+    \end{align*}
+\end{example}
+
+\section{$n$次元単位球}
+
+\subsection{体積と表面積}
+
+\begin{theorem}[球の体積]
+    $n$次元球$B(0,r)\subset\R^n$について，
+    \begin{enumerate}
+        \item 体積は
+        \[V_n(r)=\frac{\Gamma(1/2)^n}{\Gamma((n+2)/2)}r^n=\om_nr^n.\]
+        \item 特に，$r=1$のとき，体積とその表面積は
+        \[\om_n=\frac{\Gamma(1/2)^n}{\Gamma((n+2)/2)}=\frac{\pi^{n/2}}{(n/2)\Gamma(n/2)},\quad\sigma_n=n\om_n.\]
+    \end{enumerate}
+    特に，関係
+    \[\frac{2}{n\om_n}=\frac{\Gamma\paren{\frac{n}{2}}}{\pi^{n/2}}\]
+    はPoisson核の議論\ref{remark-Poisson-kernel}で重宝する．
+\end{theorem}
+\begin{remark}[$\sigma_1$の解釈]
+    $n=1$次元球$[-1,1]$の体積は
+    \[\om_1=\frac{\Gamma(1/2)}{\Gamma(3/2)}=2.\]
+    であるが，その表面積は
+    \[\sigma_1=1\cdot\om_1=2.\]
+    とカウントされる．2点からなる集合であるためだろうか．
+\end{remark}
+
+\subsection{相互関係}
+
+\begin{lemma}[Gamma関数の性質]\mbox{}
+    \begin{enumerate}
+        \item 任意の$z\in\C\setminus\Z_{\le0}$について，$\Gamma(z+1)=z\Gamma(z)$．
+        \item $\Gamma(1)=\Gamma(2)=1$．$\Gamma\paren{\frac{1}{2}}=\sqrt{\pi}$．
+        \item $\Gamma(k)=(k-1)!$．$\Gamma\Paren{k-\frac{1}{2}}=\paren{k-\frac{3}{2}}\cdots\frac{1}{2}\sqrt{\pi}$．
+    \end{enumerate}
+\end{lemma}
+
+
+\begin{corollary}\mbox{}\label{cor-volume-of-ball-in-odd-and-even-dimension}
+    \begin{enumerate}
+        \item 偶数次元$n=2k\;(k\in\N^+)$のとき，$\om_n=\frac{\pi^k}{k!}$．
+        \item 奇数次元$n=2k-1\;(k\in\N^+)$のとき，
+        \[\om_n=\frac{\pi^{k-1}}{2\paren{k-\frac{1}{2}}!}=\frac{\pi^{k-1}}{2\paren{k-\frac{1}{2}}\paren{k-\frac{3}{2}}\cdots\paren{\frac{1}{2}}}=\frac{\pi^{k-1}}{2}\frac{2^n}{(2k-1)(2k-3)\cdots 1}=\frac{\pi^{k-1}2^{n-1}}{n!!}\]
+        \item $n=2k\;(k\in\N^+)$が偶数次元のとき，
+        \[\frac{\om_{2k}}{\om_{2k+1}}=\frac{\paren{k+\frac{1}{2}}!!}{k!}=\frac{1}{2}\frac{(2k+1)!!}{2k!!}=\frac{1}{2}\frac{(n+1)(n-1)\cdots5\cdot3\cdot1}{n(n-2)\cdots4\cdot2\cdot1}.\]
+    \end{enumerate}
+\end{corollary}
+
+\subsection{球上の積分}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    $\R^n$上の積分を，任意の点$x_0\in\R^n$を中心とした球面$\partial B(x_0,r)$上の積分に分割出来るが，
+    このときJacobianの$r$などは出現しない．これは面積分の妙技による．間違いやすいので注意．
+\end{tcolorbox}
+
+\begin{theorem}[Co-area formula]
+    $u:\R^n\to\R$をLipschitz連続関数とし，殆ど至る所の$r\in\R$について，等位集合$\Brace{x\in\R^n\mid u(x)=r}$は滑らかな超曲面をなすとする．
+    $f:\R^n\to\R$を連続な可積分関数とする．このとき，
+    \[\int_{\R^n}f\abs{Du}dx=\int^\infty_{-\infty}\paren{\int_{\Brace{u=r}}fdS}dr.\]
+\end{theorem}
+
+\begin{corollary}[球面積分の性質]\mbox{}\label{cor-property-of-ball-surface-integral}
+    \begin{enumerate}
+        \item $f:\R^n\to\R$は連続で可積分であるとする．このとき，
+        \[\forall_{x_0\in\R^n}\quad\int_{\R^n}fdx=\int^\infty_0\paren{\int_{\partial B(x_0,r)}fdS}dr.\]
+        \item 特に，次が成り立つ：
+        \[\forall_{r>0}\quad\dd{}{r}\paren{\int_{B(x_0,r)}fdx}=\int_{\partial B(x_0,r)}fdS.\]
+    \end{enumerate}
+\end{corollary}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item 余面積公式を$u(x):=\abs{x}$と取った場合の結果である．
+        \item (1)より，
+        \[\int_{B(x_0,r)}fdx=\int_{l=0}^{l=r}\int_{\partial B(x_0,l)}fdSdl\]
+        と表せる．これを微分すれば従う．
+    \end{enumerate}
+\end{Proof}
+
+\begin{corollary}[球面上の積分と球体上の積分との関係]\label{thm-sphere-and-ball}
+    $B(0,R)\subset\R^n, f\in L^1(B(0,R))$について，
+    \[\int_{B(0,R)}f(x)dx=\int^R_0\int_{\partial B(0,r)}f(x)d\sigma(x)dr=\int^R_0r^{n-1}dr\int_{\partial B(0,1)}f(rx)d\sigma(x).\]
+\end{corollary}
+
+\chapter{Laplace方程式}
+
+\section{$\R^n$上の解公式}
+
+\subsection{基本解の定義と性質}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    $D^2\Phi(x-y)$が局所可積分でさえないため，議論が込み入る．
+\end{tcolorbox}
+
+\begin{definition}[fundamental solution / Newton Kernel]
+    Poisson方程式の\textbf{基本解}$\Phi:\R^n\to\R\cup\{-\infty\}$を
+    \[\tcboxmath{\Phi(x):=\begin{cases}
+        -\frac{1}{2\pi}\log\abs{x},&n=2,\\
+        \frac{1}{n(n-2)\om_n}\frac{1}{\abs{x}^{n-2}},&n\ge3.
+    \end{cases}}\]
+    と，基本調和関数の定数倍で定める．
+\end{definition}
+
+\begin{proposition}[微分に関する性質]\label{prop-derivative-of-fundamental-solution}
+    任意の$n\ge2$次元の基本解$\Phi:\R^n\to\R\cup\{-\infty\}$について，
+    \begin{enumerate}
+        \item 原点を極とし，$\R^n\setminus\{0\}$上で調和な関数である．
+        \item 基本調和関数の定数倍であるため，$\R^n\setminus\{0\}$上球対称である．特に，$\Phi'(y)$は$y\ne0$において$\frac{1}{\abs{y}^{n-1}}$の定数倍であることが必要なのであった\ref{prop-necessary-condition-for-sphere-symmetric-harmonic-functions}．
+        \item 特に，第$i$変数に関する微分は原点を除いて定義され，
+        \[\tcboxmath{\Phi_{x_i}(y)=-\frac{1}{n\om_n}\frac{y_i}{\abs{y}^n}\quad y\ne0.}\]
+        と表せる．超関数の意味ではこれが微分である．
+        \item 勾配
+        \[D\Phi(y)=-\frac{1}{n\om_n}\frac{y}{\abs{y}^{n}}\quad y\ne0.\]
+        とHesse行列
+        \[\tcboxmath{D_{ij}\Phi(y)=-\frac{1}{n\om_n}\frac{\abs{y}^2\delta_{ij}-ny_iy_j}{\abs{y}^{n+2}}.}\]
+        とは，次のように評価できる：
+        \[\abs{D\Phi(x)}\le\frac{C_1}{\abs{x}^{n-1}},\quad\abs{D^2\Phi(x)}\le\frac{C_2}{\abs{x}^n},\quad \paren{x\ne0,C_1=\frac{1}{n\om_n},C_2=\frac{1}{\om_n}}.\]
+        特に，Hesse行列は原点の近傍で可積分ではなく，局所可積分でさえない！
+        \item 一般階数の微分については，
+        \[\abs{D^\al\Phi(x)}\le\frac{C}{\abs{x}^{n-2+\abs{\al}}},\quad(C>0).\]
+    \end{enumerate}
+\end{proposition}
+
+\begin{corollary}[基本解の係数の設計意図]\label{lemma-design-of-fundamental-solution-of-Poisson-equation}
+    内向き単位法線方向の微分係数が，その点を通る原点中心の球面の面積の逆数に等しくなる：
+    \[\pp{\Phi}{\nu}(x)=\frac{1}{n\om_n}\frac{1}{\abs{x}^{n-1}}=\frac{1}{\abs{\partial B(0,\abs{x})}}.\]
+\end{corollary}
+\begin{Proof}
+    点$y\in\R^n$における外向き法線とは，ベクトル$-\frac{y}{\abs{y}}$である．よって，
+    \[\pp{\Phi}{\nu}(x)=-D\Phi(x)\cdot\frac{y}{\abs{y}}=\frac{1}{n\om_n}\frac{\abs{y}^2}{\abs{y}^{n+1}}=\frac{1}{n\om_n}\frac{1}{\abs{y}^{n-1}}.\]
+    ここで，$n\om_n$が$n$次元球の表面積であるから，その$\abs{y}^{n-1}$倍は$B(0,\abs{y})$の表面積である．
+\end{Proof}
+
+\begin{proposition}[原点の近傍での積分の評価]\mbox{}
+    \begin{enumerate}
+        \item $n=2$のとき，
+        \[\int_{B(0,\ep)}\abs{\Phi(x)}dx=\frac{\ep^2\abs{\log\ep}}{2}-\frac{\ep^2}{4}\le C\ep^2\abs{\log\ep}\]
+        \[\int_{\partial B(0,\ep)}\abs{\Phi(x)}dx=\ep\abs{\log\ep}.\]
+        \item $n\ge3$のとき，
+        \[\int_{B(0,\ep)}\Phi(x)dx=\frac{n-1}{n-2}\frac{1}{2\sqrt{\pi}}\frac{\ep^2}{2}\le C\ep^2.\]
+        \[\int_{\partial B(0,\ep)}\Phi(x)dx=\frac{n-1}{n-2}\frac{1}{2\sqrt{\pi}}\ep.\]
+    \end{enumerate}
+\end{proposition}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item \begin{align*}
+            \int_{B(0,\ep)}\frac{1}{2\pi}\abs{\log\abs{x}}dx&=\int^\ep_0r\abs{\log r}dr\\
+            &=\Square{\frac{r^2\log r}{2}}^\ep_0-\int^\ep_0\frac{r}{2}dr=\frac{\ep^2\abs{\log\ep}}{2}-\frac{\ep^2}{4}.
+        \end{align*}
+        \item \begin{align*}
+            \int_{B(0,\ep)}\frac{1}{n(n-2)\om_n}\frac{1}{\abs{x}^{n-2}}dx&=\frac{1}{n(n-2)\om_n}\int_0^\ep\frac{(n-1)\om_{n-1}r^{n-1}}{r^{n-2}}dr\\
+            &=\frac{n-1}{n(n-2)}\frac{\om_{n-1}}{\om_n}\Square{\frac{r^{2}}{2}}^\ep_0.
+            \end{align*}
+    \end{enumerate}
+\end{Proof}
+
+\subsection{解公式}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=]
+    基本解が$x=0$の周りで特異性を持つために，
+    ここの近傍だけ分離して積分を評価する必要がある．
+    このときのために，$f\in C_c^2(\R^n)$を仮定すると評価が本質的に基本解$\Phi$の評価に依拠し，証明が簡単になる．
+    原点から離れた部分での積分の評価は，２回の部分積分\ref{cor-partial-integral}を通じて$\Lap\Phi=0$の項を作り出すことによる，部分積分によるもう一項は積分領域がコンパクトであるために，簡単に評価出来るのである．
+\end{tcolorbox}
+
+\begin{problem}
+    Poisson方程式
+    \[\Lap u=f,\qquad \In\R^n,f\in C_c^2(\R^n)\]
+    を考える．
+\end{problem}
+
+\begin{theorem}[基本解は畳み込みによって解を与える]\label{thm-solution-to-Poisson-equation}
+    非斉次項$f\in C^2_c(\R^n)$に対して，
+    \[u:=\Phi*f=\int_{\R^n}\Phi(x-y)f(y)dy\]
+    とする．このとき，
+    \begin{enumerate}
+        \item $u\in C^2(\R^n)$．
+        \item $u$は$n\ge3$ならば$u\in C_0(\R^n)$，特に有界でもある．
+        \item $u$は大域的なPoisson方程式$-\Lap u=f\;\on\R^n$を満たす．
+    \end{enumerate}
+\end{theorem}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item Lebesgueの優収束定理は用いず，直接考えることとする．
+        \[u(x)=\int_{\R^n}\Phi(x-y)f(y)dy=\int_{\R^n}\Phi(y)f(x-y)dy\]
+        の微分であるが，$\Phi$の微分は原点では定義できないので，少なくとも通常の関数の意味では微分を考えたくない．
+        そこで，最右辺の表示に注目する．
+        $i$番目の標準基底を$e_i\in\R^n$として，
+        \[\frac{u(x+he_i)-u(x)}{h}=\int_{\R^n}\Phi(y)\frac{f(x+he_i-y)-f(x-y)}{h}dy\]
+        と表せ，この右辺の被積分関数の$\frac{f(x+he_i-y)-f(x-y)}{h}$が$h\to0$について$\R^n$上で一様に$f_{x_i}(x-y)$に収束するためである($f\in C_c$より)．
+        \item $f$の台を含む任意のコンパクト集合$\supp f\subset K\compsub\R^n$について，
+        \[\abs{u(x)}=\Abs{\int_K\Phi(x-y)f(y)dy}\]
+        である．このとき被積分関数は，任意の$x\in\R^n$について，
+        \[\sup_{y\in\R^n}\abs{\Phi(x-y)f(y)}=\sup_{y\in  K}\abs{\Phi(x-y)f(y)}\]
+        が成り立っているが，$\Phi$は$\abs{x}$のみの関数だから，この右辺は$\abs{x}$を十分大きく取れば，十分小さく出来る．すなわち，
+        一様に$\Phi(x-y)f(y)\xrightarrow{\abs{x}\to\infty}0$．
+        よって，Lebesgueの優収束定理より，$\abs{u(x)}\xrightarrow{\abs{x}\to\infty}0$でもある．
+        \item 再び$f$の台のコンパクト性より，微分と積分を交換して
+        \[\Lap u(x)=\paren{\int_{B(0,\ep)}+\int_{\R^n\setminus B(0,\ep)}}\Phi(z)\Lap_x f(x-z)dz=:I_\ep(x)+J_\ep(x).\]
+        と表せる．原点の近傍$I_\ep$については，$\Phi$自体だと可積分であり，それに有界な連続関数$\Lap f$を乗じて居るからHolderから可積分性は大丈夫であるが，$\ep\to0$にしたがって減少することをあとは確認すればよい．
+        原点を除いた項$J_\ep$が$f$に収束するはずであるが，$\Lap f$は捉えられないから，部分積分によって微分を$\Phi$に移して，基本解の設計意図\ref{lemma-design-of-fundamental-solution-of-Poisson-equation}を用いる．
+        
+        実際にそれぞれを評価してみる．
+        \begin{description}
+            \item[$I_\ep(x)$の評価] 
+            この項は$\ep$を十分小さく取ると収束する．評価は，基本解の積分の評価を通じて，
+            \[\abs{I_\ep}\le\norm{\Lap_xf(x-y)}_{L^\infty(\R^n)}\int_{B(0,\ep)}\abs{\Phi(y)}dy\le\begin{cases}
+                C\ep^2\abs{\log\ep},&n=2,\\
+                C\ep^2,&N\ge3.
+            \end{cases}\]
+            となる．
+            \item[$J_\ep(x)$の評価] 
+            まず，部分積分\ref{cor-partial-integral}により，
+            \begin{align*}
+                J_\ep&=\int_{\R^n\setminus B(0,\ep)}\Phi(y)\Lap_yf(x-y)dy\\
+                &=-\int_{\R^n\setminus B(0,\ep)}D\Phi(y)\cdot D_yf(x-y)dy+\int_{\partial B(0,\ep)}\Phi(y)D_yf(x-y)\cdot\nu dS(y)=:K_\ep+L_\ep.
+            \end{align*}
+            の２つに分解する．
+            ただしこのとき，$\R^n\setminus B(0,\ep)$の境界としての$\partial B(0,\ep)$の向きを考えれば，$\nu$は内側法線ベクトル$\nu=-\frac{y}{\abs{y}}$であることに注意．
+            \begin{enumerate}
+                \item するとまず，$L_\ep$は積分領域がコンパクトであるから，$I_\ep$と同様にして基本解の積分の評価を通じて
+                \[\abs{L_\ep}\le\norm{Df}_{L^\infty(\R^n)}\int_{\partial B(0,\ep)}\abs{\Phi(y)}dS(y)\le\begin{cases}
+                    C\ep\abs{\log\ep},&n=2,\\
+                    C\ep,&n\ge3.
+                \end{cases}\]
+                と評価出来る．
+                \item 次に，残った$K_\ep$は再び部分積分を施して$\Lap\Phi$の項を作ると，$\Phi$の$\R^n\setminus\{0\}$上での調和性よりこれ零であるから，
+                \begin{align*}
+                    K_\ep&=-\int_{\R^n\setminus B(0,\ep)}D\Phi(y)\cdot D_yf(x-y)dy\\
+                    &=\int_{\R^n\setminus B(0,\ep)}\Lap\Phi(y)f(x-y)dy-\int_{\partial B(0,\ep)}f(x-y)D\Phi(y)\cdot\nu dS(y)\\
+                    &=-\int_{\partial B(0,\ep)}f(x-y)D\Phi(y)\cdot\nu dS(y).
+                \end{align*}
+                いま，$D\Phi(y)=-\frac{1}{n\om_n}\frac{y}{\abs{y}^n}$より，
+                \[D\Phi(y)\cdot\nu=\frac{1}{n\om_n}\frac{1}{\abs{y}^{n-1}}.\]
+                これは$\abs{\partial B(0,\ep)}$に等しいから，$f$の連続性の仮定から，
+                \[K_\ep=-\dint_{\partial B(x,\ep)}f(y)dS(y)\xrightarrow{\ep\to0}-f(x).\]
+            \end{enumerate}
+            \item[結論] 以上より，$\ep>0$は任意であったから，$-\Lap u(x)=f(x)$が判る．
+        \end{description}
+    \end{enumerate}
+\end{Proof}
+\begin{remark}
+    $f\in C^1_c(\R^n)$にも弱められるが，証明は一気に煩雑になる\cite{Gilbarg}．
+\end{remark}
+
+\subsection{有界な解の一意性}
+
+\begin{corollary}[有界な解の一意性 (representation formula)]
+    $f\in C_c^2(\R^n)\;(n\ge3)$が定める大域的なPoisson方程式$-\Lap u=f\;\on\R^n$の有界な解は
+    \[u(x)=\Phi*f(x)+C\quad(C\in\R,x\in\R^n)\]
+    という形のものに限る．
+\end{corollary}
+\begin{Proof}
+    $u$を任意の有界な解とすると，Laplacianの線型性より$u-\Phi*f(x)$も有界な調和関数である．
+    よってLiouvilleの定理\ref{cor-Liouville}より，$\R^n$上定数である．
+\end{Proof}
+
+\begin{remarks}
+    結局，基本解を定数だけずらしたものはみな解であり，有界な解はこれに限る．
+    なお，$n=2$の場合の基本解は非有界である．
+\end{remarks}
+
+\section{一般の有界領域上の解公式}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=一般領域上での解の求め方]
+    \begin{enumerate}
+        \item 一般の有界領域$U\osub\R^n$上
+        のDirichlet問題
+        \[\begin{cases}
+            -\Lap u=f&\In U,\\
+            u=g&\on\partial U.
+        \end{cases}\]
+        を解くには，
+        $\partial U$上で$\Phi(y-x)$を打ち消す調和関数$\phi^x(y)$を探す必要がある．
+        \item するとこれによって基本解$\Phi$を修正する対応
+        \[G(x,y):=\Phi(y-x)-\phi^x(y)\]
+        が任意の$x\in U$に対して，任意の$y\in\partial U$で$0$になる．
+        \item このことにより，
+        \[u(x)=-\int_{\partial U}g(y)\pp{G}{\nu}(x,y)dS(y)+\int_Uf(y)G(x,y)dy,\qquad x\in U\]
+        と求まる．
+    \end{enumerate}
+\end{tcolorbox}
+
+\subsection{問題の所在}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    任意の$u\in C^2(\R^n)$についての大域的な恒等式
+    \[u(x)=\int_U\Phi(y-x)(-\Lap u(y))dy\]
+    を，有界開集合$U\osub\R^n$上ではどう変形すべきかを考える．
+    実は，$\Phi$が無限遠で消えるために
+    $\partial U$上の積分の項が消えていただけであるから，この項が本来は存在する．
+    この積分変換を陽に記述するのがこの有界領域の場合における真の問題である．
+\end{tcolorbox}
+
+\begin{lemma}[Green's third identity]
+    任意の$u\in C^2(\o{U})$の$x\in U$での値は次のように分解できる：
+    \[u(x)=\int_{\partial U}\paren{\Phi(y-x)\pp{u}{\nu}(y)-u(y)\pp{\Phi}{\nu}(y-x)}dS(y)-\int_U\Phi(y-x)\Lap u(y)dy.\]
+\end{lemma}
+\begin{Proof}\mbox{}
+    \begin{enumerate}[{Step}1]
+        \item 次の関係に注目する：
+        \[\int_{U\setminus B(x,\ep)}\Paren{u(y)\Lap\Phi(y-x)-\Phi(y-x)\Lap u(y)}dy=-\int_{U\setminus B(x,\ep)}\Phi(y-x)\Lap u(y)dy.\]
+        これは$\Phi(y-x)$の導関数は$y=x$上では定義されないためにこれを積分範囲に入れることは出来ず，しかしこの点を避ければ$\Lap\Phi=0$であるためである．
+        \item 左辺をGreenの第二恒等式\ref{cor-Green-identity}を用いて変形する：
+        \begin{align*}
+            \int_{U\setminus B(x,\ep)}\Paren{u(y)\Lap\Phi(y-x)-\Phi(y-x)\Lap u(y)}dy&=\int_{\partial U-\partial B(x,\ep)}\paren{u(y)\pp{\Phi}{\nu}(y-x)-\Phi(y-x)\pp{u}{\nu}(y)}dS(y).
+        \end{align*}
+        最後に$\ep\to0$を考えるのであるが，$\partial B(0,\ep)$上での積分である2項は片方は消えて片方は$u(x)$に収束することを議論する．
+        \begin{enumerate}
+            \item 右辺第二項は，
+            \[\Abs{\int_{\partial B(x,\ep)}\Phi(y-x)\pp{u}{\nu}(y)dS(y)}\le\Norm{Du}_{L^\infty(\o{U})}\int_{\partial B(x,\ep)}\abs{\Phi(y-x)}dS(y)=O(\ep)\quad(\ep\to0).\]
+            最後の収束は，積分領域の面積が$\abs{\partial B(x,\ep)}=O(\ep^{n-1})$かつ基本解のその上での最大値が$\norm{\Phi(y-x)}_{L^\infty(\partial B(x,\ep))}=O(\ep^{-(n-2)})$であるためである．
+            \item 右辺第一項は，基本解の設計意図\ref{lemma-design-of-fundamental-solution-of-Poisson-equation}より，
+            \[\int_{\partial B(x,\ep)}u(y)\pp{\Phi}{\nu}(y-x)dS(y)=\dint_{\partial B(x,\ep)}u(y)dS(y)\to u(x)\quad(\ep\to0).\]
+        \end{enumerate}
+        \item 以上より，Step1の右辺とStep2の右辺を$\ep\to0$の先で繋ぎ合わせると結論を得る．
+    \end{enumerate}
+\end{Proof}
+
+\begin{observation}[調和関数の和として解作用素を得る]
+    上式に登場する値のうち，$\Lap u$の$U$上の値，$u$の$\partial U$上の値はPoisson方程式の初期値問題で与えられる．
+    一方で，$\pp{u}{\nu}$の$\partial U$上の値は不明であるため，一般領域上のPoisson方程式を解くには，この項を除去する必要がある．
+    まず一般の調和関数$h\in C^2(U)$に対して，
+    \[0=\int_{\partial U}\paren{h(y)\pp{u}{\nu}(y)-u(y)\pp{h}{\nu}(y)}dy-\int_Uh\Lap udy.\]
+    これを上の補題で得た$u$の表示
+    \[u(x)=\int_{\partial U}\paren{\Phi(y-x)\pp{u}{\nu}(y)-u(y)\pp{\Phi}{\nu}(y-x)}dS(y)-\int_U\Phi(y-x)\Lap u(y)dy.\]
+    に足し合わせることで，
+    $G:=\Phi+h$について
+    \[u(x)=\int_{\partial\Om}\paren{u\pp{G}{\nu}-G\pp{u}{\nu}}dS+\int_\Om G\Lap udx.\]
+    を得る．
+    したがって，$G$を$\partial\Om$上で消えるように$h\in C^2(\Om)$を選べれば，$\pp{u}{\nu}$を消去することに成功することになる．
+    この$G$を\textbf{第１種Green関数}ともいう．
+\end{observation}
+
+\subsection{Green関数の定義}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=]
+    $\partial U$上の積分の項の積分核は$\pp{G}{\nu}$が与える．よって，
+    $U$上のPoisson方程式のDirichlet問題を解くことは，Green関数を$U$について構成し，$\pp{G}{\nu}$を求める問題に還元される．
+\end{tcolorbox}
+
+\begin{definition}[corrector function, (Dirichlet's) Green function]
+    有界領域$U\osub\R^n$について，
+    \begin{enumerate}
+        \item $x\in U$に対して，次のDirichlet問題(C)の解$\phi^x\in C^2(\o{U})$を\textbf{修正関数}という：
+        \[\text{(C)}\quad\begin{cases}
+            \Lap\phi^x(y)=0\quad y\in U\\
+            \phi^x(y)=\Phi(y-x)\quad y\in\partial U.
+        \end{cases}\]
+        \item 領域$U$上の\textbf{Green関数}とは，$U^2\setminus\Delta$上の関数
+        \[G(x,y):=\Phi(y-x)-\phi^x(y)\quad(x,y\in U,x\ne y)\]
+        をいう．これはたしかに，任意の$x\in U$に対して，$y\in\partial U$上全域で消えており，$\Phi$に対して調和関数の分しか変更していない．
+    \end{enumerate}
+\end{definition}
+\begin{remarks}
+    これを，次のようにも表す：
+    \[\begin{cases}
+        -\Lap_y G(x,y)=\delta_x& y\in U,\\
+        G(x,y)=0& y\in \partial U.
+    \end{cases}\]
+\end{remarks}
+
+\begin{lemma}[Green関数による関数の積分表示]\label{lemma-decomposition-of-C2-function-through-Green-function}
+    有界領域$U\osub\R^n$上の任意の関数$u\in C^2(\o{U})$について，
+    \[\forall_{x\in U}\quad u(x)=-\int_{\partial U}u(y)\pp{G}{\nu}(x,y)dS(y)-\int_UG(x,y)\Lap u(y)dy.\]
+    ただし，$\pp{G}{\nu}(x,y)=D_yG(x,y)\cdot\nu(y)$は$G$の第二変数$y$に関する外側単位法線ベクトルに沿った微分とする．
+\end{lemma}
+\begin{Proof}
+    $\phi^x$は$y\in U$上調和であるから，
+    Greenの第二恒等式\ref{cor-Green-identity}より，
+    \[0=\int_{\partial U}\paren{\phi^x(y)\pp{u}{\nu}(y)-u(y)\pp{\phi^x(y)}{\nu}(y)}dy-\int_U\phi^x(y)\Lap udy.\]
+    これと，前の補題の結果
+    \[u(x)=\int_{\partial U}\paren{\Phi(y-x)\pp{u}{\nu}(y)-u(y)\pp{\Phi}{\nu}(y-x)}dS(y)-\int_U\Phi(y-x)\Lap u(y)dy.\]
+    の辺々を引くことで，$G(x,y)=\Phi(y-x)-\phi^x(y)$について
+    \[u(x)=\int_{\partial U}\paren{G(x,y)\pp{u}{\nu}(y)-u(y)\pp{G(x,y)}{\nu}}dy-\int_UG(x,y)\Lap u(y)dy.\]
+    であるが，$G(x,y)$は$\partial U$上で零なので，この項は消える．
+\end{Proof}
+
+\subsection{解公式}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=]
+    特に，任意の調和関数は，その境界値に$\pp{G}{\nu}$を核とする積分変換を施すことで内部での値を復元することができる．
+\end{tcolorbox}
+
+\begin{problem}[境界を持つ有界領域上のPoisson方程式のDirichlet問題の解法]
+    $U\osub\R^n$を有界開集合，$\partial U$を$C^1$-級であるとし，次のPoisson方程式$-\Lap u=f$のDirichlet問題を考える：
+    \[\text{(D)}\quad\begin{cases}
+        -\Lap u=f\quad\mathrm{in}\;U\\
+        u=g\quad\on\;\partial U.
+    \end{cases}\]
+\end{problem}
+
+\begin{corollary}[Green関数によるDirichlet問題の解の積分表示]\label{cor-solution-via-Green-function}
+    $u\in C^2(\o{U})$がDirichlet問題(D)の解ならば，
+    \[\forall_{x\in U}\quad u(x)=-\int_{\partial U}g(y)\pp{G}{\nu}(x,y)dS(y)+\int_Uf(y)G(x,y)dy.\]
+\end{corollary}
+\begin{Proof}
+    $U$上で$\Lap u=f$であり，$\partial U$上で$u=g$であるため．
+\end{Proof}
+
+\begin{remarks}
+    熱方程式の基本解と解釈しているものを，積分核$\pp{G}{\nu}$として畳み込みでないことばで与えている．
+    これを熱核と同様に名前を与えて\textbf{Poisson核}という．
+    非斉次項はもっと簡単で，Green関数$G$と畳み込むだけである．
+    熱核は境界条件と畳み込むが，Laplace方程式の基本解は非斉次項と畳み込む，ここが違う．
+\end{remarks}
+
+\begin{proposition}[解の存在の十分条件]
+    $\Om$を有界とする．
+    有界関数$f\in L^\infty(\Om)$に対して，
+    \begin{enumerate}
+        \item 次の$v$は$C^1(\Om)$の元になる：
+        \[v(x):=\int_\Om G(x,y)f(y)dy.\]
+        \item 任意の$\xi\in\Om$に対して，
+        \[\lim_{\Om\ni x\to\xi}\int_\Om G(x,y)f(y)dy=0.\]
+        \item さらに$f\in C^1(\Om)$も満たすとき，$v\in C^2(\Om)$で，$-\Lap v=f\;\In\Om$である．
+    \end{enumerate}
+\end{proposition}
+
+\section{Green関数の性質}
+
+\subsection{対称性}
+
+\begin{theorem}[Green関数は対称である]
+    $U\osub\R^n$を有界領域とする．
+    任意の$(x,y)\in U^2\setminus\Delta$について，$G(y,x)=G(x,y)$．
+\end{theorem}
+\begin{Proof}\mbox{}
+    \begin{description}
+        \item[証明の方針] 任意に$x,y\in U,x\ne y$を取り，
+        \[v(z):=G(x,z)=\Phi(z-x)-\phi^x(z),\quad w(z):=G(y,z)=\Phi(z-y)-\phi^y(z)\]
+        とおいて，$v(y)=w(x)$を示せば良い．
+        \item[問題の所在] いま，$\Lap v=0\;\on U\setminus\{x\},\Lap w=0\;\on U\setminus\{y\},w=v=0\;\on\partial U$であるから，$V:=U\setminus(B(x,\ep)\cup B(y,\ep))$上のGreenの恒等式\ref{cor-Green-identity}(2)より，
+        \[\int_{\partial V}\paren{v\pp{w}{\nu}-w\pp{v}{\nu}}dS=0\]
+        \[\therefore\quad\int_{\partial B(x,\ep)}\paren{w\pp{v}{\nu}-v\pp{w}{\nu}}dS(z)=\int_{\partial B(y,\ep)}\paren{v\pp{w}{\nu}-w\pp{v}{\nu}}dS.\]
+        この左辺が$w(x)$に，右辺が$v(y)$に収束することを示す．
+        \item[評価] 左辺が$w(x)$に収束することを示す．
+        \begin{enumerate}
+            \item 左辺第２項は消える．実際，$w(z)=\Phi(z-y)-\phi^y(z)$は$x$の近傍で滑らかであるからその近傍で有界で，$v(z)=G(z-x)-\phi^x(z)$は$G(z-x)$の部分が$x$を特異点に持つが，これは$x$からの距離$\ep$の$\ep^{-(n-2)}$の関数であるから，
+            \[\Abs{\int_{\partial B(x,\ep)}\pp{w}{\nu}vdS}\le C\ep^{n-1}\sup_{\partial B(x,\ep)}\abs{v}=O(\ep)\quad(\ep\to0).\]
+            \item 左辺第１項は$w(z)$に収束する．
+            実際，$\Phi$の設計意図\ref{lemma-design-of-fundamental-solution-of-Poisson-equation}より，
+            \begin{align*}
+                \int_{\partial B(x,\ep)}\pp{v}{\nu}wdS&=\int_{\partial B(x,\ep)}\pp{\Phi}{\nu}(x-z)w(z)dS(z)-\int_{\partial B(x,\ep)}\pp{\phi^x}{\nu}(z)w(z)dS(z)\\
+                &=\dint_{\partial B(x,\ep)}w(z)dS(z)+O(\ep)\xrightarrow{\ep\to0}w(x).
+            \end{align*}
+        \end{enumerate}
+    \end{description}
+\end{Proof}
+
+\subsection{正性}
+
+\begin{proposition}[Green関数は正値である]
+    $U\osub\R^n$を有界領域である．
+    任意の$(x,y)\in U^2\setminus\Delta$について，
+    $G(x,y)>0$．
+\end{proposition}
+
+\section{Green関数の例}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    Green関数を定める修正関数$\phi^x$の構成は幾何学的な問題である．
+    次のような鏡映変換$x\mapsto\wt{x}$に対して，$\phi^x(y):=\Phi(y-\wt{x})$とすればよい
+    \begin{enumerate}
+        \item $\Phi$の特異点は$\o{U}$の外にあり，$\phi^x$は$y\in U$上で調和である．
+        \item 特異点の移動先$\wt{x}$は，$\partial U$からみて$x$と等距離にある．
+    \end{enumerate}
+    すると，任意の$y\in\partial U$について
+    \[\phi^x(y)=\Phi(y-\wt{x})=\Phi(y-x).\]
+    となる．基本解は距離の関数であることに注意．こうして得たGreen関数$G(x,y):=\Phi(y-x)-\Phi(r\abs{y-\wt{x}})$の境界$\partial U$上での法線方向微分
+    \[K(x,y):=-\pp{G}{\nu}(x,y)\qquad(x,y)\in U\times\partial U\]
+    を\textbf{Poisson核}といい，この核が定める積分変換が境界条件に対する解作用素$C_b(\partial U)\to C^\infty(U)$を与える．
+\end{tcolorbox}
+
+\subsection{上半平面のPoisson核}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    前節の一般論と異なり，$\R_+^n$は非有界であるが，全く同様の論法が通り，
+    $-\pp{G}{\nu}(x,y)=K(x,y)$の関係を得るので，
+    境界情報$g$をPoisson核$K$で畳み込むことでLaplace方程式のDirichlet問題の解を得る．
+\end{tcolorbox}
+
+\begin{notation}
+    $\R^n_+:=\R^{n-1}\times\R^+$とする．
+\end{notation}
+
+\begin{definition}[上半平面上のGreen関数]\mbox{}
+    \begin{enumerate}
+        \item $x\in\R^n_+$の$\partial\R^n_+$に関する\textbf{鏡映}とは，$\wt{x}=(x_1,\cdots,x_{n-1},-x_n)$をいう．
+        \item \textbf{上半平面上の修正関数}を鏡映によって
+        \[\phi^x(y):=\Phi(y-\wt{x})=\Phi(y_1-x_1,\cdots,y_{n-1}-x_{n-1},y_n+x_n)\quad(x,y\in\R^n_+)\]
+        で定める．これはたしかに次の問題(C)の答えである：
+        \[\text{(C)}\quad\begin{cases}
+            \Lap\phi^x(y)=0\quad\In\;\R^n_+,\\
+            \phi^x(y)=\Phi(y-x)\quad\on\partial\R^n_+.
+        \end{cases}\]
+        \item \textbf{上半平面上のGreen関数}を
+        \[G(x,y):=\Phi(y-x)-\Phi(y-\wt{x})\quad(x,y\in\R^n_+,x\ne y)\]
+        で定める．
+    \end{enumerate}
+\end{definition}
+\begin{Proof}
+    $\phi^x(y):=\Phi(y-\wt{x})$は，任意の$y\in\R^n_+$については$y-\wt{x}\ne0$より$\Phi$の特異点を通らないから$\Lap_y\Phi(y-\wt{x})=0$で，
+    任意の$y\in\partial\R^n_+$については，$\Phi$の球対称性より，
+    \[\Phi(y-\wt{x})=\Phi\paren{\begin{pmatrix}y_1-x_1\\\vdots\\y_{n-1}-x_{n-1}\\x_n\end{pmatrix}}=\Phi\paren{\begin{pmatrix}y_1-x_1\\\vdots\\y_{n-1}-x_{n-1}\\-x_n\end{pmatrix}}=\Phi(y-x)\]
+    が成り立つから，確かに問題(C)の解である．
+\end{Proof}
+
+\begin{lemma}[Green関数の境界上での外側法線ベクトルに関する微分]\mbox{}
+    \begin{enumerate}
+        \item Green関数の$y_n$に関する微分は
+        \[G_{y_n}(x,y)=\frac{1}{n\om_n}\frac{2x_n}{\abs{y-x}^n}.\]
+        \item 境界上での外側法線ベクトルに関する微分は
+        \[\forall_{y\in\partial\R^n_+}\quad\pp{G}{\nu}(x,y)=-G_{y_n}(x,y)=-\frac{2x_n}{n\om_n}\frac{1}{\abs{x-y}^n}=:-K(x,y).\]
+    \end{enumerate}
+\end{lemma}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item 基本解の微分\ref{prop-derivative-of-fundamental-solution}に代入すれば，
+        \[G_{y_n}(x,y)=\Phi_{y_n}(y-x)-\Phi_{y_n}(y-\wt{x})=-\frac{1}{n\om_n}\paren{\frac{y_n-x_n}{\abs{y-x}^n}-\frac{y_n+x_n}{\abs{y-\wt{x}}^n}}.\]
+        あとは，$y,x,\wt{x}$は原点を中心とした同一球面上に存在しているために，$\abs{y-x}^n=\abs{y-\wt{x}}^n$に注意すれば良い．
+        \item 境界$y\in\R^n_+$での外側法線とは，$n$番目の標準基底$-e_n$であるから，$\pp{G}{\nu}=(-e_n)\cdot DG=-G_{y_n}$より．
+    \end{enumerate}
+\end{Proof}
+
+\begin{definition}[上半平面に対するPoisson核が与えるPoissonの公式]
+    これで積分核$K$を
+    \[K(x,y):=-\pp{G}{\nu}(x,y)=G_{y_n}(x,y)=\frac{2}{n\om_n}\frac{x_n}{\abs{x-y}^n}\]
+    と定めたことになる．
+    そして，上半平面上の境界値$g\in C_b(\R^{n-1})=C_b(\partial\R^n_+)$に対して，$K$を核とした積分変換を施せば，これがLaplace方程式の解$\Lap u=0\;\In\R^n_+$を定める．
+    これによる調和関数の内部での値の復元公式をPoisson公式という．
+\end{definition}
+
+\begin{lemma}[上半平面のPoisson核は調和な総和核]\label{lemma-Poisson-Kernel-on-upper-half-plane}
+    Poisson核
+    \[K(x,y)=\frac{2}{n\om_n}\frac{x_n}{\abs{x-y}^n}=\frac{2}{n\om_n}\frac{x_n}{\Paren{(x_1-y_1)^2+\cdots+(x_{n-1}-y_{n-1})^2+x_n^2}^{n/2}},\qquad(x,y)\in\R^n_+\times\partial\R^n_+.\]
+    について，
+    \begin{enumerate}
+        \item $\R^n_+\times\partial\R^n_+$上の二変数関数と見れば，特異点を持たず，いずれの変数に関しても調和である．
+        \item 任意の$x\in\R^n_+$に対して，$y\mapsto K(x,y)$は$\partial\R^n_+$上の確率密度である：
+        \[1=\int_{\partial\R^n_+}K(x,y)dy,\quad x\in\R^n_+.\]
+        実は$x_n>0$を添え字とする$x_n\to0$に関する総和核となる．
+    \end{enumerate}
+\end{lemma}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item 明らか．
+        \item direct computationらしい．
+        総和核をなすことは，$P_1(x):=\frac{1}{(1+\abs{x}^2)^{n/2}}$に対して関係
+        \[P_{x_n}(y)=x_n^{-(n-1)}P_1(y/x_n)\]
+        という関係が成り立つことによる．
+    \end{enumerate}
+\end{Proof}
+\begin{remarks}[Poisson総和核としての表式]\mbox{}\label{remark-Poisson-kernel}
+    \begin{enumerate}
+        \item $K(x,y)\;((x,y)\in\R^n_+\times\partial\R^n_+)$は$z:={}^t\!(x_1-y_1,\cdots,x_{n-1}-y_{n-1}),t:=x_n$とおくと$x-y=(z,t)\in\R^n$と見れて，
+        $K$はこの$(z,t)\in\R^n_+$上の関数とも見れるから，
+        \[K(x,y)=\frac{2}{n\om_n}\frac{x_n}{\abs{x-y}^n}=\frac{2}{n\om_n}\frac{t}{(t^2+\norm{z}^2)^{n/2}}=:P(t,z)\]
+        とも表示できる．
+        \item 特に$n=2$の場合は，
+        \[P(t,z)=P_t(x)=\frac{1}{\pi}\frac{t}{t^2+z^2}\quad(z\in\R,t>0).\]
+        \item $P_t$は$e^{-\abs{\xi}}$という形の関数のFourier変換像である．任意の$t>0$に対して，
+        \[P(t,z)=\F[e^{-2\pi  t\abs{\xi}}](x)=\int_{\R^n}e^{-2\pi t\abs{\xi}}e^{-2\pi i\xi\cdot x}d\xi.\]
+        が成り立つ．よって，任意の$t>0$について
+        \[\wh{P}_t(z)=e^{-t\abs{z}}\]
+        を満たす．
+    \end{enumerate}
+\end{remarks}
+
+\subsection{非有界性に対する証明}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    Poisson核$K(x,y)$は$P_{x_n}({}^t\!(x_1-y_1,\cdots,x_{n-1}-y_{n-1}))$とみると総和核になるという性質\ref{lemma-Poisson-Kernel-on-upper-half-plane}により，解作用素を与えることになる．
+\end{tcolorbox}
+
+\begin{theorem}[上半平面上のLaplace方程式のDirichlet問題の解]
+    有界連続な境界条件$g\in C(\R^{n-1})\cap L^\infty(\R^{n-1})$に対して，
+    \[u(x):=\int_{\partial\R^n_+}K(x,y)g(y)dy=\frac{2x_n}{n\om_n}\int_{\partial\R^n_+}\frac{g(y)}{\abs{x-y}^n}dy\quad(x\in\R^n_+)\]
+    と定めると，次が成り立つ：
+    \begin{enumerate}
+        \item $u\in C^\infty(\R^n_+)\cap L^\infty(\R^n_+)$．
+        \item $\Lap u=0\;\on\R^n_+$．
+        \item $\forall_{x^0\in\partial\R^n_+}\;\lim_{\R^n_+\ni x\to x^0}u(x)=g(x^0)$．
+    \end{enumerate}
+\end{theorem}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item $g$は有界とした．任意の$x\in\R^n_+$に対して$y\mapsto K(x,y)$は調和だから，$u$は再び有界で$C^\infty(\R^n_+)$-級である．
+        \item 次の積分と微分の交換
+        \[\Lap u(x)=\int_{\partial\R^n_+}\Lap_xK(x,y)g(y)dy=0,\quad x\in \R^n_+.\]
+        は$K$の調和性と$g$の有界性より成功する．
+        \item 任意の境界点$x^0\in\partial\R^n_+$と$\ep>0$を取る．
+        まず$g$の連続性より，$\exists_{\delta>0}\;\forall_{y\in\partial\R^n_+}\;\abs{y-x^0}<\delta\Rightarrow\abs{g(y)-g(x^0)}<\ep$．
+        \begin{description}
+            \item[問題の所在] 
+            このとき，$K(x,-)$は$\partial\R^n_+$上の確率密度だから，任意の$x\in B(x^0,\delta/2)$に対して，
+            \begin{align*}
+                \abs{u(x)-g(x^0)}&=\Abs{\int_{\partial\R^n_+}K(x,y)(g(y)-g(x^0))dy}\\
+                &\le\int_{\partial\R^n_+\cap B(x^0,\delta)}K(x,y)\abs{g(y)-g(x^0)}dy+\int_{\partial\R^n_+\setminus B(x^0,\delta)}K(x,y)\abs{g(y)-g(x^0)}dy\\
+                &=:I+J
+            \end{align*}
+            と分解できる．すると$I$は$y\in B(x^0,\delta)$を満たして居るから，
+            \[I\le\ep\int_{\partial\R^n_+}K(x,y)dy=\ep.\]
+            問題は$J$である．
+            \begin{align*}
+                J&\le2\norm{g}_\infty\int_{\partial\R^n_+\setminus B(x^0,\delta)}K(x,y)dy\\
+                &=\frac{2^2\norm{g}_\infty x_n}{n\om_n}\int_{\partial\R^n_+\setminus B(x^0,\delta)}\frac{1}{\abs{x-y}^n}dy
+            \end{align*}
+            までは進む．
+            いま，$x\in B(x^0,\delta/2)$であるが，$y\notin B(x^0,\delta)$と取ってある．
+            \item[非有界領域上の積分項$J$の評価] いま少し考慮を要するが，$\abs{y-x}\ge\frac{1}{2}\abs{y-x^0}$なる位置関係を満たしている．
+            よって，
+            \[J\le\frac{2^{2+n}\norm{g}_\infty x_n}{n\om_n}\int_{\partial\R^n_+\setminus B(x^0,\delta)}\frac{1}{\abs{y-x^0}^n}dy\]
+            と有界係数による評価が得られ，この右辺は$x_n\to0$のとき$0$に収束する．
+        \end{description}
+    \end{enumerate}
+\end{Proof}
+
+\subsection{単位球上のPoisson核}
+
+\begin{definition}[単位球上のGreen関数]\mbox{}
+    \begin{enumerate}
+        \item $x\in\R^n\setminus\{0\}$の球面$\partial B(0,R)$に関する\textbf{反転}とは，$\wt{x}:=\frac{R^2}{\abs{x}^2}x$をいう．
+        ただし$0\mapsto\infty$とする．
+        変換$x\mapsto\wt{x}$を\textbf{反転}という．
+        \item 単位球上の修正関数を反転によって$\phi^x(y):=\Phi(\abs{x}(y-\wt{x}))\;(x\ne0)$と定める．ただし，$\phi^0(y)=\Phi(1)$とする．
+        \item \textbf{単位球上のGreen関数}を\[G(x,y):=\Phi(y-x)-\Phi(\abs{x}(y-\wt{x}))\quad(x,y\in B(0,1),x\ne y).\]
+        とする．
+    \end{enumerate}
+\end{definition}
+\begin{lemma}
+    単位球面$B(0,1)$について，
+    \begin{enumerate}
+        \item 修正関数
+        \[\phi^x(y)=\Phi(\abs{x}(y-\wt{x}))=\begin{cases}
+            -\frac{1}{2\pi}\log\abs{x}\abs{y-\wt{x}}&n=2,\\
+            \frac{1}{n(n-2)\om_n}\frac{1}{\abs{x}^{n-2}}\frac{1}{\abs{y-\wt{x}}^{n-2}}&n\ge3.
+        \end{cases}\quad(x\ne0)\]
+        はたしかに修正問題
+        \[\text{(C)}\quad\begin{cases}
+            \Lap\phi^x(y)=0\quad\mathrm{\in}\;B^\circ(0,1),\\
+            \phi^x(y)=\Phi(y-x)\quad\on\partial B(0,1).
+        \end{cases}\]
+        の解である．
+        $\phi^0(y)=\Phi(1)$は明らかに解である．
+        \item Green関数$G(x,y)=\Phi(y-x)-\Phi(\abs{x}(y-\wt{x}))$の$\partial B(0,1)$上での第二変数の第$i$変数に関する微分は
+        \[G_{y_i}(x,y)=-\frac{1}{n\om_n}\frac{1}{\abs{x-y}^n}\paren{(y_i-x_i)-(y_i\abs{x}^2-x_i)}=\frac{(1-\abs{x}^2)}{n\om_n}\frac{y_i}{\abs{x-y}^n}.\]
+        \item Green関数の境界上での外側法線ベクトルに関する微分は
+        \[\forall_{y\in\partial B(0,1)}\quad-\pp{G}{\nu}(x,y)=\frac{1}{n\om_n}\frac{1-\abs{x}^2}{\abs{x-y}^n}=:K(x,y).\]
+    \end{enumerate}
+\end{lemma}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item $x\ne0$のとき，$\wt{x}\notin B^\circ(0,1)$なので，$\phi^x$は明らかに$B^\circ(0,1)$上調和である．
+        さらに境界点$y\in\partial B(0,1)$に関しては，$\norm{x}^{n-2}\norm{y-\wt{x}}^{n-2}=\norm{x-y}^{n-2}$であるために，$\phi^x(y)=\Phi(y-x)\;\on \partial B(0,1)$が成り立つ．
+        というのも，
+        \begin{align*}
+            \norm{x}^2\norm{y-\wt{x}}^2&=\norm{x}^2\paren{\norm{y}^2-\frac{2y\cdot x}{\norm{x}^2}+\frac{1}{\norm{x}^2}}\\
+            &=\norm{x}^2-2y\cdot x+1=\norm{x-y}^2
+        \end{align*}
+        が成り立つためである．
+        \item 基本解の微分\ref{prop-derivative-of-fundamental-solution}より，
+        \[\pp{\Phi}{y_i}(y-x)=-\frac{1}{n\om_n}\frac{y_i-x_i}{\abs{x-y}^n}\]
+        さらに，$\phi^x$の微分は合成関数の微分則より，
+        \[\pp{\phi^x}{y_i}(y)=\Phi_{y_i}(\abs{x}(y-\wt{x}))\abs{x}=-\frac{1}{n\om_n}\frac{\abs{x}(y_i-x_i/\abs{x}^2)}{\abs{x}^n\abs{y-\wt{x}}^n}\abs{x}=-\frac{1}{n\om_n}\frac{y_i\abs{x}^2-x_i}{\abs{x}^n\abs{y-\wt{x}}^n}.\]
+        さらに，$y\in\partial B(0,1)$上では$\abs{x}^n\abs{y-\wt{x}}^n=\abs{x-y}^n$に注意．
+        \item (2)より，
+        \begin{align*}
+            \pp{G}{\nu}(x,y)&=\sum_{i\in[n]}y_iG_{y_i}(x,y)\\
+            &=-\frac{1}{n\om_n}\frac{1-\abs{x}^2}{\abs{x-y}^n}\sum_{i\in[n]}y_i^2=-\frac{1}{n\om_n}\frac{1-\abs{x}^2}{\abs{x-y}^n}
+        \end{align*}
+    \end{enumerate}
+\end{Proof}
+\begin{remark}
+    一般の$r$の場合は，$u$を調和関数としたときのGreen関数による解公式\ref{cor-solution-via-Green-function}を通じて，$\xi=rx$とすると
+    \begin{align*}
+        u(\xi)&=\frac{1-\abs{\xi/r}^2}{n\om_n}\int_{\partial B(0,1)}\frac{u(y)}{\abs{\xi/r-y}^n}dS(y)\\
+        &=\frac{1}{r^2}\frac{r^2-\abs{\xi}^2}{n\om_n}r^n\int_{\partial B(0,r)}\frac{u(\eta/r)}{\abs{\xi-\eta}^n}\frac{1}{r^{n-1}}dS(\eta)\\
+        &=\frac{r^2-\abs{\xi}^2}{n\om_nr}\int_{\partial B(0,r)}\frac{g(\eta/r)}{\abs{\xi-\eta}^n}dS(\eta).
+    \end{align*}
+    を満たす必要があるところから，Poisson核は次のように定めれば良い：
+\end{remark}
+
+\begin{definition}[球上のPoisson核が与えるPoissonの公式]
+    \textbf{球$B(0,r)$上のPoisson核}を
+    \[K(x,y):=\frac{r^2-\abs{x}^2}{n\om_nr}\frac{1}{\abs{x-y}^n}\quad(x\in B^\circ(0,r),y\in\partial B(0,r))\]
+    で定める．
+    球面上の境界値$g\in C_b(\partial B(0,R))$に対して，$K$を核とした積分変換を施せば，これがLaplace方程式の解$\Lap u=0\In B(0,R)$を定める．
+    これによる調和関数の内部での値の復元公式をPoisson公式という．
+\end{definition}
+\begin{remarks}[Poisson総和核としての表示]\mbox{}
+    \begin{enumerate}
+        \item $K(x,y)\;((x,y)\in B(0,r)\times\partial B(0,r))$は$P(z,\zeta)$とも表し，これが定める積分変換
+        \[P[u](z)=\int_{\partial B(0,r)}u(\xi)P(z,\zeta)dS(\zeta)\]
+        は\textbf{Poisson積分}と呼ばれる．
+        \item 特に$n=2$の場合は
+        \[P(z,\zeta)=\frac{R^2-\abs{z}^2}{2\pi R}\frac{1}{\abs{z-\zeta}^2}\qquad(z\in B(0,R),\zeta\in\partial B(0,R))\]
+        となる．これが複素平面上のPoisson積分の形である．
+        \item さらに$R=1$とすると，共役調和関数が命題\ref{prop-Poisson-kernel-on-disk-of-C}から，
+        \[P(z,\zeta)=\Re\paren{\frac{\zeta+z}{\zeta-z}}=\Re\paren{\frac{1+(z/\zeta)}{1-(z/\zeta)}}\]
+        と見つかる．$\abs{\zeta}=1$であるために，これは回転変換を$z$に施していることになる．
+        さらに，みやすくするために$\zeta=e^{-i\varphi}$，$r:=\abs{z}$と定めると
+        \[P(z,e^{-i\varphi})=\Re\paren{\frac{e^{-i\varphi}+z}{e^{-i\varphi}-z}}=\frac{1-r^2}{1-2r\cos(\arg(z)+\varphi)+r^2}=:P_r(\arg(z)+\varphi)\]
+        となる．よって，$r:=\abs{z},\theta:=\arg(z)+\varphi=\arg(z/\zeta)$の二変数関数
+        \[P_r(\theta)=\sum_{n\in\Z}r^{\abs{n}}e^{in\theta}=\Re\paren{\frac{1+re^{i\theta}}{1-re^{i\theta}}}\qquad0\le r<1,\theta\in\cointerval{0,2\pi}\]
+        と見れることが解る．$(P_r)$は$r\to1$に関して$\bT\simeq\cointerval{0,2\pi}$上の総和核である．
+    \end{enumerate}
+\end{remarks}
+
+\begin{theorem}\label{thm-Green-function-on-disk}
+    $g\in C(\partial B(0,r))$ならば，
+    \[u(x):=\int_{\partial B(0,r)}K(x,y)=\frac{r-\abs{x}^2}{n\om_nr}\int_{\partial B(0,r)}\frac{g(y)}{\abs{x-y}^n}dS(y)\quad(x\in B^\circ(0,r))\]
+    について，次が成り立つ：
+    \begin{enumerate}
+        \item $u\in C^\infty(B^\circ(0,r))$．
+        \item $\Lap u=0\;\text{in}\;B^\circ(0,r)$．
+        \item $\forall_{x^0\in \partial B(0,r)}\;\lim_{B^0(0,r)\ni x\to x^0}u(x)=g(x^0)$．
+    \end{enumerate}
+\end{theorem}
+
+\subsection{練習問題}
+
+\begin{problem}[Green関数を求め方]
+    次の領域$\Om\osub\R^n$上のGreen関数$G$を求めよ：
+    \begin{enumerate}
+        \item $n\ge2$について
+        \[\Om:=\R^n_+:=\Brace{x\in\R^n\mid x_n>0}.\]
+        \item $n=2$について，
+        \[\Om:=\Brace{(x_1,x_2)\in\R^2\mid x_1,x_2>0}.\]
+    \end{enumerate}
+\end{problem}
+\begin{Proof}[\underline{\bf【解】}]
+    $x\in\R^n$の反射を
+    \[x^*:=(x_1,\cdots,x_{n-1},-x_n).\]
+    と定める．
+    \begin{enumerate}
+        \item \[G(x,y):=\Phi(y-x)-\Phi(y-x^*).\]
+        \item 
+        \[x_*:=(-x_1,x_2),\qquad x\in\R^2.\]
+        と表すと，
+        \[G(x,y):=\Phi(y-x)-\Phi(y-x^*)-\Phi(y-x_*)+\Phi(y-x^*_*).\]
+    \end{enumerate}
+\end{Proof}
+
+\begin{problem}[上半平面上のPoisson核の性質]
+    $g(x)=\abs{x}\;(\abs{x}\le1)$を満たす$g\in L^\infty(\R^{n-1})$が定める境界値問題
+    \[\begin{cases}
+        -\Lap u=0&\In\R^n_+,\\
+        u=g&\on\partial\R^n_+.
+    \end{cases}\]
+    の解
+    \[u(x)=\frac{2x_n}{n\om_n}\int_{\partial\R^n_+}\frac{g(y)}{\abs{x-y}^n}dS(y).\]
+    の微分$Du$は原点の近傍で非有界である．
+\end{problem}
+\begin{Proof}[\underline{\bf【解】}]
+    $x_n$に関する導関数
+    \[u_{x_n}(x)=\frac{2}{n\om_n}\int_{\R^n_+}\frac{g(y)}{\abs{x-y}^n}dy-\frac{2x_n^2}{n\om_n}\int_{\partial\R^n_+}\frac{g(y)}{\abs{x-y}^{n+2}}dy.\]
+    を考える．$x_1=\cdots=x_{n-1}=0$を代入し，$x_n=h>0$と表すと
+    \[u_{x_n}(he_n)=\frac{2}{n\om_n}\int_{\partial\R^n_+}\frac{g(y)}{(h^2+\abs{y}^2)^{n/2}}dy=\frac{2}{n\om_n}\paren{\int_{\partial\R^n_+\cap\Brace{\abs{y}\le1}}\frac{\abs{y}}{(h^2+\abs{y}^2)^{n/2}}dy+\int_{\partial\R^n_+\cap\Brace{\abs{y}>1}}\frac{g(y)}{(h^2+\abs{y}^2)^{n/2}}dy}.\]
+    と分解できるが，第１項は$h\to0$の極限で非有界である．実際，第１項はFubiniの定理より
+    \[\frac{2}{n\om_n}\int^1_0\int_{\partial B^{n-1}(0,r)}\frac{r}{(h^2+r^2)^{n/2}}dSdr=\frac{2(n-1)\om_{n-1}}{n\om_n}\int^1_0\frac{r^{n-1}}{(h^2+r^2)^{n/2}}dr.\]
+    と計算できるが，$h\to0$の極限でこの積分は発散する．
+\end{Proof}
+
+\section{外部問題の扱い}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    非有界領域上のDirichlet問題，Neumann問題を考えたい．
+    そこで，単純閉曲線$S$に関して，これが定める有界領域上の境界値問題を内部問題，非有界領域上の境界値問題を外部問題というが，この外部問題について考える．
+\end{tcolorbox}
+
+\subsection{Kelvin変換}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    Kelvin変換は調和性を保つ．
+\end{tcolorbox}
+
+\begin{definition}
+    $\Om\subset\R^n\setminus\{0\}$を開集合，$\wt{\Om}:=\Brace{x\in\Om\;\middle|\;\frac{x}{\abs{x}^2}\in\Om}$とする．
+    \[\xymatrix@R-2pc{
+        K:C^2(\Om)\ar[r]&C^2(\wt{\Om})\\
+        \rotatebox[origin=c]{90}{$\in$}&\rotatebox[origin=c]{90}{$\in$}\\
+        u\ar@{|->}[r]&\wt{u}(x):=\abs{x}^{2-n}u\paren{\frac{x}{\abs{x}^2}}=\abs{\o{x}}^{2-n}u(\o{x}).
+    }\]
+    を\textbf{Kelvin変換}という．ただし，$\o{x}:=\frac{x}{\abs{x}^2}$とした．
+    これは$\partial B(0,1)$に対する鏡像変換となっている．
+\end{definition}
+
+\begin{proposition}\mbox{}
+    \begin{enumerate}
+        \item $D_x\o{x}(D_x\o{x})^\top=\abs{x}^{-4}I_n$が成り立つ．すなわち，変換$x\mapsto\o{x}$は等角である．
+        \item 次が成り立つ：
+        \[\Lap\wt{u}(x)=\abs{x}^{-2-n}\Lap u\paren{\frac{x}{\abs{x}^2}},\quad\on\wt{\Om}.\]
+        \item $u$が調和ならば，$\wt{u}$も調和である．
+    \end{enumerate}
+\end{proposition}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item \[\frac{x}{\abs{X}^2}=\frac{1}{x^2_1+\cdots+x_n^2}\vctrr{x_1}{\vdots}{x_n}\]
+        の第$j$成分の$i$に関する偏微分は
+        \[\pp{}{x_i}\paren{\frac{x_j}{x_1^2+\cdots+x_n^2}}=-\frac{2x_ix_j}{(x_1^2+\cdots+x_n^2)^2}.\]
+        \[\pp{}{x_i}\paren{\frac{x_i}{x_1^2+\cdots+x_n^2}}=\frac{1}{(x_1^2+\cdots+x_n^2)^2}-\frac{2x_i^2}{(x_1^2+\cdots+x_n^2)^2}.\]
+        より，
+        \[D\paren{\frac{x}{\abs{x}^2}}=\frac{I_n}{\abs{x}^2}-\frac{2}{\abs{x}^4}\begin{pmatrix}x_1x_1&\cdots&x_1x_n\\\vdots&\ddots&\vdots\\x_nx_1&\cdots&x_nx_n\end{pmatrix}.\]
+        よって，
+        \begin{align*}
+            D\paren{\frac{x}{\abs{x}^2}}D\paren{\frac{x}{\abs{x}^2}}^\top&=\frac{I}{\abs{x}^4}-\frac{4}{\abs{x}^4}\begin{pmatrix}x_1x_1&\cdots&x_1x_n\\\vdots&\ddots&\vdots\\x_nx_1&\cdots&x_nx_n\end{pmatrix}+\frac{4}{\abs{x}^8}\Paren{x_ix_j\abs{x}^2}_{i,j\in[n]}\\
+            &=\abs{x}^{-4}I_n.
+        \end{align*}
+        \item 
+    \end{enumerate}
+\end{Proof}
+
+\subsection{球面外の外部問題}
+
+\begin{problem}
+    $\R^2$上のLaplace方程式の外部問題
+    \[\begin{cases}
+        -\Lap u=0&\abs{x}>1,\\
+        u(x)=x_1&\abs{x}=1,\\
+        \lim_{\abs{x}}\to\infty u(x)=0.
+    \end{cases}\]
+    を解け．
+\end{problem}
+\begin{Proof}
+    $u$のKelvin変換
+    \[v(x):=u\paren{\frac{x}{\abs{x}^2}},\qquad x\ne0.\]
+    を考えると，$v(0):=0$と定めれば，次が必要：
+    \[\begin{cases}
+        -\Lap v=0&\abs{x}>1,\\
+        v(x)=x_1&\abs{x}=1,\\
+        v(0)=0.
+    \end{cases}\]
+    $v(x)=x_1$はこれを満たす調和関数であるが，有界領域におけるDirichlet問題の解の一意性\ref{cor-uniqueness-of-Dirichlet-problem-of-Laplace-eq}より，
+    これが解のすべてである．
+    以上より，Kelvin変換の対合性を用いて，
+    \[u(x)=v\paren{\frac{x}{\abs{x}^2}}=\frac{x_1}{\abs{x}^2}.\]
+\end{Proof}
+
+\section{劣調和関数の球面平均性}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    広義劣調和関数は半連続性から上に有界で，実は局所可積分でもある．
+    正則関数の絶対値は劣調和である．
+\end{tcolorbox}
+
+\subsection{定義と球面平均性}
+
+\begin{definition}[subharmonic, harmonic]
+    $\Om\osub\R^n$上の関数$u\in C^2(\Om)$について，
+    \begin{enumerate}
+        \item \textbf{$\Om$上劣調和}であるとは，次を満たすことをいう：
+        \[\forall_{x\in\Om}\;-\Lap u(x)\le 0.\]
+        \item \textbf{$\Om$上調和}であるとは，$u,-u$がいずれも劣調和であることをいう．
+    \end{enumerate}
+\end{definition}
+
+\begin{lemma}[球面平均の微分の表示]\label{lemma-derivative-of-surface-avarage-of-arbitrary-function}
+    $\Om\osub\R^n$を領域，$u\in C^2(\Om)$，$B(x,r)\ssub\Om\;(x\in\Om)$について，
+    球面平均
+    \[\phi(R):=\dint_{\partial B(x,R)}u(y)dS(y)\]
+    の微分は
+    \[\phi'(R)=\frac{1}{\abs{\partial B(x,R)}}\int_{B(x,R)}\Lap u\;dz=\frac{R}{n}\dint_{B(x,R)}\Lap udz.\]
+    と球平均の$R/n$倍で表せる．
+\end{lemma}
+\begin{Proof}
+    変数変換$y=x+Rz$のJacobianは$\Abs{\pp{y}{z}}=R^{n-1}$であることに注意して，
+    \begin{align*}
+        \phi(R)&=\dint_{\partial B(x,R)}u(y)dS(y)\\
+        &=\int_{\partial B(0,1)}u(x+Rz)\frac{dS(z)}{\abs{\partial B(x,R)}/R^{n-1}}\\
+        &=\dint_{\partial B(0,1)}u(x+Rz)dS(z).
+    \end{align*}
+    と計算出来る．
+    すると，$\phi\in C^2(\Om)$であることと$\partial B(0,1)$のコンパクト性から，$\phi,\phi'$はいずれも可積分であるため，
+    微分と積分の交換が可能であることより，$\phi'$が次のように計算できる：
+    \begin{align*}
+        \phi'(R)&=\dint_{\partial B(0,1)}Du(x+Rz)\cdot zdS(z)\\
+        &=\dint_{\partial B(x,R)}Du(y)\frac{y-x}{R}dS(y)=\dint_{\partial B(x,R)}\pp{u}{\nu}dS(y)\\
+        &=\frac{r}{n}\dint_{B(x,r)}\Lap u(y)dy
+    \end{align*}
+    $\frac{y-x}{R}$とは$y\in\partial B(x,R)$における外側単位法線ベクトルに他ならないことに注意．
+    最後の2行はGreenの恒等式(1)\ref{cor-Green-identity}による．
+\end{Proof}
+
+\begin{theorem}[劣調和関数の平均定理]\label{thm-mean-value-theorem-of-subharmonic-function}
+    $u\in C^2(\Om)$を劣調和函数とする．
+    このとき，任意の$B(x,R)\ssub\Om$について，次が成り立つ：
+    \begin{enumerate}
+        \item $u(x)\le\dint_{\partial B(x,R)}u(y)dS_y$．
+        \item $u(x)\le\dint_{B(x,R)}u(y)dy$．
+    \end{enumerate}
+\end{theorem}
+\begin{Proof}
+    任意の$B(x,R)\ssub\Om\;(x\in\Om,R>0)$を取る．
+    \begin{enumerate}
+        \item 補題と条件$\Lap u\ge0$を併せると，この球面での平均の微分は$\varphi'(r)\ge0$より，単調増加である．
+        よって，Lebesgueの優収束定理から，
+        \[\phi(R)\ge\lim_{r\to0}\phi(r)=\lim_{r\to0}\dint_{\partial B(x,r)}u(y)dS_y=u(x).\]
+        \item 球面上の積分と球体上の積分との関係\ref{thm-sphere-and-ball}から，(1)の結果より
+        \begin{align*}
+            \dint_{B(x,R)}u(y)\dvol&=\frac{1}{\abs{B(x,R)}}\int^R_0\int_{\partial B(0,r)}u(x)dS_xdr\\
+            &\ge\frac{1}{\abs{B(x,R)}}\int^R_0u(x)\abs{\partial B(x,r)}dr=u(x).
+        \end{align*}
+        が従う．
+    \end{enumerate}
+\end{Proof}
+
+\subsection{劣調和関数の球面平均性による特徴付け}
+
+\begin{definition}
+    領域$\Om\osub\R^n$上の
+    関数$u:\Om\to\R\cup\{-\infty\}$が\textbf{広義劣調和}であるとは，次の2条件を満たすことをいう：
+    \begin{enumerate}
+        \item $u$は上半連続：$u\in USC(\Om)$．
+        \item $u$は球面平均値定理を満たす：$\forall_{0<r<\dist(x,\partial\Om)}\;u(x)\le\dint_{B(x,r)}udS$．
+    \end{enumerate}
+\end{definition}
+
+\begin{theorem}[2つの定義の同値性]
+    $u\in C^2(\Om)$について，次の2条件は同値：
+    \begin{enumerate}
+        \item $u$は広義劣調和．
+        \item $u$は劣調和：$-\Lap u\le0\;\on\Om$．
+    \end{enumerate}
+\end{theorem}
+\begin{Proof}
+    (1)$\Rightarrow$(2)を示せば良い．
+    $u\in C^2(\Om)$と仮定したから，2次までのTaylorの定理が使える．よって，
+    任意の$B(x_0,r)\ssub\Om\;(x_0\in\Om,r>0)$について，広義劣調和性より，
+    \begin{align*}
+        u(x_0)&\le\M_r[u(x_0)]\\
+        &=\dint_{\partial B(0,1)}u(x_0+rz)dS_z\\
+        &=\dint_{\partial B(0,1)}\paren{u(x_0)+rDu(x_0)z+\frac{r^2}{2}z^\top D^2u(x_0)z+o(r^2)}dS_z\\
+        &=u(x_0)+\frac{1}{\abs{\partial B(0,1)}}r\int_{\partial B(0,1)}Du(x_0)\cdot dS_z+\frac{1}{\abs{\partial B(0,1)}}\frac{r^2}{2}\int_{\partial B(0,1)}D^2u(x_0)z\cdot dS_z+o(r^2)\\
+        &=u(x_0)+\frac{1}{\abs{\partial B(0,1)}}r\int_{B(0,1)}\div(Du(x_0))\dvol(z)+\frac{1}{\abs{\partial  B(0,1)}}\frac{r^2}{2}\int_{B(0,1)}\div(D^2u(x_0)z)\dvol(z)+o(r^2)
+    \end{align*}
+    と変形出来るが，$\div(Du(x_0))=0$は定数ベクトル場の微分なので零，同様に$z$の微分であることを忘れなければ，$\div(D^2u(x_0)z)=\Tr(D^2u(x_0))=\Lap u(x_0)$より，
+    両辺の$u(x_0)$を相殺して$r^2/2$で割ることで，
+    \[0\le\dint_{\partial B(0,1)}\Lap u(x_0)dz+O(r)=\Lap u(x_0)+O(r).\]
+    $r\to0$とすると，$x_0\in\Om$は任意だったから，$\Lap u\ge0$．
+\end{Proof}
+
+\subsection{調和関数の球面平均性による特徴付け}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    今までの議論を特に調和関数について述べてみる．
+    調和関数は球面平均性によって特徴づけられる．
+    より一般に，関数の劣調和性と広義劣調和性（上半連続で球面平均性を持つ関数）とは等価である．
+\end{tcolorbox}
+
+\begin{corollary}[調和関数の球面平均定理]\label{cor-surface-avarage-of-harmonic-functions}
+    $\Om\osub\R^n$を領域，$u\in C^2(\Om)$は$\Om$上調和とする．
+    このとき，任意の$B(x,R)\ssub\Om$について，
+    \[u(x)=\dint_{\partial B(x,r)}udS=\dint_{B(x,r)}udy.\]
+\end{corollary}
+\begin{Proof}
+    補題より，
+    球面平均$\dint_{\partial B(x,r)}udS$は$r\ge0$について定値であることによる．
+    球上の平均は，積分の計算\ref{thm-sphere-and-ball}による．
+\end{Proof}
+
+\begin{corollary}[\cite{Evans} Th'm I.2.2.3]\label{cor-characterization-of-harmonic-function-through-mean-value-property}
+    $u\in C^2(U)$が任意の開球$B(x,r)\subset U$について
+    \[u(x)=\dint_{\partial B(x,r)}udS.\]
+    を満たすならば，$u$は調和関数である．
+\end{corollary}
+\begin{Proof}
+    仮に調和関数でないとして矛盾を導く：$\Lap u\not\equiv0$．
+    このとき，ある開球$B(x,r)$が存在して，その上で$\Lap u>0$を満たす．
+    このとき，$x$を中心とした球面上の平均の値は変わらないから，$\phi'=0$が必要であるが，
+    \[0=\phi'(r)=\frac{r}{n}\dint_{B(x,r)}\Lap u(y)dy>0\]
+    より，これは矛盾．
+\end{Proof}
+
+\section{調和関数の局所評価}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=]
+    Cauchyの評価
+    $\abs{f^{(n)}(a)}\le\frac{n!}{r^n}\norm{f}_{\partial\Delta(a,r)}$
+    と同様な消息が成り立つ．
+    \begin{enumerate}
+        \item $L^\infty$-評価：任意の$[B(a,r)]\subset U\osub\R^n$について，
+        \[\abs{D^\al u(a)}\le \frac{C}{r^{\abs{a}}}\norm{u}_{L^\infty(B(a,r))}\le \frac{C}{r^{\abs{a}}}\norm{u}_{\partial B(a,r)}.\]
+        \item 結果として，調和関数列が一様ノルムについて有界ならば，一様ノルムについて相対コンパクトである．これは正則関数の場合は「正規族」と呼んでいた性質である．
+        \item $L^1$-評価：任意の$[B(a,r)]\subset U\osub\R^n$について，
+        \[\abs{D^\al u(a)}\le\frac{C}{r^{n+\abs{k}}}\norm{u}_{L^1(B(a,r))}.\]
+        $L^\infty$-の場合よりもさらに次元の数$n$だけ厳しい収束レートである．
+        \item Liouvilleの定理：$\R^n$上で有界ならば定数．
+        \item Harnackの不等式：任意の非負の調和関数は，有界領域$D$上で
+        \[\sup_{x\in D}u\le C\inf_{x\in D}u\]
+        を満たす．ある種のDoobの不等式か！？
+    \end{enumerate}
+\end{tcolorbox}
+
+\subsection{Harnackの定理：Laplace方程式の解の$L^\infty$-安定性}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    正則関数の場合と同様，調和関数の広義一様収束極限は再び正則である．
+    これは調和関数の球面平均性\ref{cor-characterization-of-harmonic-function-through-mean-value-property}による特徴付けからすぐに従う．
+\end{tcolorbox}
+
+\begin{proposition}[$L^\infty$-安定性 (Harnack)]\label{cor-Harnack-L-infty-stability}
+    任意の領域$\Om\subset\R^n$に於ける
+    広義調和関数の族$\{u_n\}\subset C(\Om)$が$u$に広義一様収束するならば，$u$も広義調和である．
+\end{proposition}
+\begin{Proof}
+    任意の$B(x,r)\subset\Om$について，$u_n$の調和性より，
+    \[u_n(x)=\dint_{B(x,r)}u_n(y)dy.\]
+    この極限$n\to\infty$を取ると，
+    \[u(x)=\dint_{B(x,r)}u(y)dy.\]
+    より，体積平均値の原理を満たす．
+    コンパクト一様収束極限は連続であることに注意すると，$u$もたしかに広義調和．
+\end{Proof}
+\begin{remarks}
+    また，次のHarnackの$L^\infty$-評価の系\ref{cor-Harnack-Linfty-evaluation}からもすぐに従う．
+    というのも，調和関数の広義一様収束列$\{u_n\}$は一様有界であるから，調和関数への収束部分列を持つ．
+\end{remarks}
+
+\subsection{導関数の$L^\infty$-評価}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    調和関数の$k$階微分係数の$\Om'\ssub\Om$上の$L^\infty$-ノルムは，$\Om$上の$L^\infty$-ノルムによって，
+    $O(d^{-k})\;(d:=\dist(\partial\Om,\Om'))$で抑えられる．
+\end{tcolorbox}
+
+\begin{theorem}[Harnackの評価]\label{thm-Harnack-evaluation-of-derivative}
+    $u$は$\Om$上調和とする．任意のコンパクト部分集合$\Om'\ssub\Om$と任意の多重指数$\al\in\N^n$について，
+    \[\sup_{x\in\Om'}\abs{D^\al u(x)}\le\frac{C}{d^{\abs{\al}}}\sup_{x\in\Om}\abs{u},\quad  C>0,d:=\dist(\partial\Om,\Om').\]
+    さらに，$C=(n\abs{\al})^{\abs{\al}}$と取れる．
+\end{theorem}
+
+\begin{corollary}[一様有界列は相対コンパクト]\label{cor-Harnack-Linfty-evaluation}
+    $\{u_n\}\subset C(\Om)$を調和関数の一様有界列とする．
+    このとき，$\Om$上である調和関数に広義一様収束する部分列が存在する．
+\end{corollary}
+\begin{Proof}
+    Harnackの評価により，$\Om$上の調和関数の有界集合$\{u_i\}_{i\in I}$の任意階の導関数の全体は，$\Om$の任意の有界部分領域上で同程度連続であるから，正規族をなすことが従う．
+    よって，与えられた調和関数列も，一様有界ならばすぐにAscoli-Arzelaの定理の要件を満たす正規族になる．
+\end{Proof}
+
+\subsection{導関数の$L^1$-局所評価}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    調和関数の$k$階微分係数は，$O\paren{\norm{u}_{L^1(B(x_0,r))}/r^{n+k}}$で抑えられる．
+\end{tcolorbox}
+
+\begin{theorem}\label{thm-L1-evaluation-of-derivarive}
+    $\Om\osub\R^n$を領域，$u$をその上の調和関数，$\al\in\N^n$を多重指数，$k:=\abs{\al}$とする．
+    任意の内部球$B(x_0,r)\subset\Om$について，
+    \[\abs{D^\al u(x_0)}\le\frac{C_k}{r^{n+k}}\norm{u}_{L^1(B(x_0,r))},\quad C_0:=\frac{1}{\om_n},C_k:=\frac{(2^{n+1}nk)^k}{\om_n}.\]
+\end{theorem}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item $k=0$のとき，球面平均定理\ref{cor-surface-avarage-of-harmonic-functions}と三角不等式より，
+        \[u(x_0)=\dint_{B(x_0,r)}udy\le\frac{1}{\om_nr^n}\int_{B(x_0,r)}\abs{u(y)}dy.\]
+        \item $k=1$のとき，$u$が調和ならば，その導関数$u_{x_i}$も調和であることに注意すると，$\nu$を球面の外側単位法線ベクトル，$\nu^i$をその各成分とすると，発散定理から，まず一階の微分が
+        \begin{align*}
+            \forall_{x_0\in\R^n}\quad\abs{u_{x_i}(x_0)}&=\Abs{\dint_{B(x_0,r/2)}u_{x_i}dy}\\
+            &=\frac{1}{\abs{B(x_0,r/2)}}\Abs{\int_{\partial B(x_0,r/2)}u\nu^idS_y}\\
+            &\le\frac{\abs{\partial B(x_0,r/2)}}{\abs{B(x_0,r/2)}}\norm{u}_{L^\infty(B(x_0,r/2))}\\
+            &=\frac{n\om_n(r/2)^{n-1}}{\om_n(r/2)^n}=\frac{2n}{r}.
+        \end{align*}
+        と$L^\infty(B(x_0,r/2))$-ノルムによって評価できる．引き続き，これを評価するために$u$の$\partial B(x_0,r/2)$での最大値を評価すると，(1)より，
+        \begin{align*}
+            \forall_{x\in\partial B(x_0,r/2)}\quad\abs{u(x)}&=\Abs{\dint_{B(x,r/2)}udy}\le\frac{1}{\abs{B(x,r/2)}}\int_{B(x,r/2)}\abs{u}dy\\
+            &\le\frac{1}{\abs{B(x,r/2)}}\int_{B(x_0,r)}\abs{u}dy=\frac{1}{\om_n}\paren{\frac{2}{r}}^n\norm{u}_{L^1(B(x_0,r))}.
+        \end{align*}
+        を得る．2つを併せると，
+        \[\abs{Du^\al(x_0)}\le\frac{2n}{r}\cdot\frac{1}{\om_n}\paren{\frac{2}{r}}^n\norm{u}_{L^1(B(x_0,r))}=\frac{2^{n+1}n}{\om_nr^{n+1}}\]
+        と評価できている．
+        \item $k>2$のときも同様．
+    \end{enumerate}
+\end{Proof}
+
+\subsection{Liouvilleの定理}
+
+\begin{corollary}\label{cor-Liouville}
+    $\R^n$上の調和関数が有界ならば定数である．
+\end{corollary}
+\begin{Proof}
+    導関数の$L^1$-評価\ref{thm-L1-evaluation-of-derivarive}より，任意の$B(x_0,r)\subset\R^n$について，
+    \begin{align*}
+        \abs{Du(x_0)}&\le\frac{C_1}{r^{n+1}}\norm{u}_{L^1(B(x_0,r))}\\
+        &=\frac{C_1}{r^{n+1}}\int_{B(x_0,r)}\abs{u(y)}dy\\
+        &=\frac{C_1}{r^{n+1}}\om_nr^n\sup_{y\in\R^n}\abs{u(y)}\xrightarrow{r\to\infty}0.
+    \end{align*}
+\end{Proof}
+
+\begin{proposition}
+    $\R^n$上の下に有界な調和関数は定数に限る．
+\end{proposition}
+\begin{remark}
+    $\R^2$の下に有界な優調和関数は定数に限るが，$\R^n\;(n\ge3)$では正しくない．
+\end{remark}
+
+\subsection{Harnackの不等式}
+
+\begin{theorem}[Harnackの不等式]
+    $U\osub\R^n$を有界領域，$V\ssub U$を領域とする．
+    このとき，$V$のみに依存する定数$C>0$が存在して，任意の非負調和関数$u:U\to\R_+$について次が成り立つ：
+    \[\forall_{u\in\H(U)_+}\quad\sup_{V}u\le C\inf_Vu.\]
+    特に，
+    \[\forall_{x,y\in V}\quad\frac{1}{C}u(y)\le u(x)\le Cu(y).\]
+\end{theorem}
+\begin{Proof}
+    実は球面平均定理\ref{thm-mean-value-theorem-of-subharmonic-function}から出る．
+
+\end{Proof}
+
+\begin{corollary}[Harnackの収束定理]
+    $\{u_n\}\subset H(\Om)$を調和関数の単調増加列で，ある$y\in\Om$について$\{u_n(y)\}\subset\R$は有界になるとする．
+    このとき，$\{u_n\}$は広義一様収束する．
+\end{corollary}
+\begin{Proof}
+    点$u_n(y)$について，ある$N>0$が存在して，
+    \[0\le u_m(y)-u_n(y)<\ep,\qquad m\ge n>N.\]
+    続いて
+    Harnackの不等式より，任意の有界領域$\Om'\osub\Om$について，
+    \[\sup_{x\in\Om'}\abs{u_m(x)-u_n(x)}<C\ep.\]
+    よって$u_n$は$\Om'$上一様に収束する．
+\end{Proof}
+
+\begin{corollary}[Poisson核が与えるHarnackの不等式]
+    $u\in C^2(B(0,R))$を非負な調和関数とする．次が成り立つ：
+    \[\frac{R^{n-2}(R-\abs{x})}{(R+\abs{x})^{n-1}}u(0)\le u(x)\le \frac{R^{n-2}(R+\abs{x})}{(R-\abs{x})^{n-1}}u(0)\]
+\end{corollary}
+
+\section{調和関数の正則性}
+
+\subsection{広義調和関数の可微分性}
+
+\begin{lemma}[軟化子の性質]
+    次の3条件を満たす関数$\rho\in C^\infty(\R^n)$は存在する．
+    \begin{enumerate}
+        \item $\supp\rho\subset\o{B(0,1)}$．
+        \item $\rho\ge0$かつ$\int_{\R^n}\rho dx=1$．
+        \item $\rho$は$x=0$を中心として球対称．
+    \end{enumerate}
+    これに対して，$\rho^\ep(x):=\frac{1}{\ep^n}\rho\paren{\frac{x}{\ep}}$とおくと，線型作用素$\rho^\ep*:C(\Om)\to C^\infty(\Om)$を定める．
+\end{lemma}
+\begin{Proof}
+    \[\rho(x):=e^{-\frac{1}{1-\abs{x}^2}}1_{\Brace{\abs{x}<1}}\]
+    を考えると，$\abs{x}=1$上でも任意階微分可能である．
+\end{Proof}
+
+\begin{theorem}[Laplace方程式の解の正則性]
+    $\Om\osub\R^n$を領域，$u\in C(\Om)$を広義調和関数とする．
+    このとき，
+    \begin{enumerate}
+        \item $u\in C^2(\Om)$でもあり，$\Lap u(x)=0\;\on\Om$．
+        \item 実は$u\in C^\infty(\Om)$である．
+    \end{enumerate}
+\end{theorem}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item 前節の定理より．
+        \item 任意の$B(x_0,\ep)\ssub\Om\;(x_0\in\Om,\ep>0)$を取る．
+        これに対して，
+        \begin{align*}
+            u^\ep(x_0)&=\int_{B(x_0,\ep)}\rho^\ep(x-y)u(y)dy\\
+            &=\int^\ep_0\int_{\partial B(0,1)}\rho^\ep(r\sigma)u(x_0-r\sigma)r^{n-1}drd\sigma\\
+            &=u(x_0)\abs{\partial B(0,1)}\int^\ep_0h^\ep(r)r^{n-1}dr=u(x_0)
+        \end{align*}
+        が成り立つから，$u\in C^\infty(\Om)$．
+    \end{enumerate}
+\end{Proof}
+
+\subsection{広義調和関数の実解析性}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    すべての調和関数は実解析的である．
+    Weylの定理はこれを一般化する定理で，Laplace方程式の全ての弱解は滑らかであることを保証する．
+    さらに一般化すると楕円型方程式一般に，解の正則性が保証される．
+\end{tcolorbox}
+
+\begin{theorem}[調和関数は解析的である]
+    任意の領域$\Om\subset\R^n$における調和関数は，$\Om$で実解析的である．
+\end{theorem}
+\begin{Proof}
+    Greenの積分表示\ref{thm-mean-value-theorem-of-subharmonic-function}によると，調和関数$u\in C^2(\Om)$は
+    \[u(x)=\int_{\partial\Om}\paren{u(y)\pp{\Phi}{\nu}(y-x)-\Phi(y-x)\pp{u}{\nu}(y)}dS,\quad x\in\Om.\]
+    と表せる．被積分関数は$x$に関して実解析的であることから従う．
+\end{Proof}
+
+\section{最大値原理と初期値問題の一意性}
+
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=]
+    波動は中心から伝播し，最大点・最小点は境界に限るので，境界を見ればいい(弱原理)．
+    もし内点で最大点・最小点が見つかったならば，その調和関数は定数である(強原理)．
+    この性質は，全て調和関数の球面平均性から導出される．
+\end{tcolorbox}
+
+\begin{remark}
+    弱最大値原理は有界開集合，強最大値原理は領域で成り立つ．
+\end{remark}
+
+\subsection{弱最大値原理}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    調和関数の最大値と最小値を知るには，境界値だけを見れば良い．
+    これによりDirichlet問題の解の一意性，一様ノルムに関する安定性，正値保存性，順序保存性も導かれる．
+\end{tcolorbox}
+
+\begin{theorem}
+    $\Om\osub\R^n$を有界開集合，$u\in C(\o{\Om})\cap C^2(\Om)$について，
+    \begin{enumerate}
+        \item $\Om$上劣調和ならば，$\max_{x\in\o{\Om}}u(x)=\max_{x\in\partial\Om}u(x)$．
+        \item $\Om$上調和ならば，$u$は必ず$\partial\Om$上で最大値と最小値を取る．
+    \end{enumerate}
+\end{theorem}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item 劣調和関数$u$は$x_0\in\Om$で最大値を取るとし，矛盾を導く．
+        $u$の変形
+        \[u^\ep(x):=u(x)+\ep\abs{x}^2\quad(\ep>0)\]
+        を考えると，$\ep\to0$のときの$u^\ep\searrow u$は$\Om$上の一様収束．
+        これより，$\max_{x\in\o{\Om}}u^\ep(x)\to\max_{x\in\o{\Om}}u(x)$と$\max_{x\in\partial\Om}u^\ep(x)\to\max_{x\in\partial\Om}u(x)$とが従う．
+        これは
+        \[\abs{\max_{x\in\o{\Om}}u(x)-\max_{x\in\o{\Om}}u^\ep(x)}\le\max_{x\in\o{\Om}}\abs{u(x)-u^\ep(x)}\to0\]
+        であるためである，
+        
+        これと$\max_{x\in\o{\Om}}u(x)>\max_{x\in\partial\Om}u(x)$とを併せると，十分小さい$\ep>0$について$\exists_{x^\ep\in\Om}\;\max_{x\in\o{\Om}}u^\ep(x)=u^\ep(x^\ep)$．
+        したがって，$x^\ep$での$u^\ep$のHesse行列は半負定値になる：$D^2u^\ep(x^\ep)\le0$．
+        よって特に跡が負：
+        \[\Tr(D^2u^\ep(x^\ep))=\Lap u^\ep(x^\ep)=\Lap u(x^\ep)+2\ep n\le0\]
+        よって，$\Lap u(x^\ep)<0$で，これは$u$の劣調和性に矛盾．
+        \item 調和関数は劣調和かつ優調和であるため．
+    \end{enumerate}
+\end{Proof}
+
+\subsection{Dirichlet問題の解の一意性}
+
+\begin{corollary}[Dirichlet問題の解の一意性]\label{cor-uniqueness-of-Dirichlet-problem-of-Laplace-eq}
+    有界領域$\Om\osub\R^n$上の，連続なデータ$g\in C(\partial\Om),f\in C(\o{\Om})$が定める次のDirichlet問題の古典解$u\in C(\o{\Om})\cap C^2(\Om)$は高々1つである：
+    \[\mathrm{(D)}\quad\begin{cases}
+        \Lap u=f&\on \Om,\\
+        u=g&\on \partial\Om.
+    \end{cases}\]
+\end{corollary}
+\begin{Proof}
+    $u_1,u_2$をいずれも古典解とすると，$\om:=u_1-u_2$は，$f=g=0$とした場合のDirichlet問題を満たすが，これは弱最大値原理より，最大値も最小値も$0$である．よって，$\om=0$．
+\end{Proof}
+\begin{remarks}
+    この議論は最大値原理を用いなくとも，次の議論を正当化するSobolevの方法が考え得る．まず$\Lap\om=0$より，$\om$と内積を取っても例だから，Greenの定理\ref{cor-Green-identity}より，
+    \[(\Lap\om,\om)_{L^2(\Om)}=-\int_\Om(\nabla\om)^2\dvol+\int_{\partial\Om}\underbrace{\om}_{=0\;\on\partial\Om}\pp{\om}{\b{n}}dS=0.\]
+    よって$\nabla\om=0$が必要より，$\om$は定数．境界条件と併せて，$\om=0$．
+\end{remarks}
+
+\begin{remark}[領域の有界性は本質的な制約である]
+    \[\begin{cases}
+        -\Lap u=0&\on\R^{n-1}\times\R^+,\\
+        u=0&\on\R^{n-1}\times\{0\}
+    \end{cases}\]
+    の解は$u=0$と$u=\pr_n$の2つある．
+    これについては，無限遠での増大性に制限を加えることで，一意性が回復される(Phragmen-Lindelof)．
+\end{remark}
+
+\subsection{強最大値定理}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    調和関数の
+    最大値・最小値が内点でも到達されるならば，それは定数関数である．
+    これは，内点でもあるような最大値点全体の集合が$\Om$内で連結であることから従う．
+\end{tcolorbox}
+
+\begin{theorem}
+    $\Om\osub\R^n$を領域，$u\in C(\Om)$を広義劣調和関数とする．
+    次が成り立つならば，$u$は定数である：
+    \[\exists_{x_0\in\Om}\;u(x_0)=\max_{\o{\Om}} u=:C.\]
+\end{theorem}
+\begin{Proof}
+    最大点の集合$A:=u^{-1}(C)\subset\Om$は仮定により空でない．
+    \begin{enumerate}
+        \item $u$の上半連続性より，$A$は$\Om$-相対閉集合である．
+        \item 任意の$\o{x}\in A$について，$u$の広義劣調和性から，任意の$B(x_0,r)\ssub\Om$について，
+        \begin{align*}
+            C=u(\o{x})&\le\int_{\partial B(\o{x},r)}u\frac{dS_y}{\abs{\partial B(\o{x},r)}}.
+        \end{align*}
+        よって，
+        \[\int_{\partial B(\o{x},r)}(u(y)-C)\frac{dS_y}{\abs{\partial B(\o{x},r)}}.\]
+        一方で$C$は最大値だったから$u(y)-C\le0$より，
+        $u$は$\partial B(\o{x},r)$上で一定値$C$を取ることが必要．
+        $r>0$は任意だったから，$A$は開集合でもある．
+    \end{enumerate}
+\end{Proof}
+
+\subsection{解の無限伝播速度}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=比較原理：解作用素は正作用素である]
+    調和関数は，境界上で正な値を取れば，内点では常に正である．
+\end{tcolorbox}
+
+\begin{theorem}[比較原理]\label{thm-comparison-principle}
+    $\Om\osub\R^n$を有界領域，$u\in C^2(\Om)\cap C(\o{\Om})$は次を満たすとする：
+    \[\begin{cases}
+        \Lap u=0\quad\on \Om,\\
+        u=g\ge0\quad\on\partial \Om.
+    \end{cases}\]
+    このとき，
+    \begin{enumerate}
+        \item $u\ge0\;\on\o{\Om}$であり，
+        \item $\exists_{x\in\partial\Om}\;g(x)>0$である
+    \end{enumerate}
+    ならば，$u>0\;\on\Om$．
+\end{theorem}
+\begin{Proof}
+    仮に$u_0:=u(x)\le 0$を満たす点$x\in\Om$が存在するならば，その点が$\o{\Om}$上の最小値を達成してしまうから，$u\equiv u_0$が必要だが，これは$\partial\Om$上のある点では値が正であることに矛盾．
+\end{Proof}
+
+\subsection{Neumann問題の解の一意性}
+
+\begin{corollary}[Neumann問題の一意性]
+    次を満たす有界領域$\Om\osub\R^n$については，Neumann問題(N)の解が定数の差を除いて一意に定まる：
+    \begin{quote}
+        (内部球条件) 任意の$x_0\in\partial\Om$について，開球$B\subset\Om$が存在して$\partial\Om\cap B=\{x_0\}$を満たす．
+    \end{quote}
+    \[\mathrm{(N)}\quad\begin{cases}
+        -\Lap u=f&\on\Om\\
+        Du\cdot n=g&\on\Om.
+    \end{cases}\]
+    ただし，$n$は$\partial\Om$上の単位外側法線ベクトル場とする．
+    \footnote{$n$として傾けたものを採用した境界条件をreflection境界条件という．}
+\end{corollary}
+\begin{Proof}
+    $\om:=u_1-u_2$とすると，$f=g=0$としたNeumann境界問題を満たす．ここでもし$\om$が定数でないならば，強最大値原理より$\exists_{x_0\in\Om}\;\om(x_0)=\max_{\o{\Om}}\om$が必要．
+    さらに弱最大値原理より，内部では最大値に届かないから，$\forall_{x\in\Om}\;\om(x_0)>\om(x)$が必要．
+    これはHopfの補題より$(D\om(x_0)|n(x_0))>0$を含意し，Neumann境界条件に矛盾．
+\end{Proof}
+
+\begin{observation}
+    $C^2$-級有界領域については内部球が一様に取れる．
+    一方で，$C^1$-球領域は$y=x^{3/2}$の頂点が反例となる．
+\end{observation}
+
+\begin{lemma}[内部球条件の使い方 (Hopf)]\mbox{}
+    \begin{enumerate}
+        \item $y\in\R^n$を中心とする開球$B(y,R)\;(R>0)$上の劣調和関数
+        $u\in C^2(B(y,R))\cap C^1(\o{B(y,R)})$が
+        境界上の点$x_0\in\partial B(y,R)$において$\forall_{x\in B(y,R)}\;u(x_0)>u(x)$を満たすとする．このとき，$(Du(x_0)|\b{n}(x_0))>0$．
+        \item 有界領域$\Om\osub\R^n$の境界上の点$x_0\in\partial\Om$において内部球条件が成り立つとする．
+        このとき，任意の調和関数$u\in C^2(\Om)\cap C^1(\o{\Om})$について，
+        \[\forall_{x\in\Om}\;u(x_0)>u(x)\Rightarrow (Du(x_0)|n(x_0))>0.\]
+    \end{enumerate}
+\end{lemma}
+
+\chapter{熱方程式}
+
+\section{$\R^n$上の解公式}
+
+全空間$\R^n$上の斉次な熱方程式
+\begin{equation}\label{HE}\tag{HE}
+    u_t-\Lap u=0\quad\on\R^n\times\R^+.
+\end{equation}
+を考える．
+
+\subsection{基本解の定義}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    \begin{definition}[fundamental solution of the heat equation]
+        熱方程式の\textbf{基本解}または\textbf{熱核}とは，
+        \[\tcboxmath{\Phi(x,t):=\frac{1}{(4\pi t)^{n/2}}e^{-\frac{\abs{x}^2}{4t}}1_{\R^n\times(0,\infty)}(x,t)\qquad(x\in\R^n,t>0).}\]
+        をいう．
+        すなわち，$n$次元正規分布$\rN_n(0,2t)$の密度関数をいう．
+    \end{definition}
+\end{tcolorbox}
+
+\begin{proposition}[基本解の性質]\label{prop-property-of-fundamental-solution-to-EH}
+    $n\in\N^+$次元空間上の熱方程式の基本解$\Phi$について，
+    \begin{enumerate}
+        \item 原点での特異性：$t=0$を除いた点$\R^n\times\R^+\setminus\{(0_n,0)\}$上滑らかかつ$\Phi>0$を満たし，変数$x$については球対称である（すなわち，$\abs{x}$の関数である）．
+        原点での特異性が総和核としての性質をもたらす．形式的には，
+        \[\begin{cases}
+            \Phi_t-\Lap\Phi=0&\In\R^n\times\R^+,\\
+            \Phi=\delta_0&\on\R^n\times\{0\}.
+        \end{cases}\]
+        \item $\Phi$自身も，$\R^n\times\R^+$上で超関数の意味で，各点毎には原点を除いた領域$\R^n\times\R\setminus\{(0_n,0)\}$上で斉次熱方程式\ref{HE}の解である\ref{prop-fundamental-solution-of-HE-is-a-solution}：
+        \[\Phi_t=\Lap_x\Phi.\]
+        $b=\frac{1}{(4\pi)^{n/2}}$とした理由は次の補題による．
+        \item 平行移動しても解である：さらに，任意の$y\in\R^n,s\in\R^+$に対して，平行移動$(x,t)\mapsto\Phi(x-y,t-s)$も$\R^n\times\R\setminus\{(y,s)\}$上で\ref{HE}の解である．
+        もちろん重ね合わせも解になる．
+        \item 畳み込みによって関数を近似できる：$\R^n$上の総和核である．
+        すなわち，
+        \[\forall_{\delta>0}\quad\lim_{t\to0}\int_{\abs{x}\ge\delta}\abs{\Phi(x,t)}dx=0.\]
+        これより，次の定理\ref{thm-solution-for-HHE} (2)を満たす．
+        \item 導関数の$\R^n\times\cointerval{\delta,\infty}$上の一様有界性：$\Phi$の任意階の導関数は，任意の$\R^n\times\cointerval{\delta,\infty}\;(\delta>0)$上で一様に有界である．
+        これにより，\textbf{$t=0$を避ければ微分と積分の交換が可能}で，$\Phi$との畳み込みは可微分である（定理\ref{thm-solution-for-HHE}）．
+    \end{enumerate}
+\end{proposition}
+\begin{Proof}
+    (5)を示す．
+    \begin{description}
+        \item[有界性] $\Phi\in\S$より，任意階の$x_i$に関する導関数は急減少である．
+        \[\partial_{x_i}\Phi(x,t)=-\frac{x_i}{\sqrt{4\pi t}}e^{-\frac{\abs{x}^2}{4t}}.\]
+        \[\partial_t\Phi(x,t)=-\frac{1}{4\sqrt{\pi}}t^{-\frac{3}{2}}e^{-\frac{\abs{x}^2}{4t}}+\frac{\abs{x}^2}{4t^2}\frac{1}{\sqrt{4\pi t}}e^{-\frac{\abs{x}^2}{4t}}.\]
+        この形をした関数は$\R^n\times\cointerval{\delta,\infty}$上有界である．
+        \item[一様性] 
+    \end{description}
+\end{Proof}
+
+\begin{lemma}[基本解の設計意図：基本解の積分は1]
+    任意の$t>0$について，
+    \[\int_{\R^n}\Phi(x,t)dx=1.\]
+\end{lemma}
+\begin{Proof}
+    変数変換$z:=\frac{x}{2\sqrt{t}}$を考えると，$dz=\paren{\frac{1}{2\sqrt{t}}}^ndx$で，
+    \begin{align*}
+        \int_{\R^n}\Phi(x,t)dx&=\frac{1}{(4\pi t)^{n/2}}\int_{\R^n}e^{-\frac{\abs{x}^2}{4t}}dx\\
+        &=\frac{1}{\pi^{n/2}}\int_{\R^n}e^{-\abs{z}^2}dz\\
+        &=\frac{1}{\pi^{n/2}}\prod_{i=1}^n\int_\R e^{-z^2_i}dz_i=1.
+    \end{align*}
+\end{Proof}
+
+\subsection{基本解のFourier変換による特徴付け}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=]
+    熱方程式をFourier変換すると，$\wh{H_t}(\xi)=e^{-t\abs{\xi}^2}$のFourier逆変換が基本解であることが分かり，実際その通りになっている．
+\end{tcolorbox}
+
+\begin{theorem}[\cite{Strichartz03-Distribution} 3.5節]\mbox{}\label{thm-Fourier-transform-of-Gaussian-density}
+    \begin{enumerate}
+        \item $\R$上のGauss核について，\[\F[e^{-tx^2}](\xi)=\sqrt{\frac{\pi}{t}}e^{-\frac{\xi^2}{4t}}.\]
+        \item $\R^d$上のGauss核について，
+        \[\F[e^{-t\abs{x}^2}]=\paren{\frac{\pi}{t}}^{d/2}e^{-\frac{\abs{\xi}^2}{4t}}.\]
+    \end{enumerate}
+\end{theorem}
+\begin{Proof}\mbox{}
+    \begin{enumerate}[{Step}1]
+        \item 平方完成により，
+        \begin{align*}
+            \int^\infty_{-\infty}e^{-tx^2}e^{ix\xi}dx=e^{-\frac{\xi^2}{4t}}\int^\infty_{-\infty}e^{-t\paren{x-\frac{i\xi}{2t}}^2}dx
+        \end{align*}
+        を得る．
+        \item これは$z=x-\frac{i\xi}{2t}$の変数変換により計算可能である．
+        まず$\xi>0$の場合には，
+        $\C$上の積分路$\partial([-R,R]\times[0,i\xi/2t])$を考えることにより，これを計算できる．
+        左端と右端の積分は，
+        \[\abs{e^{-tz^2}}=\abs{e^{-t(x^2-y^2)-2itxy}}\le e^{-t(x^2-y^2)}\]
+        より，$R\to\infty$の極限で$0$に収束する．
+        よって，被積分関数が$\C$上の正則関数であることより，
+        \[\sqrt{\frac{\pi}{t}}=\int_\R e^{-tx^2}dx=\int_\R \exp\paren{-t\paren{x-\frac{i\xi}{2t}}^2}dx.\]
+        \item $\xi<0$の場合と，元の式と併せて，
+        \[\F[e^{-tx^2}](\xi)=\sqrt{\frac{\pi}{t}}e^{-\frac{\xi^2}{4t}}.\]
+    \end{enumerate}
+\end{Proof}
+
+\begin{theorem}[上半平面上の熱核]
+    $\wh{H_t}(\xi)=e^{-t\abs{\xi}^2}$によって$\R^d$上の関数$H_t$を定めると，次のように表示できる：
+    \[H_t(x)=\frac{1}{(4\pi t)^{d/2}}e^{-\frac{\abs{x}^2}{4t}}.\]
+    さらに，$(H_t)_{t>0}$は$t\to0$の極限において総和核をなす．
+    なお，これは$\rN_d(0,2tI_d)$の密度関数でもある．
+\end{theorem}
+
+\begin{observation}
+    上半平面$\R^{d+1}_+:=\Brace{(x_1,\cdots,x_d,t)\in\R^{d+1}\mid t\ge0}$における熱方程式の境界値問題
+    \[\begin{cases}
+        u_t=\Lap u&\In \R^{d+1}_+,\\
+        u=f&\on\partial\R^{d+1}_+.
+    \end{cases}\]
+    を考える．$t\in\R_+$を固定して$x\in\R^d$についてFourier変換すると，$t>0$についてのODE
+    \[\begin{cases}
+        \pp{\wh{u_t}}{t}(\xi)=-\abs{\xi}^2\wh{u_t}(\xi),\\
+        \wh{u_0}(\xi)=\wh{f}(\xi).
+    \end{cases}\]
+    を得る．これは1階線型ODEの初期値問題であるから，ただ一つの解$\wh{u_t}(\xi)=e^{-t\abs{\xi}^2}\wh{f}(\xi)$を持つ．
+    すなわち，$u$が一般解であるための必要条件は，
+    $\wh{H_t}(\xi)=e^{-t\abs{\xi}^2}$を満たす関数$H_t$について，
+    $u_t=H_t*f$である．
+\end{observation}
+
+\subsection{斉次な場合}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=]
+    熱方程式が斉次である場合，初期値／境界値$g$に対して基本解$\Phi$を畳み込むことで，これを満たす解を得る．
+    境界条件については，
+    \begin{enumerate}
+        \item データが$g\in C_b(\R^n)$ならば，各点で境界条件を満たす．
+        \item さらに$g\in UC_b(\R^n)$ならば，$u(t,-)\to g(t)$は一様．
+        \item $g\in L^p(\R^n)\;(1\le p<\infty)$のとき，平均の意味でも，$u(t,-)\to g\in L^p(\R^n)$
+    \end{enumerate}
+\end{tcolorbox}
+
+\begin{problem*}
+    斉次熱方程式の$\R^n\times\R^+$上のDirichlet境界値問題，または$\R^n$上のCauchy初期値問題\ref{HE-C}
+    \[\text{(HE-C)}\quad\begin{cases}
+        u_t-\Lap u=0&\In\R^n\times\R^+,\\
+        u=g&\on\R^n\times\{0\}
+    \end{cases}\]
+    を考える．
+\end{problem*}
+
+\begin{theorem}\label{thm-solution-for-HHE}
+    $p\in[1,\infty]$について，$g\in L^p(\R^n)$とし，これとの基本解の畳み込み
+    \[u(t,x):=\int_{\R^n}\Phi(x-y,t)g(y)dy=\frac{1}{(4\pi t)^{n/2}}\int_{\R^n}e^{-\frac{\abs{x-y}^2}{4t}}g(y)dy,\qquad(x\in\R^n,t>0).\]
+    を考える．
+    \begin{enumerate}
+        \item $\R^n\times\R^+$上滑らか$u\in C^\infty(\R^n\times\R^+)$．
+        \item 方程式\ref{HE}を満たす：$u_t-\Lap u=0$．
+        \item 任意の$t>0$について，畳み込み$\Phi*:L^p(\R^n)\to L^p(\R^n)$はノルム減少的．すなわち，
+        \[\norm{u(t,-)}_{L^p(\R^n)}\le\norm{g}_{L^p(\R^n)}.\]
+        \item $p<\infty$ならば，$u(t,-)\xrightarrow[t\to0]{L^p(\R^n)}g$．
+        \item $p=\infty$かつ$g\in C(\R^n)$のとき，各点$x^0\in\R^n$で，$\lim_{\R^n\times\R^+\ni(x,t)\to(x^0,0)}u(x,t)=g(x^0)$．
+        \item 特に$g\in UC(\R^n)$ならば，一様に$u(t,-)\xrightarrow[t\to0]{L^\infty(\R^n)}g$．
+    \end{enumerate}
+\end{theorem}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item 
+        $\Phi$は原点$(0_n,0)$を除いて無限回微分可能であり，
+        導関数は任意の$\R^n\times\cointerval{\delta,\infty}\;(\delta>0)$上で一様に有界である
+        \ref{prop-property-of-fundamental-solution-to-EH}(5)ことを認めれば，すぐに従う．
+        
+        実際，任意の$(x,t)\in\R^n\times\R^+$に対して，十分小さく$\delta\in(0,t)$と取ることで，この上では
+        微分と積分の交換は可能であり，$(0,\delta)$上での積分も無視できるほど小さいことから，$u$の可微分性が従う．
+        \item 同様の議論により，\ref{HE}を満たすことは，
+        \[u_t(x,t)-\Lap u(x,t)=\int_{\R^n}((\Phi_t-\Lap_x\Phi)(x-y,t))g(y)dy,\quad(x\in\R^n,t>0)\]
+        より，
+        \[\Phi_t=\Lap_x\Phi\]
+        に同値．
+        \item Youngの不等式と，任意の$t>0$について$\norm{\Phi(-,t)}_{L^1(\R^n)}=1$であることによる．
+        \item $(\Phi(-,t))_{t>0}$は総和核であるため\ref{prop-property-of-fundamental-solution-to-EH}．
+        \item ノルム収束ではなく各点収束も示せることは，次のように緻密に議論する必要がある．
+        任意の$x^0\in\R^n,\ep>0$を取ると，ある$\delta>0$が存在して，任意の$y\in B(x^0,\delta)$について$\abs{g(y)-g(x^0)}<\ep$が成り立つ．
+        \begin{enumerate}[(i)]
+            \item 任意の$x\in B(x^0,\delta/2)$に対して，$\Phi(-,t)$の$\R^n$上の積分は$1$だから，評価したい対象は
+            \begin{align*}
+                \abs{u(x,t)-g(x^0)}&=\Abs{\int_{\R^n}\Phi(x-y,t)(g(y)-g(x^0))dy}\\
+                &\le\paren{\int_{B(x^0,\delta)}+\int_{\R^n\setminus B(x^0,\delta)}}\Phi(x-y,t)\abs{g(y)-g(x^0)}dy=:I+J.
+            \end{align*}
+            と分解出来る．
+            $I$については即座に，評価
+            \[I\le\int_{B(x^0,\delta)}\Phi(x-y,t)\ep dy=\ep\]
+            が成り立つ．
+            \item $J$については，$x\in B(x^0,\delta/2),\abs{y-x^0}\ge\delta$とすると
+            \[\abs{y-x^0}\le\abs{y-x}+\frac{\delta}{2}\le\abs{y-x}+\frac{1}{2}\abs{y-x^0}.\]
+            の評価が成り立つから，特に$\abs{y-x}\ge\frac{1}{2}\abs{y-x^0}$に注意すると，
+            \begin{align*}
+                J&\le2\norm{g}_{L^\infty}\int_{\R^n\setminus B(x^0,\delta)}\Phi(x-y,t)dy\\
+                &\le\frac{C}{t^{n/2}}\int_{\R^n\setminus B(x^0,\delta)}e^{-\frac{\abs{x-y}^2}{4t}}dy\\
+                &\le\frac{C}{t^{n/2}}\int_{\R^n\setminus B(x^0,\delta)}e^{-\frac{\abs{y-x^0}^2}{16t}}dy\\
+                &=C\int_{\R^n\setminus B(x^0,\delta/\sqrt{t})}e^{-\frac{\abs{z}^2}{16}}dz\xrightarrow{t\to+0}0.
+            \end{align*}
+            ただし，最後はやはり$z:=\frac{y-x^0}{\sqrt{t}}$の変数変換を用いた．
+        \end{enumerate}
+        \item これは，$(\Phi(-,t))_{t>0}$は総和核であるため\ref{prop-property-of-fundamental-solution-to-EH}．
+    \end{enumerate}
+\end{Proof}
+
+\begin{observation}[熱方程式は無限伝播速度を許す]
+    $g\in C_b(\R^n)_+$を初期値とする．$g\not\equiv 0$ならば，解$u(-,t):=g*\Phi_t$は$\R^n\times\R^+$上で正である．
+    これは初期温度がたとえ1点でも正ならば，次の瞬間$t>0$では至る所温度は正になることを言っている．
+    これは波動方程式とは対照的な性質である．
+\end{observation}
+
+\subsection{Duhamelの原理}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    次に非斉次な場合を考える．
+    簡単のためまず$g=0$として考える．一般解はこれらの重ね合わせで与えられる\ref{cor-solution-to-HE-in-Rn}．
+\end{tcolorbox}
+
+\begin{problem*}
+    非斉次熱方程式に関する
+    $\R^n\times\R^+$上のDiriclet境界値問題，すなわち$\R^n$上のCauchy初期値問題
+    \[\text{(C-N-HE)}_0\quad\begin{cases}
+        u_t-\Lap u=f&\In\R^n\times\R^+,\\
+        u=0&\on\R^n\times\{0\}.
+    \end{cases}\]
+    を考える．ただし，境界条件は簡単のため$g=0$とした．
+\end{problem*}
+
+\begin{observation}[Duhamelの発想]
+    時点$s\in\R^+$を定め，
+    \[u(x,t;s):=\Phi_{t-s}*f_s(x)=\int_{\R^n}\Phi(x-y,t-s)f(y,s)dy\]
+    とすると，これは
+    \[\begin{cases}
+        u_t(-;s)-\Lap u(-;s)=0&\In\R^n\times(s,\infty),\\
+        u(-;s)=f(-,s)&\on\R^n\times\{s\}
+    \end{cases}\]
+    を満たす．つまり，時点$s\in\R^n$での強制項$f(-;s)$を，その時点での初期値と解釈してしまったわけだ．
+    無限伝播速度を仮定するならば，これは物理的に等価で，解を与えるはずであり，後は$s\in(0,\infty)$で積分すれば良い．すなわち，
+    \begin{align*}
+        u(x,t)&:=\int^t_0u(x,t;s)ds\\
+        &=\int^t_0\int_{\R^n}\Phi(x-y,t-s)f(y,s)dy\\
+        &=\int^t_0\frac{1}{(4\pi (t-s))^{n/2}}\int_{\R^n}e^{-\frac{\abs{x-y}^2}{4(t-s)}}f(y,s)dyds,\qquad(x,t)\in\R^n\times\R^+.
+    \end{align*}
+    が解の候補である．
+\end{observation}
+
+\begin{theorem}[非斉次方程式の境界値問題の解公式]\label{thm-solution-for-NHE}
+    外力項は$f\in C^{2,1}_c(\R\times\R^+)$を満たすとし，これに対して$u:\R^n\times\R^+\to\R$を
+    \[u(x,t):=\int^t_0\frac{1}{(4\pi (t-s))^{n/2}}\int_{\R^n}e^{-\frac{\abs{x-y}^2}{4(t-s)}}f(y,s)dyds\]
+    で定める．
+    \begin{enumerate}
+        \item 解の滑らかさ：$u\in C^{2,1}(\R\times\R^+)$．
+        \item 非斉次方程式の解である：$u_t(x,t)-\Lap u(x,t)=f(x,t)\;\In\R^n\times\R^+$．
+        \item 各点で境界条件を満たす：$\forall_{x^0\in\R^n}\;\lim_{\R^n\times\R^+\ni(x,t)\to(x^0,0)}u(x,t)=0$．
+        実は一様にも満たすが．
+    \end{enumerate}
+\end{theorem}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item おそらくどちらでもよいが，$f$の方に変数を移して微分する．すなわち，
+        \[u(x,t)=\int^t_0\int_{\R^n}\Phi(x-y,t-s)f(y,s)dyds=\int^t_0\int_{\R^n}\Phi(y,s)f(x-y,t-s)dyds\]
+        の最右辺の表示について$t$で微分すると，実は
+        \[u_t(x,t)=\int^t_0\int_{\R^n}\Phi(y,s)f_t(x-y,t-s)dyds+\int_{\R^n}\Phi(y,t)f(x-y,0)dyds\]
+        となる．これは，動く積分領域上の微分\ref{thm-differentiation-of-integral-on-moving-region}または次のように直接計算することもできる：
+        \begin{align*}
+            \frac{u(x,t+h)-u(x,t)}{h}&=\frac{1}{h}\paren{\int^{t+h}_0\int_{\R^n}\Phi(y,s)f(x-y,t+h-s)dyds-\int^t_0\int_{\R^n}\Phi(y,s)f(x-y,t-s)dyds}\\
+            &=\int^t_0\int_{\R^n}\Phi(y,s)\frac{f(x-y,t+h-s)-f(x-y,t-s)}{h}dyds\\
+            &\qquad+\frac{1}{h}\int^{t+h}_t\int_{\R^n}\Phi(y,s)f(x-y,t+h-s)dyds.
+        \end{align*}
+        であるが，第一項は$f$がコンパクト台を持つために$\frac{f(x-y,t+h-s)-f(x-y,t-s)}{h}\to f_t(x-y,t-s)$は一様収束し，
+        第二項は$f$のTaylor展開を考えることで，
+        \[\frac{1}{h}\int^{t+h}_t\int_{\R^n}\Phi(y,s)(f(x-y,t-s)+hf_t(x-y,t-s)+O(h^2))dyds\]
+        となり，第一項のみ残ることがわかり，それが被積分関数に$s=t$を代入したものになることは
+        微積分学の基本定理による．
+        $x_i$に関する微分は，$x_i$は積分区間に登場しないため，もっと簡単に
+        \[u_{x_ix_j}(x,t)=\int^t_0\int_{\R^n}\Phi(y,s)f_{x_ix_j}(x-y,t-s)dyds,\qquad i,j\in[n].\]
+        以上より，$u_t,D_x^2u$も存在して連続である．
+        \item (1)での計算より，$u_t-\Lap u$の値は積分の形で次のように求まっているから，これが$f$に等しいことを示せば良い：
+        \begin{align*}
+            u_t(x,t)-\Lap_xu(x,t)&=\int^t_0\int_{\R^n}\Phi(y,s)\paren{\pp{}{t}-\Lap_x}f(x-y,t-s)dyds\\
+            &\qquad+\int_{\R^n}\Phi(y,s)f(x-y,0)dy\\
+            &=\int^t_\ep\int_{\R^n}\Phi(y,s)\paren{-\pp{}{s}-\Lap_y}f(x-y,t-s)dyds\\
+            &\qquad+\int^\ep_0\int_{\R^n}\Phi(y,s)\paren{-\pp{}{s}-\Lap_y}f(x-y,t-s)dyds\\
+            &\qquad+\int_{\R^n}\Phi(y,s)f(x-y,0)dy\\
+            &=:I_\ep+J_\ep+K
+        \end{align*}
+        とする．ただし，途中で$\partial_tf(x-y,t-s)=-\partial_sf(x-y,t-s)$と$\partial_{x_ix_i}f(x-y,t-s)=\partial_{y_iy_i}f(x-y,t-s)$を用いた．
+        \begin{description}
+            \item[第二項$J_\ep$] 特異点の近傍での積分$J_\ep$は，積分区間が小さいので，被積分関数の評価は殆どせずとも
+            \[\abs{J_\ep}\le\paren{\norm{f_t}_{L^\infty}+\norm{D^2f}_{L^\infty}}\int^\ep_0\int_{\R^n}\Phi(y,s)dyds=\paren{\norm{f_t}_{L^\infty}+\norm{D^2f}_{L^\infty}}\ep.\]
+            と評価できる．
+            \item[第一項$I_\ep$] 特異点を除いた積分$I_\ep$には部分積分を用いる．
+            まず，$\partial_s$についてのみ部分積分を用いると，
+            \begin{align*}
+                I_\ep&=\int^t_\ep\int_{\R^n}\Phi(y,s)\paren{-\pp{}{s}-\Lap_y}f(x-y,t-s)dyds\\
+                &=-\int_{\partial(\R^n\times(\ep,t))}\Phi(y,s)f(x-y,t-s)dyds\\
+                &\qquad+\int_{\R^n\times(\ep,t)}\underbrace{\paren{\pp{}{s}-\Lap y}\Phi(y,s)}_{=0}f(x-y,t-s)dyds\\
+                &=\int_{\R^n}\Phi(y,\ep)f(x-y,t-\ep)dy-\int_{\R^n}\Phi(y,t)f(x-y,0)dy\\
+                &=\Phi_\ep*f_{t-\ep}(x)-K.
+            \end{align*}
+        \end{description}
+        以上の考察より，次のようにして結論が導かれる：
+        \begin{align*}
+            u_t(x,t)-\Lap_xu(x,t)&=\lim_{\ep\to0}\Phi_\ep*f_{t-\ep}(x)\\
+            &=f(x,t),\qquad(x,t)\in\R^n\times\R^+.
+        \end{align*}
+        この収束を厳密に議論するには，例えば斉次な場合の境界値の議論\ref{thm-solution-for-HHE}(4)と同様にできる．
+        \item まず，畳み込みのノルム減少性より，
+        \begin{align*}
+            \abs{u(-,t)}&\le\int^t_0\abs{u(-,t;s)}ds\\
+            &\le\int^t_0\norm{f(-,t;s)}_{L^\infty(\R^n)}ds\\
+            &\le t\norm{f}_{L^\infty(\R^n\times\R^+)}
+        \end{align*}
+        であるから，$\norm{u(-,t)}_{L^\infty(\R^n)}\le t\norm{f}_{L^\infty(\R^n\times\R^+)}$．よって，$x^0$に依らず，
+        $t\searrow0$について，$u(x,t)\to0$．
+    \end{enumerate}
+\end{Proof}
+\begin{remarks}
+    $f$がコンパクト台を持つという条件は，Poisson方程式(Laplace方程式の非斉次化)の解公式\ref{thm-solution-to-Poisson-equation}における
+    場合と同様，$\Phi$の導関数との積が可積分でないために，$f$に微分と積分が交換できる根拠を転嫁するためである．
+\end{remarks}
+
+\subsection{非斉次な場合の解公式}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    一般のDirichlet問題は，$f=0$とした場合と$g=0$とした場合の解の和で与えられる．
+\end{tcolorbox}
+
+\begin{corollary}[重ね合わせの原理]\label{cor-solution-to-HE-in-Rn}
+    一般の非斉次熱方程式の境界値問題
+    \[\begin{cases}
+        u_t-\Lap u=f&\In\R^n\times\R^+,\\
+        u=g&\on\R^n\times\{0\}.
+    \end{cases}\qquad f\in C^{2,1}_c(\R^n\times\R^+),g\in C_b(\R^n).\]
+    の解は，線型和
+    \[u(x,t):=\int_{\R^n}\Phi(x-y,t)g(y)dy+\int^t_0\int_{\R^n}\Phi(x-y,t-s)f(y,s)dyds\]
+    が与える．
+\end{corollary}
+\begin{Proof}
+    第一項は定理\ref{thm-solution-for-HHE}，第二項は定理\ref{thm-solution-for-NHE}が与え，$\R^n\times\{0\}$上では第二項が消えて$g$のみが残り，$\R^n\times\R^+$上での$u_t-\Lap u$では第一項が消えて第二項のみが残る．
+\end{Proof}
+
+\subsection{初期値境界値問題の解公式}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    この節の内容の簡単な応用となるため，初期値と境界値の両方を与えた場合の公式の導出を問題とする．
+\end{tcolorbox}
+
+\begin{problem}
+    非斉次な熱方程式の初期値境界値問題
+    \[\begin{cases}
+        u_t=u_{xx}+f(x,t)&\In\R^+\times\R^+,\\
+        u=h&\on\{0\}\times\R^+,\\
+        u=\varphi&\on\R^+\times\{0\}.
+    \end{cases}\qquad f\in C^1_b(\R_+\times\R_+),h\in C^1_b(\R_+),\varphi\in C_b(\R_+),h(0)=\varphi(0).\]
+    の解は
+    \[u(x,t)=\int^t_0\frac{x}{\sqrt{4\pi(t-s)^3}}e^{-\frac{x^2}{4(t-s)}}h(s)ds+\frac{1}{\sqrt{4\pi t}}\int^\infty_0\paren{e^{-\frac{\abs{x-y}^2}{4t}}-e^{-\frac{\abs{x+y}^2}{4t}}}\varphi(y)dy\]
+    \[+\int^t_0\frac{1}{\sqrt{4\pi(t-s)}}\int^\infty_0\paren{e^{-\frac{\abs{x-y}^2}{4(t-s)}}-e^{-\frac{\abs{x+y}^2}{4(t-s)}}}f(y,s)dyds.\]
+    が与える．
+\end{problem}
+\begin{Proof}[\underline{\bf【解】}]
+    $v:=u-h$と定めると，
+    \[\begin{cases}
+        v_t-v_{xx}=f(x,t)-h'(t)&\In\R^+\times\R^+,\\
+        v=0&\on\{0\}\times\R^+,\\
+        v=\varphi-h(0)&\on\R^+\times\{0\}.
+    \end{cases}\]
+    を満たす．これは$\R_+$上の解公式\ref{prop-solution-of-HE-on-R_+}とDuhamelの原理を併せて，
+    \[v(x,t)=\frac{1}{\sqrt{4\pi t}}\int^\infty_0\paren{e^{-\frac{\abs{x-y}^2}{4t}}-e^{-\frac{\abs{x+y}^2}{4t}}}(\varphi(y)-h(0))dy+\int^t_0\frac{1}{\sqrt{4\pi(t-s)}}\int^\infty_0\paren{e^{-\frac{\abs{x-y}^2}{4(t-s)}}-e^{-\frac{\abs{x+y}^2}{4(t-s)}}}(f(y,s)-h'(s))dyds.\]
+    $u=v+h$に代入すると式を得る．
+\end{Proof}
+
+\section{$\R^n_+$上の解公式}
+
+\begin{proposition}[$\R_+$上の解公式]\label{prop-solution-of-HE-on-R_+}
+    \[\begin{cases}
+        u_t-u_{xx}=0&\In\R^+\times\R^+,\\
+        u=\phi&\on\R^+\times\{0\},\\
+        u=0&\on\{0\}\times\R^+.
+    \end{cases},\qquad\phi\in C_b(\R_+),\phi(0)=0.\]
+    の解は，
+    \[u(x,t)=\frac{1}{\sqrt{4\pi t}}\int^\infty_0\Paren{e^{-\frac{\abs{x-y}^2}{4t}}-e^{-\frac{\abs{x+y}^2}{4t}}}\phi(y)dy.\]
+\end{proposition}
+\begin{Proof}\mbox{}
+    \begin{enumerate}[{Step}1]
+        \item 奇関数拡張$\wt{\phi}$を考えれば，$\R\times\R^+$上の解が
+        \[u(x,t)=\frac{1}{\sqrt{4\pi t}}\int_\R\wt{\phi}(y)e^{-\frac{(x-y)^2}{4t}}dy.\]
+        で与えられる．
+        \item 3つ目の条件$u(0,t)=0$を確認すればよいが，
+        \[u(0,t)=\frac{1}{\sqrt{4\pi t}}\int_\R\wt{\phi}(y)e^{-\frac{y^2}{4t}}dy\]
+        の被積分関数が$y$に関して奇関数であることに注意すればよい．
+        \item 最後に，$x>0$の場合は，関係$\phi(y)=-\phi(-y)\;(y\le0)$に注意して，
+        \[u(x,t)=\frac{1}{\sqrt{4\pi t}}\int^\infty_0\Paren{e^{-\frac{\abs{x-y}^2}{4t}}-e^{-\frac{\abs{x+y}^2}{4t}}}\phi(y)dy.\]
+        と書き直せる．
+    \end{enumerate}
+\end{Proof}
+
+\begin{problem}
+    \[\begin{cases}
+        u_t-u_{xx}=0&\In\R^+\times\R^+,\\
+        u=\phi&\on\R^+\times\{0\},\\
+        u_x+u=0&\on\{0\}\times\R^+.
+    \end{cases},\qquad\phi\in C^1(\R_+)\cap L^\infty(\R_+),\phi_x(0)+\phi(0)=0.\]
+    の解を与えよ．
+\end{problem}
+\begin{Proof}[\underline{\bf【解】}]\mbox{}
+    \begin{description}
+        \item[方針] \[v:=u_x+u\]
+        の形が先に求まるから，$v$を所与として先にこのODEを解いておく．
+        これは，斉次化$u_x+u=0$の解である$Ce^{-x}$と特解の和であるが，特解は定数変化法により，
+        $u(x)=C(x)e^{-x}$の形を予想すると
+        \[u_x+u=C'(x)e^{-x}=v\]
+        が必要．これを積分して
+        \[C(x)=\int^x_ae^{y}v(y)dy,\qquad a\in\R.\]
+        は特解になる．以上より，$u$の表示は
+        \[u(x,t)=e^{-x}\paren{\int^x_ae^{y}v(y)dy+C},\qquad a,C\in\R.\]
+        という形であることが必要．方程式は1階であったから，$C=0$としても一般性は失われない．
+        \item[$v$の表示] $v$は
+        \[\begin{cases}
+            v_t-v_{xx}=0&\In\R^+\times\R^+,\\
+            v=\phi_x+\phi&\on\R^+\times\{0\},\\
+            v=0&\on\{0\}\times\R^+.
+        \end{cases}\]
+        を満たすから，$\wt{\phi'},\wt{\phi}$を$\R$上への奇関数拡張とすると，
+        \[v(x,t)=\frac{1}{\sqrt{4\pi t}}\int_\R\Paren{\wt{\phi'}(y)+\wt{\psi}(y)}e^{-\frac{(x-y)^2}{4t}}dy.\]
+        \item[初期条件の確認] 以上によれば，
+        \[u(x,t)=\frac{e^{-x}}{\sqrt{4\pi t}}\int^x_ae^z\int_\R \Paren{\wt{\phi'}(y)+\wt{\psi}(y)}e^{-\frac{(z-y)^2}{4t}}dydz.\]
+        という形が必要であることが解り，まだ確認していない条件は$u(x,0)=\phi(x)$である．部分積分により
+        \[u(x,0)=\phi(x)-e^{a-x}\phi(a).\]
+        と計算できるから，$a=-\infty$と取ればよい．
+    \end{description}
+    以上から，
+    \[u(x,t)=\int^x_{-\infty}e^{y-x}v(y,t)dy=\frac{1}{\sqrt{4\pi t}}\int^x_{-\infty}e^{y-x}\int^\infty_{-\infty}(\wt{\phi'}(z)+\wt{\phi}(z))e^{-\frac{(y-z)^2}{4t}}dzdy.\]
+\end{Proof}
+
+\section{種々の拡散方程式}
+
+\begin{problem}
+    対流付き拡散方程式の初期値問題
+    \[\begin{cases}
+        u_t=u_{xx}-u_x&\In\R\times\R^+,\\
+        u=\varphi&\on\R\times\{0\}.
+    \end{cases}\qquad \varphi\in L^\infty(\R)\]
+    を考える．
+    \begin{enumerate}
+        \item $v(x,t):=u(x+t,t)$の満たすべき方程式を求めよ．
+        \item 積分因子$\psi(x,t):=e^{\frac{x}{2}-\frac{t}{4}}$について$u:=\psi w$によって定めた$w$が熱方程式を満たすような$\psi(x,t)$を見つけよ．
+    \end{enumerate}
+\end{problem}
+\begin{Proof}[\underline{\bf【解】}]\mbox{}
+    \begin{enumerate}
+        \item \[\begin{cases}
+            v_t(x,t)&=u_x(x+t,t)+u_t(x+t,t),\\
+            v_{xx}(x,t)&=u_{xx}(x+t,t)
+        \end{cases}\]
+        より，$v_t-v_{xx}=0$が$\R\times\R^+$内で成り立ち，$t=0$の際の初期条件は変わらず$v(x,0)=u(x,0)=\varphi(x)$を満たす．
+        よって，
+        \[v(x,t)=\frac{1}{\sqrt{4\pi t}}\int_\R \varphi(y)e^{-\frac{(x-y)^2}{4t}}dy.\]
+        \[u(x,t)=v(x-t,t)=\frac{1}{\sqrt{4\pi t}}\int_\R \varphi(y)e^{-\frac{(x-y-t)^2}{4t}}dy.\]
+        \item $\psi$は
+        \[\psi_t=-\frac{1}{4}\psi,\quad\psi_x=\frac{1}{2}\psi.\]
+        を満たすから，
+        \[u_t=\psi_tw+\psi w_t=\paren{w_t-\frac{1}{4}w}\psi,\]
+        \[u_{xx}-u_x=\paren{w_{xx}-\frac{1}{4}w}\psi.\]
+        と計算できる．よって特に，$w_t=w_{xx}$が必要で，初期条件は$w(x,0)=u(x,0)\psi^{-1}(x,0)=\varphi(x)e^{-\frac{x}{2}}$．よって，
+        \[w(x,t)=\frac{1}{\sqrt{4\pi t}}\int_\R e^{-\frac{\abs{x-y}^2}{4t}-\frac{y}{2}}\varphi(y)dy.\]
+        \[u(x,t)=\psi(x,t)w(x,t)=\frac{1}{\sqrt{4\pi t}}\int_\R e^{-\frac{\abs{x-y}^2}{4t}+\frac{x-y}{2}-\frac{t}{4}}\varphi(y)dy=\frac{1}{\sqrt{4\pi t}}\int_\R \varphi(y)e^{-\frac{(x-y-t)^2}{4t}}dy.\]
+    \end{enumerate}
+\end{Proof}
+
+\chapter{波動方程式}
+
+\begin{quotation}
+    \[u_{tt}-\Lap u=f\]
+    という形の方程式を波動方程式という．
+\end{quotation}
+
+\section{移流方程式と双曲型方程式}
+
+\begin{definition}[advection equation]
+    \[u_t+b\cdot Du=0\;\In\R^n\times\R^+\qquad b\in\R^n.\]
+    という形の方程式を定数係数の\textbf{移流方程式}または\textbf{輸送方程式}という．
+\end{definition}
+
+\subsection{移流方程式の解公式}
+
+\begin{observation}[斉次な場合]\label{observation-homogeneous-transport-eq}
+    \[\begin{cases}
+        u_t+b\cdot Du=0&\In \R^n\times\R^+,\\
+        u=g&\R^n\times\{0\}.
+    \end{cases}\]
+    の特性方向は$\vctr{b}{1}$である．これを方向ベクトルとする
+    直線は点$(x-tb,0)$で境界$\R^n\times\{0\}$に交わるから，
+    \[u(x,t):=g(x-tb)\qquad(x,t)\in\R^n\times\R_+\]
+    が解を与える．
+    $g\in C^1(\R^n)$ならば$u$は古典解であり，それ以外の場合でも
+    適切に弱解とみなせることが多い．
+\end{observation}
+
+\begin{observation}[非斉次な場合]\label{observation-nonhomogeneous-transport-eq}
+    \[\begin{cases}
+        u_t+b\cdot Du=f&\In \R^n\times\R^+,\\
+        u=g&\on\R^n\times\{0\}.
+    \end{cases}\]
+    の解は
+    \[u(x,t)=\int^t_0u(x,t;s)ds=\int^t_0f(x-(t-s)b,s)ds.\]
+    が与える．これはDuhamelの原理によって求めることが出来る．
+\end{observation}
+\begin{Proof}[\bf 解説]
+    変形した問題
+    \[\begin{cases}
+        u_t+b\cdot Du=0&\In\R^n\times\R^+,\\
+        u=f&\on\R^n\times\{s\}.
+    \end{cases}\]
+    の解
+    \[u(x,t;s)=u(x-(t-s)b,s)=f(x-(t-s)b,s)\]
+    の積分
+    \[u(x,t)=\int^t_0u(x,t;s)ds=\int^t_0f(x-(t-s)b,s)ds.\]
+    が解を与える．
+\end{Proof}
+
+\subsection{双曲型方程式}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    双曲型PDEは移流方程式と関係が深いことは，次のことからも解る．
+\end{tcolorbox}
+
+\begin{proposition}
+    $A,B,C\in\C\setminus\{0\}$が定めるPDE
+    \[Au_{xx}+2Bu_{xt}+Cu_{tt}=0\]
+    について，次は同値である：
+    \begin{enumerate}
+        \item ある実数$c_1<c_2$が存在して，任意の関数$f,g\in C^2(\R)$に対して，
+        \[u(x,t):=f(x-c_1t)+g(x-c_2t)\]
+        は$Au_{xx}+2Bu_{xt}+Cu_{tt}=0$の解になる．
+        \item 方程式は双曲型である：$B^2-AC>0$である．
+    \end{enumerate}
+\end{proposition}
+\begin{Proof}\mbox{}
+    \begin{description}
+        \item[(1)$\Rightarrow$(2)] 必要条件をまず考えると，各微分を計算することより，任意の$f,g\in C^2(\R)$に対して
+        \[Au_{xx}+2B_{xt}+Cu_{tt}=(A-2Bc_1+Cc_1^2)f''(x-c_1t)+(A-2Bc_2+Cc_2^2)g''(x-c_2t)=0\]
+        が必要である．このためには，例えば$f(x)=x^31_{(0,\infty)},g(x)=x^31_{(-\infty,0)}\in C^2(\R)$を考えると，2階微分はそれぞれ$(0,\infty),(-\infty,0)$に台と持つから，
+        \[\begin{cases}
+            A-2Bc_1+Cc_1^2=0\\
+            A-2Bc_2+Cc_2^2=0
+        \end{cases}\]
+        が必要であるが，これは$B^2-AC>0$と同値．
+        \item[(2)$\Rightarrow$(1)] 実際にこれで十分であることは，上の連立方程式を満たす$c_1<c_2$を取れば，任意の$f,g\in C^2(\R)$に対して構成した$u$は常に方程式を満たすようになる．
+    \end{description}
+\end{Proof}
+
+\section{$\R$上の解公式}
+
+\subsection{公式の発見的考察}
+
+\begin{problem}
+    1次元の波動方程式の初期値問題
+    \[\begin{cases}
+        u_{tt}-u_{xx}=0&\In \R\times\R^+,\\
+        u=g,\quad u_t=h&\on \R\times\{0\}.
+    \end{cases}\]
+    を考える．
+\end{problem}
+
+\begin{observation}[1次元の波動方程式は移流方程式の2回適用の構造を持つ]
+    
+    波動方程式は，1次元の場合，
+    \[u_{tt}-u_{xx}=\paren{\pp{}{t}+\pp{}{x}}\paren{\pp{}{t}-\pp{}{x}}u=0\]
+    の形を持っている！
+    \begin{description}
+        \item[第一段階] そこで，
+        \[v:=\paren{\pp{}{t}-\pp{}{x}}u\]
+        とおくと，これは
+        \[\paren{\pp{}{t}+\pp{}{x}}v=v_t+v_x=0\quad\In\R\times\R^+\]
+        を満たす必要がある．
+        これは斉次な定数係数の移流方程式\ref{observation-homogeneous-transport-eq}で，
+        $v$の値は$\vctr{1}{1}$方向で不変であることに注目すると，
+        \[(u_t-u_x=)v(x,t)=v(x-t,0)=:a(x-t)\]
+        と表せる．
+        \item[第二段階] 上式は再び定数係数の移流方程式で，ただし非斉次項$a$を持つ\ref{observation-nonhomogeneous-transport-eq}．
+        この解は，外力項の寄与のみを考えた場合
+        \[\begin{cases}
+            \begin{cases}
+                u_t-u_x=a(x-t)&\In\R^n\times\R_+,\\
+                u=0&\on\R^n\times\{0\}.
+            \end{cases}
+        \end{cases}\]
+        の解
+        \[u(x,t)=\int^t_0a(x+t-2s)ds=\frac{1}{2}\int^{x+t}_{x-t}a(u)du.\]
+        を用いて，初期条件を$u(x,0)=:b(x)$と定めれば，
+        \[u(x,t)=b(x+t)+\frac{1}{2}\int^{x+t}_{x-t}a(u)du.\]
+        と解ける．
+        \item[初期条件について] まず，$b(x)=u(x,0)=g(x)$である．次に，
+        \[a(x)=v(x,0)=u_t(x,0)-u_x(x,0)=h(x)-g'(x).\]
+        以上より，
+        \begin{align*}
+            u(x,t)&=\frac{1}{2}\int^{x+t}_{x-t}a(y)dy+b(x+t)\\
+            &=\frac{1}{2}\int^{x+t}_{x-t}\Paren{h(y)-g'(y)}dy+g(x+t)\\
+            &=\frac{1}{2}\Paren{g(x+t)+g(x-t)}+\frac{1}{2}\int^{x+t}_{x-t}h(y)dy.
+        \end{align*}
+    \end{description}
+\end{observation}
+
+\subsection{d'Alembertの公式}
+
+\begin{theorem}[d'Alembert's formula]\label{thm-solution-to-WE-on-R-dAlembert}
+    データ$g\in C^2(\R),h\in C^1(\R)$が定める関数
+    \[u(x,t):=\frac{1}{2}\Paren{g(x+t)+g(x-t)}+\frac{1}{2}\int^{x+t}_{x-t}h(y)dy\qquad(x,t)\in\R\times\R^+\]
+    について，
+    \begin{enumerate}
+        \item 可微分である：$u\in C^2(\R\times\R_+)$．
+        \item 波動方程式の解である：$u_{tt}-u_{xx}=0\;\In\R\times\R^+$．
+        \item 任意の$x^0\in\R$に対して，
+        \[\lim_{\R^n\times\R^+\ni(x,t)\to (x^0,0)}u(x,t)=g(x^0),\quad\lim_{\R^n\times\R^+\ni(x,t)\to (x^0,0)}u_t(x,t)=h(x^0).\]
+    \end{enumerate}
+\end{theorem}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item 可微分性は$g\in C^2(\R),h\in C^1(\R)$の仮定から明らか．
+        \item $u(x,t)=:A(x,t)+B(x,t)$の第一項は
+        \[A_{tt}(x,t)=\frac{1}{2}\Paren{g''(x+t)+g''(x-t)}=A_{xx}(x,t).\]
+        第二項は，
+        \begin{align*}
+            B(x,t)&=\frac{1}{2}\paren{\int^{x+t}_0h(y)dy-\int^{x-t}_{0}h(y)dy}\\
+            &=\frac{1}{2}\paren{\int^{x}_{-t}h(y+t)dy-\int^{x}_th(y-t)dy}\\
+            &=\frac{1}{2}\paren{\int^t_{-x}h(y+x)dy+\int^{t}_{x}h(x-z)dy},\qquad z:=-y
+        \end{align*}
+        と表せるから，
+        \[B_x=\frac{1}{2}\Paren{h(x+t)-h(x-t)},\quad B_t=\frac{1}{2}\Paren{h(t+x)+h(x-t)}.\]
+        \[B_{xx}=\frac{1}{2}\Paren{h'(x+t)-h'(x-t)}=B_{tt}.\]
+        \item 前者は$g$の連続性と積分の区間に対する絶対連続性から明らか．
+        後者は，
+        \[u_t=\frac{1}{2}\Paren{g'(x+t)-g'(x-t)}+\frac{1}{2}\Paren{h(t+x)+h(x-t)}.\]
+        より，$g',h$の連続性から明らか．
+    \end{enumerate}
+\end{Proof}
+
+\section{一般次元の解公式}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    証明に当たっては球面平均の方法\cite{Evans} 2.4.1.b などがあるが，準備が長くなるので省略する．
+    しかし奇数次元の場合はLaplace変換を用いた熱方程式からの導出法があり，これを境界条件のうち１つが$u_t=h=0$である場合に限って議論する．
+\end{tcolorbox}
+
+\subsection{奇数次元の場合}
+
+\begin{theorem}\label{thm-C-WE-in-odd-dimension}
+    $n=2m-1\ge3$を奇数とする．
+    $g\in C^{m+1}(\R^n),h\in C^m(\R^n)$について，
+    \[u(x,t):=\frac{1}{\gamma_n}\paren{\paren{\pp{}{t}}\paren{\frac{1}{t}\pp{}{t}}^{\frac{n-3}{2}}\paren{t^{n-2}\dint_{\partial B(x,t)}gdS}+\paren{\frac{1}{t}\pp{}{t}}^{\frac{n-3}{2}}\paren{t^{n-2}\dint_{\partial B(x,t)}hdS}},\qquad(x,t)\in\R^n\times\R_+\]
+    について，
+    \begin{enumerate}
+        \item $u\in C^2(\R^n\times\R_+)$．
+        \item $u_{tt}-\Lap u=0\;\In\R^n\times\R^+$．
+        \item 任意の$x^0\in\R^n$について，
+        \[\lim_{\R^n\times\R^+\ni(x,t)\to(x^0,0)}u(x,t)=g(x^0),\quad\lim_{\R^n\times\R^+\ni(x,t)\to(x^0,0)}u_t(x,t)=h(x^0).\]
+    \end{enumerate}
+    すなわち，初期値問題
+    \[\begin{cases}
+        u_{tt}-\Lap u=0&\In\R^n\times\R^+,\\
+        u=g,\quad u_t=h&\on\R^n\times\{0\}.
+    \end{cases}\]
+    の解である．
+\end{theorem}
+\begin{remark}
+    特に$n=3$の場合
+    \begin{align*}
+        u(x,t)&:=\pp{}{t}\paren{t\dint_{\partial B(x,t)}gdS}+t\dint_{\partial B(x,t)}hdS\\
+        &=\dint_{\partial B(x,t)}\Paren{th(y)+g(y)+Dg(y)\cdot(y-x)}dS(y),\qquad (x,t)\in\R^3\times\R^+.
+    \end{align*}
+    をKirchhoffの公式という．
+\end{remark}
+
+\subsection{解のLaplace変換は熱方程式を満たす}
+
+\begin{problem}
+    零化された$n=:2k+1\;(k\ge1)$-次元の初期値問題
+    \[\text{(C-WH)}^{2k+1}_0\quad\begin{cases}
+        u_{tt}-\Lap u=0&\In\R^n\times\R^+,\\
+        u=g,\quad u_t=0&\on\R^n\times\{0\}.
+    \end{cases}\]
+    の古典解$u\in C^{k+1}(\R^n\times\R^+)$を，さらなる制約$u\in C_b(\R^n\times\R^+)$と$g\in C_c^\infty(\R^n)$の下で考える．
+    さらに，$u(x,t):=u(x,-t)\;(x\in\R^n,t<0)$と偶関数に延長すれば，大域上で$u_{tt}-\Lap u=0\;\In\R^n\times\R$を満たす．
+\end{problem}
+
+\begin{proposition}[波動方程式の解のLaplace変換は熱方程式を解く]
+    \[v(x,t):=\frac{1}{\sqrt{4\pi t}}\int_{\R}e^{-\frac{s^2}{4t}}u(x,s)ds=\frac{1}{\sqrt{4\pi t}}\int_\R e^{-\lambda^2}u(x,\sqrt{4t}\lambda)\sqrt{4t}d\lambda\quad(x,t)\in\R^n\times\R^+\]
+    について，次の熱方程式の初期値問題を解く：
+    \[\begin{cases}
+        v_t-\Lap v=0&\In\R^n\times\R^+,\\
+        v=g&\on\R^n\times\{0\}.
+    \end{cases}\]
+    よって，次のようにも表せる：
+    \[v(x,t)=\frac{1}{(4\pi t)^{n/2}}\int_{\R^n}e^{-\frac{\abs{x-y}^2}{4t}}g(y)dy.\]
+\end{proposition}
+\begin{Proof}\mbox{}
+    \begin{description}
+        \item[初期値について] $e^{-\frac{s^2}{4t}}$は$t\searrow0$に関する総和核であるから，$\lim_{t\to0}v=g\;\on\R^n$が一様位相についても成り立つ．
+        \item[方程式について] $u$が波動方程式を満たすことと部分積分により，
+        \begin{align*}
+            \Lap v(x,t)&=\frac{1}{\sqrt{4\pi t}}\int_\R e^{-\frac{s^2}{4t}}\Lap u(x,s)ds=\frac{1}{\sqrt{4\pi t}}\int_\R e^{-\frac{s^2}{4t}}u_{ss}(x,s)ds\\
+            &=\frac{1}{\sqrt{4\pi t}}\SQuare{e^{-\frac{s^2}{4t}}u_s(x,s)}^\infty_{-\infty}+\frac{1}{\sqrt{4\pi t}}\int_\R \frac{s}{2t}e^{-\frac{s^2}{4t}}u_s(x,s)ds\\
+            &=\frac{1}{\sqrt{4\pi t}}\SQuare{\frac{s}{2t}e^{-\frac{s^2}{4t}}u_s}^\infty_{-\infty}-\frac{1}{\sqrt{4\pi t}}\int_\R\paren{\frac{1}{2t}-\frac{s^2}{4t^2}}e^{-\frac{s^2}{4t}}uds\\
+            &=\frac{1}{\sqrt{4\pi t}}\int_\R \paren{\frac{s^2}{4t^2}-\frac{1}{2t}}e^{-\frac{s^2}{4t}}u(x,s)ds=v_t(x,t).
+        \end{align*}
+        実際，
+        \[v_t=\frac{1}{\sqrt{4\pi t}}\paren{-\frac{1}{2t}}\int_\R e^{-\frac{s^2}{4t}}u(x,s)ds+\frac{1}{\sqrt{4\pi t}}\int_\R\frac{s^2}{4t^2}e^{-\frac{s^2}{4t}}u(x,s)ds.\]
+    \end{description}
+\end{Proof}
+
+\subsection{熱方程式からの奇数次元公式の導出}
+
+\begin{lemma}
+    $n=2k+1$のとき，
+    \begin{enumerate}
+        \item \[\paren{-\frac{1}{2r}\dd{}{r}}^k(e^{-\lambda r^2})=\lambda^ke^{-\lambda r^2}.\]
+        \item \[\lambda^{\frac{n-1}{2}}\int^\infty_0e^{-\lambda r^2}r^{n-1}G(x;r)dr=\frac{1}{2^k}\int^\infty_0r\paren{\paren{\frac{1}{r}\pp{}{r}}^k(r^{2k-1}G(x;r))}e^{-\lambda r^2}dr.\]
+    \end{enumerate}
+\end{lemma}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item $\dd{}{r}e^{-\lambda r^2}=-2r\lambda e^{-\lambda r^2}$より．
+        \[-\frac{1}{2r}\dd{}{r}e^{-\lambda r^2}=\lambda e^{-\lambda r^2}.\]
+        これを繰り返すことによる．
+        \item (1)の等式を用いたのちに，$k$回部分積分を繰り返すことにより，
+        \begin{align*}
+            \text{(LHS)}&=\int^\infty_0\lambda^ke^{-\lambda r^2}r^{2k}G(x;r)dr\\
+            &=\frac{(-1)^k}{2^k}\int^\infty_0\paren{\paren{\frac{1}{r}\dd{}{r}}^k(e^{-\lambda r^2})}r^{2k}G(x;r)dr\\
+            &=\frac{1}{2^k}\int^\infty_0r\paren{\paren{\frac{1}{r}\pp{}{r}}^k(r^{2k-1}G(x;r))}e^{-\lambda r^2}dr.
+        \end{align*}
+    \end{enumerate}
+\end{Proof}
+
+\begin{proposition}
+    問題$\text{(C-WH)}^{2k+1}_0$の古典解$u\in C^{k+1}(\R^n\times\R^+)$について，
+    \begin{enumerate}
+        \item \[\int_0^\infty e^{-\lambda s^2}u(x,s)ds=\frac{n\om_n}{2}\paren{\frac{\lambda}{\pi}}^{\frac{n-1}{2}}\int^\infty_0e^{-\lambda r^2}r^{n-1}\underbrace{\dint_{\partial B(x,r)}gdS(y)}_{=G(x;r)}dr\]
+        \item \[\int^\infty_0e^{-\lambda r^2}u(x,s)ds=\frac{n\om_n}{\pi^{\frac{n-1}{2}}2^{k+1}}\int^\infty_0\paren{\paren{\frac{1}{r}\pp{}{r}}^k\Paren{r^{2k-1}G(x;r)}}e^{-\lambda r^2}dr.\]
+        \item \[u(x,t)=\frac{1}{\gamma_n}\pp{}{t}\paren{\frac{1}{t}\pp{}{t}}^{\frac{n-3}{2}}\paren{t^{n-2}\dint_{\partial B(x,t)}gdS}.\]
+    \end{enumerate}
+\end{proposition}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item 命題の結論より，
+        \[v=\frac{1}{\sqrt{4\pi t}}\int_{\R}e^{-\frac{s^2}{4t}}u(x,s)ds=\frac{1}{(4\pi t)^{n/2}}\int_{\R^n}e^{-\frac{\abs{x-y}^2}{4t}}g(y)dy.\]
+        左辺は$\lambda:=\frac{1}{4t}$と定めると，$u$は$\R$上に偶関数として拡張したことに注意して，
+        \[\text{(LHS)}=\sqrt{\frac{\lambda}{\pi}}\int_\R e^{-\lambda s^2}u(x,s)ds=2\sqrt{\frac{\lambda}{\pi}}\int^\infty_0e^{-\lambda s^2}u(x,s)ds.\]
+        右辺は極座標変換により，
+        \[\text{(RHS)}=\paren{\frac{\lambda}{\pi}}^{n/2}\int_{\R^n}e^{-\lambda\abs{x-y}^2}g(y)dy=\frac{n\om_n}{2}\paren{\frac{\lambda}{\pi}}^{n/2}\int^\infty_0e^{-\lambda r^2}r^{n-1}G(x;r)dr.\]
+        \item 補題より，
+        \begin{align*}
+            \int_0^\infty e^{-\lambda s^2}u(x,s)ds&=\frac{n\om_n}{2}\paren{\frac{\lambda}{\pi}}^{\frac{n-1}{2}}\int^\infty_0e^{-\lambda r^2}r^{n-1}G(x;r)dr\\
+            &=\frac{n\om_n}{\pi^{\frac{n-1}{2}}2^{k+1}}\int^\infty_0\paren{\paren{\frac{1}{r}\pp{}{r}}^k\Paren{r^{2k-1}G(x;r)}}e^{-\lambda r^2}dr.
+        \end{align*}
+        \item $\tau:=r^2$とみると，$u$の$\tau$に関するLaplace変換とみなせるから，
+        \[u(x,t)=\frac{n\om_n}{\pi^k2^{k+1}}t\paren{\frac{1}{t}\pp{}{t}}^k(t^{2k-1}G(x;t)).\]
+        ここで，
+        \[\frac{n\om_n}{\pi^k2^{k+1}}\frac{n\pi^{1/2}}{2^{k+1}\Gamma\paren{\frac{n}{2}+1}}=\frac{1}{(n-2)(n-4)\cdots5\cdot 3}=\frac{1}{\gamma_n}.\]
+        より，
+        \[u(x,t)=\frac{1}{\gamma_n}\pp{}{t}\paren{\frac{1}{t}\pp{}{t}}^{\frac{n-3}{2}}\paren{t^{n-2}\dint_{\partial B(x,t)}gdS}.\]
+        と書き直せる．
+    \end{enumerate}
+\end{Proof}
+
+\subsection{偶数次元の場合}
+
+\begin{theorem}\label{thm-C-WE-in-even-dimension}
+    $n=2m-2\ge2$を偶数，$g\in C^{m+1}(\R^n),h\in C^m(\R^n)\;(m\ge2)$とし，
+    \begin{align*}
+        u(x,t)&:=\frac{1}{\gamma_n}\Paren{\pp{}{t}\paren{\frac{1}{t}\pp{}{t}}^{\frac{n-2}{2}}\paren{t^n\dint_{B(x,t)}\frac{g(y)}{(t^2-\abs{y-x}^2)^{1/2}}dy}\\
+        &\hspace{3cm}+\paren{\frac{1}{t}\pp{}{t}}^{\frac{n-2}{2}}\paren{t^n\dint_{B(x,t)}\frac{h(y)}{(t^2-\abs{y-x}^2)^{1/2}}dy}}.
+    \end{align*}
+    を考える．
+    \begin{enumerate}
+        \item $u\in C^2(\R^n\times\R_+)$．
+        \item $u_{tt}-\Lap u=0\;\In\R^n\times\R^+$．
+        \item 任意の$x^0\in\R^n$について，
+        \[\lim_{\R^n\times\R^+\ni(x,t)\to(x^0,0)}u(x,t)=g(x^0),\quad\lim_{\R^n\times\R^+\ni(x,t)\to(x^0,0)}u_t(x,t)=h(x^0).\]
+    \end{enumerate}
+    すなわち，初期値問題
+    \[\begin{cases}
+        u_{tt}-\Lap u=0&\In\R^n\times\R^+,\\
+        u=g,\quad u_t=h&\on\R^n\times\{0\}.
+    \end{cases}\]
+    の解である．
+\end{theorem}
+\begin{remark}[次数の違いとHuygensの原理]\mbox{}
+    \begin{enumerate}
+        \item 奇数次元の場合と違って，依存領域が$\partial B(x,t)$だけでなく，$B(x,t)$全体が要る．
+        \item すなわち，$n\ge3$の奇数次元では，wavefrontのみが影響を与える．一方で，
+        $n\ge2$の偶数次元では，wavefrontが通過した後も波は影響を持ち，干渉などの現象を持続的に起こす．
+        \item 特に$n=2$の場合
+        \[u(x,t):=\frac{1}{2}\dint_{B(x,t)}\frac{tg(y)+t^2h(y)+tDg(y)\cdot(y-x)}{\sqrt{t^2-\abs{y-x}^2}}dy,\qquad(x,t)\in\R^2\times\R^+.\]
+        をPoissonの公式という．
+    \end{enumerate}
+\end{remark}
+
+\section{非斉次な場合の解公式}
+
+\subsection{Duhamelの原理}
+
+\begin{problem}
+    非斉次波動方程式の零化された初期値問題
+    \[\text{(N-C-WE)}_s\quad\begin{cases}
+        u_{tt}-\Lap u=f&\In\R^n\times\R^+,\\
+        u=0\quad u_t=0&\on\R^n\times\{s\}.
+    \end{cases}\]
+    を考えるにあたって，次の斉次な初期値問題の解を$u(x,t;s)$とする：
+    \[\begin{cases}
+        u_{tt}(-;s)-\Lap u(-;s)=0&\In\R^n\times(s,\infty),\\
+        u(-;s)=0,\quad u_t(-;s)=f(-,s)&\on\R^n\times\{s\}.
+    \end{cases}\]
+    そして，解の候補をその$s\in\R_+$についての積分とする．
+\end{problem}
+\begin{remarks}[Duhamelの原理の物理的直感]
+    追加した斉次な初期値問題は，波動のない静寂の中で，外力$f(-,s)$を作用させた次の瞬間を表している．
+    これを時間で積分すれば，経時的な外力$f$を取り込むことが可能である．
+\end{remarks}
+
+\begin{theorem}[非斉次波動方程式の解]\label{thm-solution-to-N-C-WE-in-Rn}
+    $n\ge2,f\in C^{\floor{n/2}+1}(\R^n\times\R_+)$とする．このとき，
+    \[u(x,t):=\int_0^tu(x,t;s)ds\qquad(x\in\R^n,t\in\R_+)\]
+    に対して，
+    \begin{enumerate}
+        \item $u\in C^2(\R^n\times\R_+)$．
+        \item $u_{tt}-\Lap u=f\;\In\R^n\times\R^+$．
+        \item 任意の$x^0\in\R^n$について，
+        \[\lim_{\R^n\times\R^+\ni(x,t)\to(x^0,0)}u(x,t)=0,\quad\lim_{\R^n\times\R^+\ni(x,t)\to(x^0,0)}u_t(x,t)=0.\]
+    \end{enumerate}
+\end{theorem}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item $n$が奇数$n=2m-1$のとき，$f\in C^m(\R^n\times\R_+)$であるから，奇数次元の解公式\ref{thm-C-WE-in-odd-dimension}から$u(-;s)\in C^2(\R^n\times[s,\infty))$がわかる．
+        よって，$u$も$C^2(\R^n\times\R_+)$．
+        $n$が偶数$n=2m-2$の場合も定理\ref{thm-C-WE-in-even-dimension}より同様．
+        \item 動く領域についての微分則\ref{thm-differentiation-of-integral-on-moving-region}によって，
+        \[u_t(x,t)=\underbrace{u(x,t;t)}_{=0}+\int^t_0u_t(x,t;s)ds.\]
+        \[u_{tt}(x,t)=u_t(x,t;t)+\int^t_0u_{tt}(x,t;s)ds=f(x,t)+\int^t_0u_{tt}(x,t;s)ds.\]
+        また，\ref{exp-moving-region-appeared-in-N-C-WE}のように微分の定義に戻って考えることもできる．
+        一方で，空間での微分は簡単で
+        \[\Lap u(x,t)=\int_0^t\Lap u(x,t;s)ds=\int_0^t u_{tt}(x,t;s)ds.\]
+        これより，$u_{tt}-\Lap u=f$がわかった．
+        \item 積分を始めていないのだから，連続性から$u(x,0)=u_t(x,0)=\lim_{t\to0}u_t(x,t)=0$．
+    \end{enumerate}
+\end{Proof}
+
+\begin{corollary}
+    一般の非斉次波動方程式の初期値問題の解は，
+    零化した初期値問題の解と，斉次化した初期値問題の解との
+    和が与える．
+\end{corollary}
+
+\subsection{奇数次元での例}
+
+\begin{example}[$n=1$の場合の解]\label{thm-solution-to-N-C-WE-in-R}
+    斉次な初期値問題の解$u(x,t;s)$は，$n=1$の場合は次の形をしている：
+    \[u(x,t;s)=\frac{1}{2}\int^{x+t-s}_{x-t+s}f(y,s)dy.\]
+    積分区間の違いは，$t=s$での速度$f(y,s)$は地点$x$時刻$t$には$x\mp(t-s)$に到達するためである．
+    よって，解は
+    \[u(x,t)=\frac{1}{2}\int^t_0\int^{x+t-s}_{x-t+s}f(y,s)dyds=\frac{1}{2}\int^t_0\int^{x+u}_{x-u}f(y,t-u)dydu,\quad u:=t-s.\]
+\end{example}
+
+\begin{example}[$n=3$の場合の解]
+    $n=3$の場合の修正問題の解は，初期時刻が$0$ではなく$s$であるので$t$の代わりに$t-s$を用いることに注意すれば，Kirchhoffの公式\ref{thm-C-WE-in-odd-dimension}より，
+    \[u(x,t;s)=\dint_{\partial B(x,t-s)}(t-s)f(y,s)dS(y).\]
+    これをさらに積分すれば，
+    \begin{align*}
+        u(x,t)&=\int^t_0(t-s)\frac{1}{4\pi(t-s)^2}\int_{\partial B(0,t-s)}f(y,s)dS(y)ds\\
+        &=\frac{1}{4\pi}\int^t_0\int_{\partial B(x,r)}\frac{f(y,t-r)}{r}dS(y)dr\\
+        &=\frac{1}{4\pi}\int_{B(x,t)}\frac{f(y,t-\abs{y-x})}{\abs{y-x}}dy.
+    \end{align*}
+    この被積分関数を\textbf{遅延ポテンシャル}(retarded potential)という．
+\end{example}
+
+\subsection{練習問題}
+
+\begin{problem}
+    初期値問題
+    \[\begin{cases}
+        u_{tt}=c^2u_{xx}+f(x,t)&\In\R\times\R^+,\\
+        u=u_t=0&\on\R\times\{0\}.
+    \end{cases}\qquad f(x,t)=F'''(x)t\;(F\in C^3(\R)),c>0\]
+    の解$u(x,t)$を求めよ．
+\end{problem}
+\begin{Proof}[\underline{\bf【解】}]
+    実はDuhamelの原理\ref{thm-solution-to-N-C-WE-in-R}を用いれば，定理\ref{thm-solution-to-N-C-WE-in-Rn}の条件は満たしていない($f$は連続微分可能とは限らない)ものの解を与えていることが確認できる．
+    この確認は変換$v(x,t):=u(x,t/c)$を通せば簡単．
+    ここではd'Alembertの公式\ref{thm-solution-to-WE-on-R-dAlembert}が適用可能な状況へ変換することを考えてみる．
+    \[v(x,t):=u(x,t/c)+F'(x)\frac{t}{c^3}\]
+    とおくと，これは
+    \[\begin{cases}
+        v_{tt}=v_{xx}&\In\R\times\R^+,\\
+        v=0\quad v_t=\frac{1}{c^3}F'(x)&\on\R\times\{0\}.
+    \end{cases}\]
+    を満たす．$F'\in C^2(\R)$に注意すれば，これはd'Alembertの公式を適用することができる．
+    実際，
+    \[v_{xx}=u_{xx}(x,t/c)+F'''(x)\frac{t}{c^3},\quad v_{tt}=c^{-2}u_{tt}(x,t/c)\]
+    であり，2つは
+    \[c^2u_{xx}(x,t/c)+F'''(x)\frac{t}{c}=c^2u_{xx}(x,t/c)+f(x,t/c)=u_{tt}(x,t/c)\]
+    と，確かに等号で結ばれている．
+    よって，d'Alembertの公式より，
+    \[v(x,t)=\frac{1}{2c^3}\int^{x+ct}_{x-ct}F'(y)dy=\frac{1}{2c^3}(F(x+ct)-F(x-ct)).\]
+    \[\therefore\qquad u(x,t)=\frac{1}{2c^3}(F(x+ct)-F(x-ct))-F'(x)\frac{t}{c^2}.\]
+\end{Proof}
+
+\chapter{Fourier変換}
+
+\begin{notation*}\mbox{}
+    \begin{enumerate}
+        \item $x,y\in\R^n$の内積を
+        \[(x|y):=x\cdot y=\sum_{i=1}^nx_iy_i.\]
+        で表す．
+        \item $L^p(\R^n;\C)$で，$\R^n$上の複素数値の$p$-乗可積分関数のa.e.同値類全体がなすBanach空間を表す．
+    \end{enumerate}
+\end{notation*}
+
+\section{$L^1(\R^n)$上のFourier変換}
+
+\begin{definition}[Fourier transform, inverse Fourier transform]
+    $f\in L^1(\R^n;\C)$に対して，
+    \begin{enumerate}
+        \item \textbf{Fourier変換}を次のように定める：
+        \[\F[f](\xi)=\wh{f}(\xi):=\frac{1}{(2\pi)^{n/2}}\int_{\R^n}e^{-i(x|\xi)}f(x)dx.\]
+        \item \textbf{反転Fourier変換}を次のように定める：
+        \[\wc{f}(\xi):=\frac{1}{(2\pi)^{n/2}}\int_{\R^n}e^{i(x|\xi)}f(x)dx.\]
+    \end{enumerate}
+\end{definition}
+
+\section{$L^2(\R^n)$上のFourier変換}
+
+\subsection{Plancherelの定理}
+
+\begin{theorem}[Plancherel]
+    Fourier変換の$L^1(\R^n;\C)\cap L^2(\R^n;\C)$への制限の像は$L^2(\R^n;\C)$に入っており，等長同型を定める．
+\end{theorem}
+
+\subsection{反転公式}
+
+\begin{proposition}[\cite{Evans} 4.3.1 Th'm2]\label{prop-inversion-formula-for-Fourier-transform}
+    $u,v\in L^2(\R^n;\C)$について，
+    \begin{enumerate}
+        \item Fourier変換は内積を保つ：$(u|v)=(\wh{u}|\wh{v})$．
+        \item 任意の$\al\in\N^n$について，$D^\al u\in L^2(\R^n;\C)$ならば，$\wh{(D^\al u)}=(iy)^\al\wh{u}$．
+        \item $u,v\in L^1(\R^n;\C)$でもあるならば，$\wh{(u*v)}=(2\pi)^{n/2}\wh{u}\wh{v}$．
+        \item $u,v\in L^1(\R^n;\C)$でもあるならば，$u=\wc{\wh{u}}$．
+    \end{enumerate}
+\end{proposition}
+
+\bibliography{../../StatisticalSciences.bib,../../SocialSciences.bib,../../mathematics.bib,../../statistics.bib}
+
+\end{document}

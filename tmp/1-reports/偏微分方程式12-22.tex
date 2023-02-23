@@ -1,0 +1,194 @@
+\documentclass[uplatex,dvipdfmx]{jsarticle}
+\title{偏微分方程式論レポート\\12月22日発表分}\author{05-210520 司馬博文}\date{\today}
+\pagestyle{empty} \setcounter{secnumdepth}{4}
+%\input{/Users/Hirofumi Shiba/NatureOfStatistics/preamble_no_fonts.tex}
+\input{/Users/hirofumi.shiba48/NatureOfStatistics/preamble_no_fonts.tex}
+\usepackage[math]{anttor}
+\begin{document}
+\setcounter{section}{1}
+
+\begin{problem}\mbox{}
+    \begin{enumerate}
+        \item 初期値問題
+        \[\begin{cases}
+            u_{tt}=c^2u_{xx}&\In\R\times\R^+,\\
+            u=g,\quad u_t=0&\on\R\times\{0\},
+        \end{cases}\quad g(x):=1_{(-\pi/2,\pi/2)}\cos x\in C_c(\R).\]
+        の解$u(x,t)$を求めよ．
+        \item $A,B,C\in\C\setminus\{0\}$が定めるPDE
+        \[Au_{xx}+2Bu_{xt}+Cu_{tt}=0\]
+        について，次は同値である：
+        \begin{enumerate}
+            \item ある実数$c_1<c_2$が存在して，任意の関数$f,g\in C^2(\R)$に対して，
+            \[u(x,t):=f(x-c_1t)+g(x-c_2t)\]
+            は$Au_{xx}+2Bu_{xt}+Cu_{tt}=0$の解になる．
+            \item 方程式は双曲型である：$B^2-AC>0$である．
+        \end{enumerate}
+    \end{enumerate}
+\end{problem}
+\begin{proof}[\bf\underline{［解］}]\mbox{}
+    \begin{enumerate}
+        \item $g$が偶関数，$g'$が奇関数であることに注意すると，
+        \[u(x,t):=\frac{1}{2}\Paren{g(x+ct)+g(x-ct)}\]
+        は解を与えている．
+        \item \begin{description}
+            \item[(1)$\Rightarrow$(2)] 必要条件をまず考えると，各微分を計算することより，任意の$f,g\in C^2(\R)$に対して
+            \[Au_{xx}+2B_{xt}+Cu_{tt}=(A-2Bc_1+Cc_1^2)f''(x-c_1t)+(A-2Bc_2+Cc_2^2)g''(x-c_2t)=0\]
+            が必要である．このためには，例えば$f(x)=x^31_{(0,\infty)},g(x)=x^31_{(-\infty,0)}\in C^2(\R)$を考えると，2階微分はそれぞれ$(0,\infty),(-\infty,0)$に台と持つから，
+            \[\begin{cases}
+                A-2Bc_1+Cc_1^2=0\\
+                A-2Bc_2+Cc_2^2=0
+            \end{cases}\]
+            が必要であるが，これは$B^2-AC>0$と同値．
+            \item[(2)$\Rightarrow$(1)] 実際にこれで十分であることは，上の連立方程式を満たす$c_1<c_2$を取れば，任意の$f,g\in C^2(\R)$に対して構成した$u$は常に方程式を満たすようになる．
+        \end{description}
+    \end{enumerate}
+\end{proof}
+\begin{remarks}
+    $g$は$C^1$-級でさえなく，したがって古典解ではない．
+    殆ど至る所の解と考えても，超関数解と考えても良い．
+\end{remarks}
+
+\begin{problem}
+    初期値問題
+    \[\begin{cases}
+        u_{tt}=c^2u_{xx}+f(x,t)&\In\R\times\R^+,\\
+        u=u_t=0&\on\R\times\{0\}.
+    \end{cases}\qquad f(x,t)=F'''(x)t\;(F\in C^3(\R)),c>0\]
+    の解$u(x,t)$を求めよ．
+\end{problem}
+\begin{proof}[\bf\underline{［解］}]
+    \[v(x,t):=u(x,t/c)+F'(x)\frac{t}{c^3}\]
+    とおくと，これは
+    \[\begin{cases}
+        v_{tt}=v_{xx}&\In\R\times\R^+,\\
+        v=0\quad v_t=\frac{1}{c^3}F'(x)&\on\R\times\{0\}.
+    \end{cases}\]
+    を満たす．$F'\in C^2(\R)$に注意すれば，これはd'Alembertの公式を適用することができる．
+    実際，
+    \[v_{xx}=u_{xx}(x,t/c)+F'''(x)\frac{t}{c^3},\quad v_{tt}=c^{-2}u_{tt}(x,t/c)\]
+    であり，2つは
+    \[c^2u_{xx}(x,t/c)+F'''(x)\frac{t}{c}=c^2u_{xx}(x,t/c)+f(x,t/c)=u_{tt}(x,t/c)\]
+    と，確かに等号で結ばれている．
+    よって，d'Alembertの公式より，
+    \[v(x,t)=\frac{1}{2c^3}\int^{x+t}_{x-t}F'(y)dy.\]
+    \[\therefore\qquad u(x,t)=\frac{1}{2c^3}\int^{x+tc}_{x-tc}F'(y)dy-F'(x)\frac{t}{c^2}.\]
+\end{proof}
+\begin{remarks}
+    外力項はいくらでも滑らかだと思って良いという．
+\end{remarks}
+
+\begin{problem}
+    次のそれぞれについて，$E'=0\;\In\R^+$を示せ．
+    \begin{enumerate}
+        \item 境界値問題
+        \[\begin{cases}
+            u_{tt}-c^2u_{xx}+f(u)=0&\In\R^+\times\R^+\\
+            u(0,t)=u_x(0,t)=0&t\in\R^+.
+        \end{cases}\]
+        を満たす古典解$u\in C^2_c(\R_+\times\R_+)$について，
+        \[E(t):=\frac{1}{2}\int^\infty_0(u_t^2+c^2u_x^2+2F(u))dx,\qquad F(x):=\int^x_0f(y)dy\]
+        とする．
+        \item 境界値問題
+        \[\begin{cases}
+            u_{tt}-c^2u_{xx}=0&\R^+\times\R^+,\\
+            u_x(0,t)+Au(0,t)=0&t>0.
+        \end{cases}\qquad c>0,A\in\R\]
+        を満たす古典解$u\in C^2_c(\R_+\times\R_+)$について，
+        \[E(t):=\frac{1}{2}\int^\infty_0(u_t^2+c^2u_x^2)dx+\frac{1}{2}au(0,t)^2,\qquad a:=-\textcolor{red}{c^2}A\]
+        と定める．
+    \end{enumerate}
+\end{problem}
+\begin{proof}[\bf\underline{［解］}]\mbox{}
+    \begin{enumerate}
+        \item 無限遠での減衰条件と$x=0$での境界条件から$u_x(\infty,t)u_t(\infty,t)-u_x(0,t)u_t(0,t)=0$で，
+        \[\int^\infty_0u_xu_{tx}dx=\SQuare{u_xu_t}^\infty_0-\int^\infty_0u_{xx}u_tdx=-\int^\infty_0u_{xx}u_tdx.\]
+        だから，
+        \begin{align*}
+            \dd{}{t}E(t)&=\int^\infty_0(u_tu_{tt}+c^2u_xu_{tx}+f(u)u_t)dx\\
+            &=\int^\infty_0u_t(u_{tt}-c^2u_{xx}+f(u))dx=0.
+        \end{align*}
+        \item \[\int^\infty_0u_xu_{tx}dx=\SQuare{u_xu_t}^\infty_0-\int^\infty_0u_{xx}u_tdx=-u_x(0,t)u_t(0,t)-\int^\infty_0u_{xx}u_tdx\]
+        で，境界条件より$-u_{x}(0,t)=Au(0,t)$であるから，
+        \begin{align*}
+            \dd{E(t)}{t}&=\int^\infty_0(u_tu_{tt}+c^2u_xu_{tx})dx+au(0,t)u_t(0,t)\\
+            &=\int^\infty_0u_t(u_{tt}-c^2u_{xx})dx+A\rednote{c^2}u(0,t)u_t(0,t)+au(0,t)u_t(0,t)=0.
+        \end{align*}
+    \end{enumerate}
+\end{proof}
+
+\begin{problem}
+    \[\begin{cases}
+        u_{tt}=\Lap u&\In\R^2\times\R,\\
+        u(x,y,0)=g(x,y)&\In\R^2,\\
+        u_t(x,y,0)=0&\In\R^2.
+    \end{cases}\qquad g(x,y)=\frac{1}{1+x^2+y^2}.\]
+    の解$u(x,y,t)$の$\{0\}\times\{0\}\times\R$上での具体的な表示を求めよ．
+\end{problem}
+\begin{proof}[\bf\underline{［解］}]
+    
+\end{proof}
+\begin{consideration*}
+    まず，$\R^2\times\R^+$上での解$u$を考えたのちに，これを偶関数に延長$u(x,t):=u(x,-t)\;(t<0)$すれば，元の方程式を満たす．
+    $\R^2\times\R^+$上での解は，Poissonの公式より，
+    \begin{align*}
+        u(z,t)&=\frac{1}{2}\dint_{B(z,t)}\frac{tg(\zeta)+tDg(\zeta)\cdot(\zeta-z)}{\sqrt{t^2-\abs{\zeta-z}^2}}d\zeta\\
+        &=\frac{1}{2}\frac{t}{\abs{B(z,t)}}\int_{B(z,t)}\frac{1}{\sqrt{t^2-\abs{\zeta-z}^2}}\frac{1-\abs{\zeta}^2}{(1+\abs{\zeta}^2)^2}d\zeta,\quad z=\vctr{x}{y}\in\R^2.
+    \end{align*}
+    さらに$z=0$とすれば，被積分関数は動径$\abs{\zeta}$のみに依存することになる．
+\end{consideration*}
+
+\begin{problem}
+    次の境界値問題の十分速く減衰する古典解$u$について，$E'=0\;\In\R^+$を示せ．
+    \begin{enumerate}
+        \item \[\begin{cases}
+            u_{tt}+Ku_{xxxx}=0,&x,t>0,\\
+            u(0,t)=u_t(0,t)=0,&t>0.
+        \end{cases}\qquad K>0,\]
+        に対して，
+        \[E(t):=\frac{1}{2}\int^\infty_0(u_t^2+Ku^2_{xx})dx.\]
+        \item \[\begin{cases}
+            u_{tt}-c^2u_{xx}=0,&\In(0,L)\times(0,\infty),\\
+            u_x(0,t)+Au(0,t)=0,&t>0,\\
+            u_x(L,t)+Bu(L,t)=0,&t>0.
+        \end{cases}\qquad c>0,\;a,b\in\R,\]
+        に対して，
+        \[E(t):=\frac{1}{2}\int^L_0(u^2_t+c^2u_x^2)dx+\frac{1}{2}au(0,t)^2+\frac{1}{2}bu(L,t)^2,\qquad a,b\in\R.\]
+    \end{enumerate}
+\end{problem}
+\begin{proof}[\bf\underline{［解］}]\mbox{}
+    \begin{enumerate}
+        \item $u$とその4階までの微分が十分速く減衰するとき，微分と積分の記号を交換することで
+        \[\dd{E(t)}{t}=\frac{1}{2}\int^\infty_0(2u_tu_{tt}+2Ku_{xx}u_{xxt})dx=\int^\infty_0(u_{t}u_{tt}+Ku_{xx}u_{txx})dx\]
+        と計算できる．$u$は古典解と仮定しており，十分滑らかだとするから，$u_{xxt}=u_{txx}$が成り立つことを用いた．
+        するとこの最右辺の第二項は，部分積分により，
+        \[\int^\infty_0u_{xx}u_{txx}dx=\SQuare{u_{xx}u_{tx}}^\infty_0-\int^\infty_0u_{xxx}u_{tx}dx=-\int^\infty_0u_{xxx}u_{tx}dx\]
+        と計算できる．なお，減衰条件より$u_{xx}(\infty,t)u_{tx}(\infty,t)=0$で，さらに境界条件$u_x(0,t)=0$から$u_{xt}(0,t)=0$より，
+        $u_{xx}(0,t)u_{tx}(0,t)=0$であることを用いた．
+        よって，再び部分積分を用いれば，
+        \[-\int^\infty_0u_{xxx}u_{tx}dx=-\SQuare{u_{xxx}u_t}^\infty_0+\int^\infty_0u_{xxxx}u_tdx=\int^\infty_0u_{xxxx}u_tdx\]
+        を得る．ただし，$u(0,t)=0$より$u_t(0,t)=0$が従うことを用いた．
+        以上より，
+        \[\dd{E(t)}{t}=\int^\infty_0u_t(u_{tt}+Ku_{xxxx})dx=0.\]
+        \item $a=-A,b=B$と定めれば良い．
+        まず，(1)と同様にして微分は
+        \[\dd{E(t)}{t}=\int^L_0(u_tu_{tt}+c^2u_xu_{xt})dx+au(0,t)u_t(0,t)+bu(L,t)u_t(L,t)\]
+        と計算できる．$u_{xt}=u_{tx}$に注意すれば，第一項は部分積分より，
+        \begin{align*}
+            \int^L_0u_xu_{xt}dx&=\SQuare{u_xu_t}^L_0-\int^L_0u_{xx}u_tdx\\
+            &=u_x(L,t)u_t(L,t)-u_x(0,t)u_t(0,t)-\int^L_0u_{xx}u_tdx\\
+            &=-Bu(L,t)u_t(L,t)+Au(0,t)u_t(0,t)-\int^L_0u_{xx}u_tdx.
+        \end{align*}
+        ただし，最後の等号では，2つの境界条件を用いた．
+        以上の考察より，
+        \begin{align*}
+            \dd{E(t)}{t}&=\int^L_0u_t(u_{tt}-c^2u_{xx})dx-Bu(L,t)u_t(L,t)+Au(0,t)u_t(0,t)+au(0,t)u_t(0,t)+bu(L,t)u_t(L,t)\\
+            &=(b-B)u(L,t)u_t(L,t)+(A+a)u(0,t)u_t(0,t)
+        \end{align*}
+        であるが，$b=B,a=-A$としたから，これは$=0$である．
+    \end{enumerate}
+\end{proof}
+
+%\bibliography{../../StatisticalSciences.bib,../../SocialSciences.bib,../../mathematics.bib,../../statistics.bib}
+
+\end{document}

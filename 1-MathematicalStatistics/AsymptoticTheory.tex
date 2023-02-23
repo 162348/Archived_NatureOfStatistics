@@ -1,0 +1,2478 @@
+\documentclass[uplatex,dvipdfmx]{jsreport}
+\title{漸近展開の社会実装}
+\author{司馬博文}
+\date{\today}
+\pagestyle{headings} \setcounter{secnumdepth}{4}
+%\input{/Users/Hirofumi Shiba/NatureOfStatistics/preamble_no_fonts.tex}
+%\input{/Users/hirofumi.shiba48/NatureOfStatistics/preamble_no_fonts.tex}
+\input{/Users/hirof/NatureOfStatistics/preamble_no_fonts.tex}
+\usepackage[math]{anttor}
+\begin{document}
+\tableofcontents
+
+
+\chapter{古典大標本理論}
+
+\begin{quotation}
+    非線型モデル・非ガウスモデルに対しては，統計量の精密な分布を導出することが困難なため(それが非線型性である)，統計的決定理論を適用するのは非現実的であるが，
+    これに替わって漸近的方法に基づく大標本理論が有力な解析手段となる．
+    ここで，正規近似に基づく１次の漸近理論を扱う．
+    続いて，大標本理論の一番最初の応用先として統計量の漸近分布を求めることがあるので，
+    統計的検定問題を例に，漸近決定理論を考える．
+    しかし，実際の統計推測では標本数を意識した理論が要請される．
+    そこで統計研究は独自の発達をしてしまった．
+    その原点回帰が高次の漸近論である．
+    \begin{enumerate}
+        \item $M$-推定量：一般化された対数尤度関数$\o{U}_n(\x;\theta):\o{\X}\times\Theta\to(-\infty,\infty]$を，ある関数$U:\X\times\Theta\to(-\infty,\infty]$の経験平均とする．
+        こうして得られた目的関数$\o{U}_n(\x;\theta)$は，独立観測の仮定の下で，独立確率変数列の和の構造を持つことにより，$\o{U}_n(\x_n;\theta)$は$\x\in\o{\X}$に依らず$\o{U}(\theta):=E_{P_\theta}[U(X;\theta)]$にコンパクト一様収束するための簡明な十分条件が得られる\ref{thm-B-Uniform-LoN}．
+        なお，$M$-推定量は$Z$-推定量である．
+        \item 最小コントラスト推定量：一般化された対数尤度関数$\o{\Psi}_n(\x;\theta):\o{\X}\times\Theta\to(-\infty,\infty]$を考え，これの真値からの差$\o{U}(\x,\theta):=\o{\Psi}(\x;\theta)-\o{\Psi}(\x;\theta_0)$の最大化という付随する問題を考える場面は多い．
+        この枠組の中で，一様対数の法則が一方向に成り立つ下では，いくつかの追加の条件の下で強一致性が従う\ref{thm-C-strong-consistency}．
+        $M$-推定量は最小コントラスト推定量であるが，この場合はさらに明瞭である\ref{thm-strong-consistency-for-M-estimator}．
+        \item $Z$-推定量：$M$-推定量は$Z$-推定量である．一般化されたスコア関数$\psi:$を推定関数といい，この経験平均$\o{\psi}_n$の零点として得られる推定量をいう．
+        このクラスは漸近正規性を持つ．
+    \end{enumerate}
+\end{quotation}
+
+\begin{notation}\mbox{}
+    \begin{enumerate}
+        \item $\X$上のディラック測度の全体は，$P(\X)$の極点の全体$\Ex(P(\X))$に等しい．この凸結合の全体は，経験分布の全体に等しく，正しくは$\Conv(\Ex(P(\X)))$と表すべきだが，$\Em(P(\X))$と略記することとする．
+    \end{enumerate}
+\end{notation}
+
+\section{最尤推定法}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=]
+    統計推測においては，Bayes法と最尤法とが双璧をなす．
+    最尤推定量がごく自然な条件の下で一致性を持つのは，i.i.d.の場合はWald，これを一般化してHuberが示した．
+    また，正則な場合は有効な推定量にもなるが，これは「尤度最大」であることは関係がなく，「尤度方程式の根である」ことによる．
+    そこで，$Z$-推定量なる対象に議論が移る．
+\end{tcolorbox}
+
+\subsection{モデルの定義}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    尤度とはその標本$X_1,\cdots,X_n$の$P_\theta$の下でのもっともらしさである．
+    $X_1,\cdots,X_n$が独立であるとき，$L_n(\theta;\x_n)$は積としての簡単な表示を持つ．
+    尤度が最大な$P_\theta$をファイナルアンサーとするのは自然な発想である．
+\end{tcolorbox}
+
+\begin{model}[最尤推定法が適用可能なモデル (Fisher)]\label{model-for-MLE}
+    モデル$\{P_\theta\}_{\theta\in\Theta}\subset P(\X)$はある$\sigma$-有限測度$\nu$に支配されており，密度$p_\theta(x)$を持つとする．
+    \begin{enumerate}
+        \item $L_n(\theta;x_1,\cdots,x_n):=\prod_{j\in[n]}p_\theta(x_j)$によって定まる母数空間上の関数$L_n:\Theta\to\R_+$を，観測$x_1,\cdots,x_n$が定める\textbf{尤度関数}という．
+        \item 合成$l_n(\theta;x_1,\cdots,x_n):=\log L_n(\theta;x_1,\cdots,x_n)$を\textbf{対数尤度関数}という．
+        \item $(p_\theta)$が微分可能ならば$l_n$も微分可能で，$S(\theta;x_1,\cdots,x_n):=\pp{l}{\theta}(\theta;x_1,\cdots,x_n)$が定まる．これを\textbf{スコア関数}という．
+        \item $\wh{\theta}_n(x_1,\cdots,x_n):=\argmax_{\theta\in\Theta}L_n(\theta;x_1,\cdots,x_n)$によって定まる統計量$\wh{\theta}_n:\X^n\to\Theta$を\textbf{最尤推定量}という．
+    \end{enumerate}
+\end{model}
+
+\begin{lemma}[最尤推定量の特徴付け]\label{lemma-characterization-of-MLE}
+    観測$\x_n=(x_1,\cdots,x_n)$について，
+    次は同値：
+    \begin{enumerate}
+        \item $\wh{\theta}_n$は尤度関数$L_n(\theta;\x_n)$を最大にする．
+        \item $\wh{\theta}_n$は対数尤度関数$l_n(\theta;\x_n)$を最小にする．
+        \item 真値$\theta_0$について，対数尤度関数の差$l_n(\theta_0)-l_n(\theta)$を最小にする．
+        \item $\wh{\theta}_n$はスコア関数$S(\theta;\x_n)$の零点である．
+    \end{enumerate}
+\end{lemma}
+
+\begin{lemma}[尤度関数の情報理論的な意味]\mbox{}
+    \begin{enumerate}
+        \item 対数尤度関数の差は，KL-変分に概収束する：
+        \[\frac{1}{n}(l_n(\theta)-l_n(\theta_0))\xrightarrow{P_{\theta_0}\dae}-D(P_{\theta_0}|P_\theta)<0.\]
+        差を取らないことには，それぞれの$l_n(\theta)/n$の極限は発散する，はず．
+        \item 尤度関数の比$L_n(\theta)/L_n(\theta_0)$は，$e^{-nD(P_{\theta_0}|P_\theta)}$のレートで収束する．
+    \end{enumerate}
+\end{lemma}
+
+\subsection{一致性・漸近正規性を持つ十分条件}
+
+\begin{corollary}[最尤推定量は一致推定量である\cite{Ferguson}Th'm17]
+    次を仮定する：
+    \begin{enumerate}[({M}1)]
+        \item 母数空間$\Theta$はコンパクト．
+        \item 第二引数下半連続性：$\forall_{x\in\X}\;\theta\mapsto p_\theta(x)$は$\theta$について下半連続．
+        \item $L^1$有界性：$\exists_{M\in L^1(\X,P_{\theta_0})}\;\forall_{(x,\theta)\in\X\times\Theta}\;\abs{U(x,\theta)}\le M(x)$．
+        \item 第一引数の弱い可測性： $\forall_{\theta\in\Theta}\;\exists_{\rho_0>0}\;\forall_{0<\rho<\rho_0}\;x\mapsto\sup_{\abs{\theta'-\theta}<\rho}p_{\theta'}(x)\in L(\X)$．
+        \item 識別可能性：$(P_\theta)$は単射．
+    \end{enumerate}
+    このとき，任意の独立観測列$\{x_n\}_{n\in\N}\subset\X$について，
+    \[P_{\theta_0}[\lim_{n\to\infty}\wh{\theta}_n=\theta_0]=1.\]
+\end{corollary}
+\begin{Proof}
+    $M$-推定量が一致性を持つための条件\ref{thm-strong-consistency-for-M-estimator}の系である．
+\end{Proof}
+\begin{remarks}\mbox{}
+    \begin{enumerate}
+        \item $\wh{\theta}_n:\o{\X}\to\Theta$の可測性はなくても成り立つ．
+        \item 
+    \end{enumerate}
+\end{remarks}
+
+\begin{corollary}\label{cor-E-ASN-of-MLE}
+    模型\ref{model-for-MLE}において，
+    \[Z_n(\theta):=\sqrt{n}E_{\bP_n}[S(\theta;\x)]=\frac{1}{\sqrt{n}}\sum_{j\in[n]}\partial_\theta\log p_\theta(x_j)\]
+    とする．$\theta_0\in V\osub\Theta$を開近傍とし，対数尤度$l_1(\theta;x)=\log p_\theta(x):\X\times\Theta\to\R_{\le0}$とその導関数$S(\theta;x):=\partial_\theta\log p_{\theta}(x)$について次を仮定する：
+    \begin{enumerate}[({F}1)]
+        \item 第二引数は真値の近傍で$C^2$-級：対数尤度$\log p_\theta(x):\X\times\Theta\to\R^p$は$V$上$C^2$級．
+        \item 第一引数可測性：$\log p_\theta(-)$は可測．
+        \item $S$は真値において中心化された$L^2$関数である：$S(\theta_0;x):=\partial_\theta\log p_{\theta_0}(x)\in\L^2(P_{\theta_0};\R^p)$で，$E_{P_{\theta_0}}[\psi(x,\theta_0)]=0$．
+        さらに，Fisher情報行列
+        \[\Gamma=E_{P_\theta}[\partial_\theta S(x,\theta_0)]=\int_\X(\partial_\theta\log p)^\top(\partial_\theta\log p)(x,\theta_0)P_{\theta_0}(dx)=I(\theta_0)\]
+        は正則．
+        \item $S$の導関数は$L^1$-有界：$\exists_{M\in L^1(\X,\R)}\;\forall_{x\in\X,\theta\in V}\;\abs{\partial_\theta\psi(x,\theta)}=\abs{\partial^2_\theta\log p_\theta(x)}\le M(x)$で，
+        その積分は$\theta_0$においては
+        \[\int_\X\partial^2_\theta\log p_{\theta_0}(x)P_{\theta_0}(dx)=-I(\theta_0).\]
+        \item $\wh{\theta}_n$は漸近$Z$-推定量である：確率変数列$\wt{\theta}_n:\X^n\to\Theta$が$\wh{\theta}_n\xrightarrow{p}\theta_0$かつ$S_n(\wh{\theta}_n)=o_p(\sqrt{n})$，すなわち，$Z_n(\wh{\theta}_n)=o_p(1)$を満足する．
+    \end{enumerate}
+    このとき，
+    \[\sqrt{n}(\wh{\theta}_n-\theta_0)-I(\theta_0)^{-1}Z_n(\theta_0)=o_p(1)\quad(n\to\infty)\under\;\o{P}.\]
+    特に，
+    \[\sqrt{n}(\wh{\theta}_n-\theta_0)\Rightarrow N_p(0,I(\theta_0)^{-1})\quad(n\to\infty).\]
+\end{corollary}
+\begin{remarks}
+    条件(F3)の，スコア関数$S$が中心化されているという条件は，正則性の仮定(F1),(F4)の下で常に成立する．
+    この系により，「正則」な統計モデルの中で，最尤推定量は漸近有効であることが，漸近決定理論の枠組みから分かる．
+\end{remarks}
+
+\subsection{収束レート}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    結局，滑らかなパラメトリックモデルにおける最尤推定量は次の性質を持つ：
+    \begin{enumerate}
+        \item 漸近的一致性を持つ．
+        \item 真値への収束レートが最速である：$n^{-1/2}$．
+        \item 極限分布の分散が最小である．実際，Cramer-Raoを漸近的に満たす．
+    \end{enumerate}
+\end{tcolorbox}
+
+\subsection{Neyman-Scottの問題}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    正規分布族$(N_p(\theta,\sigma^2I_p))_{\theta\in\R^p,\sigma\in\R^+}$について，
+    \begin{enumerate}
+        \item $\sigma^2$を既知とするならば，位置母数$\theta$に対して，標本平均$\o{x}$はUMV不偏推定量である．
+        \item 不偏推定量に限らなければ，James-Stein推定量はこれを一様に改善する．
+    \end{enumerate}
+    正規性の仮定をおかずとも，一般化線型モデルには次の不偏推定量が存在する：
+    \begin{enumerate}
+        \item $\theta$の線型関数は，推定可能ならば，BLUEが存在する．
+        \item $R^2_0:=\min_{\theta\in\R^p}\abs{Y-X\theta}^2$について，$\wh{\sigma}^2:=\frac{R^2_0}{n-r}\;(\rank X=:r)$は不偏推定量である．
+    \end{enumerate}
+\end{tcolorbox}
+
+\begin{theorem}[Neyman and Scott (48)]
+    すべての観測$Y=(Y_{ij})$は独立であるとする．
+    このとき，標本のレプリカの個数$n$を固定したとき，$\sigma^2$の最尤推定量$\wh{\sigma}^2$は$p\to\infty$の極限において一致性を持たない．
+\end{theorem}
+
+\begin{example}\mbox{}
+    \begin{enumerate}
+        \item 標本のコピーの数を$n=2$として考える．
+        2つの独立な標本$\{x_j\}_{j\in\N}\indep\{y_j\}_{j\in\N}$はそれぞれ$x_j,y_j\sim N(\mu_j,\sigma^2)$を満たすとする．
+        このとき，
+        \[\wh{\mu}_j=\frac{x_j+y_j}{2},\quad\wh{\sigma}^2=\frac{1}{4n}\sum_{j\in[n]}(x_j-y_j)^2\]
+        はいずれも最尤推定量である．
+        しかし，$\wh{\sigma}^2\to\frac{\sigma^2}{2}\;\as$で一致性を満たさない．
+        \item 混合正規分布
+        \[p(x,\theta):=(1-t)\phi(x;\mu_1,\sigma_1^2)+t\phi(x;\mu_2,\sigma_2^2)\quad\theta:=(t,\mu_1,\mu_2,\sigma_1^2,\sigma_2^2),t\in(0,1)\]
+        において，その尤度関数は
+        \[\forall_{n\ge2}\;L_n(\theta;\x_n)\ge (1-t)t^{n-1}\phi(x_1;\mu_1,\sigma_1^2)\prod_{j=2}^n\phi(x_j;\mu_2,\sigma^2_2)\]
+        と評価出来るが，これは$(\mu_1,\sigma_1^2)\in\{x_1\}\times(0,\infty)$なる非コンパクト集合上では$\sigma^2_1\searrow0$で発散する．
+        このように，母数空間が非コンパクトだと最尤推定量は構成できない．
+        しかしワンステップ推定量は構成できて，これは漸近正規性を有する．
+    \end{enumerate}
+\end{example}
+
+\section{漸近決定理論の枠組み}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=漸近的に不偏な推定量]
+    一般のモデルについて，性能評価は漸近論において行う．
+    その際，漸近決定論に依らずとも指標として適当であろうと思われる性質が，「漸近的不偏推定量」，すなわち，一致性である．
+\end{tcolorbox}
+
+\subsection{一致推定量の定義}
+
+\begin{definition}[consistency]
+    パラメータの推定量$\wh{\theta}_n:\X^n\to\Theta$について，
+    \begin{enumerate}
+        \item 任意の$\theta\in\Theta$について，これが真値であったとき，$\wt{\theta_n}\to\theta\as\;(n\to\infty)$が成り立つとき，この推定量は\textbf{強一致性}を持つという．
+        \item 推定量$\wt{\theta_n}$が可測で，任意の$\theta\in\Theta$について，これが真値であったとき，$\wt{\theta_n}\xrightarrow{p}\theta\;(n\to\infty)$が成り立つとき，すなわち，$\wt{\theta}_n-\theta=o_p(1)$が成り立つとき，この推定量は\textbf{弱一致性}を持つという．
+        \item 弱一致な推定量が特に，$\wh{\theta}_n-\theta=O_p(1/\sqrt{n})$を満たすとき，これは$\sqrt{n}$-一致性を持つという．
+        \item 推定量$\wh{\theta}_n:\X^n\to\Theta$は自然に経験分布上の関数$\Em(P(\X))\to\Theta$と同一視出来る．この延長$T:P(\X)\to\Theta$が\textbf{Fisherの一致性}を持つとは，$\forall_{\theta\in\Theta}\;T(P_\theta)=\theta$を満たすことをいう．
+    \end{enumerate}
+    可測な推定量について，強一致ならば弱一致．
+\end{definition}
+\begin{remarks}
+    殆どの場合，最小コントラスト推定量は可測に選べるので，技術的な違いしかない\ref{thm-measurable-selection}
+\end{remarks}
+
+\begin{lemma}[分散が消える不偏推定量は一致推定量である]
+    統計量$U_n:\X^n\to\Theta$について，
+    \begin{enumerate}
+        \item $U_n$が$\theta$にある$r>0$について$r$-次平均収束するならば，弱一致推定量である．
+        \item 特に，$U_n$が$\theta$の不偏推定量かつ$\Var[U_n]\to0$が成り立つならば，$\theta$の弱一致推定量である．
+    \end{enumerate}
+\end{lemma}
+
+\begin{example}[一致推定量]\mbox{}
+    \begin{enumerate}
+        \item $U_n(X):=\o{X}=\frac{X_1+\cdots+X_n}{n}$は母集団平均の強一致推定量である（大数の強法則による）．
+        \item 全く同様のことは，一般の標本モーメント$\wh{m}_r:=\frac{1}{n}\sum^n_{j=1}X_j^r$が強一致推定量であるということが言える．
+        \item 一般の標本中心化モーメントも強一致推定量であるが，そのままでは不偏推定量にはならない．
+        \item セミパラメトリックな線型回帰モデル$Y_j=\al+\beta X_j+\ep_j\;(j\in[n])$のOLS(ordinary least squares estimator)はいくらかの条件の下一致推定量である．
+        \item 自己回帰モデル(AR:Autoregressive Model)$Y_j=\al+\beta Y_{j-1}+\ep_j$の最小二乗推定量
+        \[\wh{\al}=\o{Y}_{1,n}-\wh{\beta}\o{Y}_{0,n-1},\quad\wh{\beta}=\beta+\frac{\sum_{r\in[n]}\ep_r(Y_{r-1}-\o{Y}_{0,n-1})}{\sum_{r\in[n]}(Y_{r-1}-\o{Y}_{0,n-1})^2}\]
+        は一致推定量である．ただし，$\o{Y}_{i,j}$を$Y_i$から$Y_j$までのデータを使った標本平均とした．
+    \end{enumerate}
+\end{example}
+
+\subsection{一致推定量の存在}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    これにより，$\Theta$全域で$L^2$-微分可能で非退化なFisher情報行列を持つ識別可能なパラメトリックモデル$(P_\theta)_{\theta\in\Theta}$には正則で漸近最適な$\theta$の統計量が存在することが示せる．
+    または，極限実験$\{P_\theta\}$において，$\delta_n$が離散位相を定めていれば良い．
+\end{tcolorbox}
+
+\begin{theorem}[Cramer]
+    可微分模型\ref{model-differentiable}において，$\theta_0\in\Theta^\circ,\theta_0\in B\osub\Theta$を開近傍とする．
+    推定関数$\psi:\X\times\Theta\to\R$について(E1)~(E4)\ref{thm-E-asymptotic-normality-for-Z-estimator}を仮定する．このとき，次が成り立つ：
+    \begin{enumerate}
+        \item 任意の十分小さい開球$B_0:=B(\theta_0,r)$と$\beta\in(0,1/2)$について，ある事象列$\X_n^*\subset\X^n$が存在して，次を満たす：
+        \begin{enumerate}
+            \item 十分大きな$n$に対して，$\exists!_{\wh{\theta}_n\in B_0}\;\psi_n(\X^*_n;\wh{\theta}_n)=\{0\}\land\abs{\wh{\theta}_n-\theta_0}\le n^{-\beta}$．
+            \item $P^{\otimes n}[\X^*_n]=1-o(1)\;(n\to\infty)$．
+            \item (a)が定める対応$\wh{\theta}_n:\X^*_n\to\Theta$は$\X^n$全域に可測な延長を持つ．
+        \end{enumerate}
+        \item (1)で定まる推定量の列$(\wh{\theta}_n)$について，次が成り立つ：
+        \[\sqrt{n}(\wh{\theta}_n-\theta_0)-\Gamma^{-1}\frac{1}{\sqrt{n}}\psi_n(\theta_0)=o_p(1)\;(n\to\infty),\quad\Gamma:=-\int_\X\partial_\theta\psi(x,\theta_0)P(dx)\in\GL_p(\R).\]
+        特に，$\sqrt{n}(\wh{\theta}_n-\theta_0)\Rightarrow N_p(0,\Sigma)$．
+    \end{enumerate}
+\end{theorem}
+\begin{remarks}
+    $\wh{\theta}_n$の構成の仕方は真値$\theta_0$に依存してしまう．
+    したがって，推定方程式の解が唯一しかない場合のみ，実用的な意味を持つ．
+\end{remarks}
+
+\begin{notation}
+    $(\X_n,\A_n,\{P_{n,\theta}\}_{\theta\in\Om})\;(\Om\osub\R^p)$を統計的実験の列とする．
+\end{notation}
+
+\begin{definition}
+    弱一致推定量$(\wh{\theta}_n)$が\textbf{局所一様}であるとは，
+    \[\forall_{\theta\in\Om}\;\forall_{\ep>0}\;\exists_{\delta>0}\;\lim_{n\to\infty}\sup_{\norm{\theta'-\theta}<\delta}P_{n,\theta'}[\norm{\wh{\theta_n}-\theta'}>\ep]=0\]
+    が成り立つことをいう．
+\end{definition}
+
+\begin{proposition}\mbox{}
+    \begin{enumerate}
+        \item $\theta_1,\theta_2\in\Om$に対して，$P_{n,\theta_1},P_{n,\theta_2}$を優越する$\sigma$-有限測度$\mu_n$が取れる．
+        \item $L^1(\mu_n)$-ノルムが，$\{P_{n,\theta}\}$上に距離$\delta_n$を定める．
+        \item この距離は全変動ノルムの2倍$\delta_n(\theta_1,\theta_2)=2\sup_{A\in\A_n}\abs{P_{n,\theta_1}(A)-P_{n,\theta_2}(A)}$と特徴付けられる．特に，$\Im\delta_n\subset[0,2]$．
+    \end{enumerate}
+\end{proposition}
+
+\begin{theorem}
+    統計的実験列$(\X_n,\A_n,\{P_{n,\theta}\}_{\theta\in\Om})\;(\Om\osub\R^p)$について，
+    \begin{enumerate}
+        \item $\theta$の一致推定量が存在するならば，$\theta_1\ne\theta_2\Rightarrow\lim_{n\to\infty}\delta_n(\theta_1,\theta_2)=2$．
+        \item 局所一様一致推定量が存在するならば，$\forall_{\ep>0}\;\delta_{\delta>0}\;\forall_{\theta\in\Om}\;\lim_{n\to\infty}\sup_{\ep<\norm{\theta'-\theta}<\delta}\delta_n(\theta,\theta')=2$．
+    \end{enumerate}
+\end{theorem}
+\begin{proof}\mbox{}
+    \begin{enumerate}
+        \item 
+    \end{enumerate}
+\end{proof}
+
+\section{$M$-推定量}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    最尤推定量は多くの場合一致性を持つが，この現象はより広いクラスについて成り立つ．
+    $M$-推定量は，ある目的関数(一般化対数尤度関数)$U:\X\times\Theta\to(-\infty,\infty]$の経験平均$\o{U}_n$を最大化する$\theta$として定義される．
+    すると独立観測の仮定の下で，$\o{U}_n$は独立同分布列の和となるから，一様大数の法則を通じて強一致性を持つための十分条件が得られる．
+\end{tcolorbox}
+
+\subsection{一様大数の法則}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    真値$\theta_0\in\Theta$はわからないため，あらゆる$\theta\in\Theta$について一様な一致性を持ってほしい．
+    そこで，統計推測への応用には，大数の法則を一様ノルムで考えたい．
+    最尤推定量はこの性質を持つ．
+    これは，対数尤度関数が独立確率変数の和の構造を持っていたためである．
+    これを一般化すると，任意の可測-連続関数$U(x,\theta):\X\times\Theta\to\R$が定める一般化対数尤度関数$\o{U}_n(x_1,\cdots,x_n;\theta)$は，母数空間の任意のコンパクト部分集合上で一様に真の対数尤度$\o{U}(\theta)=E_{P_\theta}[U(X;\theta)]$に収束する．
+\end{tcolorbox}
+
+\begin{model}[$M$-推定量が定義可能なモデル]\label{model-for-M-estimator}
+    推定量は$n\in\N$に依ってそれぞれ定義域が違うが，これを帰納極限$\o{\X}$上に引き戻して，一元的に議論する．
+    以後，自然な同一視$\X^n\mono\o{\X}$を採用する．
+    \begin{enumerate}
+        \item $(\X,\A,P)$の可算無限直積$(\o{\X},\o{\A},\o{P})$上に，$\pi_n:=(\pr_1,\cdots,\pr_n):\o{\X}\to\X^n$で$\X^n$上の可測関数を引き戻して議論する．
+        \item 関数$U:\X\times\Theta\to(-\infty,\infty]$に対して，
+        \[\o{U}_n(\x_n,\theta):=E_{\bP_n}[U(\x_n,\theta)]=\frac{1}{n}\sum^n_{j=1}U(x_j,\theta)\]
+        と表す．この$\o{U}_n:\X^n\times\Theta\to\R\cup\{\infty\}$を，\textbf{$U\in L(\X\times\Theta)$が定める一般化対数尤度関数}ということにしよう．
+        ただし，$\x_n=(x_1,\cdots,x_n)\in\X^n$とした．
+        \item 関数$U$の真の平均を$\o{U}(\theta):=E_{\o{P}}[U(\x;\theta)]$とする．
+    \end{enumerate}
+    $U:\X\times\Theta\to(-\infty,\infty]$の平均$\al_1(U(\theta)):=E[U(X,\theta)]$について，
+    明らかに$\forall_{\theta\in\Theta}\;P_\theta[\o{U}_n(\x_n,\theta)\to\al_1(U(\theta))]=1$．
+    これを，$\theta\in\Theta$に依らない方法で評価する．
+\end{model}
+
+\begin{lemma}[単一方向に関する一様対数の法則]\label{lemma-A-one-sided-Uniform-LoN}
+    $(\Theta,d)$を距離空間，$\Theta_1\subset\Theta$をコンパクト集合，$U:\X\times\Theta\to[-\infty,\infty]$を次を満たす関数とする：
+    \begin{enumerate}[({A}1)]
+        \item 第2引数について$\forall_{x\in\X}\;\theta\mapsto U(x,\theta)$は下半連続．
+        \item $\forall_{\theta\in\Theta}\;r$が十分に小さければ，$x\mapsto\inf_{\theta'\in\Theta,d(\theta',\theta)<r}U(x,\theta')$は可測．
+        \item ある可積分関数$M:\X\to\R$が存在して，$\forall_{(x,\theta)\in\X\times\Theta}\;U(x,\theta)\ge M(x)$．
+    \end{enumerate}
+    このとき，$\o{U}(\theta):=\int_\X U(x,\theta)P(dx)\in(-\infty,\infty]$に対して，
+    \begin{enumerate}
+        \item 
+        \[\liminf_{n\to\infty}\inf_{\theta\in\Theta_1}\o{U_n}(\theta)\ge\inf_{\theta\in\Theta_1}\o{U}(\theta)\quad\as\]
+        \item $\o{U}$も$\theta$について下半連続．
+    \end{enumerate}
+\end{lemma}
+\begin{remarks}
+    $\Theta$が可分で$U(-,\theta)$が可測ならば(A2)のために十分．また，$U$が$\theta_0$で下半連続とは，次に同値：
+    \begin{enumerate}
+        \item $\lim_{r\searrow0}\inf_{\theta\in\Theta,d(\theta,\theta_0)<r}U(\theta)=U(\theta_0)$．
+        \item $\theta_0$の任意の収束列$(\theta_n)$について，$\liminf_{n\to\infty}U(\theta_n)\ge U(\theta_0)$．
+    \end{enumerate}
+    すなわちこの補題は，関数$\o{U}$は下半連続で，関数$\o{U}_n$はこれに下半連続性の位相について収束することを言っている($\Theta_1$を一点とすれば良い)．
+\end{remarks}
+
+\begin{theorem}[一様大数の法則 (LeCam)]\label{thm-B-Uniform-LoN}
+    $(\Theta,d)$を距離空間，$\Theta_1\subset\Theta$をコンパクト集合，$U:\X\times\Theta\to[-\infty,\infty]$を関数とし，以下の条件を仮定する：
+    \begin{enumerate}[({B}1)]
+        \item 第二引数連続性：$\forall_{x\in\X}\;U(x,-):\Theta\to\R$は連続．
+        \item 第一引数可測性：$\forall_{\theta\in\Theta}\;U(-,\theta):\X\to\R$は可測．
+        \item $L^1$-有界性：ある可積分関数$M\in L^1(\X)$が存在して，$\forall_{(x,\theta)\in\X\times\Theta}\;\abs{U(x,\theta)}\le M(x)$．
+    \end{enumerate}
+    このとき，$\o{U}(\theta):=\int_\X U(x,\theta)P(dx)\in\R$は連続で，
+    \[\lim_{n\to\infty}\sup_{\theta\in\Theta_1}\abs{\o{U_n}(\theta)-\o{U}(\theta)}=0\quad\as\]
+\end{theorem}
+
+\subsection{一致推定量の収束の速度}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=]
+    $\Theta$上の関数$\theta\mapsto P(\Psi_\theta-\Psi_{\theta_0})$と$\theta\mapsto E^*[\abs{\bG_n(\Psi_\theta-\Psi_{\theta_0})}]$の$\theta_0$近くのHolder指数
+    によって，$d(\wh{\theta}_n,\theta_0)$の収束レートが定まる．
+\end{tcolorbox}
+    
+\begin{definition}
+    一致推定量$(\wh{\theta}_n)$が，無限大に発散する正数列$\{c_n\}\subset l_\infty(\N;\R_+)$に関して
+    \textbf{オーダー$(c_n)$を持つ}とは，$c_n(\wh{\theta}_n-\theta)$が極限分布を持つこと，すなわち裾が無限大へ逃げて分布が潰れてしまうことがないことをいう：
+    \[\forall_{\theta_0\in\Om}\;\exists_{\delta>0}\;\lim_{L\to\infty}\limsup_{n\to\infty}\sup_{\norm{\theta-\theta_0}<\delta}P_{n,\theta}[c_n\norm{\wh{\theta}_n-\theta}>L]=0.\]
+\end{definition}
+
+\begin{notation}
+    コントラスト関数$\Psi_\theta(x)$について，目的関数$\theta\mapsto\bP_n\Psi_\theta(x)$を漸近的に最大化する推定量列を$(\wh{\theta}_n)$とする．
+\end{notation}
+
+\begin{theorem}[rate of convergence]
+    ある$C\in\R,\al>\beta\in\R$と任意の$n\in\N$と十分小さい任意の$\delta>0$について，次が成り立つとする：
+    \[\sup_{d(\theta,\theta_0)<\delta}P(\Psi_\theta-\Psi_{\theta_0})\le-C\delta^\al,\qquad E^*\Square{\sup_{d(\theta,\theta_0)<\delta}\abs{\bG_n(\Psi_\theta-\Psi_{\theta_0})}}\le C\delta^\beta.\]
+    \[\bP_n\Psi_{\wh{\theta}_n}\ge\bP_n\Psi_{\theta_0}-O_P\paren{n^{\frac{\al}{2\beta-2\al}}},\qquad\wh{\theta}_n\xrightarrow{P^*}\theta_0\]
+    このとき，$n^{\frac{1}{2\al-2\beta}}d(\wh{\theta}_n,\theta_0)=O^*_P(1)$．
+\end{theorem}
+
+\subsection{$M$-推定量の影響関数}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    Huber and Ronchetti (2009)\cite{Huber} p.47．
+    Hampel et al. (1986) p.85\cite{Hampel}
+    $M$-推定量の影響関数は，推定関数$\psi$の定数倍になる．
+    特に最尤推定量について言えば，スコア関数の定数倍となる．
+    また，$\Var[\IF^2]$が漸近分散となる．
+    最尤推定量について，これはFisher情報量である．
+\end{tcolorbox}
+
+\begin{theorem}
+    \[\IF(x;P,\theta)=\]
+\end{theorem}
+
+\subsection{モーメント法}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    モーメント法はしばしば$Z$-推定量でもあるが，ここで扱うこととする．
+    良い条件の下でモーメント推定量は$\sqrt{n}$-一致性と漸近正規性を持つが，最尤推定量のものより漸近分散は大きい．
+    これはデルタ法の結果である．
+\end{tcolorbox}
+
+\begin{notation}
+    $\{P_\theta\}_{\theta\in\Theta}\subset P(\X)$を分布族，$g:\X\to\R^p$を所与の関数とする．
+    $\psi(x,\theta):=g(x)-\int_\X g(y)P_\theta(dy)$とすると，真値$\theta_0\in\Theta$について$E[\psi(x,\theta_0)]=0$である．
+    このとき，次の識別可能条件がなりたつとする
+    \[\theta_1\ne\theta_2\Rightarrow\int_\X g(y)P_{\theta_1}(dy)\ne\int_\X g(y)P_{\theta_2}(dy).\]
+    このとき，$\psi(x,\theta)$の$P_{\theta_0}$-平均$E_{\theta_0}[\psi(x,\theta)]$の零点は$\theta_0$に限る．
+    たとえば$g(x)=x^n$と取ると，この条件を満たす．
+\end{notation}
+
+\begin{definition}[method of moments]
+    この$\psi$を推定関数とした$M$-推定量$\wh{\theta}^\dagger_n$，すなわち次の$\theta$についての方程式の解を\textbf{$g$に関するモーメント推定量}という：
+    \[\o{\psi}_n(x,\theta):=\bP_n[\psi(x,\theta)]=\frac{1}{n}\sum_{j=1}^n\psi(x_j,\theta)=0\quad\Leftrightarrow\quad \bP_ng(x)=P_\theta g(x)\]
+    あるいは，あるノルム$\norm{-}$について，$\norm{\o{\psi}_n(x,\theta)}$を最小にする$\wh{\theta}$を探す(これを近似的モーメント推定量(approximate moment estimator)という)．
+    このとき，推定関数$\psi$を\textbf{モーメント関数}という．
+\end{definition}
+
+\begin{theorem}
+    次の条件を仮定する．
+    \begin{enumerate}[({M}1)]
+        \item $e(\theta):\theta\mapsto P_\theta f\in\R^k$は$\Theta\osub\R^k$上の単射で，$\theta_0$上で連続微分可能で，非特異なJacobi行列$e'_{\theta_0}\in\GL_k(\R)$を持つとする．
+        \item $P_{\theta_0}\norm{f}^2<\infty$．
+    \end{enumerate}
+    このとき，モーメント推定量$\wh{\theta}_n$は任意に$1$に近い確率で存在し，次を満たす：
+    \[\sqrt{n}(\wh{\theta}_n-\theta_0)\xrightarrow{\theta_0}N\paren{0,e'^{-1}_{\theta_0}P_{\theta_0}ff^\top(e'^{-1}_{\theta_0})^\top}.\]
+\end{theorem}
+
+\subsection{一般化モーメント法}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    Lars HansenはPearson 1894によるモーメント法を拡張してファイナンスに応用し，2013年のノーベル経済学賞を受賞した．
+    モーメントに限らず，真の分布を特徴付ける別の母数$\psi$で計算しやすいものがあったら，これに変換することで
+    $M$-推定量を構成する．
+    最尤法は一般化モーメント法の特殊な場合とみなせる．
+\end{tcolorbox}
+
+\section{最小コントラスト推定量}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    $M$-推定量の目的関数のような，独立観測とその和としての構造を仮定せず，一般の目的関数$\o{U}_n$を最小化する推定量の性質を考える．
+\end{tcolorbox}
+
+\subsection{定義と例}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    最尤推定量は，真の分布との対数尤度の差，すなわちKL-分離度を最小化するものとして得られた．
+    経験分布の真の分布とのKL-分離度は，$n\in\N$に対応して関数を与える．これを$n\to\infty$の極限で漸近的に最小にするクラスを最小コントラスト推定量という．
+\end{tcolorbox}
+
+\begin{model}[最小コントラスト推定量が構成可能な模型]\label{model-for-minimum-contrast-estimator}
+    母数空間$(\Theta,d)$は距離空間，$(\o{X},\o{\A},\o{P})$を帰納極限として得られる確率空間とし，
+    \begin{enumerate}
+        \item $\o{\Psi}:\o{\X}\times\Theta\to(-\infty,\infty]$を\textbf{コントラスト関数}という．
+        \item これは$\o{U}_n$とは別の意味「最小化すべき目的関数」という意味で，「一般化対数尤度関数」の一般化である．一方で，付随する目的関数$\o{U}_n$に今後は独立観測の構造も，その和である構造も仮定しない．
+        \item $\wh{\theta}:=\argmin_{\theta\in\Theta}\o{\Psi}(\x;\theta)$として得られる対応$\whtheta:\o{\X}\to\Theta$を\textbf{最小コントラスト推定量}という．
+    \end{enumerate}
+\end{model}
+
+\begin{example}[最尤推定]
+    最尤推定量は，第一義的には，
+    $\o{\Psi}_n(\theta):=-E_{\bP_n} [\log p(x,\theta)]$を最小化した．
+    
+    が，一致性の議論の中で，真の分布との対数尤度の差$\abs{l_n(\theta)-l_n(\wt{\theta})}$の最小化を考えた．
+    これは損失関数のようでより直感的である．
+    すなわち，
+    \[\o{U}_n(\theta)=E_{\bP_n} \Square{\log\frac{ p(x,\theta_0)}{p(x,\theta)}}\xrightarrow{P_{\theta_0}\dae}D(P_{\theta_0}|P_\theta)\]
+    と取ることも出来る．
+    この考え方は，$Z$-推定量では出来ない，最小コントラスト推定量独自の議論である．
+\end{example}
+
+\begin{theorem}[可測選択定理 (von Neumann 49)]\label{thm-measurable-selection}
+    $\o{\Psi}:\o{\X}\times\Theta\to\R$が次を満たすとき，最小コントラスト推定量$\wh{\theta}:\X\to\Theta$は可測に選べる．
+    \begin{enumerate}
+        \item $(\Theta,d)$は完備可分．
+        \item $\o{\Psi}$は第一引数について可測で第二引数について連続．
+        \item 下限の達成：$\forall_{x\in\X}\;\inf_{\theta\in\Theta}\Psi(x,\theta)\in\Psi(x,\Theta)$．
+    \end{enumerate}
+\end{theorem}
+
+\subsection{独立観測を仮定しない強一致性定理}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    対数尤度関数$\o{\Phi}_n(\x_n;\theta):=\sum_{i\in[n]}\log p_\theta(x_i)$に付随するKL-変分$\o{U}_n(\x;\theta):=\frac{1}{n}(l_n(\theta_0)-l_n(\theta))$を最小化しても良いのであった\ref{lemma-characterization-of-MLE}．
+    この部分を抽象化し，$M$-推定量としての構造を全く仮定しないこととする．
+    このときでも，単一方向に対する一様大数の法則と，もう一方向に関する到達可能性($\o{U}_n,\o{U}$をうまく設定していること)を持つならば，強一致性を持つ．
+\end{tcolorbox}
+
+\begin{theorem}[最小コントラスト推定量の強一致性の十分条件]\label{thm-C-strong-consistency}
+    関数列$\o{U}_n$，関数$\o{U}:\Theta\to(-\infty,\infty]$，空でない部分集合$\Theta'\subset\Theta$，写像列$\wh{\theta}_n:\o{\X}\to\Theta$は次の3条件を満たすとする．
+    \begin{enumerate}[({C}1)]
+        \item 単一方向に関する一様大数の法則：$\forall_{\ep>0}\;\liminf_{n\to\infty}\inf_{\theta\in\Theta:d(\theta,\Theta')\ge\ep}\o{U}_n(\theta)\ge\inf_{\theta\in\Theta:d(\theta,\Theta')\ge\ep}\o{U}(\theta)\;\as$
+        \item 識別可能性：$\forall_{\ep>0}\;\inf_{\theta\in\Theta:d(\theta,\Theta')\ge\ep}\o{U}(\theta)>\inf_{\theta\in\Theta'}\o{U}(\theta)$．
+        \item 最小コントラスト推定量である：$\limsup_{n\to\infty}\Square{\o{U}_n(\wh{\theta}_n)-\inf_{\theta\in\Theta'}\o{U}_n(\theta)}\le0\;\as$
+        \item 到達可能性：$\limsup_{n\to\infty}\inf_{\theta\in\Theta'}\o{U}_n(\theta)\le\inf_{\theta\in\Theta'}\o{U}(\theta)\;\as$
+    \end{enumerate}
+    このとき，次が成り立つ：
+    $\lim_{n\to\infty}d(\wh{\theta}_n,\Theta')=0\;\as$
+\end{theorem}
+\begin{remarks}
+    (C4)は，
+    \[\exists_{\theta_0\in\Theta'}\;\limsup_{n\to\infty}\o{U}_n(\theta_0)\le\o{U}(\theta_0)\]
+    が十分条件としてあり，$\o{U}$が$\o{U}_n$の極限関数として得られる保証である．
+\end{remarks}
+
+\subsection{一致性を持つ推定量の例}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+続いて，この枠組みを用いてより一般的なクラスについて一致性を得よう．
+この枠組みの強みは，最小コントラスト推定量が陽に（解析的に）計算できない場合でも，一致性を示すことが出来る点である．
+\end{tcolorbox}
+
+\begin{example}[最尤推定量]
+    $\{P_\theta\}\ll\nu$(模型\ref{model-for-MLE})に対する最尤推定量$\wh{\theta}_0$は，定理から一致性を持つことが認められる．
+    これは独立観測の構造によるので，一般に$M$-推定量について議論出来る．
+\end{example}
+
+\begin{example}[多項分布に対する最尤推定量]\label{exp-multinomial-model}
+    $k$個の事象への分割$\Om=\sum^k_{i=1}E_i$を考え，$P_\theta[E_i]=:\theta^i$を$k$個のパラメータとする．
+    この試行を$n$回繰り返し，$E_i$が観測された回数を$y_i$とすると，これは多項分布に従う確率変数である：$(y_1,\cdots,y_k)\sim M(n;\theta^1,\cdots,\theta^k)$．
+    パラメータ空間を
+    \[\Theta:=\Brace{(\theta^1,\cdots,\theta^k)\in[0,1]^k\mid\sum^k_{i=1}\theta^i=1}\]
+    とする．コントラスト関数を
+    \[\o{\Psi}_n(\theta):=-\sum^k_{i=1}\frac{y_i}{n}\log\theta^i\]
+    と定めると，これに対応する最小コントラスト推定量とは最尤推定量に他ならない．
+    これに対して，関数を次のように定めれば，定理が用いることが出来て，一致性がわかる：
+    \begin{align*}
+        \o{U}(\theta):=-\sum^k_{i=1}\theta^i_0[\log\theta^i-\log\theta^i_0]\\
+        \o{U}_n(\theta):=-\sum^k_{i=1}\frac{y_i}{n}[\log\theta^i-\log\theta^i_0]
+    \end{align*}
+
+    今回は実は最尤推定量$\wh{\theta_n}=(y_1/n,\cdots,y_k/n)$は陽に計算できるが，一般に尤度方程式も，コントラスト関数の最小点も求めることが出来るとは限らない．
+    この枠組みは，そのような場合でも通用するように出来ている．
+\end{example}
+
+\subsection{独立観測の構造を仮定した場合}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    $M$-推定量は最小コントラスト推定量の特別な場合である．特に最尤推定量は$U(x,\theta):=\Psi(x,\theta)-\Psi(x,\theta_0)$とした場合である．
+\end{tcolorbox}
+
+\begin{theorem}[$M$-推定量の強一致性の十分条件]\label{thm-strong-consistency-for-M-estimator}
+    模型\ref{model-for-M-estimator}において，$(\Theta,d)$をコンパクト，$\Theta':=\Brace{\theta\in\Theta\mid\o{U}(\theta)=\inf_{\wt{\theta}\in\Theta}\o{U}(\wh{\theta})}$とし，$\wh{\theta}_n:\X^n\to\Theta$は写像列で(A1),(A2),(A3)\ref{lemma-A-one-sided-Uniform-LoN}と(C3)\ref{thm-C-strong-consistency}を満たすとする．このとき，
+    \[\lim_{n\to\infty}d(\wh{\theta}_n,\Theta')=0\;\as\]
+\end{theorem}
+
+\subsection{コンパクト集合に終局するための条件}
+
+\section{$Z$-推定量}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=最尤法のノンパラメトリック化]
+    最尤推定量は対数尤度関数を最大化する推定量で，最小コントラスト推定量は真の分布との分離度を最小化する推定量であった．
+    このように，損失関数または効用関数（２つの概念を併せて目的関数）の極値点として与えられる推定量は，
+    モデルが微分可能であるとき，これらは導関数の零点として得られる推定量として一般化できる．
+    これを$M$-推定量という．
+    \footnote{この意味での推定量を$Z$-推定量とし，$M$-推定量は効用関数の最大化で得るものと狭義に解釈することもある．}
+    この一般化は，分布関数$f$への言及を除去しており，ノンパラメトリック化と言える．
+
+    Huberが頑健推定の動機で1964年に最尤推定を一般化し，"maximum likelihood-type"の頭文字から$M$-推定量のクラスを定めた．\footnote{\url{https://en.wikipedia.org/wiki/M-estimator}}
+    実はこれは可微分構造を持つ正則なモデルに関して最適でもある．
+    このセミパラメトリックな一般化を経験尤度法(Owen 1988)という．
+\end{tcolorbox}
+
+\subsection{定義と例}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    $M$-推定量はロバスト推定の代表である．
+\end{tcolorbox}
+
+\begin{model}[$Z$-推定量が構成可能なモデル]\label{model-for-Z-estimator}
+    $M$-推定量の模型\ref{model-for-M-estimator}と同様，自然な同一視$\X^n\mono\o{\X}$の下で考える．
+    \begin{enumerate}
+        \item 関数$\psi:\X\times\Theta\to\R^p$の経験平均
+        \[\o{\psi}_n(\x_n;\theta):=E_{\bP_n}[\psi(X,\theta)]=\frac{1}{n}\sum_{j=1}^n\psi(x_j,\theta)\]
+        を\textbf{推定関数}という．
+        \item 推定方程式の解$\wh{\theta}_n\in\Brace{\theta\in\Theta\mid\o{\psi}_n(\theta)=0}$として構成される推定量$\wh{\theta}_n:\X^n\to\Theta$を\textbf{$Z$-推定量}という．
+        \item $\lim_{n\to\infty}\o{\psi}_n(\wh{\theta}_n)\to0\;as$を満たすとき，\textbf{漸近$Z$-推定量}という．
+    \end{enumerate}
+\end{model}
+
+\begin{model}[可微分モデル]\label{model-differentiable}
+    $M$-推定量の模型\ref{model-for-M-estimator}と同様，自然な同一視$\X^n\mono\o{\X}$の下で考える．
+    さらに，$\{P_\theta\}\subset P(\X)$はある$\sigma$-有限測度に支配され，密度$(p_\theta)$は$\Theta$上微分可能であるとする．
+    \begin{enumerate}
+        \item $\Theta$上可微分なコントラスト関数$\Phi_n:\X^n\times\Theta\to(-\infty,\infty]$について，$\o{\psi}_n:=\partial_\theta\Psi_n$を推定関数とした$Z$-推定量を考えれば良いから，この場合に最小コントラスト推定量\ref{model-for-minimum-contrast-estimator}は$Z$-推定量でもある．
+        \item 以降，$\psi_n(\x_n;\theta):=n\o{\psi}_n(\theta)=\sum_{j\in[n]}\psi(x_j;\theta)$なる記法も採用する．
+        \item $\Theta\subset\R^p$は可測集合，$\psi$は$\Theta$上連続とする．このとき，$\forall_{\wh{\theta}_n\in L(\X^n;\Theta)}\;\psi(\x_n;\wh{\theta}(\x_n))\in\L(\X^n)$．
+    \end{enumerate}
+\end{model}
+
+\begin{example}\mbox{}
+    \begin{enumerate}
+        \item 最尤推定量は，スコア関数を推定関数とする$Z$-推定量であり，尤度方程式$S_n(x,\theta)=\partial_\theta l(\theta,x)=0$の零点として特徴付けられる．
+        \item 次を推定関数に持つ$Z$-推定量のクラスを\textbf{$g$の定めるモーメント推定量}という：
+        \[\psi(x;\theta):=g(x)-\int_\X g(x')P_\theta(dx')\quad g\in L^1(\X;\R^p).\]
+        その簡明さから古くから用いられているが，適用可能なケースは殆ど最尤推定量と同じであるが，漸近分散は最尤推定量のものより一般に大きい．さらに，ロバスト性の見地からもいまいちである．
+        \item 既知の分散$\sigma^2>0$について，モデル$(N(\theta,\sigma^2))_{\theta\in\R}$を考える．
+        関数$\psi(x,\theta)=g(x-\theta)$が定める$Z$-推定量は自然な対象である．
+        なお，分布族のaffine変換不変性から，$\theta_0=0$の場合を考えれば十分である．最尤推定量の影響関数は，$\theta_0=0$のとき$\IF(x)=x$となり，有界でない．
+        一方で，この$\psi$の代わりに，剪断するHuberの$\psi(x)=(-K)\lor x\land K$を用いたものを，頑健回帰という．
+        これが定める$Z$-推定量は一致性，漸近正規性を満たし，さらに影響関数が有界になる，$B$-ロバスト推定量である．
+        ただし，漸近有効ではなく，定数$K$が有効性とロバスト性のトレードオフになっている．
+        この$K$を\textbf{調整定数}(tuning constant)という．
+    \end{enumerate}
+\end{example}
+
+\subsection{漸近$Z$-推定量の一致性}
+
+\begin{theorem}[$Z$-推定量が一致性を持つための条件]\label{thm-D-consistency-for-Z-estimator}
+    $\Theta\subset\R^p$をコンパクト集合，$\psi:=(\psi^a)_{a\in[p]}:\X\times\Theta\to\R^p$は次を満たすとする：
+    \begin{enumerate}[({D}1)]
+        \item 第二引数連続性：$\forall_{x\in\X}\;\psi(x,-):\Theta\to\R\p$は連続．
+        \item 第一引数可測性：$\forall_{\theta\in\Theta}\;\psi(-,\theta):\X\to\R^p$は可測．
+        \item $L^1$-有界性：$\exists_{M\in L^1(\X)}\;\forall_{(x,\theta)\in\X\times\Theta}\;\abs{\psi(x,\theta)}\le M(x)$．
+        \item 極限解の存在：$\Theta':=\Brace{\theta\in\Theta\;\middle|\;\int_\X\psi(x,\theta)P(dx)=0\in\R^p}\ne\emptyset$とする．
+    \end{enumerate}
+    このとき，漸近$Z$-推定量$\wh{\theta}_n$は強一致性を持つ：$d(\wh{\theta}_n,\Theta')\to0\;\as$
+\end{theorem}
+
+\subsection{コンパクト集合に終局するための条件}
+
+\subsection{一致性を持つ$Z$-推定量の漸近分布}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=]
+    一致性は大数の法則に当たるならば，その真値への収束の速度と分布が同様に気になる．これが漸近正規性である．
+    これを，可微分模型\ref{model-differentiable}に於ける$Z$-推定量について議論する．
+\end{tcolorbox}
+
+\begin{theorem}[漸近$Z$-推定量が漸近正規であるための十分条件]\label{thm-E-asymptotic-normality-for-Z-estimator}
+    可微分模型\ref{model-differentiable}において，$\theta_0\in\Theta^\circ$とし，$B\osub\Theta$を$\theta_0$の開近傍とする．
+    推定関数$\psi:\X\times\Theta\to\R$は次の5条件を満たすとする：
+    \begin{enumerate}[({E}1)]
+        \item 第二引数は真値の近傍で$C^1$-級：推定関数$\psi:\X\times\Theta\to\R^p$は$B$上$C^1$級．
+        \item 第一引数可測性：$\psi(-,\theta)$は可測．
+        \item 真値において中心化された$L^2$関数である：$\psi(x,\theta_0)\in\L^2(P;\R^p)$で，$E_P[\psi(x,\theta_0)]=0$．
+        \item 導関数は$L^1$-有界：$\exists_{M\in\L^1(\X,\R)}\;\forall_{x\in\X,\theta\in B}\;\abs{\partial_\theta\psi(x,\theta)}\leq M(x)$．
+        さらに，$\Gamma:=-P\partial_\theta\psi(x,\theta_0)$は正則．
+        \item $\wh{\theta}_n$は漸近$Z$-推定量である：確率変数列$\wt{\theta}_n:\X^n\to\Theta$が$\wh{\theta}_n\xrightarrow{p}\theta_0$かつ$\psi_n(\wh{\theta}_n)=o_p(\sqrt{n})$を満足する．
+    \end{enumerate}
+    このとき，
+    \[\sqrt{n}(\wh{\theta}_n-\theta_0)-\Gamma^{-1}\frac{1}{\sqrt{n}}\psi_n(\theta_0)=o_p(1)\quad(n\to\infty).\]
+    特に，
+    \[\sqrt{n}(\wh{\theta}_n-\theta_0)\xrightarrow{d}N_p(0,\Sigma)\quad(n\to\infty),\qquad\Sigma:=\Gamma^{-1}\Phi(\Gamma^{\top})^{-1},\Phi:=\int_\X\phi\phi^{\top}(x,\theta_0)P(dx)\]
+\end{theorem}
+\begin{remarks}
+    $I$が
+\end{remarks}
+
+\subsection{LeCamのワンステップ改善による最適推定量の構成}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    $Z$-推定量が，方程式を解くことの困難さのために明示的に得られないとしよう．
+    すなわち，漸近$Z$-推定量$\wh{\theta}_n$は直接得られない，\ref{thm-E-asymptotic-normality-for-Z-estimator}(E5)を満たすものが見つからない
+    とする．
+    このとき，$\sqrt{n}$-一致性を持つ推定量さえ見つかれば，これを($\psi_n$をスコア関数とするときは最尤推定量と同じ漸近分散を持つまで)改善する算譜が存在する．
+    実は，この算譜は極めて自由度が高い．
+    \begin{enumerate}
+        \item $\wh{\theta}^0_n$が$\sqrt{n}$-一致性を持つとき，$\wh{\theta}_n:=\wh{\theta}^0_n-(\partial_\theta\psi_n(\wh{\theta}^0_n))^{-1}\psi_n(\wh{\theta}^0_n)$とすると，再び$Z$-推定量と同じ漸近分布を持つ．$-\partial_\theta\psi_n(\theta)$を\textbf{観測情報行列}という．
+        \item $\wh{\theta}^*_n:=\wh{\theta}^0_n-(n\eta^*(\wh{\theta}^0_n))^{-1}(\wh{\theta}^0_n)$も同じ漸近分散を持つ．$-n\eta^*(\theta)$はスコア行列の一般化である．
+    \end{enumerate}
+\end{tcolorbox}
+
+\begin{definition}[one-step estimator]
+    $\Theta$-値確率変数列$(\wh{\theta}_n^0)$について，
+    \begin{enumerate}
+        \item 新たな推定量の系列$(\wh{\theta}_n)$を
+        \[\wh{\theta}_n:=\wh{\theta}^0_n-(\partial_\theta\psi_n(\wh{\theta}^0_n))^{-1}\psi_n(\wh{\theta}^0_n)\]
+        で定めると，これは
+        \[\X^*_n:=\Brace{x\in\X^n\mid\wh{\theta}^0_n\text{において}\psi_n\text{は微分可能で}\partial_\theta\psi_n(\wh{\theta}^0_n)\text{は正則で}\wh{\theta}_n\in\Theta}\]
+        上で定まるから，これを$\X$上に可測に延長する．延長の仕方は任意で良い．
+        こうして得た$(\wh{\theta}_n)$を\textbf{$(\wh{\theta}_n^0)$を初期推定量とするワンステップ推定量}という．
+        \item 新たな推定量の系列$(\wh{\theta}_n^*)$を
+        \[\wh{\theta}^*_n:=\wh{\theta}^0_n-(n\eta^*(\wh{\theta}^0_n))^{-1}(\wh{\theta}^0_n),\quad\eta^*(\theta):=E_{P_\theta}[\partial_\theta\psi(X;\theta)]=\int_\X\partial_\theta\psi(x;\theta)P_\theta(dx).\]
+        $-n\eta^*(\theta)$はFisher情報行列に当たる．
+    \end{enumerate}
+\end{definition}
+\begin{remarks}[$\wh{\theta}_n^*$は$\wh{\theta}_n$と漸近同等]
+    $\eta^*$が真値$\theta_0$の近傍で連続ならば，$\wh{\theta}_n^*$は$\wh{\theta}_n$と漸近同等になる．
+    実は，推定関数の標本平均$\o{\psi}_n$が，ある正則行列$\dot{\psi}_0\in\R^p$について次を満たすとき，
+    \[\sup_{\sqrt{n}\norm{\theta-\theta_0}<M}\Norm{\sqrt{n}(\o{\psi}_n(\theta)-\o{\psi}_n(\theta_0))-\dot{\psi}_0\sqrt{n}(\theta-\theta_0)}\xrightarrow{p}0.\]
+    係数$(\partial_\theta\psi_n(\wh{\theta}^0_n))^{-1}$は任意の推定量で良い．
+    このとき，任意のランダムな行列$\dot{\psi}_{n,0}$はある$\dot{\psi}_0$に収束するならば，
+    \[\wh{\theta}_n:=\wh{\theta}^0_n-\dot{\psi}_{n,0}^{-1}\o{\psi_n}(\wh{\theta}^0_n)\]
+    で定まる推定量も\textbf{ワンステップ推定量}といい，次の定理を満たす．
+\end{remarks}
+
+\begin{theorem}[ワンステップ推定量が漸近正規であるための十分条件]
+    $\theta_0\in\Theta^\circ$，$B\subset\Theta$を$\theta_0$の開近傍とする．推定関数$\psi:\X\times\Theta\to\R$は
+    条件(E1)〜(E4)\ref{thm-E-asymptotic-normality-for-Z-estimator}を満足し，
+    初期推定量$(\wh{\theta}^0_n)$は次の条件を満足するとする：
+    \begin{enumerate}[({E}1)]\setcounter{enumi}{5}
+        \item 初期推定量の列$\wh{\theta}^0_n:\X^n\to\Theta$が$\sqrt{n}$-一致性を持つ：$\wh{\theta}^0_n-\theta_0=O_p(1/\sqrt{n})$．\footnote{条件$\wh{\theta}^0_n-\theta_0=O_p(1/\sqrt{n})$は，弱一致性$\wh{\theta}^0_n-\theta_0=o_p(1)$を含意することに注意．これに加えて，$n^{-1/2}$倍の範囲で真値$\theta_0$を捕まえていることは要求する．}
+    \end{enumerate}
+    このとき，ワンステップ推定量$\wh{\theta}_n$に対して，
+    通常の漸近$Z$-推定量の漸近正規性\ref{thm-E-asymptotic-normality-for-Z-estimator}と同様の結果が成り立つ：
+    \[\sqrt{n}(\wh{\theta}_n-\theta_0)=-\Gamma^{-1}\frac{1}{\sqrt{n}}\psi_n(\theta_0)+o_P(1).\]
+    特に，$\sqrt{n}(\wh{\theta}_n-\theta_0)\xrightarrow{d}N_p(0,\Sigma)$．
+\end{theorem}
+
+\subsection{$Z$-推定量の影響関数}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    1964年にHuberによって提唱された．
+    推定量の，新たな観測点$x_{n+1}\in\X$に対する感度を分析することで，推定算譜の頑健性を評価できるだろう．
+\end{tcolorbox}
+
+\begin{model}[推定量に対する感度分析]
+    $Z$-推定量の模型\ref{model-for-Z-estimator}を考える．母数値関数$T:P(\X)\to\Theta$は
+    \[\forall_{P\in P(\X)}\;\int_\X\psi(x,T(P))P(dx)=0\]
+    を満たすとする．これは，任意の経験分布$\bP_n$について$\wh{\theta}_n=T(\bP_n)$を満たす対応$T:\Em(P(\X))\to\Theta$の延長である．
+    一般に$T:P(\X)\to\Theta$を微分して感度を分析することが考えられるが，特に極点$\bP_n\in\Em(P(\X))$の$\delta_x$方向への摂動を考えると，\textbf{新たな観測に対する$Z$-推定量$\wh{\theta}_n$の感度}が考察できるだろう．
+    \begin{enumerate}
+        \item $P\in P(\X),x\in\X$について，\textbf{$P$を通る$x$-道}とは，曲線$(P^x_\ep:=(1-\ep)P+\ep\delta_x)_{\ep\in[0,1]}:[0,1]\to P(\X)$をいう．
+        \item $\Theta\osub\R^p$とし，適切なモデルの正則性を仮定する．このとき，
+        \[\IF(x;T,P):=\dd{T(P^x_\ep)}{\ep}(0):=\Gamma(P)^{-1}\psi(x;T(P)),\quad\Gamma(P):=-\int_\X\partial_\theta\psi(y;T(P))P(dy).\]
+        で定まる関数$\IF_{T,P}:\X\to\R^p$を\textbf{母数$T$の$P$における影響関数}という．
+        \item 影響関数が$\X$上有界になるような推定量$T:P(\X)\to\Theta$は，頑健性の観点から好ましいと考えられる，これを\textbf{$B$-ロバスト推定量}(bias robust estimator)という：$\exists_{M\in\R}\;\abs{\IF(x;T,P)}=\abs{\Gamma(P)^{-1}\psi(x;\theta)}\le M$．
+        \item 
+    \end{enumerate}
+\end{model}
+
+\begin{example}\mbox{}
+    \begin{enumerate}
+        \item $(N(\theta,1))_{\theta\in\R}$の位置母数最尤推定量$\wh{\theta}_n$の影響関数は$\IF(x;T,N(\theta,1))=x-\theta$である．真の分布$\theta$から観測が離れるにつれて，線型に影響がましていく．
+        このように，最尤推定量は分散の意味で最適であるが，一般に影響関数は有界にはならない．
+    \end{enumerate}
+\end{example}
+
+\section{尤度比検定とその同値な検定}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    尤度比検定統計量$\Lambda^*_n$，Rao検定量$\bS_n$，Wald検定量$\bW_n$はいずれも漸近同等である．
+\end{tcolorbox}
+
+\subsection{定義と漸近分布}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    初等統計で扱われるカイ$2$乗検定の根拠は，この漸近理論によって明らかになる．
+\end{tcolorbox}
+
+\begin{model}[単純仮説の尤度比検定]\label{model-for-likelihood-ratio-test}
+    $\Theta\subset\R^p,\theta_0\in\Theta^\circ$とし，$\sigma$-有限測度$\nu$に支配されているモデル$\{P_\theta\}_{\theta\in\Theta}\subset P(\X)$上で問題$H_0:\theta=\theta_0$を考える．
+    \begin{enumerate}
+        \item 尤度比
+        \[\Lambda_n:=\frac{L_n(\theta_0)}{\sup_{\theta\in\Theta}L_n(\theta)}=\frac{L_n(\theta_0)}{L_n(\wh{\theta}_n)}\]
+        の値が小さい時に帰無仮説$H_0$を棄却する検定を\textbf{尤度比検定}という．ただし，$\wh{\theta}_n$は$\theta$の最尤推定量とした．
+        \item 尤度というのは確らしさで，これが大きいほどたしからしい．最尤推定量の尤度に比べて$L_n(\theta_0)$が十分小さい場合は$H_0$は疑わしいことになる．
+        \item 一方で，尤度比$\Lambda_n$の精密分布は複雑になるため，極限分布で代用することになる．
+        \item 次を\textbf{基準化されたスコア関数}$Z_n:\X^n\times\Theta\to\R^p$という：
+        \[Z_n(\theta):=\frac{1}{\sqrt{n}}\sum_{j\in[n]}\partial_\theta\log p_\theta(x_j).\]
+        $Z:=Z(\theta_0)\in\R^p$とすると，$\theta_0$が最尤推定量に一致するならば$Z=0$である．
+    \end{enumerate}
+\end{model}
+
+\begin{theorem}
+    模型\ref{model-for-likelihood-ratio-test}には検定点$\theta_0$での弱一致性$\wh{\theta}_n\xrightarrow{P_{\theta_0}}\theta_0$を満たす最尤推定量$\wh{\theta}_n$が存在し，
+    これ\ref{model-for-MLE}が漸近正規になるための条件(F1)~(F4)\ref{cor-E-ASN-of-MLE}を満たすとする．
+    このとき，
+    \[-2\Log\Lambda_n\Rightarrow\chi^2(p)\;(n\to\infty)\quad\under P_{\theta_0}.\]
+\end{theorem}
+
+\subsection{複合仮説の検定}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    殆ど変わらず，$p$を$r$に変えるのみである．
+\end{tcolorbox}
+
+\begin{model}[複合仮説の尤度比検定]\label{model-compound-hypothesis-for-LRT}
+    $\Theta\osub\R^p,\Theta_0\subset\Theta$とする．
+    $\theta_0\in\Theta_0$の開近傍上の$C^2$-級関数$R:V\to\R^r$が存在して，$\Theta_0\cap V=R^{-1}(0)$が成り立つとする．
+    ただし，$1\le r\le p-1$かつ$\partial_\theta R(\theta_0)\in M_r(\R)$は非退化である．
+    検定問題$H_0:\theta\in\Theta_0$を考える．
+    \begin{enumerate}
+        \item 次による検定が尤度比検定を与える：
+        \[\Lambda^*_n:=\frac{\sup_{\theta\in\Theta_0}L_n(\theta)}{\sup_{\theta\in\Theta}L_n(\theta)}.\]
+        \item これが小さいとき，帰無仮説$H_0$を棄却する．
+        \item 制約のない最尤推定量を$\wh{\theta}_n$，$\Theta_0$の下での最尤推定量を$\wh{\tau}_n$とする．
+    \end{enumerate}
+\end{model}
+
+\begin{theorem}
+    上の模型には検定点$\theta_0$での弱一致性$\wh{\theta}_n\xrightarrow{P_{\theta_0}}\theta_0$を満たす最尤推定量$\wh{\theta}_n$と$\wh{\tau}_n$が存在し，
+    これ\ref{model-for-MLE}が漸近正規になるための条件(F1)~(F4)\ref{cor-E-ASN-of-MLE}を満たすとする．
+    このとき，
+    \[-2\Log\Lambda^*_n\Rightarrow\chi^2(r)\;(n\to\infty)\quad\under P_{\theta_0}.\]
+\end{theorem}
+
+\subsection{Rao検定とWald検定}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    複合仮説\ref{model-compound-hypothesis-for-LRT}の検定に関して，尤度比検定に変わって，ラオ検定（Lagrange未定乗数法検定）やWald検定を用いることが出来る．
+    これらは$H_0$の下で尤度比検定統計量$\Lambda_n^*$と同じ漸近分布$\chi^2(r)$を持つ．
+    特に単純仮説であったとき，Rao検定においては最尤推定量を計算する必要はない．
+\end{tcolorbox}
+
+\begin{definition}
+    複合仮説\ref{model-compound-hypothesis-for-LRT}について，
+    \begin{enumerate}
+        \item 次が大きいときに$H_0$を棄却する検定が考えられる：
+        \[\bS_n:=Z_n(\wh{\tau}_n)^\top I(\wh{\tau}_n)^{-1}Z_n(\wh{\tau}_n).\]
+        これを\textbf{ラオ検定（Lagrange未定乗数法検定）}という．
+        \item 次が大きいときに$H_0$を棄却する検定が考えられる：
+        \[\bW_n:=nR(\wh{\theta}_n)^\top C(\wh{\theta}_n)^{-1}R(\wh{\theta}_n),\quad C(\theta):=\partial_\theta R(\theta)I(\theta)^{-1}(\partial_\theta R(\theta))^\top.\]
+        これを\textbf{ワルド検定}という．
+    \end{enumerate}
+\end{definition}
+
+\begin{theorem}
+    $\bS_n,\bW_n$はいずれも$-2\log\Lambda_n^*$と漸近同等である．
+\end{theorem}
+
+\subsection{多項分布の検定}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    正則性を仮定すれば，多項分布の検定においては，尤度比検定$-2\log\Lambda^*_n$と漸近同等な統計量$Q_n,Q^*_n$が見つかる．
+\end{tcolorbox}
+
+\begin{model}[Fisherの$\chi^2$-検定]
+    $\R^k$の標準基底
+    $\Om:=\{e_1,\cdots,e_k\}$を確率空間とし，分布の全体を
+    \[\Delta:=P(\Om)=\Brace{p\in\R^k_+\;\middle|\;\sum_{i\in[k]}p_i=1}\]
+    と表す．$1\le m<l\le k-1$とする．
+    パラメトリックモデル$p=(p_\theta)_{\theta\in\Theta}:R^l\osup\Theta\to\Delta^\circ$は$C^1$級の単射で，
+    $\theta:\R^m\osup U\to\Theta\subset\R^l$も$C^1$-級の単射として，これによって定まる部分パラメトリックモデル$(p_\theta)_{\theta\in\theta(U)}$についての問題$H_0:\theta\in\theta(U)$を考える．
+    \begin{enumerate}
+        \item 最尤推定量と同様，スコア関数と漸近同等な$\theta$の推定量$\wh{\theta}_n$と$u$の推定量$\wh{u}_n$が得られているとする：
+        \[\sqrt{n}(\wh{\theta}_n-\theta_0)-I^{-1}Z_n=o_p(1),\quad I:=\sum_{i\in[k]}\frac{1}{p_i(\theta_0)}((\partial_\theta p_i)^\top\partial_\theta p_i)(\theta_0),Z_n=\frac{1}{\sqrt{n}}\sum_{j\in[n]}(\partial_\theta\log p_{\theta_0}(x_j))^{\top}.\]
+        \[\sqrt{n}(\wh{u}_n-u_0)-\I^{-1}J^{\top}Z_n=o_p(1),\quad \I:=J^\top IJ,J:=\pp{\theta}{u}(u_0).\]
+        ただし，$I$は$\theta_0\in\Theta$におけるFisher情報行列，$\I$は$u_0\in \theta(U)$におけるそれである．
+        \item それぞれの検定統計量の値が大きい時に$H_0$を棄却する：
+        \[Q_n:=\sum_{i\in[k]}\frac{(np_i(\wh{\theta}_n)-np_i\circ\theta(\wh{u}_n))^2}{np_i\circ\theta(\wh{u}_n)},\quad Q^*_n:=\sum_{i\in[k]}\frac{(np_i(\wh{\theta}_n)-np_i\circ\theta(\wh{u}_n))^2}{np_i(\wh{\theta}_n)}.\]
+    \end{enumerate}
+\end{model}
+
+\begin{theorem}
+    $H_0$の下での$Q_n,Q^*_n$の漸近分布は$\chi^2(l-m)$である．
+\end{theorem}
+\begin{remarks}
+    すなわち，尤度比検定
+    \[-2\log\Lambda^*_n=-2\log\frac{\prod_{j\in[n]}p\circ\theta(\wh{u}_n)^{x_j}}{\prod_{j\in[n]}p(\wh{\theta}_n)^{x_j}}\]
+    と漸近同等である．
+\end{remarks}
+
+\begin{example}\mbox{}
+    \begin{enumerate}
+        \item モデル$\Delta$内の\textbf{適合度検定}$H_0:(p_i)_{i\in[k]}=(p_i^*)_{i\in[k]}$は，単純仮説の検定であるが，再び$Q_n,Q_n^*$の漸近分布は$\chi^2(k-1)$である．
+        \item モデル$\Delta$の\textbf{独立性の検定}$H_0:(p_{i-})_{i\in[r]}\indep(p_{-j})_{j\in[c]}$の検定統計量の漸近分布は$\chi^2((r-1)(c-1))$である．
+    \end{enumerate}
+\end{example}
+
+\chapter{非径数的手法}
+
+\section{情報量規準}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    情報量規準という，モデルを比較する形式を手に入れたことで，
+    検定と推定を統合する視座が得られる．
+    これは標本空間上の分布の空間$P(\X)$上の測度$AIC:\B(P(\X))\to\R$であるか？
+    幾何学的に言えば，モデル$\M\subset P(\X)$の，真の分布$P_0\in P(\X)$との距離の遠さと，大きさ（次元）の和である．
+\end{tcolorbox}
+
+\subsection{KL-変分によるモデル評価}
+
+\begin{model}[パラメトリックモデルの評価]\label{model-for-evaluation-of-parametric-model}
+    $\sigma$-有限測度$\nu$に支配されたモデル$\{P_\theta\}\subset P(\X)$と真の分布$\mu\gg Q\in P(\X)$との関係を考える．
+    $\wh{\theta}_n:\X^n\to\Theta$を推定量とすると，代入$P_{\theta_n}$が分布に対する推定量となる．
+    この，分布に対する推定の精度を，Banach空間$P(\X)$上の距離や変分を用いて評価したい．
+\end{model}
+
+\begin{example}[最尤法とは真の分布からのKL-情報量を最小にする分布を採用する手法]
+    KL情報量の最小化と交差エントロピーの最大化は同値である．そして交差エントロピーに経験分布を代入したものは対数尤度関数に他ならない：
+    \[h(p,\wh{\theta}_n(x);\bP_n)=E_{\bP_n}[\log p_{\wh{\theta}_n}(X)]=l_n(\x_n;\wh{\theta}_n).\]
+    これが情報論(エントロピー理論)からみた最尤法の意味である．
+    \begin{enumerate}
+        \item 真の分布$Q$と予測分布$P_{\wh{\theta}_n}$のKL-分離度は
+        \[D(Q|P_{\wh{\theta}_n})=\int_\X q(z)\log\frac{q(z)}{p_{{\whtheta}_n}(z)}\nu(dz)=\int_\X q(z)\log q(z)\nu(dz)-\int_\X q(z)\log p(z,\wh{\theta}_n)\nu(dz).\]
+        ここで，モデル$p$と推定量$\wh{\theta}_n$の選択に依るのは第二項の\textbf{交差(連続)エントロピー$h_{P_{\wh{\theta}_n},Q}$}
+        \[h(p,\wh{\theta}_n(x);Q):=\int_\X\log p(z,\wh{\theta}_n(x))Q(dz)\]
+        である．
+        \item 真の分布$Q$からの交差エントロピーは，$Q$には何の仮定も置いていないため，経験分布$\bP_n$から推定することになる：プラグイン推定量$h(p,\wh{\theta}_n(x);\bP_n)$を用いる．
+        実はこれが対数尤度関数$l_n$である！
+    \end{enumerate}
+\end{example}
+
+\begin{definition}[information criterion]
+    尤度関数にペナルティ項$\p$を付けた
+    \[IC(\wh{\theta}_n)=-2\Square{\sum^n_{j=1}\log p(x_j,\wh{\theta}_n(x))-\p(n)}\]
+    を，推定量$\wh{\theta}_n:\X^n\to\Theta$に対する\textbf{情報量規準}という．
+    一般に$\p$は真の分布$Q$に依存するので，一致推定量で置き換える．
+\end{definition}
+
+\begin{example}
+    バイアス補正の観点から，$\p(n)=\Tr(C)$とおけば，ICは交差エントロピー(の逆符号)の一致推定量である．
+    従ってICの値が小さいほどモデルによる推定量$P_{\theta_*}$と真の分布$Q$とのKL-変分が小さいため，良いモデルだと考えられる．
+    \begin{enumerate}
+        \item 推定量$\wh{\theta}_n$が$\Psi$の定める最小コントラスト推定量であるとき，$E_Q[\partial_\theta\Psi(x;\theta_*)]=0$であるから，
+        \[\p(n)=-\Tr\paren{\paren{\int_\X\partial^2_\theta\Psi(x;\theta_*)Q(dx)}^{-1}\int_\X(\partial_\theta\Psi(x;\theta_*))^\top\partial_\theta\log p(x;\theta_*)Q(dx)}\]
+        となる．この場合を小西-北川の\textbf{一般化情報量規準}(の特殊な場合)という．
+        \item さらに$\wh{\theta}_n$が最尤推定量であるとき，$E_Q[s(X;\theta_*)]=0$より，
+        \[C=J_Q^{-1}I_Q\quad I_Q:=\int_\X(\partial_\theta\log p)^\top\partial_\theta\log p(x;\theta_*)Q(dx),J_Q:=-\int_\X\partial^2_\theta\log p(x;\theta_*)Q(dx).\]
+        となるから，補正項はその一致推定量を取る．この場合を\textbf{竹内の情報量規準}という．
+        \item $\p(n)=k$を$\Theta\subset\R^k$の次元とすると，これを\textbf{赤池情報量規準}という．
+        これは，$\wh{\theta}_n$が最尤推定量で，$Q\in\{P_\theta\}_{\theta\in\Theta}$が成り立つ場合の，竹内の情報量規準の退化した場合でもある．
+    \end{enumerate}
+    歴史的に最初に提案されたのは赤池情報量規準で，これはモデルのmisspecificationに脆弱である．
+    しかし一般に，情報量規準はパラメータ数を過大評価することが証明出来る．
+\end{example}
+
+\subsection{交差エントロピーの推定}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    真の分布と，そのモデルがはじき出す予測分布との分離度を，そのモデルのmisspecificationの度合いを測る尺度に用いるという発想である．
+    すると，「\textbf{モデル$f$の平均対数尤度が大きいほど良いモデル}」ということになる．
+    しかし，分離度を経験分布から求めても，そのバイアスの推定の仕事が残っている．
+    これはバイアスの漸近値(の一致推定量plug-in)を用いるということである．
+    \textbf{このバイアスは，同じデータ$X$を，パラメータの推定と，推定されたモデルの平均対数尤度の推定とに二度用いたことによって生じる}．
+    こうして得られる種々の分離度の推定量を，情報量規準という．
+\end{tcolorbox}
+
+\begin{model}[KL-変分によるパラメトリックモデルの評価]
+    KL-変分においてモデル$\{P_\theta\}\subset P(\X)$とその推定量$\wh{\theta}_n$を評価する事を考える．
+    これは真の分布$Q$からの交差エントロピーを(ノンパラメトリック)推定することに帰着するが，その際のバイアス
+    \[b_n:=\int_{\X^n}\Square{h(P_n,p,\wh{\theta}_n(x))-h(Q,p,\wh{\theta}_n(x))}Q^n(dx).\]
+    を評価する．ある$\theta_*\in\Theta$と$\varphi_Q\in L^2(\X,Q;\R^k)$が存在して，
+    次が成り立つことを仮定する：
+    \begin{enumerate}[({H}1)]
+        \item スコア関数の中心性：$\int_\X\varphi_Q(x)Q(dx)=0$
+        \item \[R:=\sqrt{n}(\wh{\theta}_n-\theta_*)-\zeta_n\xrightarrow{Q_n}0,\quad\zeta_n:=n^{-1/2}\sum_{j=1}^n\varphi_Q(x_j)\]
+        が成り立つと仮定する．
+        \item その他の正則性条件……．
+    \end{enumerate}
+    さらに，次の記号を用意する．
+    \begin{enumerate}
+        \item $\wh{u}_n:=\sqrt{n}(\wh{\theta}_n(\x_n)-\theta_*)$とおく．
+        \item スコアを$s(x,\theta)=\partial_\theta\log p(x,\theta)$とし，$Q$からの差を
+        \[s_0(x;\theta):=s(x;\theta)-\int_\X s(z;\theta)Q(dz)\]
+        とする．
+        \item $g(x,v):=-2\int^1_0(1-t)\partial^2_\theta\log p(x;\theta^*+tv)dt$，
+        \[g_0(x,v):=g(x,v)-\int_\X g(z,v)Q(dz).\]
+        \item $C:=\Cov_Q[s(-,\theta_*)^\top,\varphi_Q]$とする
+    \end{enumerate}
+    $Q\notin\{P_\theta\}$のとき，一般に$E_Q[s(x;\theta_*)]\ne0$に注意．このとき，Taylor展開は
+    \[\log p(z:\wh{\theta}_n(\x_n))-\log p(z;\theta_*)=\frac{1}{\sqrt{n}}s(z;\theta_*)\wh{u}_n-\frac{1}{2n}\wh{u}_n^\top g(z,n^{-1/2}\wh{u}_n)\wh{u}_n\]
+    を与える．
+\end{model}
+\begin{remarks}
+    この仮定は，$\theta_*\in\Theta$を唯一の最小点に持つ関数$\theta\mapsto\int_\X\Psi(x;\theta)Q(dx)$が定める最小コントラスト推定量が，スコア関数
+    \[\varphi_Q(x):=-\paren{\int_\X\partial_\theta^2\Psi(z;\theta_*)Q(dz)}^{-1}(\partial_\theta\Psi(x;\theta_*))^\top\]
+    について満たす．
+\end{remarks}
+
+\begin{theorem}[バイアスの漸近分布]
+    仮定(H1)~(H3)の下で，次が成り立つ：
+    \[nb_n=\int_{\X^n}Q^n(d\x_n)\paren{1_{A_n}\sum_{j\in[n]}\paren{\log p(x_j;\wh{\theta}_n(\x_n))-\int_\X\log p(z;\wh{\theta}_n(\x_n))Q(dz)}}+o(1)=\Delta_1+\Delta_2+\Delta_3+o(1).\]
+    かつ
+    \[\Delta_1=o(1),\quad\Delta_2\to\Tr C,\quad\Delta_3=o(1).\]
+    特に，
+    $nb_n\xrightarrow{n\to\infty}\Tr C$．
+\end{theorem}
+
+\subsection{AICの含蓄}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    $(-2)\log_e(\text{最大尤度})$の第1項は変わらず，第2項のペナルティ項をいろいろ変えることで，情報量規準が作れる．
+    ペナルティ項をモデルの次元としたものがAICで，
+    交差エントロピーの一致推定量としてはmisspecificationに脆弱であるが，
+    仮定が少ないものを採用する「オッカムの剃刀」の方針に則ったものとしては非常にシンプルな存在である．
+\end{tcolorbox}
+
+\begin{discussion}[独立性・有意性検定は最小AIC推定で置き換えられる（あるいは近似的には同じ行為である）]
+    二次関数に正規誤差$N(0,\sigma^2)$を持たせて発生させたデータに，$1$次，$2$次，$5$次でfittingすると，実は5次の方が最小二乗誤差は小さいが，真のデータ生成規則と異なる．
+    これをAICが解決することが最初の例として挙げられている(1976\cite{赤池76})．
+    これは「雑音で乱された信号の復元にもAICが使えることを表している」と論じている．
+
+    続いて，独立性の検定に応用する．
+    独立性を仮定した場合と仮定しなかった場合のどちらのモデルを採用するかをAICで判定できるという．
+    Fisherの$\chi^2$-検定と結論が同じになると論じている．
+    さらに$\chi^2$-検定に対する有意性として「大量データの統計解析の自動化の可能性があることを示している」と提示している．
+\end{discussion}
+
+\begin{history}[AICの誕生 (1971) \cite{赤池76}参照]\label{history-AIC}
+    AICは予測問題と密接に関係があることが，従来の検定・推定の立場と最も異なる点であるという．
+    \begin{quote}
+        従来の推定論は，単に未知パラメータの推定という形で展開され，推定結果の利用目的が明確でないために，推定精度の評価基準，例えば2乗平均誤差などの選定上の指導理念を与えることができなかった．
+    \end{quote}
+    \begin{enumerate}
+        \item 
+        定常時系列$(y_n)$を，過去$k$段階前までの観測値の線型結合で予測することを考える．
+        それぞれの線型結合の係数は，最小二乗誤差で捉え，最終予測誤差(FPE)を
+        \[FPE:=E[y_n-\wh{a_{k0}}-\wh{a_{k1}}y_{n-1}\cdots-\wh{a_{kk}}y_{n-k}]\]
+        で定めて，最良の次数$k\in\N$を決めたい．
+        なお，ここに$z_n:=y_n-\wh{a_{k0}}-\wh{a_{k1}}y_{n-1}\cdots-\wh{a_{kk}}y_{n-k}$が互いに独立であると仮定できるとき，これをこれを自己回帰モデルという．
+        この次数$k\in\N$の決定は従来検定を用いることが考えられていたが，実用的なものは知られていなかった．
+        しかしFPEの最小化と考えると，推定論の問題である．
+        FPEを推定して，その最小化を考えて$k$を選択すれば良い，とした(Akaike 1969,70)．
+        \begin{quote}
+            この最小FPE法と呼ばれる方法の実用上の有効性は著しく，現在まで多くの成功的な適用例，特に各種研究分野におけるスペクトル解析への応用例，が報告されている．
+            この方法を$\{y_n\}$がベクトル過程である場合に拡張したものは，セメント焼成工程の計算機制御の実現に用いられ，またそのほかの複雑な統計的システムの解析に利用されつつある．
+        \end{quote}
+        \item しかし実は，$\{y_n\}$がベクトル過程である場合への拡張には困難がある．
+        $X\in\R^q$を共変量として，$y\in\R^p$に対する回帰$Y=FX+Z$を\textbf{因子分析モデル}という．$F\in M_{pq},Z$の各成分は$X$の各成分と独立であるとする．
+        これは，$Y$の成分間の相関関係を，低次元因子ベクトル$X$で説明しようとするモデルで，
+        $Y$の分散共分散行列$C$に，$C=FF^\top+V\;(V\text{は対角行列})$なるパラメトリックな仮定を置いていることになる．$Z$はノイズである．
+        従来の決定法は，$Z$にパラメトリックな仮定を置いて，$q\in\N$を増加させながら最尤法によって「$q$に伴う最大尤度の増加分の検定結果」が有意でなくなるような最初の$q$を\textbf{因子数}として決定するものであった．
+        するとこれは，一体何を基準に考えているのかが明らかでない．FPEのように，「何を最小化しようとしているのか？」が明らかでない．
+        \item 役者が揃った．因子分析モデルから最尤法が採用され，ARモデルからFPEという「統計量にまとめること」が採用されることになる．
+        \begin{quote}
+            MLEはFisherによって初めて詳細に論じられてから極めて広く用いられているが，その有効性の根拠が何にあるのかは明らかではなく，
+            その合理性の説明は通常直感に訴えてなされてきた．
+            前項で論じた因子分析法には最尤法が用いられている．
+            そこで，最尤法が何を最適化しようとしているのかが明らかになりさえすれば，先の問題は解決されることになる．
+        \end{quote}
+        この後すぐに，漸近論的な立場から，$M$-推定量のような発想「最尤法は$E[\log_ef(Y|\theta)]$を最大にする$\theta$の推定量である」さらに言い換えると，
+        「KL-情報量を規準として，真の分布を最もよく近似する$f(y|\theta)$を求めようとしている」と捉え直している．
+
+        最後にこの観点から，FPEの場合の平均二乗誤差の代わりに，
+        $\bP_n[I(g;f(|\wh{\theta}))]$を取ることを考える．
+        この値の推定は，第1項を無視して，$\bP_n[E[\log_ef(Y|\wh{\theta})]]$の推定と等価．
+        そして実は$N\cdot\bP_n[E[\log_ef(Y|\wh{\theta})]]$の推定値は$l(\wh{\theta})-k$となる．
+        KL情報量またはFPEの場合に合致するように符号を反転させると，これがAICである．
+    \end{enumerate}
+\end{history}
+\begin{remarks}
+    赤池さんはすごく統計的決定理論の霊性を持っていることがわかる．
+    因子分析モデルの最尤法はどのような意味で最適化を明らかにした．
+    さらに，FPEは将来の値の予測であったが，AICは将来の値の分布の予測，という質的な進化も経ている．
+    この結果として，AICはほぼ無際限の広い適用分野を見出すことが可能になった．
+    そして赤池さん多分Fisher大好きだ．
+    そしてパラメトリックな仮定というのは「当たれば最強」という点において統計学者の腕の見せ所であり，人類の希望でもあるのだろうな．
+    我々はセミパラメトリックなFisherになろう．
+    \begin{quote}
+        我々はここに適当なモデルの系列によってデータの外の情報あるいは知識（事前情報）を適切に表現することにより，しばしば飛躍的な予測精度の向上をもたらす高度に実用的な推定法が実現されているのを見ることができる．
+        機械的盲目的な推定・検定の分類は，まさに逆立ちした有意性検定の虚像に基づくものといえよう．
+        Fisherによって書かれた書物が現在に至るまで多くの応用分野の研究者によって利用されているのは，そこに与えられている各種のモデルの系列の持つ有効性の魅力によるものといえる．
+        有意性検定を支えているものは，その一見客観的に見える論理構成ではなく，Fisher自身実際のデータの解析を通じてその有効性を信ずるに至った，極めて経験的なその手続きの実用性である．
+        この特性はある程度そのままAICに受け継がれ，それがAICの特徴と同時にまた限界を形成している．
+    \end{quote}
+\end{remarks}
+
+\begin{example}[共分散構造分析(SEM)]
+    赤池\cite{赤池79}にAICの応用として次の議論がある．
+    因子分析は共分散行列$F$の推定の営みとみなせる．が，事前の仮定を組み込む余地のない，純粋に形式的なモデルである．
+    そこで，
+    共分散構造分析は，実験や観測を適切に計画し，観測データのベクトル$Y$に対してあらかじめ想定した構造によって定まる係数行列$L$を用いて，
+    $Y=LX+U$という関係が成立するようにする．$Y$は正規分布に従い，$X\sim(0,\Phi),U\sim(M,\Psi)$とし，種々の制約条件（成分間の相互関係）を$\Phi,\Psi$の言葉で書く（$\Phi$は対角形とする，など）．
+    モデルの有意性の検定は$\chi^2$-検定などでなされるが，代わりにAICを使うことが考えられる．
+    AICを使うと，直接比較ができなかったモデルの間の比較も機械的に可能となる．
+\end{example}
+
+\begin{history}[「バイアス補正法」として拡張の歴史を辿った]
+    モデルの評価基準を「その予測能力としよう」として初めて提案したのは赤池(1973,74)．
+    $-2$の係数はこのときの名残である．
+    モデルが真の分布を含まない場合にも拡張したのが竹内啓(76)である．
+    小西・北川(96)は，バイアス補正の方法を一般の統計量に拡張した．
+    石黒(97)はブートストラップ法によってバイアス補正を行うことを提案し，拡張情報量規準EIC(Extended IC)と呼ばれる．
+\end{history}
+
+\begin{remark}
+    AICの発明のときから取っている基本的な考え方として次の3点がある．
+    \begin{enumerate}
+        \item モデルの良さはその予測能力でみる．
+        \item 予測は分布に対して行う．
+        \item 分布の近さは(二乗誤差などではなく)KL情報量で測る．
+    \end{enumerate}
+\end{remark}
+
+\begin{remarks}
+    本懐はバイアスの補正であるとするなら，ロバスト統計と考えていることの方向性は同じではないか？
+\end{remarks}
+
+\begin{tbox}{red}{\cite{赤池79}}
+    AIC最小化の考え方は，因子分析モデルのように，構造的意味を直接持たない計測用モデルと呼ぶべきモデルの当てはめ(fitting)の実現に極めて有効である．
+    しかしAIC最小化の真の意味での実現は，上述の通り適切なモデルあるいは仮説の導入によってのみ可能となる．
+    積極的に種々の仮説を展開し，それに対応する統計的モデルを構成し，必要な実験観測を計画し，その結果の解析を通じて再びモデルの発展を図っていく．
+    こういう研究の過程によって初めてAIC最小化が本来目指すものが実現される．
+\end{tbox}
+
+\subsubsection{検定とは何か}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    検定とは，モデルの良さ・悪さの比較を行っているのである．
+    情報量規準という，モデル同士の比較の形式を手に入れたために視座が高くなり，
+    検定に対するより深い理解と
+    認識論的な転換がある．
+\end{tcolorbox}
+
+\begin{discussion}[最小AIC推定の哲学から見た有意性検定]
+    Fisherの有意性検定は，例えば「接種と発病とが独立である」という仮説を，データによって反駁することを目的とするものとされてきた．
+    しかし赤池\cite{赤池76}はこう論じる．
+    \begin{quote}
+        しかしこうした見方が論理的矛盾を含むものであることは明らかである．
+        非常に厳密に見れば，接種は必ず大なり小なりの影響を人体に与えるはずで，その結果は発病と完全に無関係ではあり得ない．
+        あるサイコロの正しさを検定するという問題も全く同様で，現実のサイコロで完全に対称なものが存在し得ないことは明らかである．
+        このように，仮説は常に否定される立場にあり（帰無仮説），データによる検定結果を待つまでもなく結論は見えている．
+        この論理的矛盾に加え，有意性検定における判定基準選定上の曖昧さは著しく，いわゆる神聖な5パーセント水準の信仰の発生など議論の絶え間がなく，
+        遂に有意性検定の有用性を疑う人まで現れるようになった．
+    \end{quote}
+    これは，認識論とBayes学派とを折衷する立場じゃないのか？？
+    \textbf{帰無仮説を棄却できるというのは，「実は無効であるという制約された人工モデルの方が予測精度が良い」という我々の無知が生んだ奇異な状況を脱却できるかの試練である}．
+
+    有意性検定を，「帰無仮説はAICを最小化するか？」という問題を解いている行為とほとんど等しいとみなせることを思い出すと，有効モデル＝対立仮説は常に何らかの意味では正しいが知識不足であり（いわばノンパラメトリックモデル？），無向モデル＝帰無仮説は人工的に制約を加えたモデルであると考えられる．
+    実験データが十分に大きいならば，機械学習なり，$n(i,j)/N$を$p(i,j)$の推定量として使えば良い．
+    しかし，データは限られてるので，無効モデルの方が有効な近似を与える可能性があるし，何より推定すべきパラメータは減少するので我々にもfeasableである．
+    この時，制約を加えている無効モデルは現実の構造からあまりにも隔たっているかもしれない．
+    こうして，トレードオフの関係にある．
+    \begin{enumerate}
+        \item 有意性検定における無効モデルは，相関の非存在を主張するから，考慮すべきパラメータ数は減少する．従って，人類の計算能力からすると予測精度は上がる．
+        \item しかし，現実とは異なる仮定をおいているため，これを原因としたバイアスがあるはずである．
+    \end{enumerate}
+    この2つのどちらのモデルが良いかを，「無効モデルの方が正しいと想定して比較検討」して，どちらかのより予測精度が高いモデルを採用してこれを「科学的知識」とするのが有意性検定である．
+\end{discussion}
+
+\subsubsection{尤度とは何か}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    たぶん，セミパラメトリック化以外の精神は全て赤池先生がやってくれているような気がする．
+\end{tcolorbox}
+
+\begin{discussion}[尤度の客観性・主観性の二面性]
+    AICの導入は，平均対数尤度$l(\theta)/N=\bP_n[\log f(Y|\theta)]$が，$E[\log_ef(Y|\theta)]$の推定値であるという着想の下に成立した．
+    この見方に従えば，$\{f(y|\theta)\}_{\theta\in\Theta}$の族が$Y$の真の分布を与える$g(y)$を含まない場合においても，最尤法が統計的モデルのパラメータ決定に有効なものでありうることが容易にわかる．
+    直交射影ではないが，集合$\{f(y|\theta)\}_{\theta\in\Theta}$の中で$g$に最もKL-距離の意味で近い点を選出する算譜なのだろう．
+    つまり，赤池さんの言葉で言えば，最尤推定量$\wh{\theta}$はエントロピーに関して$g$を最もよく近似する$f(y|\theta)$を与える$\theta$の，観測値$y_1,\cdots,y_N$に基づく推定値を与える．
+    ただし，適用条件は，平均対数尤度が$E[\log_ef(Y|\theta)]$の推定値として有効な限りであり，またモデル$\{f(Y|\theta)\}$も人間が勝手に自分の責任において取捨選択するものである．
+    「Fisherが明らかにし得なかった尤度の本質的に実験的帰納的な性格と，統計理論における尤度利用の必然性とが，ここに客観的に描き出されている」．
+    つまり，$B(g;f_\theta)=E[\log f_\theta(X)]-E[\log g(X)]$の最大化は真の分布を知らなくても$E[\log f_\theta(X)]$さえ与えられれば実現できる，という意味ではノンパラメトリックな方法である．
+    この特性から，$E[\log f_\theta(X)]$を標本平均で置き換えることで実用性を獲得したのが最尤法である．
+\end{discussion}
+
+\begin{history}[稲垣宣生]
+    赤池\cite{赤池76}は$g(y)$がある$\theta_0$によって$g=f(-|\theta_0)$と与えられる状態を想定することは一つの\textbf{主観的な行動原理}であるという．
+    つまり，「想定したモデルが正しいという仮定の下に，エントロピーの期待値を評価する」という行動指針はどういう意味を持つのか？という疑問を呈している．
+    そして有意性検定も，AICも，この行動原理に貫かれている．
+    そして，この主観性を明確に表現する損失関数の下での最小AIC推定量の漸近最適性を証明したのが稲垣氏の仕事である．
+\end{history}
+
+\subsubsection{エントロピー最大化原理}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    AIC（対数尤度を用いたモデル評価）を用いることは，次の指針に従って統計的推測を行うことと等価である\cite{赤池76}．
+    「予測分布」を作りたい．これを，観測データの関数として表すためのモデル$\{f_\theta\}$を適切に定義し，エントロピーを評価基準としてその最適化を図り，モデル$\{f_\theta\}$を選択し(AIC)，パラメータ$\theta$を選択する(MLE)．
+    なお，エントロピーとはKL-情報量$-I(g;f_\theta)$である．
+\end{tcolorbox}
+
+\begin{remarks}[Boltzmanのエントロピーの確率論的解釈]
+    エントロピーが増大するとは乱雑になるということであるが，これは確率論から翻訳することもできる．
+    エントロピー$B(g;f_\theta):=-I(g;f_\theta)$について，$f_\theta$が定める確率分布に従う確率変数を独立に$N$個観測した時に得られる標本分布として，$g$に近いものが得られる確率の対数が，漸近的に$N\cdot B(g;f_\theta)$に一致する\cite{Sanov61}．
+    従って，$B$が大きいほど，$f_\theta$は$g$をよく近似していると考えられる．
+\end{remarks}
+
+\section{密度推定}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    密度推定には積分変換の理論が応用出来る．
+\end{tcolorbox}
+
+\subsection{核型推定量}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    バンド幅は平滑化のためのパラメータである．
+    いずれにしろ可測関数$K_h:\R\to\R$を用いて，$x-x_j$の重み$K_h(x)$付き標本平均を$f(x)$の推定値とするのである．
+    これは，$K_h(x)$なる波形を各観測点$x_j$において合成波を取ったものと見れる．実際，熱核を各$x_j$において熱の総量を求める操作に等しい．
+    なお，ヒストグラムもカーネル推定の例と見れる．
+    カーネル推定は合成波の手法で，基本波形を求めようとする逆問題と思える．
+    このため，時系列解析でも頻出する問題である．
+\end{tcolorbox}
+
+\begin{model}[核型密度推定モデル]\label{model-for-kernel-type-estimator}
+    $\{X_j\}$を確率密度関数$f:\R\to[0,1]$の独立同分布列とし，$f$を推定する．
+    \begin{enumerate}
+        \item 関数$K\in L(\R)$について，
+        \[\wh{f}_n(x):=\frac{1}{nh}\sum_{j\in[n]}K\paren{\frac{x-X_j}{h}}=\frac{1}{h}E_{\bP_n}\Square{K\paren{\frac{x-X}{h}}}=E_{\bP_n}[K_h(x-X)]\quad K_h(x):=\frac{1}{h}K(x/h).\]
+        を\textbf{核$K$幅$h$の核型推定量}(kernel-type estimator)または\textbf{パルツェン窓}(Parzen-Rosenblatt window)という．
+        \item 核型推定量の危険関数としては，\textbf{$L^2$-危険関数}，すなわち，\textbf{積分自乗誤差}が用いられる：
+        \[\MISE(\wh{f}):=\int_\R E[(\wh{f}_n(x)-f(x))^2]dx.\]
+    \end{enumerate}
+\end{model}
+
+\begin{definition}[super kernel]
+    核$K\in L(\R)$と$s\ge2$について，
+    \begin{enumerate}
+        \item 次を満たすとき，\textbf{クラス$s$の核}という：
+        \[\int_\R\abs{x}^s\abs{K(x)}dx<\infty,\quad\forall_{i\in s}\;\int_\R x^iK(x)dx=0\]
+        \item 任意の$s\ge2$についてクラス$s$の核であることを，\textbf{超核}であるという．
+    \end{enumerate}
+\end{definition}
+
+\begin{remark}
+    積分核の中でも統計分野で\textbf{カーネル}というと，対称分布の確率密度関数，すなわち，次の2条件を満たすものをいう：
+    \begin{enumerate}
+        \item $\int_\R K(u)du=1$．
+        \item 偶関数：$K(-u)=K(u)\;\as$．
+    \end{enumerate}
+    なお，時系列解析では\textbf{窓関数}という．
+    特に，ガウス関数
+    \[K(x)=\frac{1}{2\pi}e^{-x^2/2}\]
+    をカーネル関数として採用することが多い．
+\end{remark}
+
+\begin{theorem}
+    $f\in C^s(\R)$かつ$f^{(s)}\in L^2(\R)$とする．
+    クラス$s$の核$K\in L^2(\R),\int_\R K(x)dx=1$について，ある定数$C\in\R$が存在して，
+    \[\forall_{n\in\N}\;\forall_{h>0}\quad\MISE(\wh{f})\le C\paren{\frac{1}{nh}+h^{2s}}.\]
+\end{theorem}
+\begin{remarks}
+    誤差$\frac{1}{nh}+h^{2s}$を最小にする$h$のレートは$n^{-1/(2s+1)}$で，そのときの積分2乗誤差のオーダーは$O(n^{-2s/(2s+1)})$となる．
+    これは必ずパラメトリックモデルの$n^{-1}$よりも遅くなる．
+\end{remarks}
+
+\subsection{その他の手法}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    カーネル法は1950s，カーネル回帰法がNadaraya (1964)とWatson (1964)による．
+    その後ハザード関数，分布関数，密度比などの推定に拡張され，漸近正規性も示されている．
+    カーネル法は滑らかな推測結果を与える手法として評価され，パラメトリックな第二段階との結合により，半径数的な推測法に繋がる．
+\end{tcolorbox}
+
+\section{射影と条件付き期待値}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    統計量の漸近分布を求める方法の1つに，既に漸近分布が知れている確率変数と漸近同等であることを示す方法がある．
+    このとき，Slutskyの補題の簡単な系から，極限法則が一致することが従う．
+
+    すると，何で近似するかという問題が生じるが，条件付き期待値は射影であり，これは$L^2$-近似であることを考えると，この言葉を使うのが良かろう．
+    この手法は$U$-統計量に対して普遍的な効力を持ち，漸近正規性を導く．
+\end{tcolorbox}
+
+\subsection{Hajekの射影}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    Hajekの射影は，独立な確率変数$X_1,\cdots,X_n$の関数を，
+    その線型和の形で近似する手法である\cite{EncyclopediaOfStatisticalScience} (Hajek's Projection Lemma)．
+    それぞれの一変数関数$g_i$との合成$g_1(X_1),\cdots,g_n(X_n)$の形で$T$を最もよく近似する元である．
+\end{tcolorbox}
+
+\begin{notation}
+    \[S:=\Brace{\sum^n_{i=1}g_i(X_i)\in L^2(\Om)\;\middle|\;\forall_{i\in[n]}\;g_i(X_i)\in L^2(\Om)}\]
+    とおく．
+\end{notation}
+
+\begin{lemma}[Hajek's projection lemma \cite{Hajek68-AsymptoticNormality}]
+    $X_1,\cdots,X_n$は独立とする．
+    このとき，任意の$X_1,\cdots,X_n$の関数$T=T(X_1,\cdots,X_n)\in L^2(\Om)$の$S$への射影は
+    \[\pr_S(T)=\sum_{i=1}^nE[T|X_i]-(n-1)E[T]\]
+    と表せる．すなわち，上の右辺を$\wh{T}$とおくと，次を満たす：
+    \begin{enumerate}
+        \item $E[\wh{T}]=E[T]$．
+        \item $E[(T-\wh{T})^2]=\Var[S]-\Var[\wh{S}]$．
+        \item 任意の$L\in\S$に対して，
+        \[E[(S-L)^2]=E[(S-\wh{S})^2]+E[(\wh{S}-L)^2].\]
+    \end{enumerate}
+\end{lemma}
+
+\begin{corollary}[独立同分布列の関数の極限分布の特徴付け]
+    $X_{N_1},\cdots,X_{N_n}$を$n=n(N)$個の独立列，$S_N:=s_N(X_{N_1},\cdots,X_{N_n})\in L^2(\Om)$とし，このHajekの射影を$\wh{S_N}$とする．このとき，
+    \[\frac{\Var[\wh{S_N}]}{\Var[S_N]}\to1\]
+    が成り立ち，$\frac{\wh{S_N}-E[\wh{S_N}]}{(\Var[\wh{S_N}])^{1/2}}$が極限を持つならば，
+    \[\frac{S_N-E[S_N]}{(\Var[S])^{1/2}}\]
+    も極限を持ち，同じ極限分布を持つ．
+\end{corollary}
+
+\begin{remarks}
+    特に$X_1,\cdots,X_n$が同分布に従うとし，$T=T(X_1,\cdots,X_n):\Om\to\X^n\to\R$を対称な可測関数とする．
+    このとき，条件付き期待値は
+    \[E[T|X_i=x]=E[T(x,X_2,\cdots,X_n)]\]
+    と簡略化されるから，
+    \[S':=\Brace{\sum^n_{i=1}g(X_i)\in\L(\Om)\;\middle|\;g\in\L(\X)}\]
+    上への射影と一致する：$\pr_S=\pr_{S'}$．
+\end{remarks}
+
+\subsection{Hoeffdingの分解}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    一変数関数$g_i:\X\to\R$を用いるのではなく，より変数を多くして，$X_1,\cdots,X_n$の間の複雑な依存関係も表現できるようにすることで，近似の精度を上げることを考える．
+    これは，初めは$(H_{i})_{i\in[n]}$の線型結合で表せる元の空間だったものを，どんどん互いに直交する部分空間を追加することで大きくしていく算譜である．
+\end{tcolorbox}
+
+\begin{notation}
+    任意の$A\in P([n])$に対して，
+    \[H_A:=\Brace{g_A(X_i:i\in A)\in L^2(\Om)\mid g_A\in\L(\X^{\abs{A}}),\;\forall_{B\in P([n])}\;\abs{B}<\abs{A}\Rightarrow E[g_A(X_i:i\in A)|X_j:j\in B]=0}\]
+    と定める．
+\end{notation}
+
+\begin{lemma}
+    各$\{H_A\}_{A\in P(n)}\subset L^2(\Om)$は組ごとに直交している．
+\end{lemma}
+
+\begin{theorem}
+    $X_1,\cdots,X_n$を独立な確率変数，$T\in L^2(\Om)$とする．
+    \begin{enumerate}
+        \item $\pr_{H_A}(T)=\sum_{B\in P(A)}(-1)^{\abs{A}-\abs{B}}E[T|X_i:i\in B]$．
+        \item $\forall_{B\in P(A)}\;T\perp H_B$ならば，$E[T|X_i:i\in A]=0$．
+        \item $\bigoplus_{B\in P(A)}H_B$は，$(X_i)_{i\in A}$の関数で2乗可積分であるものの全体を含む部分空間となる．
+    \end{enumerate}
+\end{theorem}
+
+\begin{remarks}
+    特に$X_1,\cdots,X_n$が同分布に従うとし，$T=T(X_1,\cdots,X_n):\Om\to\X^n\to\R$を対称な可測関数とする．
+    このとき，Hoeffding分解は
+    \[T=\sum^n_{r=0}\sum_{\abs{A}=r}g_r(X_i:i\in A),\qquad g_r(x_1,\cdots,x_r)=\sum_{B\in P[r]}(-1)^{r-\abs{B}}E[T(x_i\in B,X_i\notin B)]\]
+    となり，各項$\sum_{\abs{A}=r}g_r(X_i:i\in A)$は退化した核を持った$r$次の$U$-統計量で，全ての項は互いに直交だから，分散は容易に計算できる：
+    \[\Var[T]=\sum_{r=1}^n \begin{pmatrix}n\\r\end{pmatrix}E[g^2(X_1,\cdots,X_r)].\]
+\end{remarks}
+
+\section{$U$-統計量}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    標本平均の性質を，核$h\in L^1(\X)$に対して$\bP_n[h(X)]$の形で得られる統計量のうち，どのような$h$について一般化できるかの問題を考え，
+    そのクラスの推定量が漸近正規になることを示す．
+\end{tcolorbox}
+
+\subsection{定義と例}
+
+\begin{history}
+    $U$-統計量の理論は\cite{Hoeffding48-U-statistic}による．まず\cite{Hoeffding61-SLLN}はマルチンゲールへの分解という基礎を与えた．
+    Hajek射影の方法による漸近正規性の証明から，
+    中心極限定理を$U$-統計量に一般化する研究で，Berry-Esseen限界が求められた．
+    ここからさらにEdgeworth展開の研究へと跳躍し，現在では漸近$U$-統計量の漸近展開も得られている(Lai and Wang 93)．
+    これから，一般のスチューデント化統計量について，漸近$U$-統計量とバイアスとの和への分解が得られるから，これのEdgeworth展開が得られることになる(Maesono 97)．
+\end{history}
+
+\begin{model}[$U$-統計量が構成可能な模型]\label{model-for-U-statistic}
+    $\{X_j\}_{j\in[n]}$を同分布の独立観測とする．
+    以下，標本の部分集合$A=\Brace{i_1,\cdots,i_r}\subset[n]$に対して，$X_A:=(X_{i_1},\cdots,X_{i_r})$と略記する．
+    便宜的に，$X_\emptyset=0$とすると，$E[h(X_A)|X_\emptyset]=E[h(X_A)]$に注意．
+    標本上の対称な可測関数$h\in L(\X^n)$は$[\X]^n$を誘導するため，$h(X_A):[\X]^r\to\R$はwell-definedである．
+    \begin{enumerate}
+        \item $h(X_-)\in L^1([\X]^r)$を仮定する．
+        \item 標本の更なる部分集合$B\subset A\subset[n]$に対して，射影の和を
+        \[h(X_A)_B:=\sum_{C\subset B}(-1)^{\abs{B}-\abs{C}}E[h(X_A)|X_C]\]
+        と定める．これを$h(X_A)$の\textbf{Hajekの射影}という．このとき，反転公式
+        \[h(X_A)=\sum_{B\subset A}h(X_A)_B\]
+        が成り立つ．「$U$-統計量はより退化次元の大きい$U$-統計量の和として表せる」というHoeffdingの分解の最も単純な場合である．
+        \item 次の形を持つ統計量を\textbf{核$h$に関する$r$次の$U$-統計量}という：
+        \[U_{r,n}:=\begin{pmatrix}n\\r\end{pmatrix}^{-1}\sum_{A\in [[n]]^r}h(X_A)=E_{U([\X]^r)}[h(X_A)].\]
+        ただし，$U([\X]^r)$とは，標本の大きさ$r$の部分集合$X_A\in[\X]^r$全体の集合上の一様分布である．
+        この意味で，$U$-統計量とは，経験平均統計量$E_{\bP_n}[h(X)]$の一般化でもある．
+        ただし，この場合と違って，各項は互いに独立にはならない．
+        \item 前$k$変数に関する条件付き期待値を
+        \[h_k(x_1,\cdots,x_k):=E[h(x_1,\cdots,x_k,X_{k+1},\cdots,X_r)]=E[h(X_{[r]})|X_1=x_1,\cdots,X_k=x_k],\quad h_0:=E[h(X_1,\cdots,X_r)]\]
+        と表す．$U$-統計量$U_{r,n}$が\textbf{退化次元$i-1\;(2\le i\le r)$を持つ}とは，その核が
+        \[h_{i-1}=0\in L([\X]^{i-1})\;\land\;h_i\ne0\in L([\X]^i)\]
+        を満たすことをいう．すなわち，$h$の部分空間$L_{\X^{i-1}}(\X^n)$への射影が零になることをいう．
+        これが$i=1$としても成り立つとき，\textbf{非退化}であるという．
+        \item 推定したいパラメータを$\theta:=h_0$と表そう．
+        核の射影$h_k$の中心化を$\wt{h}_k:=h_k-\theta\;(k\in r+1)$とする．
+        中心化された核$\wt{h}_r:[\X]^r\to\R$に関する$[k]\subset[n]$へのHajekの射影を，再び
+        関数$g_k:\X^k\to\R$で表す：
+        \[g_k(\x_k):=\sum_{C\subset[k]}(-1)^{k-\abs{C}}\wt{h}_{\abs{C}}(x_C).\]
+        すなわち，$\wh{h}_r(X_A)_B=g_{\abs{B}}(X_B)$である．
+        \item このとき，反転公式を繰り返すことで，中心化された$U$-統計量$U_{r,n}-\theta$に関する一般の\textbf{Hoeffdingの分解}
+        \[U_n-\theta=\sum_{k=1}^r \begin{pmatrix}n\\k\end{pmatrix}^{-1}\begin{pmatrix}r\\k\end{pmatrix}S_k(n),\quad S_k(n):=\sum_{B\in[[n]]^k}g_k(X_B)\]
+        を得る．
+    \end{enumerate}
+\end{model}
+
+\begin{example}\mbox{}
+    \begin{enumerate}
+        \item 標本平均$\o{X}$と不偏分散$U^2$は$U$-統計量である．
+        \item 2次元データの無作為標本$(X_j,Y_j)_{j\in[n]}$について，
+        \[\tau:=\frac{4}{n(n-1)}\sum_{i<j\in[n]}1_{\Brace{(X_i-X_j)(Y_i-Y_j)>0}-1}\]
+        で定まる$\tau:[\X]^2\to\R$は2次の$U$-統計量である．これを\textbf{Kendallの順位相関係数}という．
+        また，
+        \begin{align*}
+            K&:=\Abs{\Brace{\{i,j\}\in[[n]]^2\mid (x_i>x_j\land y_i>y_j)\lor(x_i<x_j\land y_i<y_j)}},\\L&:=\Abs{\Brace{\{i,j\}\in[[n]]^2\mid\lnot(x_i>x_j\land y_i>y_j)\land\lnot(x_i<x_j\land y_i<y_j)}}
+        \end{align*}
+        として$\tau=\begin{pmatrix}n\\2\end{pmatrix}^{-1}(K-L)$とも表せる．
+        \item Wilcoxonの順位検定統計量が漸近正規であることも，$U$-統計量に関係する．
+    \end{enumerate}
+\end{example}
+
+\subsection{漸近正規性}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+$\theta:=E[h(X_1,\cdots,X_r)]$の推定を考えると，当然$h$自身も$\theta$の不偏推定量であるが，$h$を核とする$U$-統計量$U_{r,n}$は(混ぜているだけなので)再び不偏推定量で，より小さい漸近分散を持つ(また漸近正規である)．
+実際，$U_{r,n}$は$h$の射影(条件付き期待値)となっており，射影はノルム減少的であるから分散を減らすのである．
+\end{tcolorbox}
+
+\begin{theorem}
+    上の模型について，可積分性$h\in L^1([\X]^r)$を仮定する：$h_0=E[h(X_1,\cdots,X_r)]<\infty$．
+    \begin{enumerate}
+        \item $U_{r,n}$は$\theta:=h_0$の不偏推定量である．
+        \item さらに$h\in L^2([\X]^r)$ならば，$v_1:=E[g_1(X_1)^2]>0$として，
+        \[\sqrt{n}(U_{r,n}-\theta)\Rightarrow N(0,r^2v_1)\;(n\to\infty)\]
+    \end{enumerate}
+\end{theorem}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item $U_{r,n}$の定義より，各項$h(X_A)$の平均は常に$h_0$になる．
+        また，$U$-統計量は逆マルチンゲールになっていることからも従う
+        \item 補題から，$U_{r,n}$は$n^{-1/2}rS_1(n)$に漸近同等である．$n^{-1/2}rS_1(n)$は，Hajekの射影$g_k(X_B)$の和であり，中心極限定理から$N(0,v_1)$に分布収束する．
+    \end{enumerate}
+\end{Proof}
+\begin{remarks}
+    $U_{r,n}$はHoeffdingの分解により，射影の組み合わせのような構造で組み上がっていき，$n\to\infty$の極限にて$\theta$を中心とした正規分布に弱収束する．
+    このとき，リサンプリングの大きさ$r$は小さいほどよい．
+\end{remarks}
+
+\begin{lemma}\mbox{}
+    \begin{enumerate}
+        \item $h\in L^1([\X]^r)$とする．任意の$B\in [[n]]^k,b\in B$について，$E[g_k(X_B)|X_{[n]\setminus\Brace{b}}]=0$．
+        \item $h\in L^2([\X]^r)$とする．$v_k:=E[g_k(X_1,\cdots,X_k)^2]$とすると，$B,C\subset[n]$について，$E[g_{\abs{B}}(X_B)g_{\abs{C}}(X_C)]=\delta_{B,C}v_{\abs{B}}$．特に，
+        \[\Var[U_n]=\sum_{k=1}^r \begin{pmatrix}n\\k\end{pmatrix}^{-1}\begin{pmatrix}r\\k\end{pmatrix}^2v_k.\]
+        また，
+        \[E[(U_n-\theta-n^{-1}rS_1(n))^2]=\sum_{k=2}^r\begin{pmatrix}n\\k\end{pmatrix}^{-1}\begin{pmatrix}r\\k\end{pmatrix}^2v_k=O(n^{-2}).\]
+    \end{enumerate}
+\end{lemma}
+
+\subsection{$U$-統計量の変種}
+
+\begin{example}[$K$-statistic]
+    キュムラントの最小分散不偏推定量をFisherの$K$-統計量と言い，John Tukeyはこれから一般化$K$-統計量(polykay)を導いたが，
+    これは斉次多項式が定める$U$-統計量に他ならない．
+\end{example}
+
+\begin{definition}[$V$-statistics]
+    対称な関数$h\in L([\X]^r)$に関して，
+    \[V_{r,n}:=\frac{1}{n^r}\sum_{(i_1,\cdots,i_r)\in [n]^r}h(X_{i_1},\cdots,X_{i_r})=E_{U([n]^r)}[h(X_A)]\]
+    を$V$-統計量という．
+    $U$-統計量は標本$[n]$について，重複を許さない$[[n]]^r$上の一様分布をとったが，$V$-統計量では重複を許す$[n]^r$上の一様分布を取る．
+    $V$-統計量はHoeffdingの一年前である1947年に\cite{vonMises47-AsymptoticDistributionOfStatisticalFunction}が導入した．
+    $v_1>0$のとき，$U$-統計量と漸近同等である：$\sqrt{n}(V_n-U_n)\pto 0$．
+\end{definition}
+
+\begin{example}[標本分散と不偏分散]
+    $h(x,y)=\frac{(x-y)^2}{2}$が定める2次の$V$-統計量は
+    \[V_{2,n}=\frac{1}{n}\sum^n_{i=1}(x_i-\o{x})^2\]
+    で，これは分散の最尤推定量である．しかし同じ核に対する$U$-統計量は
+    \[U_{2,n}=s=\frac{1}{n-1}\sum^n_{i=1}(x_i-\o{x})^2\]
+    となる．漸近同等ではあるが，不偏推定量となるのは後者である！
+\end{example}
+
+
+\subsection{2標本$U$-統計量}
+
+\subsection{退化$U$-統計量}
+
+\begin{definition}[degenerated]
+    $U$-統計量の列$(U_n)$(の核$(h_n)$)が\textbf{退化している}とは，漸近分散が$r^2v_1=0$であることをいう．
+\end{definition}
+
+
+\chapter{半径数的手法の理論}
+
+\begin{quotation}
+    情報量規準では$P(\X)$へ視点を広げ，パラメトリックモデルの評価をした．
+    密度推定では，分布に仮定を置かなかった．
+    このような視点は，漸近理論によって展開される．
+\end{quotation}
+
+\section{尤度比確率場の局所漸近構造}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    $M$-推定量の漸近正規性の議論では，尤度の概念は全く登場しなかった．
+    これは，最尤推定量に対する全く別のアプローチと言って良い．
+    しかし，一様大数の法則の議論のように，尤度の構造を思い出してみよう．
+    このように，尤度比確率場$\R^p\ni u\mapsto Z_n(u;\theta;\x_n)$の挙動を記述して仕舞えば，尤度解析で用いられる多くの統計量の漸近分布を，尤度比確率場の理論から自動的に，そして元のモデルの尤度以外の情報に依らず，
+    統一的に導くことが可能である．
+\end{tcolorbox}
+
+\subsection{接触性}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    2元モデル$\{P,Q\}$について，互いに特異ならば，特定の範囲でデータが観測されるかを判定すれば良いので，統計的問題としては容易である(エントロピーが発散する)．
+    従って，$P,Q$は漸近的に絶対連続な時に推測論としての興味がある．
+    これが，統計的実験の列の漸近的な局所構造の研究として，最初にとるべき対象である．
+\end{tcolorbox}
+
+\begin{model}[2元漸近模型]
+    統計的実験列$(\X^n,\A^n,\{P_n,Q_n\})_{n\in\N}$において，
+    ある$\sigma$-有限測度$\nu\in P(\X^n)$について$P_n,Q_n\ll\nu_n$を満たすとする．例えば$\nu_n:=P_n+Q_n$と取れば良い．
+    このとき，尤度比を
+    \[\Lambda_n:=\begin{cases}
+        \log(q_n/p_n)&p_n,q_n>0,\\
+        0&p_n=q_n=0,\\
+        \infty&p_n=0,q_n>0,\\
+        -\infty&p_n>0,q_n=0.
+    \end{cases}\]
+    とする．
+\end{model}
+
+\begin{definition}[contiguity]
+    統計的実験列$(\X^n,\A^n,\{P_n,Q_n\})_{n\in\N}$において，\textbf{$(Q_n)$が$(P_n)$に接触している}$(Q_n)\ll(P_n)$とは，
+    任意の可測集合の列$(A_n\in\A^n)_{n\in\N}$について，$P_n[A_n]\to0\Rightarrow Q_n[A_n]\to0$をいう．
+\end{definition}
+
+\begin{lemma}
+    次は同値：
+    \begin{enumerate}
+        \item $Q_n$は$P_n$に接触している：$(Q_n)\ll(P_n)$．
+        \item $\forall_{\{X_n\}\subset L(\X)}\;X_n\xrightarrow{P_n}0\Rightarrow X_n\xrightarrow{Q_n}0$．
+    \end{enumerate}
+\end{lemma}
+
+\begin{example}\mbox{}
+    \begin{enumerate}
+        \item $P_n=U(0,1),Q_n=U(\theta_n,1+\theta_n)$とする．$(P_n)\sim(Q_n)$は$\theta_n\to0$に同値．
+        \item $P_n=N(0,1),Q_n=(\theta_n,1)$とする．$(P_n)\sim (Q_n)$は$(\theta_n)$が有界列であることに同値．
+    \end{enumerate}
+\end{example}
+
+\begin{theorem}[接触性の十分条件]\label{thm-sufficient-condition-for-contiguity}
+    次が成り立つならば，$Q_n$は$P_n$に接触している：$(Q_n)\ll(P_n)$．
+    \[\exists_{(\Om,\F,P)\in\Prob}\;\exists_{\Lambda\in L(\Om)}\;P_n^{\Lambda_n}\Rightarrow P^\Lambda\land E[e^\Lambda]=1.\]
+\end{theorem}
+
+\subsection{尤度比の挙動}
+
+\begin{theorem}\label{thm-property-of-LR}
+    $T_n\in L(\X^n)$を確率変数列であって，ある$E[\Lambda]=-\frac{\Var[\Lambda]}{2}$を満たす正規確率変数$\Lambda\in L(\Om_\Lambda),T\in L(\Om_T)$について
+    $P_n^{(T_n,\Lambda_n)}\Rightarrow P^{(T,\Lambda)}$が成り立つとする．ここで，$P$は$\Om_\Lambda\times\Om_T$上のある2変量正規分布とした．
+    このとき，
+    \[Q_n^{(T_n,\Lambda_n)}\Rightarrow P^{(T+\Cov[T,\Lambda],\Lambda+\Var[\Lambda])}.\]
+\end{theorem}
+
+\subsection{局所漸近正規なモデル}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    Lebesgue測度について絶対連続とは限らないモデルにおいて，真値$P_{\theta_0}$を中心としたLebesgue分解を考えることがあり得る．
+
+\end{tcolorbox}
+
+\begin{model}[局所漸近正規なモデル]\label{model-lan}
+    統計的実験$(\X,\A,(P_\theta)_{\theta\in\Theta})$の，直積が定める列$(\X^n,\A^n,(P_\theta^{\otimes n})_{\theta\in\Theta})_{n\in\N}$を考える．
+    $\Theta\osub\R^p$，$\theta_0\in\Theta$とする．
+    \begin{enumerate}
+        \item 真値$\theta_0$を中心とした他の点$P_\theta\in\P$のLebesgue分解を
+        \[P_\theta[A]=\int_A\underbrace{\dd{P_\theta}{P_{\theta_0}}}_{=p_{\theta/\theta_0}}dP_{\theta_0}+\sigma_{\theta/\theta_0}(A)\quad(A\in\A)\]
+        で表す．すなわち，$p_{\theta/\theta_0}:\X\to[0,1]$はRadon-Nikodym微分，$\sigma_{\theta/\theta_0}:\A\to\R$は$P_{\theta_0}$-特異測度である．
+        \item これについて，関数$D_u(x):\X\times\R^p\to\R$を
+        \[D_u(x):=\sqrt{\dd{P_{\theta_0+u}}{P_{\theta_0}}(x)}-1=p_{(\theta_0+u)/\theta_0}^{1/2}(x)-1=p^{1/2}_{(\theta_0+u)/\theta_0}-p^{1/2}_{\theta_0/\theta_0}(x)\]
+        と表す．$(p^{1/2}_{(\theta_0+u)/\theta_0})_{u\in[0,1]}$を\textbf{$P_{\theta_0}$を通る$u$-半道}，$D_u(x)$を\textbf{$P_{\theta_0}$を通る$u$-半変位}と呼ぼう．
+    \end{enumerate}
+    $\theta_0$の近傍の性質として，次を仮定する．
+    \begin{enumerate}[({G}1)]
+        \item 変位ベクトル$u\in\R^p$の絶対値が十分小さいとき，$D_u\in L^2(\X,P_{\theta_0})$であり，$u=0$において$L^2(P_{\theta_0})$の意味で微分可能：
+        \[\exists_{\varphi\in L^2(\X,P_{\theta_0};\R^p)}\;\int_\X(D_u(x)-u^{\top}\varphi(x))^2P_{\theta_0}(dx)=o(\abs{u}^2)\;(\abs{u}\to0).\]
+        なお，$(P_\theta)$はある$\sigma$-有限測度に支配されていて密度$(p_\theta)$をもち，$\theta_0$にて微分可能で追加の正則性条件を満たせば，通常の意味での微分
+        \[\varphi(x)=\frac{1}{2p_{\theta_0}(x)}\pp{p_{\theta_0}}{\theta}(x)\]
+        に等しい．
+        \item 特異部分の最大値は2次のオーダーで減少する：$\sigma_{\theta_0+u/\theta_0}(\X)=o(\abs{u}^2)\;(\abs{u}\to0)$．
+    \end{enumerate}
+    このとき，おそらく$\theta_0$において接触構造が生じている．
+    この仮定は例えば$(N(\theta,1))$や両側指数分布族$P_\theta(dx)=\frac{e^{-\abs{x-\theta}}}{2}dx$について成り立つ．
+    $2\varphi$は\textbf{一般化スコア関数}で，
+    \[I(\theta_0):=4\int\varphi(x)\varphi(x)^{\top}P_{\theta_0}(dx)\]
+    は\textbf{一般化Fisher情報行列}に当たる．
+    さらに，次で定まる$Z_n:U\times \Theta\times\X^n\to\R$は\textbf{一般化尤度}である：
+    \[Z_n(u;\theta_0;\x_n):=\prod^n_{j=1}\frac{dP_{\theta_0+n^{-1/2}u}}{dP_{\theta_0}}(x_j)=\prod^n_{j=1}p_{(\theta_0+n^{-1/2}u)/\theta_0}(x_j).\]
+    $U$は$0\in\R^p$の開近傍とした．というのも，$n$が十分大きい時に，$n^{-1/2}u$は十分小さくなるため，$P_{\theta_0+n^{-1/2}u}\in\P$となり，well-definedである．
+    対応$\R^p\ni u\mapsto Z_n(u;\theta;\x_n)$を\textbf{尤度比確率場}という．
+\end{model}
+
+\begin{lemma}
+    上の模型において，
+    \begin{enumerate}
+        \item スコア関数は中心化されている：$E_{\theta_0}[\varphi]=0$．
+        \item 変位の平均の一次項は一般化Fisher情報行列である：$E_{\theta_0}[D^2_u]=\frac{1}{4}u^{\top}I(\theta_0)u+o(\abs{u}^2)\;(u\to0)$．
+        \item 半変位の自乗の平均も同様：$E_{\ztheta}[D_u]=-\frac{1}{8}u^\top I(\theta_0)u+o(\abs{u}^2)\;(u\to0)$．
+        \item 
+    \end{enumerate}
+\end{lemma}
+
+\begin{theorem}[模型は$\theta_0$において局所漸近正規である]\label{thm-LAN-of-model}
+    上の模型は$\theta_0$において局所漸近正規である．すなわち，次が成り立つ：
+    \[Z_n(u;\theta_0;\x_n)=\exp\paren{u^\top\Delta_n(\theta_0)-\frac{1}{2}u^\top I(\theta_0)u+\rho_n(u,\theta_0)}\]
+    ただし，次を満たす：
+    \begin{enumerate}
+        \item $\Delta_n(\theta_n)\in L(\X^n;\R^p)$が押し出す$P^{n}_{\theta_0}$は正規分布に弱収束する：
+        $(P^{\otimes n}_{\theta_0})^{\Delta_n(\theta_0)}\Rightarrow N_p(0,I(\theta_0))$．
+        \item $\rho_n(u,\theta_0)\in L(\X^n)$は$0$に漸近的に確率収束する：$\rho_n(u,\theta_0)\xrightarrow{P_{\theta_0}^{\otimes n}}0$．
+    \end{enumerate}
+\end{theorem}
+
+\begin{corollary}
+    局所局所漸近ならば，$P^{\otimes n}_{\theta_0+n^{-1/2}u}$は$P_{\theta_0}^{\otimes n}$に接触している：$P^{\otimes n}_{\theta_0+n^{-1/2}u}\ll P^{\otimes n}_{\theta_0}$．
+\end{corollary}
+\begin{Proof}
+    $E[Z_n]\to1$より，$\Lambda$を何らかの意味での$\log Z_n$の極限とすれば，
+    接触性の十分条件\ref{thm-sufficient-condition-for-contiguity}から．
+\end{Proof}
+
+\subsection{検定への応用}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    尤度比検定は一様最強力であった．
+    スコア$\Delta_n(\theta_0)$に基づく検定$\Delta_n(\theta_n)\ge d_\al\;(u>0\text{のとき})$も，(片側対立仮説については)漸近的に一様最強力である．
+\end{tcolorbox}
+
+\begin{example}
+    $\Theta\subset\R$上での検定問題
+    \[H_0:\theta=\theta_0\quad\vs\quad H_1:\theta=\theta_0+n^{-1/2}u,\quad \theta_0\in\Theta,u\ne0\]
+    を考える．$n\to\infty$とするとだんだん難しい検定問題になっていく．
+    $(0,1)$の列$(\al_n)$は$\al\in(0,1)$に収束するとする．
+    任意の$n\in\N$について，Neyman-Pearsonのサイズ$\al_n$の最強力検定$\varphi_n$は，尤度比を用いた$\log Z_n(u;\theta_0)\ge c_{n,\al_n}$という形のものである．
+    この時，検定$\varphi_n$の検出力は
+    \[\beta_{\varphi_n}(\theta_0+n^{-1/2}u)=E_{\theta_0+n^{-1/2}u}[\varphi_n]\le P_{\theta_0+n^{-1/2}u}[\log Z_n(u;\theta_0)\ge c_{n,\al_n}]\]
+    を満たす．さて，確率変数$\Delta\min N(0,I(\theta_0))$とこれについて
+    \[P\Square{\Delta u-\frac{1}{2}I(\theta_0)u^2\ge c_\al}=\al\]
+    を満たす定数$c_\al\in\R$について，モデルの局所漸近正規性\ref{thm-LAN-of-model}と対立仮説$H_1$における尤度比の挙動の結果\ref{thm-property-of-LR}より，
+    \[\limsup_{n\to\infty}\beta_{\varphi_n}(\theta_0+n^{-1/2}u)\le\lim_{n\to\infty}P_{\theta_0+n^{-1/2}u}[\log Z_n(u;\theta_0)\ge c_{n,\al_n}]=P\Square{\Delta u+\frac{1}{2}I(\theta_0)u^2\ge c_\al}\]
+    が成り立つ．いずれの距離も，ある可測関数すなわち，スコア$\Delta_n(\theta_0)$に基づく検定$\Delta_n(\theta_n)\ge d_\al\;(u>0\text{のとき})$
+    も最大検出力を漸近的に達成し得る．
+    この検定統計量は$u$に依存しないから，片側対立仮説については漸近的に一様最強力である．
+\end{example}
+
+\subsection{推定への応用}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    「手法の比較が統計学的に意味のあるのは，それらが何らかの妥当と思われる平均量（期待値や確率）によって評価される場合に限られる．
+    従って，統計推測の最適性の問題が尤度解析に帰着されるのは当然のことである．」
+\end{tcolorbox}
+
+\begin{theorem}[Hajekの不等式]
+    統計的実験$(\X_n,\A_n,\P_n)$は$\theta_0\in\Theta$で局所漸近正規であるとする．
+    任意の推定量$T_n$に対して，次が成り立つ：
+    \[\forall_{\gamma,\delta>0}\;\liminf_{n\to\infty}\sup_{\theta\in U_\delta(\theta_0)}E_\theta[\abs{\sqrt{n}(T_n-\theta)}^\gamma]\ge E[\abs{I(\theta_0)^{-1}\Delta(\theta_0)}^\gamma].\]
+\end{theorem}
+\begin{remarks}[漸近決定理論]
+    これは，局所漸近正規なモデルにおける推定量の，漸近的にミニマックスなリスク限界を与える．
+    そこで，この等号を達成する推定量を探すことで，ミニマックスの意味で漸近有効な推定量が探せる．
+    小標本理論では有効性として最小分散性を考えたが，漸近挙動については最大リスクの最小化が危険関数としては標準的である．
+    実は，最尤推定量とベイズ推定量は漸近有効である．
+\end{remarks}
+
+\subsection{Ibragimov-Has'minskii理論}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    $P_{\theta_0}$を中心に見た尤度関数(=尤度比)
+    \[\R^p\ni u\mapsto Z_n(u;\theta;\x_n)=\prod^n_{j=1}\frac{dP_{\theta_0+n^{-1/2}u}}{dP_{\theta_0}}(x_j)=\prod^n_{j=1}p_{(\theta_0+n^{-1/2}u)/\theta_0}(x_j)\in C(\Theta)\]
+    は，母数空間$\R^p$上の確率場($C(\Theta)$-値確率変数)をなす．
+    $\theta_0$からの変位の空間を$U\subset\R^p$とすると，
+    $\sup_{u\in U}C(\R^p;\R)\to\R$は連続な汎関数であり，連続写像定理を通じてIbragimov-Has'minskii理論が流入する：
+    \[\sup_{u\in U}Z_n(u;\theta_0)\Rightarrow\sup_{u\in U}Z(u;\theta_0)\;(n\to\infty).\]
+\end{tcolorbox}
+
+\begin{theorem}
+    確率変数$Z_n:\o{\X}\to C(\R^p);\x_n\mapsto Z_n(-;\theta_0;\x_n)$は，次の$Z:\R^p\to\R$に弱収束する：
+    \[Z(u;\theta_0):=\exp\paren{u^\top\Delta(\theta_0)-\frac{1}{2}u^\top I(\theta_0)u}.\]
+\end{theorem}
+\begin{remarks}[局所漸近正規性再考]
+    各点$u\in\R^p$での$Z_n(u;\theta_0;\x_n)$の法則収束を，局所漸近正規性というのであった．
+\end{remarks}
+
+\begin{remarks}[最尤推定量再考]
+    収束
+    \[\sup_{u\in U}Z_n(u;\theta_0)\Rightarrow\sup_{u\in U}Z(u;\theta_0)\;(n\to\infty).\]
+    は，
+    \[\argmax_{u\in\R^p}Z_n(u;\theta_0)\Rightarrow\argmax_{u\in\R^p}Z(u;\theta_0)\;(n\to\infty).\]
+    \[\sqrt{n}(\wh{\theta}_n-\theta_0)\Rightarrow I(\theta_0)^{-1}\Delta(\theta_0)\;(n\to\infty)\]
+    を含意する．
+    同様の方法により，Bayes推定量の漸近正規性も得られる．
+\end{remarks}
+
+\section{接触構造}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    $P_n$が帰無仮説，$Q_n$が対立仮説の法則という意味論がある．
+    接触しているとは\textbf{漸近的絶対連続}であることをいい，統計量の極限において，測度変換を与える基礎になる．
+\end{tcolorbox}
+
+\subsection{尤度比と測度変換}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=測度変換の公式が成り立つためには，絶対連続性が必要である．]
+    2つの確率変数があったときに，一方のもう一方に対する絶対連続部分のRadon-Nikodym微分を\textbf{尤度比確率変数}という．これは零集合上の差を除いて一意に定まる．
+    「尤度比」という名前は実用上の重要性が先行して考察されている対象かと思いやすいが，実際は本質的に数学的に自然に重要な対象である．
+
+    絶対連続性$Q\ll P\Leftrightarrow P(A)=0\Rightarrow Q(A)=0$は，$P\dae$性質はそのまま$Q\dae$に成り立つことを意味し，$\supp q\subset\supp p$だから$P$のグラフが上から覆いかぶさっている形になる．
+    $q/p\; dP$なる形式は$Q^a$を表す．
+    実はこの$\Om$全域での積分が$1$であるとき，$Q^\perp=0$である．
+    実際，
+    \[\int fdQ\ge\int f\frac{dQ}{dP}dP\quad(f\ge0)\]
+    が一般に成り立つが，等号が成り立って測度変換公式として使えるための必要十分条件が$Q\ll P$である．
+
+    Lebesgue測度は参照測度として優秀で，人類はみなこの測度に引き戻して計算を行う．
+\end{tcolorbox}
+
+\begin{motivation}[尤度比とは，数学的には絶対連続な確率測度組のRadon-Nikodym微分のことに他ならない]\mbox{}
+    \begin{enumerate}
+        \item （参照測度$\nu$の下の）任意の確率測度$P,Q$について，絶対連続部分と直交／特異部分とへのLebesgue分解$Q=Q^a+Q^\perp$が存在して，$Q^a\ll P$かつ$Q^\perp\perp P$かつ
+        \[\forall_{A\in\F}\quad Q^a(A)=\int_A\frac{q}{p}dP,\qquad \frac{dQ}{dP}=\frac{q}{p}\;P\dae\]
+        が成り立つ．
+        \item こうして，Radon-Nikodym微分という確率変数$\frac{dQ}{dP}:\Om\to\R_+$を確率$P$の下で考えるというテーマが定まる．これを\textbf{尤度比}という．
+        \item 尤度比の平均値が$1$であることと，$Q^\perp=0$であることと，絶対連続$Q\ll P$であることとは同値．
+    \end{enumerate}
+\end{motivation}
+
+\begin{lemma}
+    $P,Q\ll\mu$を確率測度とし，対応する密度を$p,q$とする．
+    \begin{enumerate}
+        \item 絶対連続部分$Q^a$の参照測度$\mu$が介在しない表示$Q^a(A)=\int_A\frac{q}{p}dP$が成り立つ．
+        \item 尤度比の$P$-平均値が$1$であること$\int\frac{q}{p}dP=1$と，$Q^\perp=0\Leftrightarrow Q[p=0]=0$であることと，絶対連続$Q\ll P$であることとは同値．
+        \item 一般に$\int fdQ\ge\int f\frac{dQ}{dP}dP$が成り立ち，等号が成立するのは$Q\ll P$のとき．
+    \end{enumerate}
+\end{lemma}
+
+\subsection{接触性}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    $X$の$Q$についての法則を，$P$の言葉で考えたいとき，$q/p$を積分核とすれば良いことがわかった．この
+    測度変換の問題の漸近版を考える．
+    いつ，極限実験$P$を用いて，対象の実験列$(Q_n)$の極限分布が計算可能になるか？
+\end{tcolorbox}
+
+\begin{notation}
+    台となる測度空間$(\Om^n,\A^n)$を共通とする統計的実験の列$(P_n),(Q_n)$を考える．
+    そしてそこでの統計量の列$X_n:\Om^n\to\R^k$との振る舞いを考察する．
+\end{notation}
+
+\begin{definition}[contiguous]
+    モデル$(Q_n)$は\textbf{$(P_n)$下に接触している}$Q_n\triangleleft P_n$とは，任意の可測集合の列$(A_n),A_n\in\A^n$に対して，$P_n(A_n)\to0\Rightarrow Q_n(A_n)\to0$が成り立つことをいう．
+\end{definition}
+
+\begin{remark}
+    $\frac{dQ_n}{dP_n},\frac{dP_n}{dQ_n}$はそれぞれ$P_n,Q_n$の下で一様に緊密であるから，Prohorovの定理から，弱コンパクトである．
+    すなわち，任意の部分列は，弱収束する部分列をもつ．
+    以降，この意味で$U$に収束するとき，$\frac{dP_n}{dQ_n}\xrightarrow[Q_n]{d}^*U$と表す．
+\end{remark}
+
+\begin{lemma}[接触性の特徴付け(LeCam 1)]
+    次の4条件は同値．
+    \begin{enumerate}
+        \item $Q_n\triangleleft P_n$．
+        \item $\frac{dP_n}{dQ_n}\xrightarrow[Q_n]{d}^*U$ならば，$P[U>0]=1$である．
+        \item $\frac{dQ_n}{dP_n}\xrightarrow[P_n]{d}^*V$ならば，$E[V]=1$である．
+        \item 任意の統計量$T_n:\Om_n\to\R^k$について，$T_n\xrightarrow{P_n}0$ならば$T_n\xrightarrow{Q_n}0$である．
+    \end{enumerate}
+\end{lemma}
+\begin{remarks}
+    漸近的でない場合の消息でいうと，
+    \[Q_n\paren{\frac{dP_n}{dQ_n}=0}=0\quad\Leftrightarrow E_P\Square{\frac{dQ}{dP}}=1\]
+    は$Q_n\ll P_n$に同値だが，$Q_n\triangleleft P_n$と同値になるためには，上のような表現となる．
+\end{remarks}
+
+\begin{example}[漸近的対数正規性]
+    \[\frac{dP_n}{dQ_n}\xrightarrow[Q_n]{d}e^{N(\mu,\sigma^2)}\]
+    が成り立つとき，$Q_n\triangleleft P_n$で，さらに互いに接触していることは$\mu=-\frac{1}{2}\sigma^2$に同値．
+\end{example}
+
+\begin{theorem}[漸近的測度変換(LeCam 3)]
+    $X_n:\Om^n\to\R^k$を確率変数列とする．
+    \begin{enumerate}
+        \item $Q_n\triangleleft P_n$，
+        \item $\paren{X_n,\frac{dQ_n}{dP_n}}\xrightarrow[P_n]{d}(X,V)$
+    \end{enumerate}
+    ならば，$L(B):=E[V,B]=E[1_BV]$は確率測度を定め，これについて$X_n\xrightarrow[Q_n]{d}L$．
+\end{theorem}
+
+\begin{lemma}[接触性の十分条件]
+    $P_n,Q_n$はある$\sigma$-有限測度$\nu_n$に対して絶対連続であるとし，Radon-Nikodym微分を$p_n,q_n$とおく．
+    \[\Lambda_n:=\begin{cases}
+        \log(q_n/p_n),&p_n,q_n>0,\\
+        0,&p_n=q_n=0,\\
+        \infty,&p_n=0,q_n>0,\\
+        -\infty,&p_n>0,q_n=0.
+    \end{cases}\]
+    ある確率変数$\Lambda$が存在して$P_n$の下で$\Lambda_n\xrightarrow{d}\Lambda$かつ$E[e^\Lambda]=1$であるならば，$(Q_n)$は$(P_n)$に接触している．
+\end{lemma}
+
+\section{局所漸近正規性}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+パラメータのスケーリングの違いを除いて，局所漸近正規なモデルはあるガウスモデルに収束する．
+\end{tcolorbox}
+
+\begin{discussion}
+    ある点$\theta_0\in\R^k$に注目して，その周りの
+    局所パラメータを$h:=\sqrt{n}(\theta-\theta_0)$とすると，元の統計的実験$(\X^n,\A^n,(P_\theta^n)_{\theta\in\R^k})$は，
+    $(\X^n,\A^n,(P^n_{\theta_0+h/\sqrt{n}})_{h\in\R^k})$と変換される．
+    するとこの統計的実験は，元の統計的実験$\theta\mapsto P_\theta$が滑らかであるとき，
+    $(\X^n,\A^n,(N(h,I_{\theta_0}^{-1}))_{h\in\R^k})$に漸近する！
+\end{discussion}
+
+\subsection{尤度の拡張}
+
+\begin{discussion}
+    $P_\theta\ll\mu$とし，$p_\theta:=\dd{P_\theta}{\mu}$と表す．
+    ここでは$\theta,h\in\R$のような記法をするが，$k$次元としても$\dot{l}(x)$が$k$ベクトルになり，掛け算が内積または二次形式になるのみである．
+    $l_\theta(x):=\log p_\theta(x)\in C^2(\X)$と仮定すると(この仮定は強すぎるが)，Taylorの定理より，
+    \[\log P_{\theta+h}(x)=l_\theta(x)+\dot{l}_\theta(h)+\frac{1}{2}\ddot{l}_\theta(x)h^2+o_x(h^2).\quad h\in\R^k,h\to0\]
+    \[\log\frac{p_{\theta+h}}{p_\theta}(x)=h\dot{l}_\theta(x)+\frac{1}{2}h^2\ddot{l}_\theta(x)+o_x(h^2).\quad h\in\R^k,h\to0\]
+    ここで尤度比が現れる．特に$x$に観測値$X_1,\cdots,X_n$を代入し，$h$を$\frac{h}{\sqrt{n}}$として$n\to\infty$の極限を考えると，
+    \[\log\prod_{i=1}^n\frac{p_{\theta+h/\sqrt{n}}}{p_\theta}(X_i)=\frac{h}{\sqrt{n}}\sum^n_{i=1}\dot{l}_\theta(X_i)+\frac{1}{2}\frac{h^2}{n}\sum^n_{i=1}\ddot{l}_\theta(X_i)+\sum_{i=1}^no_x\paren{\frac{h^2}{n}}\quad(n\to\infty)\]
+    ここで，$E_\theta[\dot{l}_\theta]=0,-E_\theta[\ddot{l}_\theta]=E_\theta[\dot{l}^2_\theta]=I_\theta$だから，
+    \begin{enumerate}
+        \item $\Delta_{n,\theta}:=\frac{1}{\sqrt{n}}\sum^n_{i=1}\dot{l}_\theta(X_i)\in\R$とおくと$\Delta_{n,\theta}\xrightarrow{d}N(0,I_\theta)$（中心極限定理）．
+        \item 大数の法則より$\frac{1}{n}\sum^n_{i=1}\ddot{l}_\theta(X_i)\xrightarrow{d}-I_\theta$．
+        \item 3項目はおそらく確率収束（仮定をうまく設定すれば良い）．
+    \end{enumerate}
+    よって，
+    \[\log\prod_{i=1}^n\frac{p_{\theta+h/\sqrt{n}}}{p_\theta}(X_i)=h\Delta_{n,\theta}-\frac{1}{2}I_\theta h^2+o_{p_\theta}(1)\]
+    が成り立つ．
+    実は，必要な過程は，$L^2$-微分の言葉で簡潔に書ける．
+\end{discussion}
+
+\begin{theorem}[局所漸近正規性の十分条件]
+    モデル$(p_\theta)_{\theta\in\Theta\osub\R^k}$は，
+    密度関数の平方根$\theta\mapsto\sqrt{p_\theta}$が$L^2$-微分可能であるとする：
+    \[\exists_{\dot{l}\in\L^2(\X)}\quad\int\paren{\sqrt{p_{\theta+h}}-\sqrt{p_\theta}-\frac{1}{2}h^\top \dot{l}_\theta\sqrt{p_\theta}}^2d\mu=o(\norm{h}^2)\quad(h\to0).\]
+    なお，通常の意味で微分可能であった場合は，
+    \[\frac{1}{2}\dot{l}_\theta\sqrt{p_\theta}=\pp{\sqrt{p_\theta}(x)}{\theta}\quad\Leftrightarrow\quad \dot{l}_\theta=\pp{}{\theta}\log p_\theta(x)\]
+    が必要であることに注意．このとき，
+    \begin{enumerate}
+        \item $E_\theta[\dot{l}]=0\in\R^k$かつ$I_\theta:=E_\theta[\dot{l}_\theta\dot{l}_\theta^\top]\in M_k(\R)$が定まる．
+        \item 任意の収束列$\{h_n\}\subset\Theta,h_n\to h$について，$\Delta_{n,\theta}:=\frac{1}{\sqrt{n}}\sum^n_{i=1}\dot{l}_\theta(X_i)\in\R^k$とすると，
+        \[\log\prod_{i=1}^n\frac{p_{\theta+h_n/\sqrt{n}}}{p_\theta}(X_i)=h^\top\Delta_{n,\theta}-h^\top\frac{1}{2}I_\theta h+o_{p_\theta}(1)\]
+    \end{enumerate}
+\end{theorem}
+
+\begin{definition}[LAN: local asymptotic normal]
+    モデル$(P_{n,\theta}|\theta\in\Theta)_{n\in\N}$が$\theta_0\in\Theta$において\textbf{局所漸近正規}であるとは，
+    \begin{enumerate}
+        \item 行列$r_n,I_{\theta_0}\in M_k(\R)$，
+        \item $P_{\theta_0}$の下で$N(0,I_{\theta_0})$に分布収束する確率変数$\Delta_{n,\theta}:\Om\to\R^k$，
+    \end{enumerate}
+    が存在して，任意の収束列$\{h_n\}\subset\R^k,h_n\to h$について，
+    \[\log\frac{dP_{n,\theta+r_n^{-1}h_n}}{dP_{n,\theta}}=h^\top\Delta_{n,\theta}-\frac{1}{2}h^\top I_\theta h+o_{P_{n,\theta}}(1)\]
+    と展開できることをいう．
+\end{definition}
+\begin{example}
+    $L^2$-微分可能なモデル$(P_\theta)_{\theta\in\Theta}$が定める実験列$(P^n_\theta)$は，$r_n=\sqrt{n}I$を行列として局所漸近正規である．
+\end{example}
+
+\subsection{正規実験への収束}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    上の「局所漸近正規性」の意味を，統計的実験列の収束概念以前の状態で考えたい．
+
+\end{tcolorbox}
+
+\begin{discussion}
+    統計的実験が収束するとき，元の実験で弱収束する統計量は，極限実験での弱収束先に法則同等である．
+\end{discussion}
+
+\begin{definition}
+    ランダム化された統計量$T=T(X,U)$とは，$U\sim U([0,1])$にも依存する統計量をいう．
+\end{definition}
+
+\begin{theorem}[正規実験へ収束するための十分条件]
+    モデル$(p_\theta)_{\theta\in\Theta\osub\R^k}$は，
+    密度関数の平方根$\theta\mapsto\sqrt{p_\theta}$が$L^2$-微分可能であり，Fisher情報行列$I_\theta:=E_\theta[\dot{l}_\theta\dot{l}_\theta^\top]\in\GL_k(\R)$が可逆であるとする．
+    実験$(P_{\theta+h/\sqrt{n}})_{h\in\R^k}$における統計量$T_n:\X^n\to\R^k$が，
+    任意の$P_{\theta+h/\sqrt{n}}\;(h\in\R^k)$について弱収束するとき，
+    実験$(N(h,I^{-1}_{\theta}))_{h\in\R^k}$上のランダム化された統計量$T:=T(X,U):\X\times[0,1]\to\R^k$が存在して，任意の$h$について同じ収束先へ分布収束する．
+\end{theorem}
+
+\section{漸近決定理論}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    $h_0\in H$上の尤度比過程は，周りの$h$と$h_0$との「分離度」を表す．実際対数尤度比の$P_h$についての平均が$h,h_0$の間のKL-分離度である．
+    そこで統計的実験が収束するとは，任意の尤度比過程がバージョンの違いを除いて収束することとすると，
+    統計モデルがある種の"Riemann多様体"として，各点において局所構造が等しいことと思える．
+
+    極限的実験を定めると，ここでの効率限界が，元の実験での下界を与える．
+\end{tcolorbox}
+
+\subsection{実験列の収束の定義}
+
+\begin{definition}[likelihood ratio process, limit experiment]
+    統計的実験$(\X,\A,(P_h)_{h\in H})$について，
+    \begin{enumerate}
+    \item $h_0\in H$上の\textbf{尤度比過程}とは，$\paren{\frac{dP_{h}}{dP_{h_0}}(X)}_{h\in H}$，または参照測度が存在するとき，$\paren{\frac{p_h}{p_{h_0}}(X)}_{h\in H}$をいう．
+    これは，観測という確率変数$X$に，モデルの密度関数族が定める積写像$(p_h/p_{h_0})_{h\in H}$を合成して得たものである．
+    \item 実験列$((\X_n,\A_n,P_{n,h};h\in H))_{n\in\N}$が\textbf{極限実験}$(\X,\A,P_h;h\in H)$に収束するとは，それらの任意の$h_0\in H$上の尤度比過程の任意の有限次元周辺分布が，$h_0$が真のパラメータであるという過程の下で法則収束することをいう：
+    \[\forall_{h_0\in H}\;\forall_{I\subset H}\;\abs{I}<\infty\Rightarrow\paren{\frac{dP_{n,h}}{dP_{n,h_0}}(X_n)}_{h\in I}\xrightarrow{h_0}\paren{\frac{dP_h}{dP_{h_0}}(X)}_{h\in I}.\]
+    \end{enumerate}
+\end{definition}
+
+\subsection{漸近表現定理}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    法則収束する統計量の漸近的な振る舞いは，極限実験における統計量の考察に帰着する．
+    実験内の最適統計量の考察と，実験の収束とは，完全に独立に議論できるのである！
+
+    実は，さらに仮定をおくと，最尤推定量は極限実験での最尤推定量に収束し，尤度比統計量の列は尤度比統計量に収束することなども言える．
+\end{tcolorbox}
+
+\begin{notation}
+    実験$\E_n=(P_{n,h}|h\in H)_{n\in\N}$上の統計量$T_n:\X^n\to H$を考える．
+    任意の分布$P_h$の下で，$T_n\xrightarrow{P_h} L_h\in P(H)$に法則収束するとする．
+    このとき，$T_n$の漸近的な振る舞いは極限法則$\{L_h\}_{h\in H}$に支配される．
+    ここで，極限法則$\{L_h\}_{h\in H}$が，極限実験における（少し変換した）統計量の法則に対応する．
+\end{notation}
+
+\begin{definition}[dominated, randomized statistic]\mbox{}
+    \begin{enumerate}
+        \item 実験$\E=(P_h|h\in H)$が\textbf{支配されている}とは，ある$\sigma$-有限測度$\mu$が存在して$\forall_{h\in H}\;P_h\ll\mu$が成り立つことをいう．
+        \item $(\X,\A,P_h|h\in H)$上の\textbf{ランダム化された統計量}$T$とは，可測写像$T:\X\times[0,1]\to\R^k$をいう．ただし，$[0,1]$上には一様分布を与える．
+    \end{enumerate}
+\end{definition}
+
+\begin{theorem}[法則収束統計量の漸近表現定理]
+    実験$\E_n=(P_{n,h}|h\in H)_{n\in\N}$は，$\mu$に支配された実験$\E=(P_h|h\in H)$に収束するとする．
+    $\E_n$の統計量$T_n$が，任意の$h\in H$について法則収束するならば，$\E$のランダム化された統計量$T$が存在して，$\forall_{h\in H}\;T_n\xrightarrow{h}T$．
+\end{theorem}
+
+\subsection{漸近正規性}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    $h\in H$にて局所漸近正規なモデルは，正規分布モデル$N(Jh,J)$へ収束する実験列を定める．
+\end{tcolorbox}
+
+\begin{theorem}[局所漸近正規ならば，正規実験に収束する]
+    $\E_n=(P_{n,h}|h\in H)$を実験列で，パラメータ空間$H\subset\R^d$は$0\in H$を満たすとする．
+    $h=0$下で$N(0,J)\;(J\in M_d(\R))$に収束する確率変数列$\Delta_n:\X^n\to\R^d$を用いて
+    \[\log\frac{dP_{n,h}}{dP_{n,0}}=h^\top\Delta_n-\frac{1}{2}h^\top Jh+o_{P_{n,0}}(1)\]
+    と展開できるとき，実験列$\E_n$は$(N(Jh,J))_{h\in H}$に収束する．
+\end{theorem}
+
+\subsection{一様分布}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    一様分布のモデル$(U([0,\theta]))_{\theta\in\R_+}$は$L^2$-微分可能ではなく，正規な実験に収束しない．
+    実は，指数実験に収束する．
+\end{tcolorbox}
+
+\subsection{Pareto分布}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    Pareto分布の極限実験は，正規実験と指数実験の組み合わせとなる．
+\end{tcolorbox}
+
+\subsection{漸近混合正規性}
+
+\section{尤度比確率場の局所漸近構造}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    統計推測の最適性の問題は，尤度解析に帰着される．
+\end{tcolorbox}
+
+\subsection{漸近決定理論}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    漸近決定理論の方法は，その普遍性ゆえに，確率過程の統計推測論などの新しい分野と合流し発展を続けている．
+    統計量の漸近有効性を議論するためには，統計的実験の列に対する漸近決定理論の立場で一般論を展開する方が好ましい．
+    これは，小標本理論における十分性・不偏性・不変性などの精緻な理論を，非線形な場合にも拡張する企てである．
+\end{tcolorbox}
+
+\begin{history}
+    漸近論への数学的アプローチで，初めて理論と言えるものはWald 1943とLeCam1960, 1972, 1979である．
+    そこで，統計的実験とは，多様体$\{P_\theta\}_{\theta\in\Theta}\subset P(\R^n)$とされた．
+    いまでは無限次元の場合（セミ／ノンパラメトリック）も考えられている．
+    実験を繰り返すにつれて，実験は局所的に簡単なモデルで近似可能になっていく，この現象をGaussian shiftという．
+    よって，問題は元の実験の研究から，Gaussian shiftの近似へと移り変わる（極限定理）．
+    これは本質的には実験の滑らかさに起因する．
+\end{history}
+
+\begin{definition}[experiment, deficiency]
+    $\Theta\ne\emptyset$に関する実験とは，3つ組$E=(\Om,\A,\P)$をいう．
+    パラメータ空間$\Theta$に関する実験全体の集合を$\E(\Theta)$で表す．
+    $\delta(E,F):=\inf\Brace{\ep>0\mid E\overset{\ep}{\subset} F}\;(E,F\in\E(T))$に対して，$\Delta(E,F):=\max\Brace{\delta(E,F),\delta(F,E)}$を\textbf{欠損}という．
+    これは$\E(T)$上に擬距離を定める．
+    \begin{align*}
+        \Delta(E,F)&=\sup\Brace{}
+    \end{align*}
+\end{definition}
+
+\subsection{統計的実験}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    漸近正規性を定義する枠組みを整備する．
+    Frechet微分のような考え方をするが，$L^2$ノルムにより条件が弱められている\cite{Ibragimov HasMinskii}．
+\end{tcolorbox}
+
+\begin{definition}
+    可測空間とその上の確率分布族$(P_\theta)_{\theta\in\Theta}$の組$(\X,\A,\{P_\theta\}_{\theta\in\Theta})$を\textbf{統計的実験}という．
+    大標本理論では，直積による列$(\X^n,\A^n,\{P_\theta^n\})_{n\in\N}$を考える．
+\end{definition}
+
+\begin{notation}[正則性の仮定]
+    $\Theta\osub\R^p$とし，$P_\theta$の真値$P_{\theta_0}$に対するLebesgue分解における，絶対連続部分のRadon-Nikodym微分を$dP_\theta/dP_{\theta_0}$，特異部分を$\sigma_{\theta/\theta_0}$で表すと，
+    \[P_\theta[A]=\int_A\frac{dP_\theta}{dP_{\theta_0}}dP_{\theta_0}+\sigma_{\theta/\theta_0}(A)\quad(A\in\A)\]
+    関数$D_u:\X\to\R\;(u\in\R^p)$を
+    \[D_u(x):=\sqrt{\frac{dP_{\theta_0+u}}{dP_{\theta_0}}(x)}-1\]
+    で定める．
+\end{notation}
+
+\begin{enumerate}[({G}1)]
+    \item 原点の近傍の$u\in\R^p$(十分小さな変位)に対して$D_u\in L^2(P_{\theta_0})$であって，$u\mapsto D_u$は$u=0$において$L^2(P_{\theta_0})$の意味で微分可能である：
+    \[\exists_{\varphi=\varphi_{\theta_0}\in L^2(P_{\theta_0};\R^p)}\quad\int_\X(D_u(x)-u'\varphi(x))^2P_{\theta_0}(dx)=o(\abs{u}^2)\quad(\abs{u}\to0).\]
+    \item $\sigma_{\theta_0+u/\theta_0}(\X)=o(\abs{u}^2)\;(\abs{u}\to0)$．
+\end{enumerate}
+
+\begin{lemma}[$L^2$-微分の表示]
+    G1,G2を仮定し，$P_\theta$は確率密度関数族$p(x,\theta)$を持ち，対応$\theta\mapsto p(x,\theta)$は$\theta_0$において微分可能とする．
+    このとき，
+    \[\varphi(x)=\frac{1}{2p(x,\theta_0)}\pp{p}{\theta}(x,\theta_0).\]
+    また，Fisher乗法行列に当たる作用素$\Theta\to\R$を
+    \[I(\theta_0):=4\int_\X\varphi(x)\varphi(x)^\top P_{\theta_0}(dx)\]
+    とおく．
+\end{lemma}
+
+\begin{lemma}
+    
+\end{lemma}
+
+\subsection{局所漸近正規性}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    定理の$Z_n(u;\theta_0)$の展開が成り立つとき，すなわち，G1,G2が成り立つとき，統計的実験$(\X^n,\A^n,\{P^n_\theta\}_{\theta\in\Theta})$は$\theta_0$において\textbf{局所漸近正規}であるという．
+
+    対応$\R^p\ni u\mapsto Z_n(u;\theta_0)\in C(\R^p)$を尤度比確率場という．
+    Ibragimov HasMinskiiは，この関数の$C(\R^p)$上での弱収束を示した：$Z_n(-;\theta_0)\xrightarrow{d}Z(-;\theta_0)$．
+\end{tcolorbox}
+
+\begin{notation}[normalized likelihood ratio]
+    正規化された尤度比を
+    \[Z_n(u;\theta_0):=\prod^n_{j=1}\frac{dP_{\theta_0+n^{-1/2}u}}{dP_{\theta_0}}(x_j),\quad(u\in\R^p,x\in\X^n)\]
+    とおくと，$Z_n$は十分大きな$n\in\N$に対して定義されている．
+\end{notation}
+
+\begin{theorem}[LeCam]
+    正規な統計的実験の列$E_i$について，
+    $I(\theta_0)\;(\theta_0\in\Theta)$は非退化とする．
+    [G1],[G2]を仮定し$\varphi$を$D_u$の$L^2$-微分とする．
+    このとき，ある$p$次元と$1$次元確率変数$\Delta_n(\theta_0),\rho_n(u,\theta_0)$が存在して，
+    正規化された尤度比は次の表現を持つ：
+    \[Z_n(u;\theta_0):=\exp\paren{u^\top\Delta_n(\theta_0)-\frac{1}{2}u^\top I(\theta_0)u+\rho_n(u,\theta_0)}.\]
+    また，
+    \[L\Square{\Delta_n(\theta_0)|P^n_{\theta_0}}\to N_p(0,I(\theta_0)),\quad\rho_n(u,\theta_0)\xrightarrow{P^n_{\theta_0}}0.\]
+\end{theorem}
+\begin{proof}
+    \[\Delta_n(\theta_0):=\frac{2}{\sqrt{n}}\sum^n_{j=1}\varphi(x_j),\quad\rho_n(u,\theta):=\log Z_n(u;\theta_0)-u^\top\Delta_n(\theta_0)+\frac{1}{2}u^\top I(\theta_0)u.\]
+    とすれば良い．
+\end{proof}
+\begin{remarks}
+    この定理が保証する尤度比の性質は，推定量の性質を調べるに当たって強力な道具となる．
+    特に，尤度比の対数$\log Z_n$は$N\paren{-\frac{1}{2}u^\top I(\theta_0)u,u^\top I(\theta_0)u}$に分布収束する．
+\end{remarks}
+
+\begin{definition}[LAN: Locally Asymptotically Normal (LeCam 1960)]
+    定理の$Z_n(u;\theta_0)$の展開が成り立つとき，すなわち，G1,G2が成り立つとき，統計的実験$(\X^n,\A^n,\{P^n_\theta\}_{\theta\in\Theta})$は$\theta_0$において\textbf{局所漸近正規}であるという．
+\end{definition}
+\begin{remarks}
+    LANのとき，$P^n_{\theta_0+n^{-1/2}u}$は$P^n_{\theta_0}$に接触している．
+\end{remarks}
+
+\subsection{局所漸近正規な例}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    統計モデルの列が正規モデルで近似可能であるという性質が，局所漸近正規性である．
+    正則なパラメトリックモデルの独立同分布モデルは局所漸近正規で，これについてのLeCamの定理は中心極限定理に他ならない．
+\end{tcolorbox}
+
+\begin{theorem}[Hajekの十分条件]
+    $\Theta\subset\R^1$で添字付けられた実験$E_i$の分布族$f(x,\theta)=\dd{P_\theta}{\nu}$が次の3条件を満たすならば，族$P^n_\theta$はLAN条件を$\theta=t$について満たす．
+    \begin{enumerate}
+        \item 任意の$x\in\X$について$f(x,-):\Theta\to[0,1]$は$\theta=t$の近傍$U\osub\Theta$で絶対連続である．
+        \item $\nu\dae x\in\X$について，微分係数$\pp{f(x,\theta)}{\theta}$が$\theta\in U$上存在する．
+        \item $I(\theta)\;(\theta=t)$は連続で半正定値である．
+    \end{enumerate}
+\end{theorem}
+
+\subsection{漸近有効性}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    supによって，パラメータの1点でのみ良いパフォーマンスを示す病的な推定量（超有効推定量）が競争から排除されている．これが漸近ミニマックスリスク関数である．
+\end{tcolorbox}
+
+\begin{theorem}[Hajekの不等式]
+    統計的実験は$\theta_0$にて局所漸近正規であるとする．$\theta$の任意の推定量系列$T_n$について，
+    \[\forall_{\gamma,\delta>0}\quad\liminf_{n\to\infty}\sup_{\theta:\abs{\theta-\theta_0}<\delta}E_\theta\Square{\abs{\sqrt{n}(T_n-\theta)}^\gamma}\ge E[\abs{I(\theta_0)^{-1}\Delta(\theta_0)}^\gamma].\]
+\end{theorem}
+
+\section{漸近有効性}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    滑らかなパラメトリックモデルの漸近下界は$N(0,I^{-1}_\theta)$が与える．
+\end{tcolorbox}
+
+\begin{notation}
+    $\sqrt{n}(T_n-\psi(\theta))$は全ての$\theta\in\Theta$について分布収束すると仮定して(この仮定を正則性という)，その効率性を比較する．
+\end{notation}
+
+\subsection{実験の下界}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    漸近有効性の議論は，正規な位置母数モデル(Gaussian shiftモデル)での有効推定量の問題に帰着する．
+\end{tcolorbox}
+
+\begin{definition}[regular]
+    統計量の列$(T_n:\X^n\to\Theta)$が$\theta$において\textbf{正則}または\textbf{漸近的法則同等}であるとは，ある極限分布$L_\theta$が存在して，
+    \[\forall_{h\in\Theta}\;\sqrt{n}\paren{T_n-\psi\paren{\theta+\frac{h}{\sqrt{n}}}}\xrightarrow[\theta+h/\sqrt{n}]{d}L_\theta\]
+    が成り立つことをいう．
+    極限分布$L_\theta$が$h$に依ることを許すとき，\textbf{前正則}であるとする．
+    前正則な統計量が正則であるとは，局所一様に取れる消息を表す．
+\end{definition}
+
+\begin{theorem}\mbox{}
+    \begin{enumerate}[({E}1)]
+        \item 実験$(P_\theta)_{\theta\in\Theta}$は点$\theta\in\Theta\osub\R^k$で
+        $\theta\mapsto dP^{1/2}$が
+        $L^2$-微分可能で，可逆なFisher行列$I_\theta\in\GL_k(\R)$を持つとする．
+        \item $\psi:\Theta\to\R$は$\theta$で微分可能であるとする．
+        \item 実験$(P_{\theta+h/\sqrt{n}})_{h\in\R^k}$の統計量$T_n$は前正則であるとする．
+    \end{enumerate}
+    このとき，ランダム化された統計量$T$が実験$(N(h,I_\theta^{-1}))_{h\in\R^k}$上に存在して，$T-\dot{\psi}_\theta h\sim L_{\theta,h}$．
+\end{theorem}
+
+\subsection{Gaussモデルの平均の推定}
+
+\subsection{畳み込み定理}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    正則な統計量の中で，最適なものは解析的に定まる．
+\end{tcolorbox}
+
+\begin{theorem}\mbox{}
+    \begin{enumerate}[({E}1)]
+        \item 実験$(P_\theta)_{\theta\in\Theta}$は点$\theta\in\Theta\osub\R^k$で
+        $\theta\mapsto dP^{1/2}$が
+        $L^2$-微分可能で，可逆なFisher行列$I_\theta\in\GL_k(\R)$を持つとする．
+        \item $\psi:\Theta\to\R$は$\theta$で微分可能であるとする．
+        \item 実験$(P^n_\theta)_{\theta\in\Theta}$の統計量$T_n$は正則で極限分布$L_\theta$を持つとする．
+    \end{enumerate}
+    このとき，ある確率測度$M_\theta\in P(\X)$が存在して，
+    $L_\theta=N(0,\dot{\psi}_{\theta}I^{-1}_\theta\dot{\psi}_{\theta}^\top)*M_\theta$
+    と表せる．
+\end{theorem}
+
+\subsection{局所漸近minimax定理}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    全く違うアプローチで，最適な統計量が正規分布$N(0,\dot{\psi}_{\theta}I^{-1}_\theta\dot{\psi}_{\theta}^\top)$に漸近的に従うことを示す方法を考える．
+\end{tcolorbox}
+
+\subsection{下界を達成する推定量}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    漸近分布$N(0,\dot{\psi}_{\theta}I^{-1}_\theta\dot{\psi}_{\theta}^\top)$を持つ推定量が最適とわかったから，このようなものの必要十分条件を探す．
+    これは実は漸近線型性である．線形性が正規性に対応するのである！
+\end{tcolorbox}
+
+\begin{lemma}[漸近線型性:最適性の特徴づけ]\mbox{}
+    \begin{enumerate}[({E}1)]
+        \item 実験$(P_\theta)_{\theta\in\Theta}$は点$\theta\in\Theta\osub\R^k$で
+        $\theta\mapsto dP^{1/2}$が
+        $L^2$-微分可能で，可逆なFisher行列$I_\theta\in\GL_k(\R)$を持つとする．
+        \item $\psi:\Theta\to\R$は$\theta$で微分可能であるとする．
+    \end{enumerate}
+    このとき，実験$(P^n_\theta)_{\theta\in\R^k}$の統計量列$(T_n)$について，次の2条件は同値．
+    \begin{enumerate}
+        \item 漸近線型である：$\sqrt{n}(T_n-\psi(\theta))=\frac{1}{\sqrt{n}}\sum^n_{i=1}\dot{\psi}_\theta I_\theta^{-1}\dot{l}_\theta^\top(X_i)+o_P(1)$．
+        \item $T_n$は$\psi(\theta)$に対する正則な統計量の中で最適である：$\forall_{h\in\Theta}\;\sqrt{n}\paren{T_n-\psi\paren{\theta+\frac{h}{\sqrt{n}}}}\xrightarrow[\theta+h/\sqrt{n}]{d}N(0,\dot{\psi}_{\theta}I^{-1}_\theta\dot{\psi}_{\theta}^\top)$．
+    \end{enumerate}
+\end{lemma}
+\begin{remarks}
+    $\Delta_{n,\theta}:=\frac{1}{\sqrt{n}}\sum\dot{l}_\theta(X_i)$の部分が$N(0,I_\theta)$に収束する．
+\end{remarks}
+
+\begin{example}
+    適切な正則条件の下で，最尤推定量は漸近線型である．
+    したがってデルタ法によって，任意の汎関数$\psi(\theta)$に対して，plug-in推定量は漸近線型である．
+\end{example}
+
+
+\chapter{漸近展開}
+
+\begin{quotation}
+    中心極限定理は，正規近似に基づく，分布の一次の漸近理論であった．
+    Edgeworthによる展開はその近似をより精密にしたものである．
+    標本数がそれほど大きくない実際的な状況では，分布のより精密な近似を基礎として統計量を構成することが必要になる．
+
+    今日，漸近展開法も確率過程にまでその領域を広げ，新しい確率統計学が発展しつつあるが，このような新領域を理解する上でも，独立確率変数列における現象を理解することが重要である．
+
+    キュムラント関数をよく使う．その関係で，テンソルがよく出る．
+    また，最尤推定量の漸近展開に出てくる係数の一部は接続係数にほかならない．
+\end{quotation}
+
+\section{漸近展開}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    平均$0$，分散共分散行列$\Sigma>O$の$d$次元確率変数列$\{Z_j\}_{j\in\N}$は独立同分布に従うとする．
+    中心極限定理によると，
+    \[S_n=\frac{1}{\sqrt{n}}\sum^n_{j=1}Z_j\xrightarrow{d}N_d(0,\Sigma)\quad(n\to\infty)\]
+    であるが，この正規近似はあまり精度は良くないため，標本数$n$が小さい時にはより良い近似が必要になる．
+
+    数学的には，これは$X$の特性関数$\varphi_X(u)=E[e^{iu\cdot X}]\;(u\in\R^d)$の漸近展開理論に等価である．
+\end{tcolorbox}
+
+\begin{definition}
+    確率変数$X:\X\to\R^d$に対して，
+    \[\chi_r(u;X):=i^r\kappa_r[u\cdot X]=(\partial_\ep)^r_0\log\varphi_{u\cdot X}(\ep)\]
+    を\textbf{キュムラント関数}という．ただし，$(\partial_\ep)^r_0$とは，$\ep$で$r$回偏微分をして$\ep=0$を代入したものをいう．
+    これはキュムラント母関数の$r$次項係数（を$u$の関数と観たもの）である．
+\end{definition}
+
+\section{平滑化補題}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    分布の差と特性関数の差の関係を与える補題を準備する．
+\end{tcolorbox}
+
+\section{特性関数の展開}
+
+\section{漸近展開の正当性の証明}
+
+\section{漸近展開の変換}
+
+\section{最尤推定量の漸近展開}
+
+\section{歴史}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    物理学者も解析学者も参入した対象であり，中心極限定理とはやはり夢のテーマであった．
+    ロシアが強いことに疑問もない．
+    正規分布には，算術平均が最尤推定量になるということと，微小分布へ無限分解可能な分布としての2つの普遍性がある．
+\end{tcolorbox}
+
+\begin{history}[Stirlingの公式とde Moivre-Laplaceの定理]
+    FermatとPascalの往復書簡(1654)ののちに，HuygensがDe  Ratiociniis in Ludo Aleae (1657)を書き，
+    これを
+    James Bernoulliが，まとめてArs Conjectandi (1713)が死後に出版された．
+    この時点で第四部では推論に応用することを考えたのである．
+    復元抽出の標本数$n$をどこまで大きくすれば，確率$p$を一定の誤差以下で評価できるかを考えた．
+    これは多項分布の問題であるから，Newtonの二項公式やBernoulli数の技法が第二部でまとめられている．
+    この問題を乗り越えたのがDe Moivre (1733)で，多項分布の確率が正規曲線$e^{-x^2}$の積分で近似できることを発見した．
+    この自分の論文を英訳し，The Doctrine of Chances, 2nd Ed. (1738)に収録して，友人に配った．
+    さらに$n!$の近似の問題を解いて精緻化したのがStirling (1730, Methodus differentialis)である．De Moivreの友人であった．
+    この点で本質的に解析学化したのがde Moivreであったが，本格的に微積分学の言葉で書き直したのがLaplaceであった．
+    こうして，de Moivre-Laplaceの定理が示された．
+    解析学とは極限の技法で，極限とは近似の基礎である．
+    二項分布とは，二点分布に従う独立同分布列の和の分布でもあることに注意すれば，これは中心極限定理の系である．
+\end{history}
+
+\begin{history}[誤差分布と天文学]
+    Simpson (1775)のLondon王立学会に当てた手紙に，天文学者は算術平均を推定量として使うが，注意深く測定した1回の方が信頼できるという意見の知識人も多いという現状を書いている．
+    そこでSimpson, Lagrangeらは誤差分布として考え得る分布たち（裾が軽く，対称な分布）の算術平均の分布が調べられた．
+
+    回帰分析だが，方程式の形をパラメトリックに仮定し，観測値を集めると，解析的には解無しになるが，実際は仮定も正しくなく，観測誤差もあるので，損失関数を最小にする係数を推定量とすることになる（決定問題）．
+    Gaussが最終的にこれを解決し，標本平均が位置母数の最尤推定量になるのは誤差法則が正規分布の場合に限ることを解析的に示し，このとき最小二乗法が必然的に最良になることを示した．
+    算術平均を信じるなら，誤差分布は正規性を仮定することになるのだ．
+\end{history}
+
+\begin{history}[誤差とは何か]
+    Youngは誤差という概念の安定性に疑問を持ち，「誤差とは，根元誤差の独立和に分解できるのではないか」「そして独立和は，元々の誤差分布に依らずに特定の分布に従うのでは？」と，裏の数理構造に目を向けた．
+    これは数学的には新規性はないが，無限可分分布という概念に目を向けさせる．
+    こうしてGuassとは独立に，もう一度誤差分布に正規分布を用いる妥当性が導かれる．
+    つまり，3次以上の積率が無視できるほど小さいような根元誤差の話の分布は，正規分布に従うことになる．
+    「微小分布の和」としての普遍性があるわけだ．
+\end{history}
+
+\begin{history}
+    Chebyshev, Markovの順に十分条件が厳密に見つかっていき，
+    Lyapunovが特性関数の方法で数学的に正しいものをひとまず1つ確定させた．
+    Lindeberg, Levy, Feller, Kolmogorovが引き継ぎ，現代論になる．
+\end{history}
+
+\chapter{情報幾何学}
+
+\section{漸近展開と情報幾何}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    最尤推定量の漸近展開の係数の一部は，接続係数として解釈できる．
+    統計量の漸近展開式に幾何学的解釈を与え，その高次の統計的性質を説明しようとする研究の流れは，Efronから始まり，甘利俊一による$\al$-接続の重要性の認識によって情報幾何学として確立された．
+    特に，1次漸近有効性の枠組みを脱して，高次漸近有効性の議論も可能になる．
+\end{tcolorbox}
+
+\section{変分}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    
+\end{tcolorbox}
+
+\subsection{定義}
+
+\begin{history}
+    1910年頃から統計的な距離の意味で使われており，論文ではBhattacharya (1943). On a Measure of Divergence between Two Statistical Populations Defined by Their Probability Distributions.でBhattacharya距離(距離ではない)を定義し，これにKullback and Leibler (1951)が続いたものが始まりである．
+    ただし，Kullback (1959)では現在のKL-変分を"directed divergence"と呼んで，対称化を考えている．
+    現代の意味での用法はAmari (1985)からであるが，それまでは"quasi-distance" (Amari 1982), "contrast function" (Eguchi 1985)などを辿った．
+\end{history}
+
+
+\begin{definition}[divergence]
+    $(M,(\xi_x))$を多様体とする．$C^2$-級関数$D:M\times M\to\R_+$が\textbf{分離度}であるとは，
+    \begin{enumerate}
+        \item 非退化性：$D[P|Q]=0\Leftrightarrow P=Q$．
+        \item 第二変数が計量の二次形式である：第二変数に関する微分のHesse行列$G(\xi)=(g_{ij}(\xi))$は正定値対称である．
+        \item 任意の点$P\in M$において，開近傍系$(U_r(P):=\Brace{Q\in M\mid D[P,Q]<r})_{r>0}$は単調増大．
+    \end{enumerate}
+\end{definition}
+
+
+\subsection{例}
+
+\begin{definition}[$f$-divergence]
+    
+\end{definition}
+
+\begin{theorem}[Fisher計量]
+    $C^3$-級のパラメトリック模型$\P=(P_\theta)_{\theta\in\Theta}\;(\Theta\subset\R^p)$について，
+    \begin{enumerate}
+        \item 1次の微小項が消える：$\forall_{j\in[p]}\;\left.\pp{}{\theta_j}\right|_{\theta=\theta_0}D(P_\theta|P_{\theta_0})=0$．
+        \item KL-変分の合成$\theta\mapsto D(P_\theta|P_{\theta_0})$のHesse行列を$G=\paren{g_{jk}(\theta_0):=\left.\pp{^2}{\theta_j\partial\theta_k}\right|_{\theta=\theta_0}D(P_\theta|P_{\theta_0})}$とする：
+        \[D(P_\theta|P_{\theta_0})=\frac{1}{2}\Delta\theta_j\Delta\theta_kg_{jk}(\theta_0)+o(\abs{\theta-\theta_0}^2)\qquad\Delta\theta_j:=(\theta-\theta_0)_j.\]
+        このとき，$G$は半正定値で，$\Theta$上にRiemann計量を定める．
+    \end{enumerate}
+\end{theorem}
+
+\begin{example}[正規分布族のKL分離度]
+    $M_n(\R)$の中の半正定値行列のなす部分多様体$\GL_n(\R)_+$は$n(n+1)/2$次元である．
+    この多様体に
+    \[D[P,Q]=\Tr(PQ^{-1})-\log\abs{PQ^{-1}}-n\]
+    なるダイバージェンスが定まる．これは，$P,Q$を分散共分散行列とする平均$0$の正規分布の間のKLダイバージェンスになっている．
+\end{example}
+
+\chapter{再標本化法}
+
+\begin{quotation}
+    データから推定して得た分布$\wh{P}_n$から再度標本を取る手続きを含む手法を，\textbf{リサンプリング法}という．
+\end{quotation}
+
+\section{ブートストラップ法}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    ブートストラップ法では，データから作った分布$\wh{P}_n$から，さらに標本を取る．そこから，リサンプリング法とも言われる．
+    パラメトリックモデルではプラグイン推定量$P_{\wh{\theta}_n}$，ノンパラメトリックモデルでは経験分布などを取る．
+\end{tcolorbox}
+
+\begin{model}[ブートストラップ法が適用可能な模型]
+    $P$を真の分布，$\{X_j\}_{j\in[n]}$を独立な観測とする．
+    確率変数$R_n(\x_n;P):\R^n\times P(\R)\to\R$の分布関数
+    \[H_n(x;P):=\int_{\R^n}1_{\Brace{R_n(\x_n;P)\le x}}P^{\otimes n}(d\x_n).\]
+    に対して，$H_n(c_\al;P)=\al$を満たす点$c_\al\in\R$を求める問題を考える．
+    例えば，統計的汎関数$\theta:P(\R)\to\R$の推定量$\wh{\theta}_n:\R^n\to\R$に対して，$R_n(\x_n;P):=\sqrt{n}(\wh{\theta}_n(\x_n)-\theta(P))$とすれば，検定が構成できる．
+    \begin{enumerate}
+        \item $P$の推定量$\wh{P}_n$が得られたとする．このとき，プラグイン分布
+        \[H_n(x;\wh{P}_n):=\int_{\R^n}1_{\Brace{R_n(\x_n,\wh{P}_n)\le x}}\wh{P}_n^{\otimes n}(d\x_n)\]
+        を\textbf{Bootstrap分布}という．
+        \item プラグイン分布$\wh{P}_n$から大きさ$n$の無作為標本$\bX^*_n=(X_1^*,\cdots,X^*_n)$を用意する．これを\textbf{Bootstrap標本}という．
+    \end{enumerate}
+    特に，Bootstrap分布が陽に表せないとき，(2)の手続きが困難になる．これは\textbf{計算機集約的}(computer-intensive)な統計手法である．
+\end{model}
+
+\begin{notation}
+    $(X_j)$を確率分布$P$に従う独立な実確率変数列とし，$R_n(\mathbf{X}_n,P):\X\to\R$を確率変数とする．
+    $R_n(\mathbf{X}_n,P)$の分布関数を
+    \[H_n(x;P):=\int_{\R^n}1_{R_n(\mathbf{x},P)\le x}P_n(d\mathbf{x})\]
+    と定め，$H_n(c_\al;P)=\al\in(0,1)$を満たす点$c_\al$を求める問題を考える．
+\end{notation}
+\begin{example}
+    $P$が未知で，$\theta=\theta(P)$の信頼区間を構成したいとき，推定量$\wt{\theta_n}(\mathbf{X}_n)$から定まる確率変数$R_n(\mathbf{X}_n,P):=\sqrt{n}(\wt{\theta_n}(\mathbf{X}_n)-\theta(P))$の分位点$c_\al$を求めたい．
+\end{example}
+
+\begin{definition}
+    $\wh{P}_n$を$P$の推定量とする．
+    \begin{enumerate}
+        \item 真の分布関数$H_n(x;P)$に対する近似$H_n(x;\wh{P}_n):=\int_{\R^n}1_{R_n(\mathbf{x},\wh{P}_n)\le x}(\wh{P}_n)^n(d\mathbf{x})$を，\textbf{ブートストラップ分布}という．
+        \item 推定分布$\wh{P}_n$に従う大きさ$n$の無作為標本$\bX^*=(X^*_1,\cdots,X^*_n)$を\textbf{ブートストラップ標本}という．
+    \end{enumerate}
+\end{definition}
+\begin{remark}[computer-intensive]
+    推定分布$\wt{P}_n$が複雑であるとき，
+    積分$H_n(x;\wh{P}_n)$はモンテカルロ法で近似する．
+    これが，ブートストラップ法が計算機集約的と言われる所以である．
+\end{remark}
+\begin{remark}[studentization]
+    $R_n(\bX_n,P)$をステューデント化された確率変数で置き換えることで，ブートストラップ分布の近似精度の改善が可能である．
+\end{remark}
+
+\chapter{参考文献}
+
+\bibliography{../mathematics.bib,../statistics.bib}
+\begin{thebibliography}{99}
+    \bibitem{吉田}
+    吉田朋広 (2006) 『数理統計学』（朝倉書店）
+    \bibitem{鍋谷}
+    鍋谷清治 (1978) 『数理統計学』（共立出版）
+    \bibitem{竹内啓}
+    竹内啓『統計的推定の漸近理論』
+    \bibitem{前園・ノンパラ}
+    前園宜彦 (2019). 『ノンパラメトリック統計』（共立講座，数学の輝き12）．
+    \bibitem{前園}
+    前園宜彦 (2001). 『統計的推測の漸近理論』（九州大学出版会）．
+    \bibitem{van der Vaart}
+    van der Vaart. (1998). \textit{Asymptotic Statistics}. Cambridge Univ. Press.
+    \bibitem{Ferguson}
+    Ferguson, T. S. (1996). \textit{A Course in Large Sample Theory}. Taylor and Francis Group.
+
+    漸近展開について参照すべきは以下である．
+    \bibitem{柴田義貞}
+    柴田義貞 (1981) 『正規分布』（UP応用数学選書，東京大学出版会）．
+
+    \bibitem{Bhattacharya78}
+    Bhattacharya, R. N., and Ghosh, J. K. (1978). On the Validity of the Formal Edgeworth Expansion. \textit{Annals of Statistics}. 6(2):434-451.
+    \bibitem{Sweeting}
+    Sweeting, T. J. (1977). Speeds of Convergence for the Multidimensional Central Limit Theorem. \textit{Annals of Probability}. 5:29-41.
+
+    \bibitem{Bhattacharya}
+    Rabi Bhattacharya - Course in Mathematical Statistics and Large Sample Theory
+    \bibitem{Ibragimov HasMinskii}
+    Ibragimov and Has'minskii - Statistical Estimation
+    \bibitem{Helmut Strasser}
+    Helmut Strasser "Mathematical Theory of Statistics"
+
+    \bibitem{赤池76}
+    赤池広次 (1976) 「情報量規準AICとは何か」数理科学153号，5-11ページ．
+    \bibitem{赤池79}
+    赤池広次 (1979) 「統計的検定の新しい考え方」数理科学198号，51-57ページ．
+\end{thebibliography}
+
+\end{document}

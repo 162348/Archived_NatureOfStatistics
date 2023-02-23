@@ -1,0 +1,995 @@
+\documentclass[uplatex, dvipdfmx]{jsreport}
+\title{微分積分論再建}
+\author{司馬博文}
+\date{\today}
+\pagestyle{headings} \setcounter{secnumdepth}{4}
+\input{/Users/Hirofumi Shiba/NatureOfStatistics/preamble_no_fonts.tex}
+%\input{/Users/hirofumi.shiba48/NatureOfStatistics/preamble_no_fonts.tex}
+\usepackage[math]{anttor}
+\begin{document}
+\tableofcontents
+
+\chapter{微分論}
+
+\section{l'Hospitalの定理}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    平均値の定理の消息であり，多変数の場合(または複素関数の場合)には崩れる．
+\end{tcolorbox}
+
+\subsection{一般形}
+
+\begin{theorem}[l'Hospitalの定理\footnote{\cite{Rudin-Principles} Th'm 5.13}]
+    $f,g:(a,b)\to\R$を可微分関数，$g$の微分は$(a,b)$上で消えないとする：$\forall_{x\in(a,b)}\;g'(x)\ne0$．
+    次の条件(1),(2)のいずれかが成り立てば，
+    \[\lim_{x\to a}\frac{f'(x)}{g'(x)}=A\quad\Rightarrow\quad\lim_{x\to a}\frac{f(x)}{g(x)}=A,\qquad A\in[-\infty,\infty].\]
+    \begin{enumerate}
+        \item $\lim_{x\to a}f(x)=\lim_{x\to a}g(x)=0$．
+        \item $\lim_{x\to a}g(x)\in\{\pm\infty\}$．
+    \end{enumerate}
+\end{theorem}
+\begin{Proof}\mbox{}
+    \begin{description}
+        \item[方針] まず$A\in[-\infty,\infty)$と仮定し，任意の$A<q$に対して$\frac{f(x)}{g(x)}< q$を示す．
+        すると全く同様にして，$A\in(-\infty,\infty]$の仮定の下で，任意の$p<A$に対して$p<\frac{f(x)}{g(x)}$が示せ，結論を得る．
+        欲しい等式は真の不等号であるから，新たに$A<r<q$を取ることに注意．
+        \item[準備]
+        仮定$\lim_{x\to a}\frac{f'(x)}{g'(x)}=A$より，
+        任意の$A<q$と$r\in(A,q)$について，ある$c\in(a,b)$が存在して，
+        \[x\in(a,c)\quad\Rightarrow\quad\frac{f'(x)}{g'(x)}<r.\]
+        このとき，Cauchyの平均値の定理より，任意の$(x,y)\subset(a,c)$に対して，ある$t\in(x,y)$が存在して，
+        \begin{equation}\label{eq-for-lHospital}
+            \frac{f(x)-f(y)}{g(x)-g(y)}=\frac{f'(t)}{g'(t)}<r.
+        \end{equation}
+    \end{description}
+    \begin{enumerate}
+        \item $\lim_{x\to a}f(x)=\lim_{x\to a}g(x)=0$のとき，式\ref{eq-for-lHospital}の極限$x\to a$を考えて，
+        \[\frac{f(y)}{g(y)}\le r<q,\qquad(y\in(a,c)).\]
+        \item $\lim_{x\to a}g(x)=\infty$のとき，ある$c_1\in(a,y)$が存在して，任意の$x\in(a,c_1)$について$g(x)>g(y)$かつ$g(x)>0$が成り立つように出来る．これより式\ref{eq-for-lHospital}の両辺を$\frac{g(x)-g(y)}{g(x)}$倍することで，
+        \[\frac{f(x)}{g(x)}<r-r\frac{g(y)}{g(x)}+\frac{f(y)}{g(x)},\qquad(a<x<c_1).\]
+        を得る．この変形に対して極限$x\to a$を考えると，ある$c_2\in(a,c_1)$が存在して，
+        \[\frac{f(x)}{g(x)}\le r<q,\qquad(x\in(a,c_2)).\]
+    \end{enumerate}
+\end{Proof}
+\begin{remarks}
+    すなわち，分数関数$f/g$の$a\in\R$での$0/0$または$\infty/\infty$の不定型極限について，
+    ある片側近傍$(a,b)$上で$f,g$が可微分かつ$g'$が消えないならば，$f'/g'$と同じ$x\to a$極限を持つ．
+    $x\to a$に対して，左側近傍$(b,a)$を考えてももちろん良い．
+\end{remarks}
+
+\subsection{複素関数について}
+
+\begin{proposition}[複素関数にも成り立つ消息]
+    $f,g:(a,b)\to\C$を可微分関数，$g'(x)\ne0,f(x)=g(x)=0$とする．このとき，
+    \[\lim_{t\to x}\frac{f(t)}{g(t)}=\frac{f'(x)}{g'(x)}.\]
+\end{proposition}
+
+\begin{proposition}
+    $f,g\in H((0,1);\C)$を正則関数とし，$f(x),g(x)\to0,f'(x)\to A,g'(x)\to B\;(x\to0)$とする．$B\ne0$のとき，
+    \[\lim_{x\to0}\frac{f(x)}{g(x)}=\frac{A}{B}.\]
+\end{proposition}
+
+\subsection{多変数の平均値の定理}
+
+\begin{theorem}
+    $f\in C([a,b];\R^k)$は微分可能であるとする．このとき，
+    \[\exists_{x\in(a,b)}\;\abs{f(b)-f(a)}\le(b-a)\sup_{x\in(a,b)}\abs{f'(x)}.\]
+\end{theorem}
+
+\section{最適化問題}
+
+\subsection{極値判定法}
+
+\begin{theorem}
+    $A\osub\R^n$を開集合，$f:A\to\R$を$C^2$-級，$a\in A$で$f'$は消えるとし，$Q(X_1,\cdots,X_n):=\sum^n_{i,j=1}f_{x_ix_j}(a)X_iX_j\in\R[X_1,\cdots,X_n]$を2次形式とする．
+    \begin{enumerate}
+        \item $Q$が正定値ならば，$f$は$a$で極小．
+        \item $Q$が負定値ならば，$f$は$a$で極大．
+        \item $Q$が不定符号ならば，$f$は$a$で極小でも極大でもない．
+    \end{enumerate}
+\end{theorem}
+
+\subsection{等式制約付き最適化}
+
+\begin{theorem}
+    $f,g_1,\cdots,g_m\in C^1(A)\;(A\osub\R^n)$，$S:=\cap_{i\in[m]}g_i^{-1}(0)$を実行可能領域とする．
+    $f$が$a$において極値を取り(局所最適解)，$\rank\paren{Dg}{Dx}=m$ならば，
+    \[\exists_{\lambda_1,\cdots,\lambda_m\in\R}\forall_{j\in[n]}\quad\pp{f}{x_j}(a)=\sum^m_{i=1}\lambda_i\pp{g_i}{x_j}(a)\]
+\end{theorem}
+\begin{remarks}
+    Jacobianがランク落ちしていないという仮定は，勾配$\nabla g_i$が1次独立であることをいう(1次独立制約想定)．
+    $F(x,\lambda):=f-\sum^m_{i=1}\lambda_ig_i$で定まる$\R^n\times\R^m\to\R$を\textbf{Lagrange関数}といい，極値点の候補を探す問題は，Lagrange関数の微分係数に関する連立方程式(停留条件)に還元される．
+\end{remarks}
+
+\begin{remark}
+    不等式制約付き最適化は，さらに多様な制約想定の下で理論展開されている．SlaterとMangasarian-Fromovitzである．
+    このとき，Lagrange乗数(の一般化)が満たすべき連立方程式（停留条件と相補性条件と呼ばれる条件）を\textbf{Karush-Kuhn-Tucker条件}という．ここには明らかに，
+\end{remark}
+
+\section{Taylorの定理}
+
+\subsection{理論標準形}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    可微分実関数については，多項式による最良近似が標準的に存在して，近似誤差が$n$階の微分係数で予測出来る．
+\end{tcolorbox}
+
+\begin{lemma}[可微分関数の多項式近似]
+    $f:[a,b]\to\R$は$n$階微分可能とし，$\al\in[a,b]$を点とする．
+    ある$n-1$次の多項式$P_\al$について，
+    \[f(x)-P_\al(x)=O((x-\al)^n)\quad(x\to\al)\]
+    が成り立つならば，
+    \[P_\al(t):=\sum^{n-1}_{k=0}\frac{f^{(k)}(\al)}{k!}(t-\al^k)\]
+    と表せる．
+\end{lemma}
+\begin{Proof}
+    \[Q_\al(t):=a_0+a_1(x-\al)+\cdots+a_n(x-\al)^n\]
+    も条件を満たすとする．$P_\al(\al)=Q_\al(\al)$より，$a_0=f(a)$．
+    続いて，$P'_\al(\al)=Q'_\al(\al)$と比較して行けば良い．
+\end{Proof}
+
+\begin{theorem}[Taylorの定理 \cite{Rudin-Principles} Th'm 5.15]
+    $f:[a,b]\to\R$は$n$階微分可能とする．
+    任意の$\{\al<\beta\}\subset[a,b]$について，$\al\in[a,b]$での$n-1$次多項式近似$P_\al$の近似誤差は，ある$x\in(\al,\beta)$が存在して，
+    \[f(\beta)-\underbrace{\sum_{k=0}^{n-1}\frac{f^{(k)}(\al)}{k!}(\beta-\al)^k}_{=P_\al(\beta)}=\frac{f^{(n)}(x)}{n!}(\beta-\al)^n.\]
+    と表せる．右辺を\textbf{$n$次の剰余項}という．
+\end{theorem}
+\begin{Proof}\mbox{}
+    \begin{enumerate}[{Step}1]
+        \item 任意の$\{\al<\beta\}\subset[a,b]$を取り，問題の係数を
+        \[M:=\frac{f(\beta)-P_\al(\beta)}{(\beta-\al)^n}\]
+        と定め，値の変化
+        \[g(t):=f(t)-P_\al(t)-M(t-\al)^n\qquad(t\in[a,b])\]
+        を考える．両辺を$n$階微分すると，
+        \[g^{(n)}(t)=f^{(n)}(t)-n!M\qquad(t\in(a,b))\]
+        であるが，このとき$\exists_{x\in(\al,\beta)}g^{(n)}(\al)=0$より結論を得る．
+        \item いま$\forall_{k\in n}\;P^{(k)}(\al)=f^{(k)}(\al)$より，$g(\al)=g'(\al)=\cdots=g^{(n-1)}(\al)=0$が成り立っている．
+        よって，$g(\beta)=0$であることは，平均値の定理より$\exists_{x_1\in(\al,\beta)}\;g'(x_1)=0$を含意する．
+        これを繰り返すと，$\exists_{x_n\in(\al,x_{n-1})}\;g^{(n)}(x_n)=0$．
+    \end{enumerate}
+\end{Proof}
+\begin{remarks}
+    このとき$f$は$C^{n-1}([a,b])$-級ではあるから，
+    \[f(x)=P_\al(x)+O((x-\al)^n),\quad(x\to\al)\]
+    が従う．
+\end{remarks}
+
+\begin{proposition}[Lagrange's form]
+    さらに$f:[a,b]\to\R$が$C^n$-級のとき，$n$次の剰余項は
+    \[f(\beta)-P_\al(\beta)=\int^x_\al\frac{f^{(n)}(t)}{(n-1)!}(x-t)^{n-1}dt\]
+    と表示出来る．
+\end{proposition}
+
+\subsection{Cauchyの平均値の定理}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    随伴が存在する．いまなら超関数法の萌芽に見える．
+\end{tcolorbox}
+
+\begin{theorem}[generalized mean value theorem]
+    $f,g\in C([a,b];\R)$は微分可能とする．このとき，
+    \[\exists_{x\in(a,b)}\quad (f(b)-f(a))g'(x)=(g(b)-g(a))f'(x).\]
+\end{theorem}
+
+\section{導関数の連続性}
+
+\begin{definition}[simple discontinuity / first kind]
+    $f\in\Map((a,b);\R)$は$x\in(a,b)$で不連続とする．
+    $f(x+),f(x-)$がいずれも存在するとき，\textbf{第一種不連続}という．
+    そうでない場合を第二種という．
+    第一種不連続性は，$f(x+)\ne f(x-)$と$f(x+)=f(x-)\ne f(x)$との2通りに分類出来る．
+\end{definition}
+
+\begin{theorem}
+    $f\in\Map([a,b];\R)$は微分可能で，$f'(a)<\lambda<f'(b)$を満たすとする．
+    このとき，ある$x\in(a,b)$が存在して$f'(x)=\lambda$を満たす．
+\end{theorem}
+
+\begin{corollary}
+    $f\in\Map([a,b];\R)$は微分可能ならば，導関数$f'$は第一種の不連続点を持ち得ない．
+\end{corollary}
+
+\chapter{Riemann-Stieltjes積分}
+
+\begin{quotation}
+    Lebesgue積分とは違って，$\R$の順序構造に強く依存した，Euclid空間上にオーダーメイドの積分が定義できる．
+    これについての古典論を復習する．
+    \begin{enumerate}
+        \item 多変数の積分の変数変換が苦手．Jacobi行列周り．
+    \end{enumerate}
+\end{quotation}
+
+\section{定義と存在}
+
+\begin{definition}[(Riemann-)Stieltjes integral]
+    $I:=[a,b]$を閉区間とし，$f:[a,b]\to\R$を有界関数，$\al:[a,b]\to\R$を単調増加関数とする．
+    \begin{enumerate}
+        \item \textbf{分割}$P$とは，$[a,b]$の有限集合$P=\Brace{a=x_0\le x_1\le\cdots\le x_n=b}$をいう．
+        \item 各分割$P\in P([a,b])$に対して，$\Delta\al_i:=\al(x_i)-\al(x_{i-1})$と表し，
+        \[M_i(P):=\sup_{x\in[x_{i-1},x_i]}f(x),\qquad\qquad m_i(P):=\inf_{x\in[x_{i-1},x_i]}f(x)\;(i\in[n])\]
+        とし，
+        \[U(P,f,\al):=\sum^n_{i=1}M_i(P)\Delta\al_i,\qquad\qquad L(P,f,\al):=\sum^n_{i=1}m_i(P)\Delta\al_i\]
+        とする．
+        \item 分割の全体$\P:=\Brace{P\in P([a,b])\mid\abs{P}<\infty}$は有向集合をなす．包含関係$\subset$について分割は順序をなし，任意の2つの分割$P,Q$について$P\cup Q$は上界である．
+        このとき，２つのネット$(U(P,f,\al))_{P\in\P},(L(P,f,\al))_{P\in\P}$は収束する．
+        すなわち，
+        \[\o{\int^b_a}fd\al:=\inf_{P\in P([a,b]),\abs{P}<\infty}U(P,f,\al),\qquad\qquad\underline{\int^b_a}fd\al=\sup_{P\in P([a,b]),\abs{P}<\infty}L(P,f,\al).\]
+        として得る実数を，\textbf{上／下Stieltjes積分}と呼ぶ．
+        \item 上積分と下積分が一致するとき，\textbf{Stieltjes可積分}であるといい，$f\in\cR([a,b],\al)$と表す．
+    \end{enumerate}
+\end{definition}
+
+\section{可積分性}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    復習する．
+\end{tcolorbox}
+
+\begin{theorem}[可積分性の特徴付け]
+    関数$f:[a,b]\to\R$について，次の2条件は同値．
+    \begin{enumerate}
+        \item $f\in\cR(\al)$．
+        \item $\forall_{\ep>0}\;\exists_{P\in P([a,b])}\;\abs{P}<\infty\land U(P,f,\al)-L(P,f,\al)<\ep$．
+    \end{enumerate}
+\end{theorem}
+
+\begin{theorem}[可積分条件]\mbox{}
+    関数$f:[a,b]\to\R$は，
+    \begin{enumerate}
+        \item 連続ならば$f\in\cR(\al)$．
+        \item 単調ならば，$\al$が連続ならば$f\in\cR(\al)$．
+        \item 有界であり，$[a,b]$上に高々有限の不連続点をもち，その任意の点で$\al$は連続であるならば，$f\in\cR(\al)$．
+    \end{enumerate}
+\end{theorem}
+
+\chapter{多変数関数論}
+
+\section{行列のBanach代数}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    Euclid空間の間の写像について，接空間の間に引き起こされる微分の空間$B(\R^n,\R^m)$がJacobi行列の空間である．
+    Jacobi行列への対応$x\mapsto Jf(x)$が連続であるとき，$f$を$C^1$-級という．
+\end{tcolorbox}
+
+\begin{theorem}[行列の代数]
+    任意の行列$A,B\in B(\R^n,\R^m)$について，
+    \begin{enumerate}
+        \item $A$は一様連続である．
+        \item $B(\R^n,\R^m)$は有限次元Banach空間である．
+        \item 劣乗法性が成り立つ：$\norm{BA}\le\norm{B}\norm{A}$．
+    \end{enumerate}
+\end{theorem}
+
+\begin{theorem}[行列の空間]\mbox{}
+    \begin{enumerate}
+        \item $A\in\Iso(\R^n),B\in B(\R^n)$について，$\norm{B-A}\norm{A^{-1}}<1$ならば，$B\in\Iso(\R^n)$．
+        \item $\Iso(\Om)\subset B(\R^n)$は開集合で，$A\mapsto A^{-1}$は$\Iso(\Om)$上の位相同型である．
+    \end{enumerate}
+\end{theorem}
+
+\begin{theorem}
+    $S$を距離空間，$a_{11},\cdots,a_{mn}:S\to\R$を連続とする．
+    このとき，$S\to B(\R^n,\R^m);p\mapsto A_p:=(a_{ij}(p))$は連続である．
+\end{theorem}
+
+\begin{theorem}[Jacobi行列からJacobianへの対応]
+    $\det:B(\R^n)\to\R$は行列積と実数積について群準同型を与える：$\det(BA)=\det(B)\det(A)$．
+\end{theorem}
+\begin{definition}
+    可微分関数$f:E\to\R^m$に対して，微分と行列式の合成
+    $J_f:=\det\circ D:E\to B(\R^m)\to\R$をJacobianという．
+\end{definition}
+
+\section{微分}
+
+\begin{definition}
+    $f:\R^n\osup E\to\R^m$が
+    \begin{enumerate}
+        \item $x\in E$で\textbf{微分可能}であるとは，
+        \[\exists_{A\in B(\R^n,\R^m)}\;\lim_{h\to0\in\R^n}\frac{\abs{f(x+h)-f(x)-Ah}}{\abs{h}}=0\]
+        が成り立つことをいう．このとき，$f'(x)=df_x=A$として$f':E\to B(\R^n;\R^m)$を定める．
+        \item \textbf{$C^1$-級}であるとは，$f'=df:E\to B(\R^n;\R^m)$が連続であることをいう：$\forall_{x\in E}\;\forall_{\ep>0}\;\exists_{\delta>0}\;\forall_{y\in E}\;\abs{x-y}<\delta\Rightarrow\norm{f'(y)-f'(x)}<\ep$．
+        \item 写像$f:E\to\R^m$の微分$Df:R^n=T(\R^n)\to T(\R^m)=\R^m$は，係数の対応$D_if:E\to\R$によって完全に定まる．これを\textbf{偏微分}という．
+        \item $\nabla f(x):=\sum_{i=1}^nD_if(x)e_i$によって定まる対応$\nabla f:E\to T(\R^m)=\R^m$を\textbf{勾配}または\textbf{発散}という．
+        \item 任意の$u\in\R^n$に対して，$(D_uf)(x):=(\nabla f)(x)\cdot u$によって定まる対応$D_uf:E\to\R$を\textbf{方向微分}という．
+    \end{enumerate}
+\end{definition}
+
+\begin{proposition}\mbox{}
+    \begin{enumerate}
+        \item $A_1,A_2\in M_{mn}(\R)$がいずれも$f$の$x\in E$における微分係数ならば，$A_1=A_2$．
+        \item $f$が$C^1$-級であることは，任意の偏微分$D_if_i\;(i\in[m])$が$E$上連続であることに同値．
+    \end{enumerate}
+\end{proposition}
+
+\begin{proposition}
+    $f:E\to\R$を関数，$\gamma:I\to E$を可微分曲線とする．$g:=f\circ\gamma$とすると，
+    \[g'(t)=(\nabla f)(\gamma(t))\cdot\gamma'(t).\]
+\end{proposition}
+
+\begin{theorem}[平均値の定理の一般化]
+    $E$は凸開集合，$f:E\to\R^m$は可微分で$E$上有界な導関数を持つとする．このとき，$\forall_{a,b\in E}\;\abs{f(b)-f(a)}\le\sup_{x\in E}\norm{f'(x)}\abs{b-a}$．
+\end{theorem}
+\begin{corollary}
+    $f'=0\;\on E$ならば$f$は定数．
+\end{corollary}
+
+\section{逆関数定理}
+
+\begin{theorem}
+    $f:E\to\R^n$を$C^1$-級で，$f(a)=b$において$f'(a)$は可逆であるとする．
+    \begin{enumerate}
+        \item 開近傍$U\in\O(a),V\in\O(b)$が存在して，$f|_U$は全単射$U\simeq_\Set V$を定める．
+        \item 逆写像$g:V\to U$も$C^1$-級である．
+    \end{enumerate}
+\end{theorem}
+\begin{remarks}[陽関数定理としての見方]
+    成分毎に表せば，$n$元連立$n$次方程式$y_i=f_i(x_1,\cdots,x_n)\;(i\in[n])$は$f$が$C^1$-級で$f'(x)$が可逆ならば必ず局所解$x_i=g_i(y_1,\cdots,y_n)$を持ち，$g$も$C^1$-級になる．
+\end{remarks}
+
+\begin{corollary}
+    $f:E\to\R^n$を$C^1$-級で，$f'(E)\subset\Iso(\R^n)$とする．このとき，$f$は開写像である．
+\end{corollary}
+
+\section{陰関数定理}
+
+\begin{remark}
+    $A\in B(\R^{n+m},\R^m)$について，$A(h,k)=A(h,0)+A(0,k)$であるから，$A_x(h):=A(h,0),A_y(k):=A(0,k)$と定めると$A_x\in B(\R^n),A_y\in B(\R^m,\R^n)$で，$A(h,k)=A_xh+A_yk$が成り立つ．
+    $(h,k)=(h,0)+(0,k)$は縦ベクトルに関する分解，$A=[A_x;A_y]$は横長行列の分解である．
+\end{remark}
+
+\begin{lemma}[$n$元連立方程式の解]
+    線型写像$A\in B(\R^{n+m},\R^n)$は$A_x\in\Iso(\R^n)$が可逆であるとする．このとき，
+    \begin{enumerate}
+        \item $\forall_{k\in\R^m}\;\exists_{h\in\R^n}\;A(h,k)=0$．
+        \item $h=-(A_x)^{-1}A_yk$を満たす．
+    \end{enumerate}
+\end{lemma}
+\begin{remarks}
+    陰関数表示された$n+m$元連立$n$次方程式系$A(h,k)=0$は，$\rank A\ge n$ならば，与えられた$k$に対して$h$について解け，解の対応は線形写像として表される．
+\end{remarks}
+
+\begin{theorem}[陰関数定理]
+    $f:\R^{n+m}\osup E\to\R^n$を$C^1$-級，$f(a,b)=0$とする．$A:=f'(a,b)\in B(\R^{n+m},\R^n)$の首座行列$A_x\in\Iso(\R^n)$は可逆とする．
+    \begin{enumerate}
+        \item 開近傍$U\in\O_{\R^{n+m}}(a,b),W\in\O_{\R^m}(b)$が存在して，$\forall_{y\in W}\;\exists_{x\in U_y}\;f(x,y)=0$．
+        \item $x=:g(y)$で定まる対応$\R^m\osup W\to\R^n$は$C^1$-級で$g(b)=a$を満たし，$\forall_{y\in W}\;f(g(y),y)=0$かつ$g'(b)=-(A_x)^{-1}A_y$を満たすものとする．
+    \end{enumerate}
+\end{theorem}
+\begin{remarks}
+    式$g'(b)=-(A_x)^{-1}A_y$は$f(g(b),b)=0$のChain Ruleに関する必要条件
+    \[\sum^n_{i=j}\paren{\pp{f_i}{x_j}}\paren{\pp{g_j}{y_k}}=-\paren{\pp{f_i}{y_k}}\]
+    である．
+\end{remarks}
+
+\begin{theorem}[変数変換の存在 (rank theorem)]
+    $m,n\ge r$について，$C^1$-級写像$F:E\to\R^m$の微分$F'(x)$は$E$上常に階数$r$を持つとする．
+    このとき，任意の$a\in E,A:=F'(a)\in M_{mn}(\R)$に対して，ある開近傍$U,V\in\O_E(a)$と$C^1$-級全単射$H:V\iso U$と$C^1$-級写像$\varphi:A(V)\to(\Im A)^\perp$が存在して，$\forall_{x\in V}\;F(H(x))=Ax+\varphi(Ax)$．
+\end{theorem}
+
+\section{高階微分}
+
+\begin{theorem}[平均値の定理]
+    $f:\R^2\osup E\to\R$は$D_1f,D_{21}f$を$E$上で持つとし，$Q:=[a,a+k]\times[b,b+h]\subset E$を閉矩形とする．
+    このとき，ある$(x,y)\in Q^\circ$が存在して，
+    \[\Delta(f,Q):=f(a+h,b+k)-f(a+h,b)-f(a,b+k)+f(a,b)=hk(D_{21}f)(x,y).\]
+\end{theorem}
+
+\begin{theorem}
+    $f:\R^2\osup E\to\R$は$D_1f,D_{21}f,D_2f$を$E$上で持ち，$D_{21}f$はある$(a,b)\in E$上で連続とする．このとき，$D_{12}f$も$(a,b)$上で存在し，値が$D_{21}f(a,b)$に一致する．
+    特に，$C^2$-級ならば，2つの偏微分作用素は可換．
+\end{theorem}
+
+\section{定積分の微分}
+
+\begin{notation}\mbox{}
+    \begin{enumerate}
+        \item $\varphi^t(x):=\varphi(x,t)$を$[a,b]\times[c,d]\to\R$とする．
+        \item $\al$は$[a,b]$上の増加関数とする．
+    \end{enumerate}
+\end{notation}
+
+\begin{theorem}
+    次が成り立つとき，$(D_2\varphi)(-,s)\in\R(\al)$で，
+    \[\dd{}{t}\int^b_a\varphi(x,t)d\al(x)=\int^b_a(D_2\varphi)(x,s)d\al(x).\]
+    \begin{enumerate}
+        \item 第1引数可積分性：$t\mapsto\varphi^t$は$[c,d]\to\cR(\al)$を定める．
+        \item 第2引数一様連続性：$\forall_{s\in(c,d)}\;\forall_{\ep>0}\;\exists_{\delta>0}\;\forall_{x\in[a,b]}\;\forall_{t\in(s-\delta,s+\delta)}\;\abs{(D_2\varphi)(x,t)-(D_2\varphi)(x,s)}<\ep$．
+    \end{enumerate}
+\end{theorem}
+
+\section{写像の分解}
+
+\begin{definition}[primitive, flip]\mbox{}
+    \begin{enumerate}
+        \item $G:E\to\R^n$が高々1つの成分しか変えない場合，\textbf{原始的}であるという．
+        \item $B\in B(\R^n)$がある2つの成分を入れ替え，その他を変えない場合，\textbf{入れ替え}という．
+    \end{enumerate}
+\end{definition}
+
+\begin{theorem}[原始的写像への分解]
+    $C^1$-級写像$F:\O_{\R^n}(0)\ni E\to\R^n$は$F(0)=0$かつ$F'(0)$は可逆とする．
+    このとき，ある近傍$U\in\O_{\R^n}(0)$と$U$上原始的な写像$G_i$で可逆なものと入れ替えまたは恒等作用素$B_i$とが存在して，
+    \[F=B_1\cdots B_{n-1}G_n\circ\cdots G_1\;\on U.\]
+\end{theorem}
+
+\begin{theorem}
+    $K\compsub\R^n$，$(V_\al)$を$K$の被覆とする．$\{\psi_i\}_{i\in[s]}\subset C(\R^n;[0,1])$が存在して，
+    \begin{enumerate}
+        \item 従属性：$\exists_{\al\in A}\;\supp\psi_i\subset V_\al$．
+        \item 1の分解：$\psi_1+\cdots+\psi_s=1\;\on K$．
+    \end{enumerate}
+\end{theorem}
+
+\section{変数変換}
+
+\begin{theorem}
+    $T:E\to\R^k$を単射な$C^1$-級写像で，$J_T$は消えないとする：$T'(E)\subset\Iso(\R^k)$．
+    このとき，
+    \[\forall_{f\in C_c(\R^k)}\;\int_{\R^k}f(y)dy=\int_{\R^k}f(T(x))\abs{J_T(x)}dx.\]
+\end{theorem}
+
+なお，Lebesgue積分の立場からは次のようになる．
+
+\begin{theorem}
+    $T:V\to\R^k$が次の条件を満たすとき，
+    \[\forall_{f\in L(\R^k;\o{\R_+})}\;\int_{T(X)}fdm=\int_X(f\circ T)\abs{J_T}dm.\]
+    \begin{enumerate}
+        \item $T:V\to\R^k$は$X\subset V\osub\R^k$上の連続写像．
+        \item $X$はLebesgue可測で$T|_X$は単射かつ微分可能．
+        \item $m(T(V\setminus X))=0$．
+    \end{enumerate}
+\end{theorem}
+
+\begin{corollary}
+    $\varphi:[a,b]\to[\al,\beta]$は絶対連続で全射な単調写像，$f\in L(\R)_+$をLebesgue可測とする．このとき，
+    \[\int^\beta_\al f(t)dt=\int^b_af(\varphi(x))\varphi'(x)dx.\]
+\end{corollary}
+
+\section{微分の積分}
+
+\begin{definition}
+    $\om\in\Om^k(E)$は$dx_{i_1}\wedge\cdots\wedge dx_{i_k}$を基底とする線型空間の元とし，次の方法によって$k$-曲面$\Phi:I^k\to E$に実数$\om(\Phi)$を対応させるとする．
+    \[\int_\Phi\om=\int_{I^k}\sum a_{i_1\cdots i_k}(\Phi(u))\pp{(x_{i_1},\cdots,x_{i_k})}{(u_1,\cdots,u_k)}du.\]
+    Jacobianに絶対値がつかないことに注意．
+\end{definition}
+
+\begin{definition}[simplex, chain]
+    
+\end{definition}
+
+\chapter{関数論}
+
+\section{級数論}
+
+\subsection{基本的な2つの収束判定法}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    基本は優級数を見つけるだけで，ただ標準的な見つけ方が2通り存在するのみである．
+    そして関数級数の一様収束とは，一様ノルムに関して収束級数を定めることに他ならないが，これに関する優級数定理はWeierstrass $M$-判定法と呼ばれている．
+\end{tcolorbox}
+
+\begin{theorem}
+    正数列$\{c_n\}\subset\R_{>0}$について，
+    \[\liminf_{n\to\infty}\frac{c_{n+1}}{c_n}\le\liminf_{n\to\infty}\sqrt[n]{c_n}\le\limsup_{n\to\infty}\sqrt[n]{c_n}\le\limsup_{n\to\infty}\frac{c_{n+1}}{c_n}.\]
+\end{theorem}
+
+\begin{theorem}[root test (Cauchy)]\label{thm-root-test}
+    級数$\sum a_n$に対して，$\al:=\limsup_{n\to\infty}\sqrt[n]{\abs{a_n}}$とする．
+    \begin{enumerate}
+        \item $\al<1$ならば$\sum a_n$は収束する．
+        \item $\al>1$ならば$\sum a_n$は発散する．
+    \end{enumerate}
+\end{theorem}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item $\al<1$ならば，幾何級数$\sum\al^n$が$\sum a_n$の収束優級数となる．実際，$\forall_{n\in\N}\;\abs{a_n}\le k^n$となるため．
+        \item 同様．
+    \end{enumerate}
+\end{Proof}
+
+\begin{theorem}[ratio test (d'Alembert)]
+    級数$\sum a_n$に対して，
+    \begin{enumerate}
+        \item $\limsup_{n\to\infty}\Abs{\frac{a_{n+1}}{a_n}}<1$ならば，収束する．
+        \item $\Abs{\frac{a_{n+1}}{a_n}}\fe1\;\fe$ならば，発散する．
+    \end{enumerate}
+\end{theorem}
+
+\subsection{Cauchyの二重級数定理}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    特に，両側無限列$(a_n)_{n\in\Z}$の極限は$\lim_{n,m\to\infty}\sum_{k=-m}^na_k$と定義するが，2つの級数$\sum_{n=0}^\infty a_n,\sum_{n=1}^\infty a_{-n}$がいずれも収束することに同値．
+\end{tcolorbox}
+
+\begin{definition}[convergence of double series]
+    2重級数$\sum_{n,m=1}^\infty a_{nm}\subset\C$が収束するとは，
+    2方向の部分和$S_{nm}=\sum_{i=1}^n\sum_{j=1}^ma_{ij}$について，
+    \[\exists_{S\in\C}\;\forall_{\ep>0}\;\lim_{n,m\to\infty}\abs{S_{nm}-S}\le\ep.\]
+    が成り立つ．
+\end{definition}
+
+\begin{theorem}[二重級数が定める$\sigma$-有限測度に関するFubiniの定理]
+    $(a_{m,n})$について，次の2条件は同値：
+    \begin{enumerate}
+        \item 逐次和の収束：任意の$m$について$\sum_{n\in\N}\abs{a_{m,n}}$は収束し，かつ$\sum_{m\in\N}\sum_{n\in\N}\abs{a_{m,n}}$も収束する．
+        \item 絶対和の収束：$(a_{m,n})$の並べ替え$(b_n)$が絶対収束する．
+    \end{enumerate}
+    このとき，$\sum_{n\in\N}b_n=\sum_{m\in\N}\sum_{n\in\N}\abs{a_{m,n}}$．
+\end{theorem}
+
+
+\subsection{収束級数のなす線型空間}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    級数は収束するならば，和とスカラー倍を定義できる．
+\end{tcolorbox}
+
+\begin{theorem}
+    $\sum a_n=A,\sum b_n=B$とする．
+    \begin{enumerate}
+        \item $\sum(a_n+b_n)=A+B$．
+        \item $\forall_{c\in\R}\;\sum ca_n=cA$．
+    \end{enumerate}
+\end{theorem}
+
+\subsection{級数の積の収束のAbelの判定法}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    大数の法則で$\frac{x_n}{b_n}$という形の級数を調べる際に用いる．
+\end{tcolorbox}
+
+\begin{lemma}[Cauchyの部分和公式]
+    $\{a_n\},\{b_n\}\subset\R$に対して，部分和を$A_n:=\sum_{k=0}^na_k,A_{-1}=0$とする．
+    \[\forall_{0\le p\le q}\quad\sum^q_{n=p}a_nb_n=\sum^{q-1}_{n=p}A_n(b_n-b_{n+1})+A_qb_q-A_{p-1}b_p.\]
+\end{lemma}
+\begin{Proof}
+    \[\sum^q_{n=p}a_nb_n=\sum^q_{n=p}(A_n-A_{n-1})b_n=\sum^q_{n=p}A_nb_n-\sum^{q-1}_{n=p-1}A_nb_{n+1}\]
+\end{Proof}
+
+\begin{theorem}[級数の積の収束条件 (Cauchy)]
+    $\sum a_nb_n$は，次の2条件のいずれかを満たすとき収束する：
+    \begin{enumerate}
+        \item 
+        \begin{enumerate}[(a)]
+            \item $(a_n)$の定める部分和の列$A_n:=\sum_{k=1}^n a_k$は有界である．
+            \item $b_n$は$0$に収束する正な単調減少列である．
+        \end{enumerate}
+        \item \begin{enumerate}[(a)]
+            \item $\sum_{n\in\N}a_n$は収束する．
+            \item $(b_n)$は有界な単調列である．
+        \end{enumerate}
+        \item \begin{enumerate}[(a)]
+            \item $\sum_{n\in\N}a_n$は絶対収束する．
+            \item $(b_n)$は有界列である．
+        \end{enumerate}
+    \end{enumerate}
+\end{theorem}
+
+\begin{example}
+    \[\sum_{n=1}^\infty\frac{\cos 2\pi nx}{n}\]
+    は$x=0$のとき明らかに発散する．しかし$x=1/2$のとき交代級数$\sum_{n=1}^\infty(-1)^n\frac{1}{n}$は収束する．
+    この収束判定を突破したのがCauchyであった．
+    $a_n=\cos2\pi nx,b_n=n^{-p}\;(p>0)$とすると，$n\notin\Z$について$A_n$は有界で，$b_n$は$0$に収束する単調列．よって非整数については収束する．
+\end{example}
+
+\begin{remarks}
+    積分について次のような事実が対応する．
+    $f,g:[1,\infty)\to\R$に対して，次の2条件が成り立てば，$\int^\infty_1fgdx$．
+    \begin{enumerate}
+        \item 不定積分の1つ$F(x)=\int^x_1fdt$は有界．
+        \item $g\in C^1_0([1,\infty))$かつ$g'\le0$．
+    \end{enumerate}
+\end{remarks}
+
+\subsection{交代級数の収束判定}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    絶対値が単調減少しながら$0$に収束する交代列の級数は収束する．
+\end{tcolorbox}
+
+\begin{definition}
+    数列$\{c_n\}$が$\forall_{m\in\N}\;c_{2m}\le0,c_{2m-1}\ge0$を満たすとき，\textbf{交代的}であるという．
+\end{definition}
+
+\begin{corollary}[Leibnitz]
+    交代数列$\{c_n\}\subset\C$は次の条件を満たすならば，交代級数$\sum c_n$は収束する．
+    \begin{enumerate}
+        \item $\{\abs{c_n}\}$は単調減少数列である．
+        \item $\lim_{n\to\infty}c_n=0$．
+    \end{enumerate}
+\end{corollary}
+
+\begin{corollary}
+    $\sum c_nz^n$の収束半径を1とし，$\{c_n\}\subset\R_+$は$0$に収束する単調減少列とする．このとき，整級数は$\partial\Delta\setminus\{1\}$上で収束する．
+\end{corollary}
+
+\subsection{級数のCauchy積}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    収束列の極限については，積が取れるが，級数の場合はそうはいかない．
+\end{tcolorbox}
+
+\begin{definition}[Cauchy product]\mbox{}
+    \begin{enumerate}
+        \item $\o{(b_1,\cdots,b_n)}=(b_n,\cdots,b_1)$とする．
+        \item $c_n:=(a_1,\cdots,a_n)\cdot\o{(b_1,\cdots,b_n)}=\sum_{k=0}^na_kb_{n-k}$を積という．
+    \end{enumerate}
+\end{definition}
+
+\subsection{条件収束級数に関するRiemannの定理}
+
+\begin{theorem}[Riemann]
+    $\sum a_n$を条件収束級数とする．任意の$\al\le\beta\in\o{\R}$について，ある番号の付替え$\sum a_{n(m)}$が存在して，この部分和$s_n$は
+    \[\liminf_{n\to\infty}s_n=\al,\quad\limsup_{n\to\infty}s_n=\beta\]
+    を満たす．
+\end{theorem}
+
+\begin{theorem}
+    $\sum a_n$を複素数項の絶対収束級数とすると，任意の並べ替えに対して，級数は同じ和へ収束する．
+\end{theorem}
+
+\subsection{Cesaro総和法}
+
+\begin{notation}
+    $\{s_n\}\subset\C$に対して，Cesaro平均を$\sigma_n:=\frac{s_0+s_1+\cdots+s_n}{n+1}$とする．
+\end{notation}
+
+\begin{proposition}[収束は同値]\mbox{}
+    \begin{enumerate}
+        \item 収束列のCesaro平均は収束する：$\lim s_n=s$ならば，$\lim\sigma_n=s$．
+        \item $(s_n)$が収束しない場合でも，$\sigma_n$は収束しえる．
+        \item $a_n:=s_n-s_{n-1}$とすると，
+        \[s_n-\sigma_n=\frac{1}{n+1}\sum_{k\in[n]}ka_k.\]
+        \item Cesaro平均が収束し，差分列が弱く有界ならば元の数列も収束する：$(na_n)$が有界かつ$(\sigma_n)$が収束するならば，$(s_n)$も同じ極限へ収束する．
+    \end{enumerate}
+\end{proposition}
+
+\section{関数列の一様収束}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    一様収束する級数によって正則関数を構成するのが，人類に許された大事な構成手段である．
+\end{tcolorbox}
+
+\begin{notation}
+    $E$を距離空間の部分集合とする．
+\end{notation}
+
+\subsection{一様ノルムCauchy列としての特徴付け}
+
+\begin{proposition}[一様収束の判定法]
+    $\{f_n\}\subset\Map(E,\C)$について，
+    \begin{enumerate}
+        \item $(f_n)$は一様収束する．
+        \item (Cauchy criterion) $\forall_{\ep>0}\;\exists_{n_0\in\N}\;\forall_{m,n\ge n_0}\;\forall_{x\in E}\;\abs{f_n(x)-f_m(x)}<\ep$．
+    \end{enumerate}
+\end{proposition}
+
+\subsection{極限の交換}
+
+\begin{theorem}
+    $x$を$E$の集積点とし，$\{f_n\}\subset\Map(E,\C)$は$f$に一様収束するとする．このとき，$\lim_{t\to x}\lim_{n\to\infty}f_n(t)=\lim_{n\to\infty}\lim_{t\to x}f_n(t)$．
+\end{theorem}
+
+\subsection{一様収束は連続性を保つ}
+
+
+\begin{corollary}[一様収束は連続性を保つ]
+    $(f_n)$を$E\subset\C$上の連続関数列とし，極限$f$に一様収束するとする．
+    このとき，$f$は連続である．
+\end{corollary}
+\begin{Proof}
+    任意の$x_0\in E$と$\ep>0$をとる．
+    \begin{enumerate}
+        \item $f$は$(f_n)$の一様収束極限だから，$\exists_{n\in\N}\;\forall_{x\in E}\;\abs{f_n(x)-f(x)}<\ep/3$．
+        \item $f_n$は連続だから，$\exists_{\delta>0}\;\forall_{x\in E}\;\abs{x-x_0}<\delta\Rightarrow\abs{f_n(x_0)-f_n(x)}<\ep/3$．
+    \end{enumerate}
+    以上より，任意の$\abs{x-x_0}<\delta$を満たす$x\in E$に対して，
+    \[\abs{f(x)-f(x_0)}\le\abs{f(x)-f_n(x)}+\abs{f_n(x)-f_n(x_0)}+\abs{f_n(x_0)-f(x_0)}<\ep.\]
+\end{Proof}
+
+\subsection{各点収束列が一様収束するための十分条件}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    一方で，連続関数の列が連続関数に収束するとき，そのモードが一様収束であるとは限らない．
+    が，(Arzelaの有界収束定理と併せて)単調収束定理の消息が成り立つために，次の消息が底支えしている．
+\end{tcolorbox}
+
+\begin{theorem}\label{thm-for-pointwise-to-be-uniform}
+    $(f_n)$をコンパクト集合$K$上の連続関数の列とする．このとき，
+    \begin{enumerate}
+        \item $(f_n)$はある連続関数$f$に各点収束する．
+        \item $(f_n)$は単調増加／減少列である．
+    \end{enumerate}
+    ならば，$(f_n)$は$f$に一様収束する．
+\end{theorem}
+\begin{Proof}
+    \cite{Principles of Mathematical Analysis}に載っていない方，
+    $(f_n)$を広義単調増加として示す．
+    \begin{enumerate}[(a)]
+        \item $g_n:=f-f_n\ge0$とすると，これは単調減少である．$g_n$が$0$に一様収束することを示せば良い．
+        \item $\ep>0$を任意に取り，$K_n:=\Brace{x\in K\mid g_n(x)\ge\ep}$と定めると，これはコンパクト集合の減少列である．$K_\infty:=\cap_{n\in\N}K_n$とすると，$g_n$は$0$に各点収束するから，$K_\infty=0$．
+        距離空間のコンパクト集合は完備かつ全有界であるから，空でないコンパクト集合の減少列の共通部分は空でない．よって，ある$N\in\N$が存在して$\forall_{n\ge N}\;K_n=\emptyset$である．
+    \end{enumerate}
+\end{Proof}
+
+\begin{corollary}[Dini's theorem]
+    コンパクト集合$K$上の連続関数$C(K)$の単調ネットがある$f\in C(K)$に各点収束するならば一様収束する．
+\end{corollary}
+
+\subsection{一様収束列の必要条件}
+
+\begin{proposition}
+    $\{f_n\}\subset\Map(E;\R)$を一様収束列とする．任意の$x\in E$に収束する列$\{x_n\}\subset E$について，$\lim_{n\to\infty}f_n(x_n)=f(x)$．
+\end{proposition}
+
+\subsection{一様収束列の構成}
+
+\begin{proposition}
+    $\{f_n\},\{g_n\}\subset\Map(E;\R)$を一様収束列とする．
+    \begin{enumerate}
+        \item $\{f_n+g_n\}$も一様収束する．
+        \item $\{f_n\},\{g_n\}\subset l^\infty(E)$でもあるとき，$\{f_ng_n\}$は一様収束する．
+    \end{enumerate}
+\end{proposition}
+
+\subsection{級数の一様収束の判定法}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    一様ノルムについて優級数が存在することを示せば良い．
+\end{tcolorbox}
+
+\begin{proposition}[Weierstrass $M$-test]
+    関数列$(f_n)$は収束する優級数$\{M_n\}\subset\R$を持つとする：$\forall_{n\in\N}\;\norm{f_n}_\infty\le M_n,\sum_{n\in\N}M_n\in\R$．
+    このとき，級数列$\sum_{i=1}^nf_i$は一様収束する．
+\end{proposition}
+
+\subsection{整級数による関数定義}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    整級数の収束は特に理想的な振る舞い方をする．
+\end{tcolorbox}
+
+\begin{theorem}[整級数には収束半径が定まる]
+    $f(z)=\sum_{n\in\N}a_nz^n$はある$R\in\R_{>0}$上で収束するとする．
+    このとき，$f$は$\Delta(0,r)$上広義一様収束する．すなわち，
+    任意の閉円板$[\Delta(0,r)]\;(r<R)$上で一様に絶対収束する．
+\end{theorem}
+
+\begin{theorem}[Cauchy-Hadamard]
+    $\sum_{n\in\N}a_nz^n$の収束半径は$R=\paren{\limsup_{n\to\infty}\sqrt[n]{\abs{a_n}}}^{-1}$．
+\end{theorem}
+\begin{Proof}
+    根号判定法\ref{thm-root-test}と
+    \[\limsup_{n\to\infty}\sqrt[n]{\abs{c_nz^n}}=\abs{z}\limsup_{n\to\infty}\sqrt[n]{\abs{c_n}}=\frac{\abs{z}}{R}\]
+    より，$\abs{z}<R$ならば収束し，$\abs{z}>R$ならば発散するため．
+\end{Proof}
+
+\begin{theorem}[Abel's theorem]
+    収束半径$1$を持つ整級数$\sum_{n\in\N}a_nz^n$の係数列$(a_n)$も収束するとする．このとき，閉区間$[0,1]$上でも一様収束し，$\lim_{x\to 1-0}f(x)=\sum_{n\in\N}a_n$が成り立つ．
+\end{theorem}
+\begin{remarks}
+    収束円周上では絶対収束するかどうかは分からない．
+    係数列の議論になる．
+\end{remarks}
+
+\section{極限と微積分の可換性}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    微積分は連続性同様，極限によって定まる操作であるから，同様に一様収束列に対する可換性が成り立つ．
+\end{tcolorbox}
+
+\subsection{一様収束極限と積分の可換性}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    可積分列の一様収束極限も可積分であり，積分領域上で一様収束するならば積分と極限は可換である．
+\end{tcolorbox}
+
+\begin{theorem}
+    単調増加関数$\al:[a,b]\to\R$に関して，$[a,b]$上の可積分関数の列$\{f_n\}\subset\cR(\al)$が，ある$f$に一様収束しているとする．
+    このとき，
+    \begin{enumerate}
+        \item $f\in\cR(\al)$．
+        \item $\int^b_afd\al=\lim_{n\to\infty}\int^b_af_nd\al$．
+    \end{enumerate}
+\end{theorem}
+
+\begin{corollary}[項別積分]
+    可積分列$\{f_n\}\subset\cR(\al)$が定める級数は各点収束しているとする：$\forall_{x\in[a,b]}\;f(x)=\sum^\infty_{n=1}f_n(x)$．
+    このとき，
+    \[\int^b_afd\al=\sum^\infty_{n=1}\int^b_af_nd\al.\]
+\end{corollary}
+
+\subsection{一様収束と導関数}
+
+\begin{theorem}
+    $[a,b]$上の可微分関数の列$(f_n)$は，ある$x_0\in[a,b]$において収束するとする：$f_n(x_0)\to f(x_0)$．
+    導関数が定める列$(f'_n)$が一様収束するならば，元の列$(f_n)$も一様収束し，極限と微分が可換になる：$\forall_{x\in[a,b]}\;f'(x)=\lim_{n\to\infty}f'_n(x)$．
+\end{theorem}
+
+\subsection{Ascoli-Arzelàの定理}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    一様位相を備えた$C(X)$の相対コンパクト集合の特徴付けを与える定理である．
+    なお，$X$がコンパクト距離空間のとき，$C(X)$はコンパクト開位相に一致する．
+\end{tcolorbox}
+
+\begin{definition}
+    $\F\subset\Map(X,\C)$が
+    \begin{enumerate}
+        \item \textbf{同程度連続}であるとは，$\F$の元が同一の連続度を持つことをいう．
+        すなわち，$\forall_{\ep>0}\;\exists_{\delta>0}\;\forall_{f\in\F}\;\forall_{x,y\in X}\abs{x-y}<\delta\Rightarrow\abs{f(x)-f(y)}<\ep$に同値．
+        \item \textbf{各点一様有界}であるとは，$\forall_{x\in X}\;\sup_{f\in\F}\abs{f(x)}<\infty$が成り立つことをいう．
+    \end{enumerate}
+\end{definition}
+\begin{remarks}
+    一様連続とは，$x\in X$に依らずに$\delta>0$を取れる性質であった．これを関数族についてさらに一段階強くし，$f\in\F$にも依らずに取れるときを日本語では\textbf{同程度連続}という．
+\end{remarks}
+
+\begin{theorem}
+    $X$をコンパクトハウスドルフ空間とする．
+    $\F\subset C(X,\C)$について，次の2条件は同値．
+    \begin{enumerate}
+        \item $\F$は有界で，任意の部分列は一様収束する部分列を持つ（一様ノルムについて相対コンパクトである）．
+        \item $\F$は各点一様有界かつ同程度連続である．
+    \end{enumerate}
+\end{theorem}
+
+\begin{corollary}
+    列$\{f_n\}\subset\Map(K,\C)$が同程度連続で各点収束するならば，一様収束する．
+\end{corollary}
+
+\subsection{Arzelàの有界収束定理}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=]
+        Lebesgueの有界収束定理を，可測関数ではなく，連続関数について述べたのがArlezàの有界収束定理である．
+        これを用いて，Lebesgueの優収束定理を，可測関数ではなく，連続関数について述べることができる．
+\end{tcolorbox}
+
+\begin{theorem}[Arzelàの有界収束定理 (1885)]
+    有界閉区間上の連続関数列$\{f_n\}\subset C(I)$は一様ノルムについて一様に有界で，連続関数$f_0$に各点収束するとする：$\exists_{M\in\R}\;\sup_{n\in\N}\norm{f}_\infty\le M$．
+    このとき，極限関数$f$も連続だからRiemann可積分で，
+    \[\lim_{n\to\infty}\int^b_af_n(x)dx=\int^b_af_0(x)dx.\]
+\end{theorem}
+\begin{Proof}\mbox{}
+    \begin{description}
+        \item[方針] Ascoli-Arzelàの定理より，$\{f_n\}$が相対コンパクトであることを示す．すると，$f_0$への収束モードは実は一様収束であることが分かる．すると，結論は，一様収束列に対する極限と積分の可換性から従う．
+        $\{f_n\}$が相対コンパクトであるためには，$\{f_n\}$が一様有界であるから，あとは同程度連続性を示せば良い．これは，各$f_n$の連続度を$\om_n$とすると，$f_n$の一様連続性よりこれは$\delta=0$において連続であるが，$\om:=\sup_{n\in\N}\om_n$としたものも$\om(0)=0$について連続であることを示せば良い．
+        これをするに当たって，$h_n:=\max_{1\le i\le n}\om_i$とおくと，これも$\delta=0$において連続であり，$h_n\to\om$に各点収束するが，これが一様収束もすることを示せば良い．
+        \item[証明] これは，連続関数に各点収束する単調増加関数列は一様収束すること\ref{thm-for-pointwise-to-be-uniform}による．
+    \end{description}
+\end{Proof}
+
+\begin{corollary}
+    関数列$\{f_n\},f_0$はいずれも有限個の点を除いて連続であり，列$(f_n)$は区分的に連続な優関数$g$を持ちながら，$f_0$に有限個の点を除いて収束するとする：$\abs{f_n(x)}\le g(x)$．
+    このとき，
+    \[\lim_{n\to\infty}\int^\infty_{-\infty}f_n(x)dx=\int^\infty_{-\infty}f_0(x)dx.\]
+\end{corollary}
+
+\subsection{同程度連続な関数族}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    Arzelaの定理の証明は，本質的に同程度連続な関数族を見つけることによる，一様収束列の極限の可換性の応用であった．
+    そこで，単調族以外の同程度連続な関数族を見つけたい．
+\end{tcolorbox}
+
+\begin{theorem}[Helly's selection theorem]
+    $\{f_n\}\subset\Map(\R;[0,1])$を単調増加列とする．
+    \begin{enumerate}
+        \item ある$f\in\Map(\R;[0,1])$が存在して，これに各点収束する部分列が存在する．
+        \item 極限関数$f$が連続ならば，この部分列の収束は一様である．
+    \end{enumerate}
+\end{theorem}
+
+\section{連続関数環}
+
+\subsection{Weierstrassの定理}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    連続関数環$C(X)$の稠密な部分環を特徴づける．
+\end{tcolorbox}
+
+\begin{theorem}[Weierstrass's theorem]
+    多項式の空間$\C[X]$は$C([a,b];\C)$上稠密である．
+    すなわち，任意の$f\in\Map([a,b];\C)$に対して，多項式の列$\{P_n\}\subset\C[X]$が存在して，$f$に一様収束する．
+\end{theorem}
+
+\subsection{部分代数}
+
+\begin{lemma}[補間多項式の一般化]
+    $\A\subset\Map(E,\C)$を$E$の点を分離する部分代数とする．$\A$が$E$上で消えない$\forall_{x\in E}\;\exists_{f\in\A}\;f(x)\ne0$ならば，任意の$x_1\ne x_2\in E,c_1,c_2\in\C$について，$f(x_1)=c_1,f(x_2)=c_2$を満たすものが存在する．
+\end{lemma}
+
+\begin{theorem}
+    $K$をコンパクト集合，
+    $\A\subset C(K,\R)$を$K$の点を分離し，$K$上で消えない部分代数とする．このとき，$\A$は$C(K;\R)$上稠密である．
+\end{theorem}
+\begin{remarks}
+    複素数値であるとき，$\A$は更に自己共役であることが必要．
+\end{remarks}
+
+\section{Gamma関数}
+
+\subsection{定義と特徴付け}
+
+\begin{definition}
+    $\Gamma:(0,\infty)\to(0,\infty)$を
+    \[\Gamma(x):=\int_{\R_+}t^{x-1}e^{-t}dt\]
+    で定める．
+\end{definition}
+
+\begin{theorem}[Gamma関数の性質]\mbox{}
+    \begin{enumerate}
+        \item 汎関数の等式$\forall_{x\in(0,\infty)}\;\Gamma(x+1)=x\Gamma(x)$が成り立つ．
+        \item $\forall_{n=1,2,\cdots}\;\Gamma(n+1)=n!$．
+        \item $\log\Gamma$は$(0,\infty)$上の凸関数である．
+    \end{enumerate}
+\end{theorem}
+
+\begin{theorem}[Gamma関数の特徴付け]
+    関数$f:(0,\infty)\to(0,\infty)$が次の3条件を満たすならば，$f=\Gamma$である：
+    \begin{enumerate}
+        \item $f(x+1)=xf(x)$．
+        \item $f(1)=1$．
+        \item $\log f$は凸関数である．
+    \end{enumerate}
+\end{theorem}
+
+\subsection{無限積表示}
+
+\begin{proposition}[無限積表示]
+    \[\forall_{x\in(0,\infty)}\;\Gamma(x)=\lim_{n\to\infty}\frac{n!n^x}{x(x+1)\cdots (x+n)}.\]
+\end{proposition}
+
+\subsection{Beta関数}
+
+\begin{definition}
+    $B:(0,\infty)\times(0,\infty)\to(0,\infty)$を
+    \[B(x,y):=\int^1_0t^{x-1}(1-t)^{y-1}dt=\frac{\Gamma(x)\Gamma(y)}{\Gamma(x+y)}\]
+    で定める．
+\end{definition}
+
+\begin{corollary}\mbox{}
+    \begin{enumerate}
+        \item 変数変換$t=\sin^2\theta$より，
+        \[2\int^{\pi/2}_0(\sin\theta)^{2x-1}(\cos\theta)^{2y-1}d\theta=\frac{\Gamma(x)\Gamma(y)}{\Gamma(x+y)}\]
+        \item $x=y=1/2$とすることで，$\Gamma(1/2)=\sqrt{\pi}$を得る．
+        \item 変数変換$t=s^2$より，
+        \[\Gamma(x)=2\int^\infty_0s^{2x-1}e^{-s^2}ds\]
+        \item $x=1/2$とすることで，
+        \[\int^\infty_{-\infty}e^{-s^2}ds=\sqrt{\pi}.\]
+    \end{enumerate}
+\end{corollary}
+
+\subsection{Stirlingの公式}
+
+\begin{theorem}[Stirlingの公式]
+    \[\lim_{x\to\infty}\frac{\Gamma(x+1)}{(x/e)^x\sqrt{2\pi x}}=1.\]
+\end{theorem}
+
+\chapter{参考文献}
+
+\bibliography{../StatisticalSciences.bib,../SocialSciences.bib,../mathematics.bib,../statistics.bib}
+
+\end{document}

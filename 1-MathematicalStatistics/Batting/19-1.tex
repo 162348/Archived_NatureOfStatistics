@@ -1,0 +1,244 @@
+\documentclass[uplatex,dvipdfmx]{jsarticle}
+\title{総合研究大学院大学複合科学研究科統計科学専攻\\
+博士課程（５年一貫制）入学試験(1/22/2019実施)\\
+問題と解答}
+\author{あの\footnote{e-mail address : anomath57@gmail.com\\URL : \url{https://anomath.com/}}}
+\date{\today}
+\pagestyle{headings} \setcounter{secnumdepth}{4}
+\input{/Users/Hirofumi Shiba/NatureOfStatistics/preamble_no_fonts.tex}
+%\input{/Users/hirofumi.shiba48/NatureOfStatistics/preamble_no_fonts.tex}
+\usepackage[math]{anttor}
+\begin{document}
+\maketitle
+
+\begin{tcolorbox}[title=記法についての注意]
+    次の記法は以後断りなく用いる．
+    \begin{enumerate}
+        \item $n=1,2,\cdots$について，
+        \[n:=\Brace{0,1,2,\cdots,n-1}，[n]:=\{1,2,\cdots,n\}．\N=\{0,1,2,\cdots\}，\N^+=\N_{>0}=\{1,2,3,\cdots\}.\]
+        \item 同様にして，$\R_+:=\Brace{x\in\R\mid x\ge0}$，$\R^+:=\Brace{x\in\R\mid x>0}$，$\o{\R_+}:=[0,\infty]$．
+        \item $M_{mn}(\R)$で$(m,n)$-実正方行列の全体，$\GL_n(\R)\subset M_n(\R)$でそのうち可逆なものの全体を表す．
+        \item $I_d\in M_d(\R)$を単位行列，$O_d\in M_d(\R)$を零行列とする．
+        \item $\Sp(A)\subset\C$で，行列$A\in M_n(\R)$の固有値全体の集合を表す．
+        \item $f(x)=O(x^n)\;(x\to0)$で$\limsup_{x\to0}\Abs{\frac{f(x)}{x^n}}<\infty$を表す．
+        \item $\R$上のLebesgue測度を$m$，距離空間$S$上のBorel $\sigma$-代数を$\B(S)$で表す．
+        \item $1_A$で集合$A$の指示関数を表す．
+        \item 確率変数$X,Y$に対して，期待値を$E[X]$，分散を$\Var[X]$，共分散を$\Cov[X,Y]$で表す．
+        \item $U(S)$で集合$S$上の一様分布，$N(\mu,\sigma^2)$で平均$\mu$分散$\sigma^2$の正規分布を表す．
+        \item $\Exp(\gamma)\;(\gamma>0)$で指数分布$f(x)=\gamma e^{-\gamma x}1_{\Brace{x>0}}$を表す．
+    \end{enumerate}
+    問題文の表現は筆者の都合で一部変えています．
+    過去に実施された入学試験問題は\href{https://www.ism.ac.jp/senkou/admission/kakomon.html}{統計数理研究所HP}から見れます．
+\end{tcolorbox}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=第１問]
+    \begin{enumerate}
+        \item 次の行列$A\in M_2(\R)$に対して，$A^5$を求めよ：
+        \[A=\mtrx{1}{-2}{-2}{4}.\]
+        \item 次の関数を2次までMaclaurin展開せよ：$f(x)=\log(3+4x)$．
+        \item 次の定積分の値を求めよ：
+        \[\int^1_0\frac{1-x}{\sqrt{3+2x-x^2}}dx,\quad\int^1_0\frac{1}{\sqrt{3+2x-x^2}}dx.\]
+        \item $V$を線型空間，$v_1,v_2,v_3\in V$を基底とする．
+        新たな基底を
+        \[u_1=v_1+v_2,\quad u_2=v_1-v_2+v_3,\quad u_3=-v_1+v_2+v_3\]
+        と定めたとき，次のベクトル$a\in V$の$u_1,u_2,u_3$による成分表示を求めよ：
+        \[a:=2v_1+4v_2+3v_3\in V\]
+    \end{enumerate}
+\end{tcolorbox}
+\begin{proof}[\textbf{\underline{［解答例］}}]\mbox{}
+    \begin{enumerate}
+        \item 明らかに固有ベクトルからなる基底$(1,-2)^\top,(2,1)^\top$を持つから，
+        \[\frac{1}{5}\mtrx{1}{-2}{2}{1}A\mtrx{1}{2}{-2}{1}=\mtrx{5}{0}{0}{0}\]
+        と対角化できる．よって，
+        \[A^5=\frac{1}{5}\mtrx{1}{2}{-2}{1}\mtrx{3125}{0}{0}{0}\mtrx{1}{-2}{2}{1}=625\mtrx{1}{-2}{-2}{4}=625A.\]
+        \item $f$の2階までの導関数の$x=0$での値を求めることにより，
+        \[\log(3+4x)=\log 3+\frac{4}{3}x-\frac{8}{9}x^2+O(x^3)\quad(\abs{x}\to0).\]
+        \item \[\int^1_0\frac{1-x}{\sqrt{3+2x-x^2}}dx=\Square{\sqrt{3+2x-x^2}}^1_0=2-\sqrt{3}.\]
+        $x=1+2\sin\theta$と置換することにより，
+        \begin{align*}
+            \int^1_0\frac{1}{\sqrt{3+2x-x^2}}dx&=\int^0_{-\frac{\pi}{6}}\frac{1}{2\cos\theta}2\cos\theta d\theta=\frac{\pi}{6}.
+        \end{align*}
+        \item 基底変換行列を
+        \[(u_1\;u_2\;u_3)=(v_1\;v_2\;v_3)\underbrace{\begin{pmatrix}
+            1&1&-1\\1&-1&1\\0&1&1
+        \end{pmatrix}}_{=:P}\]
+        と定めると，
+        \[a=(v_1\;v_2\;v_3)\begin{pmatrix}
+            2\\4\\3
+        \end{pmatrix}=(u_1\;u_2\;u_3)P^{-1}\begin{pmatrix}
+            2\\4\\3
+        \end{pmatrix}=(u_1\;u_2\;u_3)\begin{pmatrix}
+            2&2&0\\1&-1&2\\-1&1&2
+        \end{pmatrix}\begin{pmatrix}
+            2\\4\\3
+        \end{pmatrix}=(u_1\;u_2\;u_3)\begin{pmatrix}
+            12\\4\\8
+        \end{pmatrix}.\]
+    \end{enumerate}
+\end{proof}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=第２問]
+    $N\in\N,a\in\R$について，
+    \[A_N:=\begin{pmatrix}
+        1-a&-a&\cdots&-a\\
+        -a&1-a&\ddots&\vdots\\
+        \vdots&\ddots&\ddots&-a\\
+        -a&\cdots&-a&1-a
+    \end{pmatrix}\in M_N(\R)\]
+    と定める．
+    また，
+    \[T_5=\begin{pmatrix}
+        1&0&0&0&0\\
+        -1&1&0&0&0\\
+        -1&0&1&0&0\\
+        -1&0&0&1&0\\
+        -1&0&0&0&1
+    \end{pmatrix}\]
+    と定める．
+    \begin{enumerate}
+        \item $T_5A_5$を求めよ．
+        \item $\det(A_5)$を求めよ．また，一般の$\det(A_N)$を求めよ．
+        \item $0\in\Sp(A)$とする．このときの$a\in\R$と，固有値$0$に属する単位固有ベクトル$z$を求めよ．
+        \item $0\in\Sp(A)$とする．$x:=A_N(I_N+A_N^2)^{-1}z$を求めよ．
+    \end{enumerate}
+\end{tcolorbox}
+\begin{proof}[\textbf{\underline{［解答例］}}]\mbox{}
+    \begin{enumerate}
+        \item \[T_5A_5=\begin{pmatrix}
+            1-a&-a&-a&-a&-a\\
+            -1&1&0&0&0\\
+            -1&0&1&0&0\\
+            -1&0&0&1&0\\
+            -1&0&0&0&1
+        \end{pmatrix}.\]
+        \item 行列式は，列ベクトルに関する多重交代線型形式であることに注意すると，第一列の分解$e_1+(-a,\cdots,-a)^\top$について，$\det(A_N)=\det(A_{N-1})+\det(B_N)$となる，ただし，$B_N$は行列$A_{N}$の第一列を$(-a,\cdots,-a)^{\top}$に変えたものとした．
+        ここで同様の手続きを$B_N$の第二列に施すと，これは$B_{N-1}$と同じ行列式を持つことが判る．これを繰り返して，
+        \[\det(A_N)=\det(A_{N-1})+\det(B_2)=\det(A_{N-1})-a.\]
+        $\abs{A_1}=1-a,\abs{A_2}=1-2a$と繰り返し計算して，$\abs{A_5}=1-5a$．
+        一般には$\abs{A_N}=1-Na$．
+        \item $0\in\Sp(A_N)$のとき$\det(A_N)=0$より，$a=\frac{1}{N}$．
+        このとき，$A_N$は
+        \[A_N=I_N-\frac{1}{n}\begin{pmatrix}
+            1&\cdots&1\\
+            \vdots&\ddots&\vdots\\
+            1&\cdots&1
+        \end{pmatrix}\]
+        という形の射影行列になるから，$0$に属する単位固有ベクトルの1つは
+        \[z:=\frac{1}{\sqrt{N}}\begin{pmatrix}
+            1\\\vdots\\1
+        \end{pmatrix}\]
+        と見つかる．
+        \item 射影行列$A_N$は半正定値であるから，$I_N+A_N^2=I_N+A_N$はたしかに可逆である．
+        また，$P_N:=I_N-A_N$とおくと，これも射影行列で，
+        \[(I_N+P_N)(I_N+A_N)=(I_N+A_N)(I_N+P_N)=2I_N\]
+        であるから，$(I_N+A_N)^{-1}=\frac{1}{2}(I_N+P_N)$とわかる．
+        以上より，
+        \[x=A_N\frac{1}{2}(I_N+P_N)z=A_Nz=0.\]
+    \end{enumerate}
+\end{proof}
+\begin{remarks}
+    問題の$A_N$の形をした行列のことを\textbf{中心化行列}と言う．
+    中心化行列はHouseholder行列の例であり，原点を通る超平面に関する鏡映変換を表す行列である．
+    行列のQR分解の数値計算に使われる，
+\end{remarks}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=第３問]
+    \begin{enumerate}[{問}1]
+        \item 関数
+        \[f(x)=\frac{1}{1+(\tan x)^{\sqrt{2}}},\quad x\in\paren{0,\frac{\pi}{2}}\]
+        について，
+        \begin{enumerate}
+            \item $\forall_{x\in(0,\pi/2)}\;f(x)+f\paren{\frac{\pi}{2}-x}=\const$を示せ．
+            \item $f(x)$の$(0,\pi/2)$上での定積分の値を求めよ．
+        \end{enumerate}
+        \item 
+        \begin{enumerate}
+            \item $\log(1+x)$のMaclaurin展開を考えることより，$\frac{\log(1+x)}{x}$の2次近似式を求めよ．
+            \item 次の極限が存在するための$a,b\in\R$の値と，そのときの極限値を求めよ：
+            \[\lim_{x\to0}\frac{(1+x)^{\frac{1}{x}}-e(a+bx)}{x^2}.\]
+        \end{enumerate}
+    \end{enumerate}
+\end{tcolorbox}
+\begin{proof}[\textbf{\underline{［解答例］}}]\mbox{}
+    \begin{enumerate}[{問}1]
+        \item 任意の$x\in(0,\pi/2)$について，$\tan\paren{\frac{\pi}{2}-x}=\frac{1}{\tan x}$より，
+        \[f(x)+f\paren{\frac{\pi}{2}-x}=\frac{1}{1+(\tan x)^{\sqrt{2}}}+\frac{1}{1+(\tan x)^{-\sqrt{2}}}=\frac{1+(\tan x)^{\sqrt{2}}}{1+(\tan x)^{\sqrt{2}}}=1.\]
+        これを用いて，定積分の値を$I$とすると，
+        \begin{align*}
+            \frac{\pi}{2}&=\int^{\pi/2}_0\paren{f(x)+f\paren{\frac{\pi}{2}-x}}dx\\
+            &=I+\int^{\pi/2}_0f\paren{\frac{\pi}{2}-x}dx\\
+            &=I-\int^0_{\pi/2}f(y)dy=2I.
+        \end{align*}
+        以上より，
+        \[I=\frac{\pi}{4}.\]
+        \item \begin{enumerate}
+            \item $\log(1+x)$の3階までの$x=0$での微分係数を計算することにより，
+            \[\log(1+x)=x-\frac{x^2}{2}+\frac{x^3}{3}+O(x^4)\quad(\abs{x}\to0)\]
+            を得る．よって，$\abs{x}<1$の範囲で，
+            \[1-\frac{x}{2}+\frac{x^2}{3}+O(x^3)\quad(\abs{x}\to0).\]
+            \item $(1+x)^{\frac{1}{x}}=e^{\frac{1}{x}\log(1+x)}$のMaclaurin展開を考えると，
+            \begin{align*}
+                (1+x)^{\frac{1}{x}}&=1+\paren{1-\frac{x}{2}+\frac{x^2}{3}+O(x^3)}+\frac{1}{2}\paren{1-\frac{x}{2}+\frac{x^2}{3}+O(x^3)}+\frac{1}{3!}\paren{1-\frac{x}{2}+\frac{x^2}{3}+O(x^3)}^2+\cdots\\
+                &=\paren{1+1+\frac{1}{2}+\frac{1}{3!}+\cdots}-\frac{x}{2}\paren{1+1+\frac{1}{2}+\cdots}+\frac{x^2}{3}\paren{1+1+\frac{1}{2}+\cdots}+O(x^3)\\
+                &=e\paren{1-\frac{x}{2}+\frac{x^2}{3}}+O(x^3)\qquad(\abs{x}\to0)
+            \end{align*}
+            を得る．よって，$a=1,b=-\frac{1}{2}$とおけば，極限値$\frac{1}{3}e$を得る．
+        \end{enumerate}
+    \end{enumerate}
+\end{proof}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=第４問]
+    $X_1,X_2\sim N(0,1)$を独立同分布，
+    \[\vctr{Y_1}{Y_2}=\mtrx{1}{a}{a}{1}\vctr{X_1}{X_2},\quad a\in(0,1).\]
+    と定める．この問題では，正規分布に関する性質は，次の公式を除いて証明なしで用いてはならない：
+    \[\int_\R e^{-\frac{x^2}{2}}dx=\sqrt{2\pi}.\]
+    \begin{enumerate}
+        \item 次を計算せよ：$E[X_1],\Var[X_1]$．
+        \item $\Cov[Y_1,Y_2]$を計算せよ．
+        \item $(Y_1,Y_2)$の同時確率密度関数が次で与えられることを示せ：
+        \[f(y_1,y_2)=\frac{1}{2\pi(1-a^2)}\exp\paren{-\frac{1}{2(1-a^2)^2}\paren{(1+a^2)y_1^2-4ay_1y_2+(1+a^2)y^2_2}}\quad(y_1,y_2)\in\R^2.\]
+        \item 確率変数$\frac{Y_1}{Y_2}$の確率密度関数を求めよ．
+    \end{enumerate}
+\end{tcolorbox}
+\begin{proof}[\textbf{\underline{［解答例］}}]\mbox{}
+    \begin{enumerate}
+        \item 部分積分より，
+        \[E[X_1]=\frac{1}{\sqrt{2\pi}}\int_\R xe^{-\frac{x^2}{2}}dx=-\frac{1}{\sqrt{2\pi}}\int_\R\paren{-\frac{x^2}{2}}e^{-\frac{x^2}{2}}dx=0.\]
+        \[\Var[X_1]=E[X_1^2]=-\frac{1}{\sqrt{2\pi}}\int_\R x\paren{-\frac{x^2}{2}}e^{-\frac{x^2}{2}}dx=-0+\frac{1}{\sqrt{2\pi}}\int_\R e^{-\frac{x^2}{2}}dx=1.\]
+        \item まず，$X_1\indep X_2$より$\Cov[X_1,X_2]=0$である．実際，Fubiniの定理より，
+        \[\Cov[X_1,X_2]=E[X_1X_2]=\iint_{\R^2}x_1x_2e^{-\frac{x_1^2}{2}-\frac{x_2^2}{2}}dx_1dx_2=\int_{\R}x_1e^{-\frac{x_1^2}{2}}dx_1\int_\R x_2e^{-\frac{x_2^2}{2}}dx_2=0.\]
+        よって，共分散の双線型性より，
+        \[\Cov[Y_1,Y_2]=\Cov[X_1+aX_2,aX_1+X_2]=a\Var[X_1]+a\Var[X_2]=2a.\]
+        \item \[\begin{cases}
+            Y_1=X_1+aX_2=y_1\\
+            Y_2=aX_1+X_2=y_2
+        \end{cases}\quad\Leftrightarrow\quad\begin{cases}
+            X_1=\frac{y_1-ay_2}{1-a^2}\\
+            X_2=\frac{y_2-ay_1}{1-a^2}
+        \end{cases}\]
+        より，$N(0,1)$の確率密度関数を$\phi$で表すと，変換$(y_1,y_2)\mapsto(X_1,X_2)$のJacobianは$\frac{1}{1-a^2}$であるから，
+        \begin{align*}
+            f(y_1,y_2)&=\frac{1}{1-a^2}\phi\paren{\frac{y_1-ay_2}{1-a^2}}\phi\paren{\frac{y_2-ay_1}{1-a^2}}\\
+            &=\frac{1}{1-a^2}\frac{1}{\sqrt{2\pi}}\exp\paren{-\paren{\frac{y_1-ay_2}{1-a^2}}^2\frac{1}{2}}\frac{1}{\sqrt{2\pi}}\exp\paren{-\paren{\frac{y_2-ay_1}{1-a^2}}^2\frac{1}{2}}\\
+            &=\frac{1}{2\pi(1-a^2)}\exp\paren{-\frac{1}{2(1-a^2)^2}((1+a^2)y_1^2-4ay_1y_2+(1+a^2)y_2^2)}.
+        \end{align*}
+        \item ここで，変数変換
+        \[\begin{cases}
+            \frac{Y_1}{Y_2}=y\\
+            Y_2=y_2
+        \end{cases}\quad\Leftrightarrow\quad\begin{cases}
+            Y_1=yY_2=yy_2\\
+            Y_2=y_2
+        \end{cases}\]
+        を考えると，(3)の結果に代入することで，$\frac{Y_1}{Y_2},Y_2$の結合分布密度関数は
+        \[f(y,y_2)=\frac{1}{2\pi(1-a^2)}\exp\paren{-\frac{1}{2(1-a^2)^2}y^2_2((1+a^2)y^2-4ay+(1+a^2))}.\]
+        これを$y_2$について積分することで，
+        \[f(y)=\frac{1}{\sqrt{2\pi}(1-a^2)}\exp\paren{-\frac{1}{2(1-a^2)^2}((1+a^2)y^2-4ay+1+a^2)}.\]
+    \end{enumerate}
+\end{proof}
+
+\end{document}

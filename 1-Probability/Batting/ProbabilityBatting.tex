@@ -1,0 +1,371 @@
+\documentclass[uplatex,dvipdfmx]{jsarticle}
+\title{確率統計学I　レポート（担当： 会田茂樹先生）}
+\author{司馬博文 05-210520}
+\date{\today}
+\pagestyle{headings} \setcounter{secnumdepth}{4}
+\input{/Users/Hirofumi Shiba/NatureOfStatistics/preamble_no_fonts.tex}
+%\input{/Users/hirofumi.shiba48/NatureOfStatistics/preamble_no_fonts.tex}
+\usepackage[math]{anttor}
+\begin{document}
+
+\begin{notation*}
+    次の記法を本文中で断りなく使うことがあった．
+    \begin{enumerate}
+        \item $[n]:=\Brace{1,2,\cdots,n}$．
+        \item $\N^+:=\Brace{1,2,3,\cdots}$．
+    \end{enumerate}
+\end{notation*}
+
+\begin{problem*}[2]
+    非負値確率変数$\{X_n\}\subset L(\Om)_+$であって，次を満たす例を挙げよ：
+    \begin{enumerate}
+        \item $\forall_{\om\in\Om}\;\lim_{n\to\infty}X_n(\om)=0$．
+        \item $\lim_{n\to\infty}E[X_n]=0$．
+        \item $\forall_{n\in\N^+}\;E[\sup_{k\ge n}X_k]=\infty$．
+    \end{enumerate}
+\end{problem*}
+\begin{proof}[\bf［解］]
+    確率空間を$(\Om:=(0,1),\B((0,1)),l)$とする．ただし，$l$はLebesgue測度とした．
+    \begin{enumerate}[{第}1{段}]
+        \item $1$に収束する級数
+        \[1=\frac{1}{2}+\frac{1}{4}+\frac{1}{8}+\cdots+\frac{1}{2^n}+\cdots\]
+        の部分和を$s_n\;(n=1,2,\cdots)$とし，$(0,1)$の部分区間を
+        $I_n:=(s_{n-1},s_{n})\;(n=1,2,\cdots)$と定めと，これらは互いに交わらない．
+        ただし，$s_0:=0$とする．
+        \item 次に，$a_n:=\frac{2^n}{n}\;(i=1,2,\cdots)$とし，実確率変数$X_n:\Om\to\R$を
+        \[X_n:=a_n1_{I_n}\]
+        で定めると，これは条件を満たす．
+        実際，
+        \begin{enumerate}[(1)]
+            \item 任意の$\om\in\Om$について，ただ一つの$n\in\N$が存在して$\om\in I_n$でそれ以外では$X_m(\om)=0\;(m\ne n)$であるから，$\lim_{n\to\infty}X_n(\om)=0$．
+            \item 各$X_n$は可積分で，
+            \[E[X_n]=a_n\cdot l(I_n)=\frac{2^n}{n}\frac{1}{2^n}=\frac{1}{n}\xrightarrow{n\to\infty}0.\]
+            \item 任意の$n\in\N$を取る．
+            \[\sup_{k\ge n}X_k=\sum_{k=n}^\infty a_k1_{I_k}\]
+            であるが，$I_k$は互いに交わらないため，
+            \[E[\sup_{k\ge n}X_k]=\sum_{k=n}^\infty a_k\cdot l(I_k)=\sum_{k=n}^\infty\frac{1}{k}\]
+            であるが，右辺は発散する．
+        \end{enumerate}
+    \end{enumerate}
+\end{proof}
+
+\begin{problem*}[3]
+    $X\in L^p(\Om)\;(p\ge1)$を中心化された確率変数とする．
+    任意の定数$c\in\R$に対して$E[\abs{X+c}^p]\ge\abs{c}^p$が成り立つ．
+\end{problem*}
+\begin{proof}[\bf［解］]
+    $f(x):=\abs{x}^p\;(p\ge1)$は凸関数である．よって，Jensenの不等式より，
+    \[\abs{E[X+c]}^p=f(E[X+c])\le E[f(X+c)]=E[\abs{X+c}^p].\]
+    最左辺は$\abs{E[X+c]}^p=\abs{c}^p$である．
+\end{proof}
+
+
+\begin{problem*}[5]
+    $S$を位相空間とする．
+    \[\A:=\Brace{\cap_{i\in[n]}A_i\text{の有限個の和集合}\mid A_i\text{は開または閉},n\in\N^+}\]
+    は$S$の開集合の全体$\O(S)$を含む最小の有限加法族である．
+\end{problem*}
+\begin{proof}[\bf［解］]
+    $\O(S)$を含む有限加法族$\F$を取る．
+    すると，任意の閉集合$F\csub S$は$S\setminus F\in\O(S)$より，
+    $F\in\F$．よって，閉集合・開集合の有限個の和集合は$\F$の元である．よって，$\A\subset\F$．
+    これは$\A$の最小性を意味する．
+\end{proof}
+
+\begin{problem*}[7]
+    $S$を距離空間，$(S,\B(S),P)$を確率空間とする．
+    任意の閉集合$F\csub S$に対して，開集合の列$F\subset G_n$であって，
+    $P[G_n\setminus F]\le1/n$を満たすものが存在する．
+\end{problem*}
+\begin{proof}[\bf［解］]
+    $S$の距離を$d$で表す．
+    \[G_\delta:=\Brace{x\in S\mid d(x,F)<\delta},\qquad\delta>0\]
+    と定めると，$G$は$\delta\searrow0$について単調減少であり，
+    $\lim_{\delta\to0}G_\delta=\cap_{\delta>0}=F$．
+    よって，$P[G_\delta\setminus F]$は$\delta\searrow0$に対して単調減少し，$\lim_{\delta\to0}P[G_\delta\setminus F]=P[F\setminus F]=0$を満たす．
+    よって，列$(G_n)$であって，$P[G_n\setminus F]<1/n$を満たすものを選び出すことができる．
+\end{proof}
+
+\begin{problem*}[9]
+    $S,S'$を位相空間，$f:S\to S'$を位相同型とする．この時，$A\in\B(S)$と$f(A)\in \B(S')$は同値．
+\end{problem*}
+\begin{proof}[\bf［解］]\mbox{}
+    \begin{description}
+        \item[準備] まず，一般の集合$X,Y$間の写像について，次の事実が成り立つ：
+        \begin{enumerate}
+            \item 写像$f:X\to Y$と部分集合$B\subset Y$に対して，$f^{-1}(Y\setminus B)=X\setminus f^{-1}(B)$．
+            実際，$x\in X$に関する３つの命題$x\in f^{-1}(Y\setminus B),f(x)\in Y\setminus B,x\in X\setminus f^{-1}(B)$はいずれも同値である．
+            \item 写像$f:X\to Y$と集合の族$\{B_i\}_{i\in I}\subset P(Y)$に対して，$f^{-1}(\cup_{i\in I}B_i)=\cup_{i\in I}f^{-1}(B_i)$かつ$f^{-1}(\cap_{i\in I}B_i)=\cap_{i\in I}f^{-1}(B_i)$．実際，前者については，
+            $x\in f^{-1}(\cup_{i\in I}B_i)$と$\exists_{i\in I}\;f(x)\in B_i$と$x\in \cup_{i\in I}f^{-1}(B_i)$とがいずれも同値な命題であることからわかる．後者も同様．
+        \end{enumerate}
+        \item[証明] 任意の$A\in\B(S)$は，開集合の高々可算な族$(U_i)_{i\in\N}$を用いて，これの高々可算回の補集合・和集合・積集合の演算で表せる．位相同型$f:S\to S'$の逆写像$f^{-1}:S'\to S$も連続であるから，この逆像$(f^{-1})^{-1}(A)=f(A)$も，開集合の高々可算な族の補集合・和集合・積集合の演算で表せる．よって，$f(A)\in\B(S')$．逆方向の主張も同様である．
+    \end{description}
+\end{proof}
+
+\begin{problem*}[10]
+    $S:=C([0,1];\R^d)$に一様位相を与えて距離空間と見る．
+    Borel集合族$\B(S)$は集合族
+    \[\cC:=\Brace{C(t_1,\cdots,t_n;A_1,\cdots,A_n)\in P(S)\mid n\in\N,0\le t_1<\cdots<t_n\le1,A_1,\cdots,A_n\in\B(\R^d)}\]
+    で生成される$\sigma$-代数$\sigma(\cC)$に等しい．
+\end{problem*}
+\begin{proof}[\bf［解］]\mbox{}
+    \begin{description}
+        \item[$\sigma(\cC)\subset\B(S)$] \mbox{}\\任意の$n\in\N,0\le t_1<\cdots<t_n\le1,A_1,\cdots,A_n\in\B(\R^d)$に対して，
+        \[C(t_1,\cdots,t_n; A_1,\cdots,A_n)=\bigcap_{i\in[n]}\pr_{t_i}^{-1}(A_i)\]
+        と表せる．
+        ただし，$\pr_{t_i}:S\to\R^d$を，$\om\in S$を$\om(t_i)\in\R^d$に写す写像とした．
+        すると，各線型汎函数$\pr_{t_i}$は連続であるから，
+        $A_i$が全て開集合であるとき，$C$も開集合となる．
+        次に$A_i\in\B(\R^d)$が一般(開集合または閉集合の可算和・積)のときも，
+        $C$は開集合または閉集合の可算和・積で表せる．
+        \item[$\B(S)\subset\sigma(\cC)$] \mbox{}\\一様収束の位相は，ノルム$\norm{\om}=\sup_{t\in[0,1]}\abs{\om(t)}$が定める位相に等しい．
+        これについての開球
+        \[B(\om,\ep)=\Brace{\om_1\in S\mid\norm{\om_1-\om}<\ep}\osub S\]
+        は，$\om\in S$が連続関数であることに注意すれば，
+        $B(\om,\ep)=\cup_{t\in\Q\cap[0,1]}C(t,B(\om(t),\ep))$と表せる．
+        開球$B$は一様収束の位相の基底をなすから，この議論から$\B(S)\subset\sigma(\cC)$が従う．
+    \end{description}
+\end{proof}
+
+\begin{problem*}[13]
+    $X,Y$を独立な$\R^d$-値確率変数とする．
+    $P[X=Y]=1$ならば，ある$c\in\R^d$が存在して$P[X=Y=c]=1$である．
+\end{problem*}
+\begin{proof}[\bf［解］]
+    任意の$A\in\B(\R)$を取る．
+    \begin{enumerate}
+        \item $P[X\in A]=P[Y\in A]$が成り立つ．
+        実際，$P[X=Y]=1$に注意すれば，
+        \[P[X\in A]=P[X\in A,X=Y]+P[X\in A,X\ne Y]=P[Y\in A,X=Y]=P[Y\in A].\]
+        \item 次に$P[X\in A]\in\{0,1\}$であることがわかる．
+        実際，仮に$0<P[X\in A]<1$とすると，
+        \[P[X\in A]=P[X\in A,Y\in A]=P[X\in A]P[Y\in A]=(P[X\in A])^2\]
+        に矛盾する．
+        \item よって，ある$c\in\R$が存在して$P[X=c]=1$である．仮に$\forall_{c\in\R}\;P[X=c]<1$とするならば，任意の$c\in\R$について$\{c\}\in\B(\R)$であるから$P[X=c]=0$が必要であり，従って$F(x):=P[X\le x]$は連続．よって，ある$\delta\in(0,1)$に対して，中間値の定理より，$c\in\R$が存在して$F(c)=P[X\le c]=\delta\in(0,1)$．
+        $\ocinterval{-\infty,c}\in\B(\R)$に矛盾する．
+        \item よって，(3)で取った$c\in\R$について，$P[X=c]=P[Y=c]=1$であるから，
+        \[P[X=Y=c]=P[X=c,Y=c]=P[X=c]P[Y=c]=1.\]
+    \end{enumerate}
+\end{proof}
+
+\begin{problem*}[14]
+    $X_1,\cdots,X_n$を実確率変数列とする．次は同値：
+    \begin{enumerate}
+        \item $X_1,\cdots,X_n$は独立である．
+        \item 任意の有界連続関数$\varphi_1,\cdots,\varphi_n\in C_b(\R)$について，
+        \[E\Square{\prod^n_{i=1}\varphi_i(X_i)}=\prod^n_{i=1}E[\varphi_i(X_i)].\]
+    \end{enumerate}
+\end{problem*}
+\begin{proof}[\bf［解］]\mbox{}
+    \begin{description}
+        \item[(1)$\Rightarrow$(2)] 任意の$\varphi_1,\cdots,\varphi_n\in C_b(\R)$を取る．$X_1,\cdots,X_n$は独立である時，$\varphi_1(X_1),\cdots,\varphi_n(X_n)$も独立であり，さらに有界性からこれらの積も可積分である．よって，(2)が従う．
+        \item[(2)$\Rightarrow$(1)] $n=2$とする．$\varphi_i=\sin,\varphi_i=\cos\;(i=1,2)$と取ったそれぞれの場合について，(2)の仮定を使うことより，
+        \begin{align*}
+            E[e^{iu_1X_1+iu_2X_2}]&=E[(\sin(u_1X_1)+i\cos(u_1X_1))(\sin(u_2X_2)+i\cos(u_2X_2))]\\
+            &=E[\sin(u_1X_1)\sin(u_2X_2)-\cos(u_1X_1)\cos(u_2X_2)]\\
+            &\qquad+iE[\sin(u_1X_1)\cos(u_2X_2)+\sin(u_2X_2)\cos(u_1X_1)]\\
+            &=E[\sin(u_1X_1)]E[\sin(u_2X_2)]-E[\cos(u_1X_1)]E[\cos(u_2X_2)]\\
+            &\qquad+i\paren{E[\sin(u_1X_1)]E[\cos(u_2X_2)]+E[\sin(u_2X_2)]E[\cos(u_1X_1)]}\\
+            &=E[\sin(u_1X_1)+i\cos(u_1X_1)]E[\sin(u_2X_2)+i\cos(u_2X_2)]\\
+            &=E[e^{iu_1X_1}]E[e^{iu_2X_2}].
+        \end{align*}
+        よって，Kacの定理から，$X_1,X_2$は独立である．$n\ge3$の場合も同様．
+    \end{description}
+\end{proof}
+
+\begin{problem*}[15]
+    $X_1,\cdots,X_n\in L^2(\Om)$を中心化された独立な実確率変数とする．$S_k:=\sum_{i\in[k]}X_i$についての不等式
+    \[\text{(Kolmogorov)}\quad \forall_{\ep>0}\quad P\Square{\max_{k\in[n]}\abs{S_k}\ge\ep}\le\frac{\sum_{i\in[n]}V[X_i]}{\ep^2}\]
+    を考える．
+    \begin{enumerate}
+        \item \[A:=\Brace{\max_{1\le k\le n}\abs{S_k}\ge\ep},\quad A_k:=\Brace{\abs{S_1}<\ep,\cdots,\abs{S_{k-1}}<\ep,\abs{S_k}\ge\ep}\]
+        と定めると，$A=\sqcup_{k\in[n]}A_k$．
+        これについて，
+        \[P[A]\le\sum_{k\in[n]}\frac{E[S_k^21_{A_k}]}{\ep^2}.\]
+        \item $E[(S^2_n-S^2_k)1_{A_k}]\ge0$である．
+        \item 上の不等式を(Kolmogorov)を示せ．
+    \end{enumerate}
+\end{problem*}
+\begin{proof}[\bf［解］]\mbox{}
+    \begin{enumerate}
+        \item 次のように計算できる：
+        \begin{align*}
+            P[A]&=\sum_{k=1}^nP[A_k]\\
+            &=\sum_{k=1}^nP[\abs{S_1}<\ep_1,\cdots,\abs{S_{k-1}}<\ep,\abs{S_k}\ge\ep]\\
+            &=\sum_{k=1}^nE[1_{A_k}]\\
+            &\le\sum_{k=1}^n\frac{E[1_{A_k}S^2_k]}{\ep^2}.
+        \end{align*}
+        なお，最後の不等式は，任意の$\om\in A_k$について，
+        $\abs{S_k(\om)}\ge\ep$より，$1\le\frac{S_k^2(\om)}{\ep^2}$であることによる．
+        \item $S_k1_{A_k}$は$\sigma[X_1,\cdots,X_k]$-可測で，$S_n-S_k=X_{k+1}+\cdots+X_n$より，これは互いに独立である．
+        この事実を用いて，次のように計算できる：
+        \begin{align*}
+            E[(S_n^2-S_k^2)1_{A_k}]&=E[(S_n-S_k)(S_n+S_k)1_{A_k}]\\
+            &=E[(S_n-S_k)S_n1_{A_k}]+E[(S_n-S_k)S_k1_{A_k}]\\
+            &=E[(S_n-S_k)(S_n-S_k+S_k)1_{A_k}]+\underbrace{E[S_n-S_k]}_{=0}E[S_k1_{A_k}]\\
+            &=E[(S_n-S_k)^21_{A_k}]+\underbrace{E[(S_n-S_k)S_k1_{A_k}]}_{=0}=E[(S_n-S_k)^21_{A_k}]\ge0.
+        \end{align*}
+        \item (1),(2)の議論を総合すると，次のように評価できる：
+        \begin{align*}
+            P[A]&=\sum_{k=1}^nP[A_k]\le\sum_{k=1}^n\frac{E[S_k^21_{A_k}]}{\ep^2}\\
+            &\le\frac{1}{\ep^2}\sum_{k=1}^nE[S_n^21_{A_k}]=\frac{1}{\ep^2}E[S_n^21_A]\\
+            &\le\frac{1}{\ep^2}E[S_n^2]=\frac{\sum_{k=1}^nV[X_i]}{\ep^2}.
+        \end{align*}
+        ただし，最後の等式は$(X_i)$が独立同分布であることによる．
+    \end{enumerate}
+\end{proof}
+
+\begin{problem*}[21]
+    $X_n,X\in L(\Om;\R^d)$を確率変数とする．
+    任意のコンパクトな台を持つ滑らかな関数$\varphi\in C_c^\infty(\R^d)$に対して，$\lim_{n\to\infty}E[\varphi(X_n)]=E[\varphi(X)]$が成り立つならば，法則収束$X_n\dto X$が成り立つ．
+\end{problem*}
+\begin{proof}[\bf［解］]\mbox{}
+    \begin{description}
+        \item[$C_c^\infty(\R^d)$の稠密性] まず，$C_c^\infty(\R^d)$が$C_b(\R^d)$上稠密であることを示す．
+        
+    \end{description}
+\end{proof}
+
+\begin{problem*}[24]
+    $\{X_n\}\subset L(\Om)$を確率変数列とする．
+    $X_n$が$0$に法則収束することと，$X_n$が$0$に確率収束することとは同値である．
+\end{problem*}
+\begin{proof}[\bf［解］]
+    一般に，確率収束する確率変数は弱収束するから，$X_n$の分布がデルタ測度$\delta_0$に弱収束するとして，$X_n$の$0$への確率収束を示せば良い．
+    $X_n$の分布関数を$F_n$で表すと，仮定より$F_n\Rightarrow F:=1_{\cointerval{0,\infty}}$である．いま，
+    任意の$\ep>0$に対して，
+    \[P[\abs{X_n}\ge\ep]=F_n(-\ep)+(1-F_n(\ep))+P^{X_n}[\{\ep\}].\]
+    である．
+    まず，$F$の連続点は$\R\setminus\{0\}$であるから，
+    $F_n(-\ep)\to F(-\ep)=0$かつ$1-F_n(\ep)\to 1-F(\ep)=0$．
+    また，$\delta_0(\partial\{\ep\})=\delta_0(\{\ep\})=0$より，$P^{X_n}[\{\ep\}]\to \delta_0(\{\ep\})=0$．
+    以上を併せると，任意の$\ep>0$に対して$P[\abs{X_n}\ge\ep]\to0$．すなわち，$X_n$は$0$に確率収束する．
+\end{proof}
+
+\begin{problem*}[31]
+    実確率変数の族$\{X_\lambda\}_{\lambda\in\Lambda}$について，次は同値：
+    \begin{enumerate}
+        \item $\{X_\lambda\}_{\lambda\in\Lambda}$はGauss確率変数系である．
+        \item 任意の有限部分集合$\{\lambda_1,\cdots,\lambda_n\}\subset\Lambda$と$(t_i)_{i\in[n]}\in\R^n$について，
+        $\sum_{i\in[n]}t_iX_{\lambda_i}$は1次元の正規分布に従う．
+    \end{enumerate}
+\end{problem*}
+\begin{proof}[\bf［解］]\mbox{}
+    \begin{description}
+        \item[方針] 任意の確率ベクトル$X:=(X_{\lambda_1},\cdots,X_{\lambda_n})$に対して，これが$n$-次元Gauss確率ベクトルであることと，任意の$t:=(t_i)_{i\in[n]}\in\R^n$について$\sum_{i\in[n]}t_iX_{\lambda_i}$が1次元の正規分布に従うことが同値であることを示せば良い．
+        \item[証明] 仮に$X$の平均を$\mu\in\R^n$，共分散行列を$\Sigma$とすると，
+        $X$の特性関数は
+        \[\varphi(u)=E[e^{iu^\top X}]=\exp\paren{iu^\top\mu-\frac{1}{2}u^\top\Sigma u}\]
+        と表せ，これについて，$u=st\;(s\in\R)$への制限
+        \[\varphi|_{\R t}(s)=E[e^{ist^\top X}]=\exp\paren{is(t\top\mu)-\frac{1}{2}s^2(t^\top\Sigma t)}\]
+        は，$t^\top X$の特性関数でもあり，その形は$\rN(t^\top\mu,t^\top\Sigma t)$のものである．
+        逆も同様に辿れる．
+    \end{description}
+\end{proof}
+
+\begin{problem*}[32]
+    $\R^d$上の確率分布$\mu$に対して，特性関数
+    \[\wh{\mu}(z):=\int_{\R^d}e^{i(z,x)}d\mu(x),\qquad z\in\R^d\]
+    を考える．
+    \begin{enumerate}
+        \item $d=1$で，$\mu=\Pois(\lambda)\;(\lambda>0)$とする．この時，
+        \[\wh{\mu}(z)=e^{(e^{iz}-1)\lambda}.\]
+        \item $d=1$で，$\mu=\cN(m,a)\;(a>0)$とする．この時，
+        \[\wh{\mu}(z)=e^{izm-\frac{a}{2}z^2}.\]
+        \item $\mu=\rN_d(m,C)$の時，確率密度関数は
+        \[f(x)=\frac{1}{\sqrt{2\pi}^d\sqrt{\det C}}\exp\paren{-\frac{1}{2}(C^{-1}(x-m),x-m)},\]
+        で与えられる．
+        この時，
+        \[\wh{\mu}(z)=e^{i(z,m)-\frac{1}{2}(Cz,z)}.\]
+        \item $d=1$で，$\mu=\r{C}(m,a)\;(a>0)$の時，確率密度関数は
+        \[f(x)=\frac{1}{\pi}\frac{a}{a^2+(x-m)^2},\]
+        で与えられる．この時，
+        \[\wh{\mu}(z)=e^{imz-a\abs{z}}.\]
+        \item $d=1$で，$\mu=\r{U}([-a,a])\;(a>0)$の時，確率密度関数は
+        \[f(x)=\frac{1}{2a}1_{[-a,a]}(x)\]
+        で与えられる．この時，
+        \[\wh{\mu}(z)=\frac{\sin az}{az}.\]
+    \end{enumerate}
+\end{problem*}
+\begin{proof}[\bf［解］]\mbox{}
+    \begin{enumerate}
+        \item そもそも，$\N$上のPoisson分布$(p(x;\lambda))_{x\in\N}=\paren{\frac{\lambda^x}{x!}e^{-\lambda}}_{x\in\N}$が定める確率母関数は，
+        \begin{align*}
+            g(z)&=\sum_{x=0}^\infty \paren{\frac{\lambda^x}{x!}e^{-\lambda}}z^x\\
+            &=e^{-\lambda}\sum_{x=0}^\infty\frac{(\lambda z)^x}{x!}=e^{-\lambda}e^{\lambda z}=e^{\lambda(z-1)}.
+        \end{align*}
+        と計算できる．特に，$\wh{\mu}(z)=g(e^{iz})=e^{\lambda(e^{iz}-1)}$．
+        \item $X\sim\rN(m,a^2)$について，次のように計算できる：
+        \begin{align*}
+            \wh{\mu}(z)&=\frac{1}{\sqrt{2\pi a}}\int^\infty_{-\infty}e^{izx}e^{-\frac{(x-m)^2}{2a}}dx\\
+            &=\frac{1}{\sqrt{2\pi a}}\int^\infty_{-\infty}\exp\paren{-\frac{1}{2a}\Brace{(x-(m+iza))^2-2m iza+z^2\sigma^4}}dx\\
+            &=\exp\paren{izm-\frac{z^2a}{2}}\frac{1}{\sqrt{2\pi a}}\int^\infty_{-\infty}\exp\paren{-\frac{1}{2a}\paren{(x-(m+iza))^2}}dx=\exp\paren{izm-\frac{z^2a}{2}}.
+        \end{align*}
+        \item \mbox{}
+        \begin{description}
+            \item[標準的な場合] まず，$\R^d$上のGauss核$G(x):=\frac{1}{(2\pi)^{d/2}}e^{-\frac{\abs{x}^2}{2}}$のFourier変換，及びFourier逆変換は
+            \[\wh{G}(z)=e^{-\frac{\abs{z}^2}{2}}\]
+            である．実際，$x=:(x_1,\cdots,x_d)$として，
+            \[\wh{G}(z)=\frac{1}{(2\pi)^{d/2}}\int_{\R^d} e^{-\frac{\abs{x}^2}{2}}e^{-i(z,x)}dx\]
+            の両辺を$x_i$で微分すると，被積分関数の導関数が可積分な優関数を持つことから微分と積分の交換ができて，
+            \begin{align*}
+                \dd{}{z_i}\wh{G}(z)&=\frac{1}{(2\pi)^{d/2}}\int_{\R^d} e^{-\frac{\abs{x}^2}{2}}(-ix_i)e^{-i(z,x)}dx\\
+                &=\frac{1}{(2\pi)^{d/2}}\paren{\Square{ie^{-\frac{\abs{x}^2}{2}}e^{-i(z,x)}}^\infty_{-\infty}-i\int_\R e^{-\frac{\abs{x}^2}{2}}(-iz_i)e^{-i(z,x)}dx}\\
+                &=-\frac{z_i}{(2\pi)^{d/2}}\int_{\R^d}e^{-\frac{\abs{x}^2}{2}e^{-i(z,x)}}dx\\
+                &=-z_i\wh{G}(z).
+            \end{align*}
+            よって，$\wh{G}(z)$は$z_1,\cdots,z_n$に関する変数分離型と仮定すれば，上記の$n$元の常微分方程式系により
+            $\wh{G}(z)$は$e^{-\frac{\abs{z}^2}{2}}$の定数倍である必要があり，$\wh{G}(0)=1$の条件も併せると上述の形であることが必要．
+            \item[一般的な場合] 次に，$\mu\sim\rN_d(m,C)$の場合を考える．
+            共分散行列$C$は正定値対称だから，ある正定値対称行列$D$が存在して，$D^2=C$と表せ，$(C^{-1}x,x)=(D^{-1}x,D^{-1}x)$が成立する．
+            特に，$\det D=\sqrt{\det C}$である．
+            変数変換$x\mapsto x+m$と$y=D^{-1}x$とを用いて，次のように計算できる：
+            \begin{align*}
+                \wh{\mu}(z)&=\frac{1}{\sqrt{2\pi}^d\sqrt{\det C}}\int_{\R^d}\exp\paren{-\frac{1}{2}(x-m)^\top C^{-1}(x-m)}e^{ix^\top z}\\
+                &=\frac{1}{\sqrt{2\pi}^d\sqrt{\det C}}\int_{\R^d}e^{-\frac{1}{2}x^\top C^{-1}x}e^{ix^\top z}e^{im^\top z}dx\\
+                &=e^{i(m,z)}\frac{1}{\sqrt{2\pi}^d}\int_{\R^d}e^{-\frac{1}{2}y^\top y}e^{iy^\top Dz}dx\\
+                &=e^{i(m,z)}\wh{G}(Dz)=e^{i(m,z)-\frac{(Cz,z)}{2}}.
+            \end{align*}
+            ただし，$x^\top$は転置とし，$(x,z)=x^\top z$と表した．
+        \end{description}
+        \item \begin{description}
+            \item[標準的な場合] まず，$\mu\sim\r{C}(0,1)$の時，すなわち，$\mu(dx)=\frac{1}{\pi}\frac{1}{1+x^2}=:p(x)$のとき，$\wh{\mu}(z)=e^{-\abs{z}}$を示す．
+            $g(x):=e^{-\abs{z}}$とすると，
+            \begin{align*}
+                \wh{g}(z)&=\int_\R e^{-\abs{y}}e^{-iyz}dy\\
+                &=\int_0^\infty e^{-y(1+iz)}dy-\int^\infty_0e^{y(1-iz)}dy\\
+                &=\Square{\frac{e^{-y(1+iz)}}{1+iz}-\frac{e^{-y(1-iz)}}{1-iz}}^\infty_0\\
+                &=\frac{1}{1-iz}-\frac{1}{1+iz}=\frac{2}{1+z^2}.
+            \end{align*}
+            よって，$\wh{g}(z)=2\pi\mu(dz)$であるが，
+            $\wh{g}\in L^1(\R)$であるから反転公式より，
+            $\wh{p}(z)=g(z)=e^{-\abs{z}}$．
+            よって，$\wh{\mu}(z)=e^{-\abs{z}}$でもある．
+            \item[一般の場合] 一般の場合も，
+            \[\mu(dx)=\frac{1}{\pi}\frac{a}{a^2+(x-m)^2}=\frac{1}{a}p\paren{\frac{x-m}{a}}\]
+            と表せるから，
+            \begin{align*}
+                \wh{\mu}(z)&=\int_\R\frac{1}{a}p\paren{\frac{x-m}{a}}e^{iz x}dx\\
+                &=\int_\R p(y)e^{iz(ay+m)}dy\\
+                &=e^{izm}\wh{p}(az)=e^{izm-a\abs{z}}.
+            \end{align*}
+            ただし，途中で変数変換$y=\frac{x-m}{a}$を用いた．
+        \end{description}
+        \item 次のように計算できる：
+        \begin{align*}
+            \wh{\mu}(z)&=\int^a_{-a}\frac{1}{2a}e^{izx}dx\\
+            &=\frac{1}{2a}\Square{\frac{e^{izx}}{iz}}^a_{-a}\\
+            &=\frac{1}{2a}\paren{\frac{e^{iza}}{iz}-\frac{e^{-iza}}{iz}}=\frac{1}{a}\paren{\frac{\sin az}{z}}.
+        \end{align*}
+    \end{enumerate}
+\end{proof}
+
+\end{document}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{problem*}
+    
+\end{problem*}
+\begin{proof}[\bf［解］]
+    
+\end{proof}
+

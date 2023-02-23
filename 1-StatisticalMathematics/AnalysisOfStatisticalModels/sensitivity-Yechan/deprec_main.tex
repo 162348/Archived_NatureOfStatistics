@@ -1,0 +1,1106 @@
+\documentclass[uplatex,dvipdfmx]{jsarticle}\input{/Users/Hirofumi Shiba/NatureOfStatistics/preamble_no_fonts.tex}
+\title{Dynamic confounding and Long term treatment effect estimation by data combination: point and partial identification}\date{October 2022}\author{Yechan Park}
+\pagestyle{headings}\setcounter{secnumdepth}{4}\usepackage{apalike}\newcommand{\koko}{{\color{yellow}koko}}\newcommand{\todo}{{\color{red}todo}}\newcommand{\qu}{{\color{green}queue}}\newcommand{\yp}[1]{\textcolor{blue}{Park: #1}}\newcommand{\Sel}{\mathrm{Sel}}\newcommand{\ifquad}{\text{if}\quad}
+\begin{document}
+\maketitle\tableofcontents
+\begin{abstract}
+    We combine experimental and observational data that have complementary role in estimating long term treatment effects. The underlying important objective is to highlight the decade old idea of the inherently complementary role that the experiments and economic theory should play in program evaluation in a newly emerging setting of long term treatment effect by data combination. Economic theory provides way to differentiate and choose between non-nested competing identification strategies, and can posit a reliable model for the dynamics of labor outcomes even under selection. On the other hand, the exogenous variation of the experimental data can provide ways to choosing between different functional and distributional assumptions that economic models place, and also provides great credibility for tightening bounds even under no point identification.
+\end{abstract}
+
+\section{Introduction}
+
+
+We are interested in assessing the long term effect of a job training program. We have a result from a randomized control trial which measured the change in unemployment rate a year after the program participation, but no long term follow up has been, possibly due to cost of follow up. On the other hand, observational data documenting the results up to 3 years is available, but probably contaminated by self-selection of workers into the program. Is there anyway to get the selection corrected long term effect of the job training program by combining the two data? This is a question that has received considerable interest recently, reflected in the increasing number of papers that have documented conditions under which the long term average treatment effect can be nonparametrically point identified. One of the major and leading works by \cite{athey2020combining}  provides causal assumptions of internal and external validity of experimental data, and a form of conditional internal validity called latent unconfounding assumptions. While illuminating, there are assumptions like external validity or latent unconfounding assumption that have not been explicitly placed in the traditional program evaluation, and we would like to look deeper into the nature of these assumptions, and what to do when the assumptions seems to be difficult to hold in the application of interest. 
+
+Specifically, we first look into the external validity assumption, and (a) show that their external validity of long term potential outcome was actually unnecessary for average treatment effect estimation (b) under the relaxed assumption, provide a formal test based on partial identification literature, providing \textit{uniformly sharp identification bounds valid even in the high dimensional regime}
+
+Next, we will investigate the latent unconfounding assumption. We illustrate how it may be difficult to hold for time varying unobserved confounders or unobserved confounding that simultaneously affect the treatment, short, and long term outcome. To highlight this point, we turn from identification of average treatment effect to a average treatment effect on the treated survivors (ATETS), a modified form of average treatment effect that highlights the difficulty of dealing with dynamic confounding, and is of interest in its own right when unemployment rate is concerned. 
+
+We will approach identification of this challenging in three ways. The first two aims for point identification. The first approach aims for assumptions in the form of potential outcomes that is standard in the current literature of program evaluation. We show that the previously maintained assumptions by \cite{athey2020combining}is insufficient for point identification, due to the counterfactual quantity in the conditioning set, and provide additional assumption that suffice for point identification, though may be hard to hold in many settings. The second approach turns to more traditional economic modeling, by constructing a dynamic analogue of the generalized toy model\cite{heckman2007dynamic} \cite{roy1951some}that can flexibly embed assumptions motivated by economic theory on the time varying confounding, The final approach gives up point identification, and provides \textit{sharp identification bounds }on the treatment effect quantity with economically motivated shape restrictions in increasing strength, elucidating the role each identifying assumption plays in shaping inference.
+
+The rest of the paper is organized as follows: Section 2 provides a short introduction to the identification approach of our baseline paper \cite{athey2020combining}, Section 3 discusses the external validity assumption, Section 4 discusses the nature of latent unconfounding assumptions. Section 5 motivates the modified average treatment effect estimates and the experimental approach of identification. Section 6 illustrates the economic modeling approach. Section 7 discusses partial identification strategy. Section 8 discusses the estimation strategy, and Section 9 shows the empirical application. Section 10 concludes.
+
+\section{Setup}
+
+First we introduce the general notation that will be used throughout our paper.
+Given a probability space $(\Om,\F,\P)$, \todo
+
+A researcher conducts a randomized experiment aimed at assessing the effects of a policy or intervention. For each individual in the experiment, they measure a q-vector $X_i$ of pre-treatment covariants, a binary variable $W_i$ denoting assignment to treatment, and a d-vector $Y_{1i}$ of of short term post-treatment outcomes. The researcher is interested in the effect of the treatment on a scalar long term post treatment outcome $Y_{2i} $ that is not measured in the experimental data. They are able to obtain an auxiliary, observational data set containing measurements, for a separate population of individuals, which consist of the same covariates $X_i $, treatment, $W_i$, short term outcome $Y_{1i} $ and also the long term outcome $Y_{2i}$. 
+For the introduction, the data available for our case is presented in Figure 2. 
+
+
+As aforementioned, we have two data sets. 
+
+We first introduce the identification assumption of \cite{athey2020combining} to identify the long-term ATE. They employ the following four assumptions.
+\cite{athey2020combining} 
+\begin{assumption}[Experimental internal validity]\label{ass: exp1}
+    $W \amalg Y_2(1), Y_2(0), Y_1(1), Y_1(0) | X, G=0$.
+\end{assumption}
+
+This will be satisfied by construction in cases where 
+
+\begin{assumption}[Exernal validity of experiment]\label{ass: ex1}
+    $G \amalg Y_2(1), Y_2(0), Y_1(0), Y_1(0) | X$.
+\end{assumption}
+
+\begin{assumption}[strict overlap]
+    The probability of being assigned to treatment or of being measured in the observational data set is strictly bounded away from zero and one, i.e., for each w and g in \{0,1\}, the conditional probabilities 
+    \begin{equation}
+        P(W = w | Y_1(1), X, G = g ) \quad\text{and}\quad P(G=g | Y_1(1), X, W = w) 
+    \end{equation}
+    are bounded between $\epsilon $ and $ 1 - \epsilon $ , $ \lambda$- almost surely, for some fixed constant $ 0 < \epsilon < 1/2 $.
+\end{assumption}
+
+\begin{assumption}[latent unconfounding] \label{ass:latent}
+    $W \amalg Y_2(w) \mid Y_1(w), X, G=1\quad(w =0,1)$.
+\end{assumption}
+
+In Theorem 1 of \cite{athey2020combining}, they prove the following identification results. 
+\begin{theorem}[\cite{athey2020combining} Theorem 1]
+    $E[ Y_2(1) | G = 1 ]$ is nonparametrically identified.
+\end{theorem}
+\begin{proof}
+    This itself is very insightful, one of the early works that proposed an effective usage of experimental and observational data. However, at the same time, we notice that assumptions not commonly made in the conventional settings are necessary for identification. In particular, a cross locational independence assumption (Assumption \ref{ass: ex1}), and a form of unconfoudning conditioned on a \textit{latent variable} (Assumption \ref{ass:latent}) appears to be quite new, and may or may not hold depending on certain contexts. We examine both of them in the subsequent sections, how we may be able to relax, interpret, or test these assumptions.
+\end{proof}
+
+\section{External validity}
+In this section, we will focus on the external validity assumption (Assumption \ref{ass: ex1}). We specifically do two things. We first show that the conditional independence assumption between $G$ and $(Y_2(1), Y_1(1)$ can be relaxed to only that of $G$ and $Y_1(1)$. Second, based on those relaxations, we consider various partial identifying assumptions specialized for this setting accompanied with sharp identification bounds for them. 
+
+We will first show that Assumption \ref{ass: ex1} can be relaxed  of only the short term outcome, formalized in the following assumption and proposition. The key intuition for why this holds is to notice that the external validity assumptions is used in the identification proof of \cite{athey2020combining} two times, and the aggregate bias that appears without the external validity with the long term potential outcome can be shown to be of a simple form, which exactly becomes zero under the conditional independence of the short-term outcome.
+\begin{assumption}[short term external validity]\label{ass: ex2}
+    $G \amalg Y_1(1) ,Y_1(0) \mid X$.
+\end{assumption}
+\begin{proposition}
+\textit{ii} The long term average treatment effect in the observational population $ E[Y_2(1) -Y_2(0) | G=1]$ is nonparametrically identified replacing Assumption \ref{ass: ex1} with Assumption \ref{ass: ex2}.
+\end{proposition}
+\begin{proof}
+    It suffices to show that $E[ Y_2(1) | X, G= 1]$ is nonparametrically identified under the relaxed external validity assumptions. We will show that
+    \begin{align*}
+    &E[ Y_2(1) | G=1 ]\\
+    =& E [E[ Y_2(1) | X, G=1 ] | G=1] \\
+    =& E[ E[ Y_2(1) | X, G= 0 ] | G=1] ] + A
+    \qquad ( A: = E[ E[ Y_2(1) | X, G =1 ] - E[ Y_2(1) | X, G =0 ] | G=1]) \\
+    =& E[ E[ E[ Y_2(1) |  Y_1(1), X, G= 0 ] | X, G =0] | G=1 ]   + A \\
+    =& E[ E[ E[ Y_2(1) | Y_1(1), X, G=1 ] | X, G =0] | G=1] + B + A \\
+    &\hspace{5cm}( B: =E[ E[ E[ Y_2(1)| Y_1(1), X, G=0 ] | X, G = 0] | G = 1] -\\
+    &\hspace{7cm} E[ E[ E[ Y_2(1)| Y_1(1), X, G=1 ] | X, G = 0] | G = 1] ) \\
+    =& E[ E[ E[ Y_2(1) | Y_1(1), W=1, X, G=1] | X, G=0] | G=1] + B + A \qquad( \because  \text{Assumption}\; \ref{ass:latent} ) \\
+    =& E[ E[ E[ Y_2(1) | Y_1(1), W=1, X, G=1] | W=1,X, G=0] | G=1] + B + A\qquad( \because \text{Assumption}\; \ref{ass: exp1}) \\
+    =& E[ E[ E[ Y_2 | Y_1 , W=1, X, G=1] | W=1, X, G=0] | G=1] + B + A\qquad (\because \text{consistency} )
+    \end{align*}
+    Because $E[ E[ E[ Y_2 | Y_1 , W=1, X, G=1] | W=1, X, G=0] | G=1]$ is identified from the data, if we show that B + A =0 under the relaxed external validity assumption, our goal is achieved.
+    \begin{align*}
+    \text{Note that } \\
+    &A + B\\
+    =& E[ E[ Y_2(1) | X, G=1] - E[ Y_2(1) | X, G= 0 ] | G=1]  \\
+    & \quad-  E[ E[ Y_2(1)| X, G = 0] | G = 1] - E[ E[ E[ Y_2(1)| Y_1(1), X, G=1 ] | X, G = 0] | G = 1] \\
+    =& E[ E[ Y_2(1) | X, G=1] | G=1] - E[ E[ E[ Y_2(1)| Y_1(1), X, G=1 ] | X, G = 0] | G = 1] \\
+    =& E[ Y_2(1) | G=1] - E\biggl[ \iint y_2(1)  p(y_2(1) | y_1(1), X, G=1)\\
+    &\hspace{4cm} p( y_1(1) | X, G=0) dy_2(1) dy_1(1) \bigg| G=1 \biggr] \\
+    =& E[ Y_2(1) | G=1] - E\biggl[ \iint y_2(1) \frac{ p( y_1(1) | X, G=0)}{ p( y_1(1) | X, G=1) }\\
+    &\hspace{4cm} p(y_2(1) | y_1(1), X, G=1) p( y_1(1) | X, G=1) dy_2(1) dy_1(1) \bigg| G=1\biggr]\\
+    =&E[ Y_2(1) | G=1] - E\Square{ y_2(1) \frac{ p( y_1(1) | X, G=0)}{ p( y_1(1) | X, G=1) } \middle| G=1} \\
+    =& E\Square{ Y_2(1)\paren{ 1 - \frac{ p( y_1(1) | X, G=0)}{ p( y_1(1)} | X, G=1) } \middle| G=1}
+    = 0 \qquad( \because \text{Assumption}\; \ref{ass: ex2} )
+    \end{align*}
+\end{proof}
+
+
+Under this relaxation, we show how to test using partial identification similar in spirit to \cite{blundell2007changes}, which used it to test the differential wage gap in the UK among gender.
+\subsection{  bounds for testing external validity}
+\label{sec:uniform bound 1}
+An implication of (the relaxed) external validity is that $ F(Y_1(1) | X, G=1) = F(Y_1(1) | X, G=0) $. Rewriting from what we know, the right hand side is nonparametrically identified because  
+\begin{align}
+    F(Y_1(1) | X, G=0) &= F(Y_1(1) | W=1, X, G=0 ) \qquad(\because \text{Ass.} \ref{ass: exp1} )\\
+    &= F(Y_1| W=1, X, G=0)
+\end{align}
+For the left hand side, by the law of iterated expectation and chain rule, and consistency
+\begin{align}
+    &F(Y_1 | W=1,X,G=1) P(W=1 | X, G=1) \\
+    &\hspace{2em}+ F(Y_1(1) | W=0 , X, G=1)  P(W=0 | X, G=1)
+\end{align}%%% \hspace is abbreviation for "horizontal spacing" (10/27 Hirofumi)
+and hence the counterfactual quantity is only $F(Y_1(1) | W=0, X, G=1) $.
+A pointwise sharp bound under no additional assumption can be easily seen to be 
+\begin{align}
+    &F(Y_1 | W=1,X,G=1) P(W=1| X, G=1) \\
+    &\hspace{2em}\leq F(Y_1| W=1, X, G=0) \\ 
+    &\hspace{2em}\leq F(Y_1 | W=1,X,G=1) P(W=1 | X, G=1) + P(W=0 | X, G=1)
+\end{align}
+and was indeed implemented in works like \cite{blundell2007changes},\cite{manski2009identification}.
+
+The bound above under no additional assumptions is pointwise sharp for each t. However in practice, this will of ten be quite wide. On the other hand, researchers may have prior beliefs motivated by the economics of the problem, and they are interested in how the assumptions may translate into narrower bounds and the results of the test under such assumptions. The partial identification framework we provide below allows for such procedures in a systematic manner.
+
+We briefly mention the related literature.
+There is an increasing amount of research in the sensitivity analysis literature that assess the generalizability, or transportability of a result in one location or one research design, e.g., %\cite
+{imai egami, } etc. However, while the partial identification on the distribution function under various assumption have been widely used \cite{blundell2007changes}, manski2003partial, manski horo, there are few papers that consider such framework for assessing external validity. %\cite
+{manski 2013} provides a framework of 'external assessment' using bounds, it takes a more social decision theory, minimax perspective, which is a different approach from ours. 
+%\begin{en-text}
+%    \begin{figure}
+%        \centering
+%        \includegraphics[width=.8\textwidth]{n=30chishort.png}
+%        \caption{The Monte Carlo distribution of the test statistic based on OLS is far from being normal due to the asymmetric and heavy-tailed noise.}
+%        \label{fig:demonstration}
+%    \end{figure}
+%\end{en-text}
+
+The novelty of the assumptions that we consider can be rephrased as the following. consider the diagram below. While past literature have focused on the assumption that assess the assumption pertaining to selection (across treatment groups), the random variable $W$, \cite{blundell2007changes}, here we also consider the cross location/design assumptions , and moreover on the intersection of those two, delivering sharp identification bounds for each case. As we will see, this is particularly useful, because to gain informative bounds only using cross treatment $(W)$ variation, strong assumptions such as stochastic dominance may be necessary. However, with the aid of additional reasonable cross locational variation assumptions, by taking the intersection, we could get informative bounds even under no clearly implausible assumptions. 
+
+We will propose the assumptions here and provide the sharp bounds in the subsequent sections.
+\begin{enumerate}[(1)]
+     \item cross treatment $(W)$ assumptions
+        \begin{description}
+            \item[stochastic dominance] \[\forall_{t\in\mathcal{T}}\;\forall_{x\in\mathcal{X}}\;F(Y_1(1) \leq t |X=x W=1, G=1 )\leq F(Y_1(1) \leq t |X=x ,W= 0, G=1)\]
+            this is a form of negative selection into treatment, which in the case of job training program, past research like %\cite
+            {ashenfelter 1985, card, heckman 1999} have showed how people with lower potential wage or employment probability tend to apply for job training, for all covariates, and quantiles of the potential outcome.
+
+            if one thinks that this result holding uniformly might be too stringent, but is convinced that at least for the lower 25 percent quantile of the treated, such negative selection could be true, then we could consider the following.
+            \item[lower quantile dominance] \[\forall_{t \leq t_{0.25}}\;\forall_{x\in\mathcal{X}}\;F(Y_1(1) \leq t |X=x W=1, G=1 )\leq F(Y_1(1) \leq t |X=x ,W= 0, G=1)\]
+            where $t_{0.25}$ is the lower 25 percent quantile of $ F(Y_1(1) \leq t |X=x W=1, G=1 )$, which is observable. 
+
+            Moreover, one could consider the monotone iv assumption, which states that for a particular obserbale covariate the value of which is indicative of the unobserved potential outcomes distribution, formalized below.
+            \item[monotone iv] 
+            \begin{align*}
+                &\forall_{v_1,v_2\in\mathcal{V}}\;v_1 \leq v_2 \implies  F(Y_1(1) \leq t |V =v_1 X=x ,W= 0, G=1)\\
+                &\hphantom{\forall_{v_1,v_2\in\mathcal{V}}\;v_1 \leq v_2 \implies  F(Y_1(1) \leq}\leq F(Y_1(1) \leq t |V =v_2 X=x ,W= 0, G=1)
+            \end{align*}
+            in our problem the V may be a baseline covariate like test scores in the past, with lower values in such test scores may indicate lower values of the unobserved employment rate.
+        \end{description}
+    \item cross location/design $(G)$ assumptions
+        \begin{description}
+            \item[heterogeneity]
+            \begin{align*}
+                &\exists_{t_0}\;\forall_{x\in\mathcal{X}} [ \forall_{t \leq t_0}\;F(Y_1(1) \leq t |V = X=x ,W= 0, G=1) \\
+                &\hphantom{\exists_{t_0}\;\forall_{x\in\mathcal{X}} [ \forall_{t \leq t_0}}\qquad\leq F(Y_1(1) \leq t |V = X=x ,W= 0, G=0)   \\
+                &\qquad\qquad\land \forall_{ t \geq t_0}\;F(Y_1(1) \leq t |V = X=x ,W= 0, G=0) \\
+                &\hphantom{\exists_{t_0}\;\forall_{x\in\mathcal{X}} [ \forall_{t \leq t_0}}\qquad\leq F(Y_1(1) \leq t |V = X=x ,W= 0, G=1)]
+            \end{align*}
+            this to our knowledge is new, and is captured in the illustration below. It is often the case that the observational data have people with covariates with wider range, dispersed and heterogeneous, while the experimental data based on eligibility rules and the design of experiments are restricted to a more concentrated covariate value. In that case, the distribution of the observational quantile would be much wider than the experimental and before and after some threshold $t_0$, the cumulative probability may be reverse. 
+        \end{description}
+\end{enumerate}
+
+\subsection{point-wise sharp bounds}
+
+\subsection{uniformly sharp bounds}
+In the previous section, we have provided point wise sharp bounds
+However, if we see the bound as a bound on a function(in this case the distribution function), the point-wise bound contains is not sharp in that it can contain distribution functions that is not compatible with the data. 
+For example, it does not impose the restriction that for any $ t_0 \le t_1$, 
+\begin{align}
+\label{eq: partial id necc dist sharp}
+    P( t_0 \leq Y_1(1) \leq t_1 | \mathbf{x} ) \geq P ( t_0 \leq Y_1(1) \leq t_1 | \mathbf{x} = x, W = 1) P ( W =1 | \mathbf{x} = x)
+\end{align}
+This is easiest to see in a simple counterexample as in the following: 
+omit $\mathbf{x}$, and $G=1$ for simplicity, and let $P ( \mathbf{W} = 1 ) = \frac{2}{3} $ and let 
+\begin{align}
+    P (Y_1(1) \leq t | W=1)=
+    \begin{cases}
+    0&\ifquad t<0\\
+    \frac{1}{3}t&\ifquad 0< t< 3\\
+    1 & \ifquad t \geq 3
+    \end{cases}
+\end{align}
+
+
+Consider the distribution function 
+\begin{align}
+    F(t) = \begin{cases}
+        0&\ifquad t < 0\\
+        \frac{5}{9}t & \ifquad 0 \leq t < 1 \\
+        \frac{1}{9}t + \frac{4}{9} & \ifquad  1 \leq t \leq 2\\
+        \frac{1}{3}t & \ifquad  2\leq t < 3\\
+        1 & \ifquad t \geq 3
+    \end{cases}
+\end{align}
+For each $t \in\R$, $F(t)$ lies in the tube defined by the point-wise sharp bound above. However it cannot be the CDF of $ Y_1$, because F(2) - F(1) = $ \frac{1}{9}< P (1 \leq Y_1(1) \leq 2 | W=1) P( W=1)  $, directly contradicting (\ref{eq: partial id necc dist sharp}).
+
+What is then the uniformly sharp identification bound in this case? The following proposition provides an answer.
+\begin{proposition}
+    The uniformly sharp identification bound for $ F(Y_1(1) |  X, G=1)$ under the maintained assumptions in \cite{athey2020combining} 
+    \begin{align*}
+        \forall_{K\subset\mathcal{Y}}\;\mathcal{H}_P[ Q(y |   =  \tau(x) \in \mathcal{T} : \tau_{K(x)} \geq \mathrm{P}( Y_1(1) \in K | \mathbf{x}=x, W=1,G=1) \mathrm{P}(W =1 | \mathbf{x} = x, G=1)
+    \end{align*}
+    where $\mathcal{Y}= \{ \{0,1\} \}$.
+\end{proposition}
+\begin{proof}
+    
+\end{proof}
+
+
+This shows how intuition do not necessarily yield the desirable uniformly sharp bounds. I therefore rely mainly on a newly emerging approach from random set theory \cite{molchanov2005theory} to mechanically derive sharp bounds.
+
+
+I provide the fundamental definitions and theorems that I will use below, and refer the reader to \cite{molchanov2005theory,molchanov2018random} for the proofs and more in depth explanations.
+\begin{definition}[Random closed set]
+    A map $\mathbf{X}$ from a probability space $( \Om,\F,\P ) $ to the family $\mathbf{F} $ of closed subsets of $ \R^d $ is called a random closed set if 
+    \begin{equation}
+        \mathbf{ X}^-(K) := \{ \om \in \Om : \mathbf{X} (\om) \cup K \neq \emptyset \}     
+    \end{equation}
+    belongs to the $\sigma $-algebra $\mathfrak{F} $ on $\Om$ for each compact set $K$ in $\mathbb{R}^d$
+\end{definition}
+
+\begin{definition}[Capacity functional and containment functional]\mbox{}
+    \begin{enumerate}[1.]
+        \item A functional $T_\mathbf{X}( K) : \mathcal{K}  \to [0,1] $ given by 
+        \begin{equation}
+            \mathrm{T}_{\mathbf{X}}( K) = \mathbb{P} \{ \mathbf{X} \cup K \neq \emptyset \},\qquad (K \in \mathcal{K} )
+        \end{equation}
+        is called \textbf{capacity (or hitting) functional} of $\mathbf{X}$.
+        \item A functional $\mathrm{C}_\mathbf{X}(F) : \mathcal{F} \to [0,1] $ given by
+        \begin{equation}
+            \mathrm{C}_\mathbf{X}(F) = \mathbb{P}\{ \mathbf{X} \in F\},\qquad (F \in \mathcal{F})
+        \end{equation} 
+        is called the \textbf{containment functional} of $\mathbf{X}$.
+    \end{enumerate}
+\end{definition}
+
+\begin{definition}[Measurable selection] 
+    For any random set $\mathbf{X}$, a (measurable) selection of $\mathbf{X}$ is a random element $\mathbf{x}$ with values in $\mathbb{R}^d$ such that $\mathbf{x}(\omega) \in \mathbf{X}( \omega)$ almost surely. I denote by $\Sel( \mathbf{X} )$ the set of all selections from $\mathbf{X}$.
+\end{definition}
+
+below we have the fundamental theorem we heavily use to characterize sharp identification bounds. 
+\begin{theorem}[Artstein inequality]\label{eq:artgen}
+    A probability distribution $\mu$ on $ \mathbb{R}^d$ is the distribution of a selection of a random closed set $\mathbf{X}$ in $\mathbb{R}^d$ if and only if
+    \begin{equation}
+        \mu(K) \leq \mathrm{T}(K) = \mathbb{P} \{ \mathbf{X} \cup K \neq \emptyset \}
+    \end{equation}
+    for all compact sets $K \subseteq \mathbb{R}^d $. Equivalently, if and only if
+    \begin{equation}
+    \label{eq: art con1}
+        \mu(F) \geq \mathrm{C}(F) = \mathbb{P} \{ \mathbf{X} \subset F \}
+    \end{equation}
+    for all closed sets $ F \subset \mathbb{R}^d $. If $ \mathbf{X} $ is a compact random closed set, it suffices to check \ref{eq: art con1} for compact sets $F$ only.
+\end{theorem}
+
+\section{Latent unconfounding assumption}
+
+
+
+
+
+
+
+
+
+
+
+Different from the previous section, we will focus on the internal validity of the observational data, i.e., under what conditions does W be independent of $Y_t(w)$ ?
+As hinted in the introduction, a problem of nonnested approaches under the same availability of data may be the first issue that practitioners have to deal with when having the dataset and deciding ways for establishing identification.
+Specifically, the alternative approach for identification of the long term ATE was recently proposed by %\cite
+{ghassami et al 2022} , which posited an \textit{equi-confounding bias assumption}, which is a form of parallel trends assumption applied to the data-combination setting,formally presented below.
+\begin{assumption}[Equiconfounding bias assumption]\mbox{}
+\label{ass: equicon}
+\begin{enumerate}[(i)]
+    \item $E[Y_2(0) - Y_1(0)| G= 1] = E[Y_2(0) - Y_1(0) | G=0]$.
+    \item $ E[Y_2(1) - Y_1(1)| G= 1] = E[Y_2(1) - Y_1(1) | G=0]$.
+\end{enumerate}
+\end{assumption}
+They proved the following theorem in their paper.
+ \begin{theorem}\mbox{}
+     \begin{enumerate}
+         \item Replacing latent unconfounding assumption with \ref{ass: equicon} (i) and maintaining all the other assumptions, the long term ATT is identified.
+         \item Replacing latent unconfounding assumption with \ref{ass: equicon} (i) (ii), and maintaining all the other assumptions, the long term ATE is identified.
+     \end{enumerate}
+ \end{theorem}
+ 
+The equiconfounding assumption can be intuitively explained that the potential growth between the short term and long term outcome is the same among the treated and the untreated. Usually only the the untreated potential outcome (i) is maintained to identify the ATT in the standard did setup. Additionally assuming the equivalent growth among the treated potential outcomes identify the ATE , the proof of which is in their paper %\cite
+{ghassami 202}.
+
+While this is interesting, it leads to an additional problem coming from the nonnested nature of equi-confounding and the latent unconfounding assumption. The latent unconfounding has us to imagine what happens under condition on an \textit{latent potential outcome}, while the equiconfounding assumption has us to think about the dynamics between two post-treatments, arguably more complicated than the canonical parallel trends in the usual did setup.  How should a policy maker be able to map these various assumptions onto their current problem? One solution that I posit in the following is that, taking into account the selection mechanism provides insight into when exactly these assumptions hold or fail to hold.
+
+I illustrate this idea in two canonical selection mechanisms that are commonly used in empirical research, namely that of %\cite
+{Card}, and the Roy model \cite{roy1951some}.
+I provide \koko(necessary and sufficient?) conditions under which each assumption holds.
+
+\koko(covariates)
+
+Formally, for the main section, we model the potential outcome as
+\[\forall_{i\in[0,N]}\;\forall_{t=1,2}\;Y_{it} (0) = \alpha_i + \lambda_t + \alpha_i \lambda_t +\epsilon_{it},\; E[ \epsilon_{it} ] = 0.\]
+$Y_{it}(1) = Y_{it}(0) + \delta_{it}$, which generalizes the classical two-way-fixed effect model by (i) allowing for interactive fixed effect as in %\cite
+{bai 2009, abadie 2021}(ii) allowing for arbitrary treatment effect heterogeneity while the two-way fixed effect model usually assumes constant treatment effect. 
+We first consider the selection mechanism proposed in \cite{ashenfelter1985susing}.
+
+In \cite{ashenfelter1985susing} page \koko , the selection mechanism was posited as 
+\begin{align*}
+     W_i = 1\{ Y_{i1}(0) + \beta Y_{i2} ( 0) \leq c \} =  1 \{  (1 + \beta ) \alpha_i + \epsilon_{i1} + \beta \epsilon_{i2} \leq \tilde{c} \}
+\end{align*}
+where $\beta \in [0,1]$ is a discount factor and $\tilde{c} = c - \lambda_1 - \beta \lambda_2$.
+
+The following theorem can be shown.
+\begin{theorem}
+Consider the setting specified above. Then Latent unconfounding holds iff $\beta =0$. Equi-confounding assumption does not hold for any 
+\end{theorem}
+\begin{proof}
+    Note that
+    \[W_i = 1\{ Y_{i1} + \beta Y_{i2} > 0\} = 1\{ \alpha_i ( 1 + \lambda_1 + \beta( 1 + \lambda_2 ) ) + \lambda_1 + \beta \lambda_2 + \epsilon_{i1} + \beta \epsilon_{i2} > 0 \}\]
+    When $\beta=0$, we have that $W_i =$.
+    
+    Next, we consider the Roy selection mechanism \cite{roy1951some}, with its slight extension by e.g., \cite{heckman1984method}.
+    The essence of the Roy selection model is that, it is based on \textit{treatment effects}, opposed to the untreated potential outcome in %\cite
+    {card ashenfelter}.
+\end{proof}
+
+I fix the outcome model to be a canonical non-separable panel data model
+\[Y_{it} (0) = \alpha_i + \lambda_t + \alpha_i \lambda_t + \epsilon_{it}\]
+where $\alpha_i $ is the individual fixed effect, $\lambda_t$ is the time fixed effect, which we regard as non-stochastic (by conditioning on its realizations) as commonly assumed, in e.g., \cite{ghanem2022selection,doi:10.1146/annurev-economics-111809-125139}. The 
+
+To do this, I embed the two different approaches for ATE estimation in a first separable, then nonseparable panel data model, explicitly modeling the constant and time varying observables and unobservables and when the latent unconfounding and the equiconfounding hold or not hold in the respective settings.  
+
+
+
+
+
+\subsection{comparison of latent unconfounding and equiconfounding in nonseparable panel data setting}
+
+ following the convention of did in assuming only the parallel trend on the untreated (i), and focusing on ATT, although the ATE will also follow with a similar setup.
+ 
+ we formalize the problem as the following.
+ we first assume a model for potential outcomes that is separable in the time-invariant and time-varying unobsrevables
+\begin{assumption}
+    \[\forall_{i\in[0,N]}\;\forall_{t=1,2}\;Y_{it} ( 0) = \alpha_i + \lambda_t + \alpha_i \lambda_t +\epsilon_{it}  , E[ \epsilon_{it} ] = 0\]
+\end{assumption}
+in the above assumption, $\alpha_i$ is the time invariant unobservable, $\lambda_t$ is the (nonstochastic, without l.o.g) time fixed effect, and $\epsilon_{it} $ is the tie varying individual specific unobservable. This is close to the commonly assumed two way fixed effect model, only that treatment effect heterogeneity is allowed
+
+next we model the selection mechanism $W$, as 
+
+\[W_i = w( \alpha_i, \epsilon_{i1}, \epsilon_{i2}, \nu_i, \eta_{i1}, \eta_{i2} )\]
+where the selection into treatment may in general   depend on the unobservable determinants of the untreated potential outcomes
+\[(\alpha_i, \epsilon_{i1}, \epsilon_{i2} )\]
+as well as additional time-invariant and time-varying vectors of random variables $ (\nu_i, \eta_{i1}, \eta_{i2} )$.
+
+This general selection mechanism accommodats many different types of selection, including , random assignement, selection based on past outcomes, roystyle selections basd on treatment effects and othe selection mechanisms based on economc decision problems (heckman and robb).
+
+In the case of the equiconfouding assumption (i), a necessary sufficient condition to hold is provided in %\cite
+{ghanem et al} as in the following.
+
+\begin{theorem}
+    Suppose that the separable outcome and the general selection mechansim holds. Suppose further that $P(G_i = 1) \in (0,1) , \nu_i^1 \amalg ( \alpha_i , \epsilon_{i1}, \epsilon_{i2} ) P( \nu_i^1 > c) \in (0,1) $ for some $c\in \mathbb{R}$, and $P (\epsilon_{i2} \geq \epsilon_{i1} ) > 0$.
+    Then equiconfounding assumption (i) holds if and only if $\epsilon_{i1} = \epsilon_{i2}$ a.s.
+\end{theorem}
+
+
+\subsubsection{example: selection mechanism of Ashenfelter and Card (1985)}
+In %\cite
+{ashenfelter and card 19 85}, the selection mechanism was posited as 
+\begin{align*}
+    W_i = 1\{ Y_{i1}(0) + \beta Y_{i2} ( 0) \leq c \} =  1 \{  (1 + \beta ) \alpha_i + \epsilon_{i1} + \beta \epsilon_{i2} \leq \tilde{c} \}
+\end{align*}
+where $\beta\in[0,1]$ is a discount factor and $\tilde{c} = c - \lambda_1 - \beta \lambda_2$.
+
+In this case, selection depends only on the unobservable determinants of the untreated potential outcomes $( \alpha_i , \epsilon_{i1}, \epsilon_{i2} ) $.
+
+When $\beta = 0 $, so that selection depends only on $Y_{i1} (0) $, 
+\begin{equation}
+    W_i = 1 \{ Y_{i1}0) \leq c \} = 1 \{ \alpha_i  + \epsilon_{i1} \leq \tilde{c} \}
+\end{equation}
+In this case, the latent unconfounding assumptions is satisfied without any further assumptions. 
+
+On the other hand,  the equiconfounding assumption requires the following additional assumptions.
+\begin{enumerate}
+    \item $ ( \nu_i, \eta_{i1} , \eta_{i2} ) | \alpha_i , \epsilon_{i1}, , \epsilon_{i2} =^d ( \nu_i , \eta_{i1}, \eta_{i2} ) | \alpha_i$
+    \item $ E [ \epsilon_{i2} | \alpha_i , \epsilon_{i1} ] = \epsilon_{i1}$
+\end{enumerate}
+
+\section{estimation of confidence bands}
+
+
+
+
+\subsection{ uniform inference on the confidence band }
+
+In this section, we provide inference on the external validity bounds provided in Section\ref{sec:uniform bound 1} that allows for possible high dimensional covariates or with many moment inequalities.  
+
+
+
+
+
+
+In this section, we will be looking at the estimation for the sharp identification bounds. We will first consider the usual case, with two extensions, (i) when the covariates are high-dimensional and non-Donsker (ii) when there are many moment inequalities.
+
+Most of the bounds can be calculated readily by similar methods
+
+\subsection{the case when the covariates are high dimensional}
+
+For instance, in the case of a binary outcome like unemployment, the uniformly sharp bounds for $F(Y_1| W=1, X, G=0)$ coincide with the point-wise sharp bounds since there are only two compact sets to apply the Artstein Inequalities ($K=\{0\}, \{1\}$), so we have to construct a confidence band to test whether 
+the relationship
+\begin{align}
+    &F(Y_1 | W=1,X,G=1) P(W=1| X, G=1) \\
+    &\hspace{2em}\leq F(Y_1| W=1, X, G=0) \\ 
+    &\hspace{2em}\leq F(Y_1 | W=1,X,G=1) P(W=1 | X, G=1) + P(W=0 | X, G=1)
+\end{align}
+hold for all $ x \in \mathcal{X}$. 
+
+In the case where the covariates X may be high dimensional, which is often the case for observational data, the so-called Smirinov-Bickel-Rosenblatt(SBR) condition may not hold.
+
+
+A major breakthrough by \cite{chernozhukov2014anti} justified a \textit{generalized SBR condition} using anticoncentration and gaussian approximation for 
+suprema of empirical processes. In fact, we can show that the gaussian approximation rate can be improved using the symmetrization trick of the Stein-exchangable pair approach to Gaussian approximation. Recall the main theorem in \cite{chernozhukov2014gaussian} Theorem 2.1.
+
+\begin{theorem}[Original Gaussian approximation to suprema of empirical processes \cite{chernozhukov2014gaussian}2.1]
+    Assume the following conditions:
+    \begin{enumerate}[({A}1)]
+        \item point wise measurability of class $\mathcal{F}$.
+        \item the integrability of the envelope $F$; $\exists_{ q \geq 3}:[ F \in \mathcal{L}^q(P)]$
+        \item class $\mathcal{F}$ is pre-Gaussian
+    \end{enumerate}
+    Let $ Z= \sup_{f \in \mathcal{F}} \mathbb{G}_n f $. Let $\kappa >0$ be any positive constant such that $\kappa^3 \geq E[ || E_n [ | f(X_i)|^3 ] ||_{\mathcal{F}}] $Then for every $\epsilon \in (0,1] $ and $\gamma \in (0,1] $, there exists a random variable $ \tilde{Z} =^d  \sup _{f \in \mathcal{F}} G_P f $ such that 
+    \begin{equation}
+        P\{ | Z - \tilde{Z}| > K(q) \Delta _n ( \epsilon, \gamma ) \}  \leq \gamma ( 1 + \delta_n (\epsilon , \gamma )) + \frac{ C \log n}{n}
+    \end{equation}
+    where $K(q)> 0 $ is a constant that depends only on q, and 
+    \begin{align*}
+        \Delta_n (\epsilon, \gamma )&: = \phi_n ( \epsilon) + \gamma ^{ -1/q} \epsilon || F _{P,2}\\
+        &\qquad+ n^{-1/2} \gamma ^{-1/q} ||M||_q + n^{-1/2} \gamma^{-2/q} ||M||_2\\
+        &\qquad+ n^{-1/4} \gamma^{-1/2} ( E[ || \mathbb{G}_n ||_{ \mathcal{F}\cdot \mathcal{F}}])^{1/2} H_n^{1/2} ( \epsilon)\\
+        &\qquad+ n^{-1/6} \gamma^{-1/3} \kappa H_n ^{2/3} ( \epsilon)\\
+        \delta_n ( \epsilon, \gamma )&:= \frac{1}{4} P \{ (F/\kappa)^3 1( F/ \kappa > c \gamma ^{-1/3}n^{1/3}H_n ( \epsilon)^{-1/3}) \}
+    \end{align*}
+\end{theorem}
+
+Note the worst rate in $\Delta_n(\epsilon, \gamma )$ is the last term with the order $n^{-1/6}$, which I show can be refined to be $n^{-1/4}$, which seems to be a large gain in the high dimensional regime. Formally, I prove the following refined Gaussian approximation to suprema of empirical processes.
+\begin{theorem}
+    Consider the same setting in addition of the finiteness of fourth moment \koko 
+    Then the
+    \[P\{ | Z - \tilde{Z}| > K(q) \Delta _n ( \epsilon, \gamma ) \}  \leq \gamma ( 1 + \delta_n (\epsilon , \gamma )) + \frac{ C \log n}{n}\]
+    where
+    \begin{align*}
+        \Delta_n (\epsilon, \gamma )&: = \phi_n ( \epsilon) + \gamma ^{ -1/q} \epsilon \norm{F_{P,2}} + n^{-1/2} \gamma ^{-1/q} \norm{M}_q + n^{-1/2} \gamma^{-2/q} \norm{M}_2\\
+        &\qquad+ n^{-1/4} ( \gamma^{-1/2} ( E[ \norm{\mathbb{G}_n}_{ \mathcal{F}\cdot \mathcal{F}}])^{1/2} H_n^{1/2} ( \epsilon) + \gamma^{-1/3} \kappa H_n ^{2/3} ( \epsilon))\\
+        \delta_n ( \epsilon, \gamma )&:= \frac{1}{4} P \{ (F/\kappa)^3 1( F/ \kappa > c \gamma ^{-1/3}n^{1/3}H_n ( \epsilon)^{-1/3}) \}
+    \end{align*}
+\end{theorem}
+
+\begin{lemma}[Refinement of coupling inequality for maxima of sum of random vectors of Theorem 4.1 in \cite{chernozhukov2014gaussian}]
+    \label{lem:refinedcoup}
+    Let $X_1, ... X_n $ be independent random vectors in $\R^p$ with mean zero and finite absolute third moments, that is $E[X_{ij}] = 0 $ and $E[ | X_{ij}|^3] < \infty $ for all $ 1 \leq i \leq n $ and $1 \leq j \leq p $. Consider the statistic $Z = \max _ { 1 \leq j \leq p} \sum_{i=1}^n X_{ij} $ Let 
+    $Y_1, ... Y_n$ be independent random vectors in $\mathbb{R}^p$ with $Y_i \sim N(0, E[ X_i X_i ^T ])\;(1 \leq i \leq n)$. Then, for every $\beta >0$, and $ \delta > 1/ \beta $, there exists a random variable $ \tilde{Z} =^d \max_{ 1 \leq j \leq p }  \sum_{i=1}^ n Y_{ij} $such that 
+    \begin{equation}
+        P( | Z  - \tilde{Z} | > 2 \beta ^{-1} \log p + 3 \delta ) \leq \frac{ \epsilon + C \beta \delta^{-1}\{ B_1 + \beta \n ( B_2 + B_3)\} } { 1 - \epsilon}\\
+    \end{equation}
+    where $\epsilon = \epsilon_{\beta, \delta}$ is given by 
+    \begin{align}
+        \epsilon &= \sqrt{e^{-\alpha}( 1+ \alpha) } < 1  , \alpha = \beta^2 \delta^2 -1 >0 \\
+        B_1 &= E [ \max_{ 1 \leq j,k \leq p}| \sum_{i=1}^n(X_{ij}X_{ik} - E[ X_{ij}X_{ik}])], \\
+        B_2 &= E[ \max_ { 1 \leq j \leq p} \sum_{i=1}^n | X_{ij}|^4]\\
+        B_3 &= \sum_{i=1}^n E[ \max_{ 1 \leq j \leq p} | X_{ij}^4] \cdot 1( \max_{1 \leq j \leq p } | X_{ij}| > \beta^{-1}/2)
+    \end{align}
+\end{lemma} 
+\begin{proof}
+     We will mostly omit the parts that are common with the original.
+    \begin{align}\label{eq:nR}
+        \abs{E[ nR ]} &= \Abs{ E \Square{ \frac{1}{2} \sum_{i=1}^n  \sum_{j,k,l,m=1}^p \Delta_{ij} \Delta_{ik} \Delta_{il} \Delta_{im} ( 1 - 2 \theta )  \partial_{ jklm} h ( S_n' + \theta D +  \theta  ' ( 1 - 2 \theta) \Delta_i )}} \\
+        &\leq  \frac{1}{2} E \Square{  \sum_{i=1}^n  \sum_{j,k,l,m=1}^p \Abs{\Delta_{ij} \Delta_{ik} \Delta_{il} \Delta_{im}} \cdot \Abs{\partial_{ jklm} h ( S_n' + \theta D +  \theta  ' ( 1 - 2 \theta) \Delta_i )}}
+    \end{align}
+        Let $\chi_i = 1( \max_{1 \leq j \leq p} | \Delta_{ij} | \leq \beta^{-1})  $ and $ \chi_i^c : = 1 - \chi_i $. Then
+        \begin{align*}
+            (\ref{eq:nR}) \;&= \frac{1}{2}E[ \sum_{i=1}^n \chi_i \cdot    \sum_{j,k,l,m=1}^p |\Delta_{ij} \Delta_{ik} \Delta_{il} \Delta_{im} | \cdot | \partial_{ jklm} h ( S_n' + \theta D +  \theta  ' ( 1 - 2 \theta) \Delta_i )| ]]\\
+            &\qquad+ \frac{ 1}{2} E [ \sum_{i=1}^n \chi_i^c \cdot   \sum_{j,k,l,m=1}^p |\Delta_{ij} \Delta_{ik} \Delta_{il} \Delta_{im} | \cdot | \partial_{ jklm} h ( S_n' + \theta D +  \theta  ' ( 1 - 2 \theta) \Delta_i )| ]\\
+            &=: \frac{1}{2} [ (A)+ (B)]
+        \end{align*}
+        Observe that 
+        \begin{align*}
+            (A)&\leq E\Square{ E \Square{   \sum_{j,k,l,m=1}^p  \max_{1 \leq i \leq n }( \chi_i \Abs{ \partial_{ jklm} h ( S_n' + \theta D +  \theta  ' ( 1 - 2 \theta) \Delta_i ) })\cdot\max_{ 1\leq j,k,l,m \leq p}\sum_{i=1}^n \abs{\Delta_{ij} \Delta_{ik} \Delta_{il} \Delta_{im}} }}\\
+            &\leq C \beta ^3 \delta ^{-1} E\Square{ \max_{ 1 \leq j , k,l,m\leq p}\sum_{i=1}^n \abs{\Delta_{ij} \Delta_{ik} \Delta_{il} \Delta_{im}} }  \qquad( \text{by} )\\
+            &\leq C \beta ^3 \delta ^{-1} E \Square{ \max _{ 1 \leq j \leq p } \sum_{i=1}^n | \Delta_{ij}|^4} \\
+            &\leq C \beta ^3 \delta ^{-1} E\Square{ \max _{ 1 \leq j \leq p } \sum_{i=1}^n | X_{ij}|^4} = C \beta ^3 \delta ^{-1} B_2
+        \end{align*}
+    and
+    \begin{align*}
+        (B)&\leq C \beta^3 \delta^{-1} \sum _{i=1}^n E\Square{ \chi^c  \max_{1 \leq j \leq p} \abs{\Delta_{ij}}^4} \\
+        &\leq C \beta^3 \delta^{-1} \sum_{i=1}^n E\Square{ \chi_i^c \max_{ 1 \leq j \leq p} \abs{X_{ij}}^4}\qquad(\text{by symmetry})
+    \end{align*}
+    By the same procedure in \cite{chernozhukov2014gaussian} partitioning $\chi_i^c$ and using the Chebyshev's association inequalities, we get that 
+    \begin{align*}
+        (B) \leq C \beta^3 \delta^{-1} B_3.
+    \end{align*}
+    
+    Therefore, we can conclude that
+    \begin{equation*}
+        \abs{E[ f(S_n)] - E[ f(T_n)]} \leq C \beta \delta^{-1} \paren{B_1 + \frac{\beta}{n} ( B_2 + B_3)}.
+    \end{equation*}
+    Combining the above steps, one has \begin{align*}
+        P(Z \in A) &\leq ( 1 - \epsilon)^{-1} E[ g \circ F_\beta ( T_n)] + \frac { C \beta \delta^{-1} \{ B_1 + \beta /n ( B_2 + B_3) \}}{ 1 - \epsilon } \\
+        &\leq P( F_ \beta (T_n) \in A^{ e_\beta + 3 \delta }) + \frac { \epsilon + C \beta \delta^{-1} \{ B_1 + \beta /n ( B_2 + B_3) \}}{ 1 - \epsilon }\qquad(\text{by construction of }g)\\
+        &\leq P( \tilde{Z}^* \in A^{ 2 e_\beta + 3 \delta}) + \frac {\epsilon + C \beta \delta^{-1} \{ B_1 + \beta /n ( B_2 + B_3) \}}{ 1 - \epsilon } \qquad(\text{by} )
+    \end{align*}
+    This completes the proof
+\end{proof}
+    
+Taking $\beta = 2 \delta^{-1} \log (p \lor n ) $ in Lemma \ref{lem:refinedcoup}, we get 
+\[\alpha = \beta^2 \delta^2 -1  = 4 \log ^2 ( p \lor n) -1 \geq 2 \log ( p \lor n)\qquad(\text{recall}\;n \geq 3 > e)\]
+so that
+\[\epsilon \leq 2 \log( p \lor n) / ( p \lor n ) \leq 2 n^{-1} \log n.\]
+Then we get from Lemma \ref{lem:refinedcoup} that for every $\delta > 0 $, 
+\[P( | Z  - \tilde{Z} | >  16 \delta ) \leq \delta^{-2}\{ B_1 + \delta^{-2} ( B_2 + B_3)\log(p \lor n )^2\} \log ( p \lor n) + \frac{ \log n }{n}\]
+We finally apply this to the discretized empirical process. Construct a tight Gaussian random variable $G_P$ in $ \ell^ \infty ( \mathcal{F}) $ given in assumption (A3), independent of $ X_1, ...X_n$. We note that one can extend $G_P$ to the linear hull of $\mathcal{F}$  in such a way that $G_P$ has linear sample paths.
+Let $\{ f_1, ... f_N \}$ be a minimal $ \epsilon || F|| _{P,2}$ -net of $( \mathcal{F}, e_P)$ with $ N = N( \mathcal{F}, e_P, \epsilon \norm{ F}_{P,2}) $. Then for every $f\in \mathcal{F}$, there exists a function $f_j\;(1 \leq j \leq N)$ such that $ e_P( f, f_j) < \epsilon \norm{F}_{ P,2}$. Recall that 
+\[F_{ \epsilon} = \{ f- g: f, g \in \mathcal{F} , e_P(f,g)< \epsilon || F||_{P,2} \}\]
+and define 
+\begin{equation*}
+    Z^ \epsilon := \max _{ 1 \leq j \leq N} \mathcal{G}_n f _j,\qquad \tilde{Z}^\epsilon:= \sup G_P f , \tilde{Z^{* \epsilon}} = \max_{1 \leq j \leq N} G_P f_j.
+\end{equation*}
+Observe that $ \abs{Z - Z^ \epsilon}\leq \norm{\mathcal{G}_n}_{ \mathcal{F}_\epsilon} $ and $ | \tilde{Z}^{ * \epsilon} - \tilde{Z}^ { *}  | \leq || G_P ||_{ \mathcal{F}_\epsilon} $
+Under the setup of \cite{chernozhukov2014gaussian}, $\log(N \lor n )= H_n (\epsilon) $.Then for every Borel subset A of $\mathbb{R}$ and $\delta>0$, 
+\begin{align*}
+    P(Z^\epsilon \in A)  - P( \tilde{Z}^{* \epsilon} \in A^{16 \delta})
+\precsim \delta^{-2} \{ B_1 + \delta^{-1} ( B_2 + B_4 )H_n (\epsilon) + n^{-1} \log n 
+\end{align*}
+Clearly, $B_1 \leq n^{-1/2} E[ \norm{\mathbb{G}_n}_{\mathcal{F}\cdot \mathcal{F}} ] , B_2 \leq n^{-3/2} \kappa^4$, and $ B_4 \leq n^{-3/2} P[ F^3 1( F > \delta \sqrt{n} H_n (\epsilon)^{-1})]$. Hence, choosing $\delta >0$ in such a way that 
+\begin{align*}
+    C \delta^{-2} n^{-1/2} E[ ||\mathbb{G}_n||_{\mathcal{F}\cdot \mathcal{F}}] H_n ( \epsilon) \leq \frac{ \gamma}{4}\\
+    C \delta{-3} n^{-3/2} \kappa^4 H_n^{7/2}  \epsilon \leq \frac{\gamma}{4}
+ \end{align*}
+ that is, 
+\begin{align*}
+    \delta \geq C \max \{ \gamma^{-1/2}n ^{-1/4} ( E[ ||\mathbb{G}_n|| _ {\mathcal{F}\cdot \mathcal{F}}])^{1/2} H_n^{1/2}  (\epsilon) , \gamma^{-1/3} n^{-1/2} \kappa^{4/3} H_n ^{7/6} ( \epsilon) \}
+\end{align*} 
+we have 
+\begin{align*}
+    P(Z^\epsilon \in A) \leq P( \tilde{Z}^{ * \epsilon} \in A^{16 \delta}) + \frac{\gamma}{2} + \frac{\gamma}{4} \kappa^{-4} P[ F^4 1 ( F > \delta \sqrt{n} H_n ( \epsilon)^{-1}) ] + \frac{C \log n }{n} 
+\end{align*}
+Note that $ \delta \geq c \gamma^{-1/2}n ^{1/4} ( E[ \norm{\mathbb{G}_n} _ {\mathcal{F}\cdot \mathcal{F}}])^{1/2} H_n^{-1/2}  (\epsilon) $, so that 
+\begin{equation*}
+    P[ F^4 1(F > \delta \sqrt{n} H_n (\epsilon)^{-1})] \leq P[ F^4 1( F > c \gamma^{-1/2} n^{1/4} ( E[ || \mathbb{G}_n||_{\mathcal{F} \cdot \mathcal{F}}])^{1/2} H_n^{- 1/3}(\epsilon) ]
+\end{equation*}
+Hence,
+\begin{align*}
+    P(Z^\epsilon \in A) &\leq P( \tilde{Z}^{ * \epsilon} \in A^{16 \delta}) + \frac{\gamma}{2} + \frac{\gamma}{4} \kappa^{-4}  P\paren{ F^4 1( F > c \gamma^{-1/2} n^{1/4} ( E[ || \mathbb{G}_n||_{\mathcal{F} \cdot \mathcal{F}}])^{1/2} H_n^{- 1/3}(\epsilon)} + \frac{C \log n }{n} \\
+    &=: P( \tilde{Z}^{* \epsilon} in A^{16 \delta}) + \frac{\gamma}{2} + \text{(error)} 
+\end{align*}
+By bounding $\norm{\mathbb{G}_n}_{\mathcal{F}_\epsilon} $ and $ \norm{G_P}_{\mathcal{F}_\epsilon}$ by Theorem 5.1 of \cite{chernozhukov2014gaussian} and Borell-Sudakov-Tsirel'son inequality of \cite{van1998empirical} respectively as in the original proof we have
+\begin{equation*}
+    P(Z \in A) \leq P( \tilde{Z}^{*} \in A^{a + b + 16 \delta}) + \gamma + \text{(error)} 
+\end{equation*}
+where a, b is 
+\begin{align*}
+    a&: = K(q) \{ \phi_n ( \epsilon) + ( \epsilon ||F||_{P,2} + n^{-1/2} || M||_q ) \gamma^{-1/q} + n^{-1/2} || M|| _2 \gamma^{-2/q} \} \\
+    b&: = \phi_n (\epsilon) + \epsilon || F||_{P,2} \sqrt{ 2 \log( 4/ \gamma)}
+\end{align*}
+where $K(q)$ is a constant that depends only on q. 
+Then, the conclusion follows from Strassen's theorem (Lemma 4.1 of \cite{chernozhukov2014gaussian}).
+
+
+
+\begin{remark}[Connection to \cite{chernozhukov2014anti}]
+    How does this refined Gaussian approximation result affect the theoretical results in \cite{chernozhukov2014anti}? In \cite{chernozhukov2014anti}, in order to construct honest confidence bands, they place high level assumptions on the non-parametric estimation procedure (H1) - (H6), where (H1) corresponds to Gaussian approximation. To verify that (H1) is satisfied for the procedure proposed in the paper for VC-type classes, they invoke a corollary of the Gaussian approximation presented above (Theorem 2.1 in the original paper) specialized to VC-type classes (Corollary 2.1 in the original paper) to guarantee the existence of sequences $\epsilon_{1n} $ and $\delta_{1n}$ bounded from above by $C n^{-c} $ for some constant. Thanks to the refinement, we see that $\epsilon_{1n}$ can be taken to have a tighter upper bound from $c = {-1/6} $to $c= n^{-1/4} $. However, since the $c$ is common for all conditions (H1) -(H6), it is questionable how tangible the difference of improving one of the rate guarantees is. Nevertheless, we think this type of incremental improvements is also important, and leave developments on the other methods for future work.
+\end{remark}
+
+\section{ATE on the treated survivors :motivation}
+\label{sec: atets1}
+\begin{definition}[Average treatment effect on the treated survivors (ATETS)]
+    \[E[Y_2(1) =1| Y_1(1)=1, G=1 ] - E[ Y_2(0) = 1 | Y_1(1) =1, G=1]\]
+\end{definition}
+
+We note that if this causal estimand may be of quite interest. It provides us with what will be the causal effect on the transition probability from unemployment to employment for the \todo{ people who would have remain unemployed in the short term}. Policymakers must take into consideration such quantities, since the policy that seemed to have no effect in the short term, may turn out to be very effective later on, and vice versa.
+
+However, it can be easily seen that there is a fundamental challenge for identification.
+The crucial point here is the $ E [ Y_2(0) = 1 | Y_1(1) = 1] $ part, where while the $Y_1(1) $ 
+is the potential outcome for the treated case,whereas $ Y_2(0) $ is the untreated . In other words, there are two counterfactual worlds coinciding in this case, which is at the heart of the fundamental problem of casual inference \cite{imbens2015causal}
+
+It should be quite clear that only under the maintained assumptions in the previous section, this quantity is not nonparametrically identified under the observaional population G=1 because in any case the  $Y_1(1)$ cannot be reduced to a factual quantity when $ W \amalg Y_2(1) ,Y_2(0), Y_1(1), Y_1(0) |G=1$. does not hold.
+Is there any way to nonparametrically identify this quantity under additional assumptions?
+
+One possibility may be the no state dependence assumption that has be introduced and elaborated in papers like \cite{heckman1981heterogeneity,heckman1984method,torgovitsky2019nonparametric}. The issue in the literature is whether the commonly observed serial correlation between sequential outcomes come from unobserved heterogeneity , that affects both treatment and all the subsequent outcomes, or that there is state dependence, that the fact that one is placed in a state of unemployment in the previous stage itself has an effect on the possibility of unemployment this term(e.g. , in the form of less opportunity for gaining social skills in unemployment). In the latter case, the past potential outcome can be seen as a randomized treatment for the current potential outcome.
+
+If we posit , therefore, that there is no state dependence in our context,i.e. there is no direct (treatment) effect of the past outcome on the current outcome, we could argue that 
+\begin{equation}
+    (Y_2(1), Y_2(0) ) \amalg (Y_1(1) , Y_1(0) ) | G=1 
+\end{equation}
+holds, \footnote{  there are few papers that use potential outcome notations to formalize no state dependence, and arguably, the appropriate no state dependence should not be the joint independence across counterfactuals but for each treatment potential outcome, i.e. $ Y_2(w) \amalg Y_2(w) \, for w= 0,1 $. This is similar to the strong ignorability \cite{rosenbaum1983central} and the weak ignorability \cite{imbens2015causal} difference. For our purposes, we will stick with the strong no state dependence assumption in this paper }   
+
+In this case it is easy to see that under the previously maintained assumptions and no state dependence, the ATETS reduces to the usual LTATE (long term average treatment effect) because $E[ Y_2(1) | Y_1(1), G=1 ] = E[ Y_2(1) | G=1] $, and $ E[Y_2(0) | Y_1(0) , G=1] =  E[Y_2(0) |  G=1]$   , and the identification strategy of \cite{athey2020combining} can be used. 
+
+
+
+Nevertheless, many empirical papers %\cite
+{heckman1981heterogeneity,heckman1984method, torgovitsky2019nonparametric} have argued from economic theory and empirical evidence how , while the observed serial correlation between outcomes are often cases not solely by unobserved heterogeneity, it has been argued quite strongly that in the unemployment context, state dependence is also a crucial factor. 
+\\ Therefore, in the next section , we will build economic models that incorporate the rich accumulation of empirical research on unemployment  to gain the joint potential outcomes across counterfactual states, to identify the proposed quantity above.
+
+
+
+\koko
+
+\begin{remark}
+\koko 
+Since transition probability can be interpreted as one form of hazard parameter, naturally is of major concern. First in terms of right censoring, 
+The way we calculate the transition probability , we do not have to worry about the censoring, 
+\end{remark}
+\begin{theorem}
+dd
+\end{theorem}
+
+\section{Economic modeling}
+
+\section{point identification by structural approach: experimental data as a tool for model-validiation}
+In this section, we will consider how short-term experimental and observational data can be combined to get a more reliable causal effect under initial selection and dynamic treatment effects. As illustrated above, in order to nonparmetrically point identify the ATETS, strong assumptions like no serial dependence of potential outcomes 
+had to be assumed. This difficultly may motivate movements to come up with alternative procedures for identification and estimation, like building economic models based on the economics of the problem. Since ATETS has an interpretation as a hazard ratio, we explore duration models that enable such derivations. We first briefly 
+introduce the commonly used Mixed-Proportional-Hazard (MPH) model which is a generalization of the proportional hazard as in \cite{cox1972regression}, but show how the multiplicative strucutre has little justification in economic terms. We then turn to the main piece for this section; we introduce an on-the-job search model with endogenous effort,
+and discuss how the short term experimental data can be used as a reliable source of model specification, similar in spirit to e.g., \cite{todd2020best}.
+
+
+
+We will consider how short-term experimental and observational data can be combined to get a more reliable causal effect under initial selection and dynamic treatment effects.
+
+\subsection{mixed proportional hazard models}
+ We will focus on the arguably most popular duration model in social sciences, the mixed proportional hazard model (MPH), and vary various functional forms on it and see how the experimental data can aid in selecting the appropriate one.\\
+While there may be various reasons for the popularity of Mixed proportional hazard models in economics, according to \cite{heckman1984method}, van2001duration, abbring2003nonparametric, it is the most parsimonious model that contains the three indispensible elements; baseline hazard, observed covariates, 
+and unobserved heterogeneity in its model. 
+
+We basically follow the definition in \cite{van2001duration}
+The MPH model has as its component, 
+
+Let $\psi(t)$ be the 'baseline hazard', a possibly time varying function that is common across all individuals, $\theta_0(x)$ be the individual specific component that affects the individual hazard( often specified as $\theta_0(x)=exp(x'\beta)$), and $v$ be the unobserved heterogeneity term. 
+\begin{definition}(Standard MPH model)
+    \label{def:mph1}
+    Let the hazard function of the random variable T evaluated at the duration t be denoted by $\theta(t|x,v)$.\\
+    Then MPH specification of a hazards is one sucht that there are functions $\psi$ and $\theta_0 $ such that for every t and every x and v, the relationship 
+    \begin{equation}
+        \theta(t| x, v) = \psi(t) \cdot \theta_0 (x)\cdot v
+    \end{equation}
+    holds.
+\end{definition}
+
+Note that the above definition requires the duration(t), and explanatory variables(x), and the unobserved hetereogeneity(v) to be multiplicatitvely separable. While this simple, reduced form model is widely used, the interpretation of the coefficient may be difficult due to the multiplicative structure. It is easiest to see by a simple example of a job search model, introduced by \cite{mortensen1986job,mortensen1999new,van2001duration}
+Define the following notations 
+\begin{itemize}
+    \item $\lambda(t,x)$ : parameter of a possion distribution(possibly time and individual specific) which describes the random intervals at which job offers arrive
+    \item F(w) : the distribution function of the wage offer distribution
+    \item b(t,x): unemployment benefit received in the unemployment spell
+    \item $\rho(t,x)$: discount rate $\in [0,1]$
+    \item R(t,x): expected present value of search when the individual follows the optimal strategy 
+    \item $\phi(t,x)$: reservation wage, i.e., a job offer is accepted iff the offer exceeds $\phi(t,x)$ 
+\end{itemize}
+Under regularity conditions , the Bellman equation for R(t,x) satisfies the Bellman equation
+\begin{equation}
+    \rho(t,x) R(t,x) = b(t,x) + \lambda(t,x) E_w \max \{ 0, \frac{w}{\rho(t,x)} - R(t,x)\}
+\end{equation},
+where the expectation is with respect to the wage distribution. 
+
+When an offer of w arrives at time t, then the individual either rejects or accepts the offer. They accept the offer if and only if  $\frac{w}{\rho(t,x)} - R(t,x) >0 \iff w > \rho R(t,x) (=\phi(t,x))$
+
+Transition from unemployment to employment happens when the inidivual receives an offer( rate $\lambda(t,x)$) and accepts it($P( w > \phi(t,x) ) = (1-F(\phi(t,x)))$ ) , meaning that the hazard rate $\theta(t|x,v)$ can be expressed as $\theta(t|x,v) = \lambda(t,x) \cdot (1-F(\phi(t,x)))$. 
+This equation shows how the multiplicatitve strucutre in  (\ref{def:mph1}) is usually not possible, because $(1 - F (\phi(t,x)))$ is in general not multiplicative in$ \phi(t,x)$ , which in turn is not multiplicative in t and x. 
+While there are few special specifications when such multiplicatitve structure arise
+(e.g., F(w) being a Pareto distribution, completely myopic agent), they are often difficult to justify in practice. 
+
+Also, a distinct but important challenge is that when one attempts semiparametric identification like leaving the distribution of unobserved heterogeneity unspecified, depending on subtle untestable assumptions(the heterogeneity dependent hazard being bounded away from 0), the nonparametric maximum likeihood estimate can have 
+limiting information matrix to explode, leading to
+ slower-than-cubic-root asymptotics arise, as discussed in for example \cite{hahn1994efficiency,ridder2003singularity}. I provide partial solvency to this problem along with the curse of dimensionality consideration arising in the maximum likelihood estimation in the next secction by providing limit distribution agnostic inference for 
+high-dimensional gaussian approximation of m-estimators, even with parameter spaces possibly non-donsker. 
+
+These considerations combined, we turn to a more structural model that can embed more theory without the need to specify the multiplicativity in the hazard.
+\subsection{on the job search model with endogenous effort: point identification}
+We turn to a canoncial model for the job training 
+
+
+Consider the following setup
+\begin{itemize}
+    \item $F(w)$: the distribution function of the wage offer distribution evaluated at w, the reservation wage or the current employed wage
+    \item $\lambda s$ : parameter of a poisson distribution which describes the random intervals at which job offers arrive, s is a measure of endogenous search effort
+    \item $c(s)$: twice differtiable convex cost function which enters into the individual decision for search effort, with the properties $c(0)=c'(0)$
+    \item $\delta$: parameter of an exponential distribution which descirbes the exogenous job separation rate
+    \item $W(w)$: the value of employment, depending on the reservation wage or current wage
+\end{itemize}
+Under the assumption of a forward-looking optimizing agent and some regularity conditions, $W(w)$ solves the bellman equation
+\begin{equation}
+    r W(w) = \max_{s \geq 0} \{ w - c(s) + \lambda s \int [ \max \langle W(x), W(w) \rangle  - W(w) ] dF(x) + \delta [ U - W(w)] ] \}
+\end{equation}
+where $U$ is the value of non-employed search. 
+The 
+
+
+
+
+
+
+
+Estimation 
+Assuming that workers are identical in the sense that they face the same wage offer distribution and the same search cost, jothe labor force separation rate takes the form 
+\begin{equation}
+    d = \lambda s (w_i)[ 1 - F(w)]
+\end{equation}
+, where we recall that w is the firm's wage, $delta$ is the job destruction rate, 
+
+s(w) is the optimal search effort of a worke employed at wage w, 
+
+The search intensity function is the unique solution to the functional equation
+\begin{equation}
+    s(w) = \phi ( \lambda \int_w ^ {\bar{w}}  \frac{ [1- F(x)]dx}{ r + \delta + \lambda(x)] 1 - F(x)}) 
+\end{equation}
+by virtue of equation (2) where $\phi(\cdot)= c'^{-1}(\cdot)$ 
+
+
+
+
+
+
+In particular, in this section, we will model a duration model and the ATETS as the coefficient on the treatment indicator in a duration model
+
+First we see how economic theory can play a role in the initial stage when the interest is in the job training program effect on unemployment.
+For unemployment, ample economic theory and evidence suggests negative duration dependence due to the so-called 'weed-out effect'. The intuition is that, as time passes, the more competent people are likely to leave first, and the people with lower latent ability remain, and they tend to keep being unemployed.
+
+However, there are limitations to economic theory. While it provides the general declining tendency, it has been challenging to choose between different declining hazard models( e.g., PH, MPH, GAFT models) or to choose the precise distribution for the error term or the functional form, especially under selection. This variety of model choices leads to several model specifications with varying estimates, making it difficult to choose the one to report as the point estimate, which motivates the usage of experimental data.
+
+Specifically, we propose the use of short-term experimental data as the criteria to choose among those competing models, which was filtered in the first stage based on the economics of unemployment.
+
+Before going into the two-step procedure in detail, we shortly draw the connection with the past literature about using experimental data to evaluate econometric estimators. In the paper of, for example, \cite{lalonde1986evaluating}, it illustrated when the effect of a job training program on earnings was of interest, the various econometric estimators had varied treatment effects, and it was difficult to choose between those estimators without the 'ground truth' by an RCT. While there have been several papers elaborating on the usefulness of matching estimators or model calibration \cite{heckman1997matching,heckman1998characterizing} of nonexperimental estimators, there is a general consensus of experimental data having external validity.
+The novel contribution of this paper relative to that literature is twofold: (a) while the vast majority of documents taking the %\cite
+{lalonde 1986} approach focuses on outcomes of earnings, this paper focuses on unemployment duration, which seems to be relatively few. A notable exception is by \cite{ham1996effect}. Still, it focuses on noncompliance, a significant problem, but what we abstract from in this paper (b) we specifically focus on the \textit{dynamics  }of treatment effects, in which the previous sections have illustrated how short-term experimental data alone may not fully capture the dynamic confounding that is likely to occur. Therefore, the approach here is to take a two-layer approach to (i) first let the theory guide the general dynamics that is plausible in the form of shape restrictions on the hazard and then (ii) let the short-term experimental data choose between those subtle difference in specifications to capture the baseline confounding or the distributional aspect that is arguably more stable across time. We hope this work spurs more integration of the two approaches to more effectively answer policy-relevant questions, as in \cite{todd2020best}
+
+\subsection{specific procedure}
+We will briefly overview the different duration models that might be relevant to our current paper.  We will focus on the arguably predominant duration model, mixed proportional hazard model (MPH), and vary various functional forms on it and see how the experimental data can aid in selecting the appropriate one.\\
+While there may be various reasons for the popularity of Mixed proportional hazard models in economics, according to \cite{heckman1984method}, van2001duration, abbring2003nonparametric there are mainly two reasons.
+Firstly,  it is the most parsimonious model that contains the three indispensible elements; baseline hazard, observed covariates, and unobserved heterogeneity in its model. Secondly, an economic interpretation of the estimates is more amenable relative to other accelerated failure time models or general transformation models that do not distinguish the general and the individual hazard rates.
+
+\section{Partial id of ATETS}
+
+    In the final section, we recognize that point identification is only acheived at the limit of partially identifying assumptions, and we investigate the identifying power of exogenous variation provided by experimental data and the partially identifying assumptions motivated by economic theory.
+
+
+From the perspective of the partial identification literature, potential outcomes can be seen as an interval data, with the upper and lower bound determined by the support of $Y_t(1)$, in this case $[0,1]$. Partial identification on interval outcomes have been extensively studied from %\cite
+{manski 2003, manski and tamer 2002} to name a few. On the other hand, partial identification on interval covariate outcomes have received much less attention, and for the few research as in %\cite
+{berst molinari 2008}, they have been found to be notoriously complex to analyze. In our case , For quantities like $E[ Y _2(0) | Y_1(1) ]$ ,we have \textit{both interval outcome and covariate}, which highlights the challenge, while the  binary treatment and outcome alleviates such challenges. %\cite
+{manski and horowitz 2000} considers a similar setting but with different assumptions like MCAR.
+
+We provide our estimates from the worst case bounds and gradually increasing the strenght of our assumptions.  We first start with assuming that we only have information on the observational data, and in the absence of any further assumptions, what can be said about ATETS = $E[ Y_2(1) | Y_1(1) , G =1 ] - E[ Y_2(0) | Y_1(1), G =1]$ ? We prepare the following lemma from %\cite
+{manski and horowitz 2000} .
+
+
+
+
+We first begin the analysis on the ATETS assuming that only the observational data is available, and derive worst case bounds. The following proposition derives the sharp identification bounds under no additional assumptions.
+
+\begin{theorem}\label{the:partial1}
+    the bounds on
+    \[\mathrm{ATETS} = E[ Y_2(1) | Y_1(1) , G =1 ] - E[ Y_2(0) | Y_1(1), G =1]\]
+    Assuming that only the observational data is available, absent any further information, the sharp identification bound is 
+    \begin{align}
+        & P(Y_2 =1 | Y_1 =0, Z_y =1, Z_ x =1 ) P( Y_1 = 0 | Z_y =1, Z_x = 1 )P( Z_y = 1, Z_x =1)\\
+        &\leq E[ Y_2(0)=1 | Y_1(1)=0, G=1] \\
+        &\leq P( Y_1 = 0 | Z_y = 0 ,Z_x = 1) P( Z_y = 0 , Z_x =1 ) + P( Z_y = 0, Z _ x = 0) \\
+        &\qquad+ P( Y_2 =1 | Z_y = 1, Z_ x =0) P  Z_ y =1, Z_x = 0)
+    \end{align} 
+\end{theorem}
+\begin{proof}
+    It suffices to show that $E[ Y_2(0) =1| Y_1(1)=0, G=1]$ is uninformative. Consider the missingness indicator $Z_x, Z_y$ that is equal to $1$ if and only if the covariate $Y_1(0)$ and the outcome $Y_2(1)$ is observed and $0$ otherwise. Then, by an application of Bayes rule, and law of total probability
+    \begin{align}
+    &E[ Y_2(0)=1 | Y_1(1)=0, G=1] \\
+    &= \sum_{j,k} \frac{ P (Y_2 =1 | Y_1 = 0 , Z_y = j, Z_ x = k ) P ( Y_1 = 0 | Z_y =j,Z_ x =k ) P( Z_y = k, Z_x = j) }{ \sum_{ k, j} P( Y_1 = 0 | Z_y = j, Z_x = k ) P (Z_y = j, Z_x = k) }
+    \end{align}
+    then by applying %\cite
+    {horowitz and manski 1995} Corollary 1.1, we obtain the following sharp bounds :
+    \begin{align}
+    & P(Y_2 =1 | Y_1 =0, Z_y =1, Z_ x =1 ) P( Y_1 = 0 | Z_y =1, Z_x = 1 )P( Z_y = 1, Z_x =1)\\
+    &\leq E[ Y_2(0)=1 | Y_1(1)=0, G=1] \\
+    &\leq P( Y_1 = 0 | Z_y = 0 ,Z_x = 1) P( Z_y = 0 , Z_x =1 ) + P( Z_y = 0, Z _ x = 0) \\
+    &\qquad+ P( Y_2 =1 | Z_y = 1, Z_ x =0) P  Z_ y =1, Z_x = 0)
+    \end{align} 
+    then by %\cite
+    {horowitz and manski 2000} Corollary 1.1, we can conclude that the bounds are uninformative.
+\end{proof}
+
+
+
+
+
+
+
+Next, we consider how the short-term experimental data aids us in tightening the bound. We assume external validity of the experimental data, which can be tested based on our method in Section 1.1. The following theorem indicates the sharp identification bound for this case.
+
+The key step is to notice that
+\begin{enumerate}[(i)]
+    \item \[E[ Y_2(1)=1 | Y_1(1)=0]=\frac{E[Y_2(1)(1-Y_1(1))|G=1 ]}{ E[(1-Y_1(1))|G=1]}\]
+    is point identified, and that the denominator of 
+    \[E[ Y_2(0)=1| Y_1(0)=1 ] = \frac{E[Y_2(0)(1-Y_1(1))|G=1 ]}{ E[(1-Y_1(1))|G=1]}\]
+    is also point identified.
+    \item the only that needs to be bound is \[E[Y_2(0)(1-Y_1(1))|G=1 ] = P( Y_2(0) =1, Y_1(1)=0|G=1)\] 
+    which we can get sharp bounds by an analogous procedure to the Frechet-Hoeffding, a classical sharp bound for the joint distribution whose marginals are identified.
+\end{enumerate}
+
+\begin{theorem}
+In addition to the setting in Theorem \ref{the:partial1}, assume availability of the experimental data, accompanied by the internal validity (Assumption\ref{ass: exp1}) and external validity (Assumption\ref{ass: ex1}). Absent any further information, the sharp identification for ATETS is 
+    \begin{align*}
+        &\frac{ E[E[ Y_2(1 -Y_1)  |W=1,X,G=0 ] G=1]}{ E[ E[ (1 -Y_1) | W=1,X, G=0] | G=1] }\\
+        &\qquad - \max(0,P(Y_1| W=1, G=0) +P(Y_2| W=0, G=1) P(W=0) + P(W=1)- 1)\\
+        &\qquad\quad\times{ E[ E[ (1 -Y_1) | W=1,X, G=0] | G=1] }\\
+        &\leq\frac{ E[E[ Y_2(1 -Y_1)  |W=1,X,G=0 ] G=1]}{ E[ E[ (1 -Y_1) | W=1,X, G=0] | G=1] } \\
+        &\qquad- \min(P(Y_1| W=1, G=0) , P(Y_2| W=0, G=1) P(W=0) )\\
+        &\qquad\quad{ E[ E[ (1 -Y_1) | W=1,X, G=0] | G=1] } 
+    \end{align*}
+\end{theorem}
+\begin{proof}
+    As in the brief explanation in the body, what we need to show is that the sharp identification bound for $P( Y_2(0) =1, Y_1(1)=0|G=1)$ is  
+    \begin{align*}
+        &\biggl[\max(0,P(Y_1=0| W=1, G=0) +P(Y_2=1| W=0, G=1) P(W=0) + P(W=1)- 1) ,\\
+        &\qquad\min(P(Y_1=0| W=1, G=0) , P(Y_2=1| W=0, G=1) P(W=0) )\biggr]
+    \end{align*}
+    Note that by the Frechet-Hoeffding theorem, the sharp identification bound
+    when both $P( Y_2(0) =1|G=1)$ and $P(  Y_1(1)=0|G=1)$ is identified is 
+    \begin{align}\label{eq:atets bound frechet1}
+        &[ \max(0, P(Y_2(0)=1|G=1)+P(Y_1(1)=0|G=1) -1),\\
+        &\qquad \min( P(Y_2(0)=1|G=1), P(Y_1(1)=0|G=1))]
+    \end{align}
+    While $P(Y_1(1)=0|G=1)$ is point identified as $P(Y_1 = 0 | W=1,G=0)$ from external validity and experimental internal validity, $P(Y_2(0)=1|G=1)$ is not because the long term outcome
+    is not available for the experimental data. The sharp bound for this quantity is $[ P(Y_2| W=0, G=1)P(W=0),P(Y_2| W=0, G=1)P(W=0) + P(W=1)]$ by the same argument as in Section 1.2. hence taking this lower bound for the upper bound of \ref{eq:atets bound frechet1}, and the upper bound for the lower bound of \ref{eq:atets bound frechet1} 
+    is the sharp bound. This is because the bound collapses to a point(equals to 0 a.s.) for the distribution that takes $P(Y_2=1|W=0,G=1)=0$ , which is admissible under the given assumptions.
+\end{proof}
+
+
+The above has shown the strength of experimental data even only for the short term, which tightened the bound more than half relative to the worst case. However, there is still a fundamental nonidentification for $P( Y_2(0) =1, Y_1(1)=0|G=1) $, which may possibly be still wide. We now examine structural assumptions that can be
+deduced by a qualitative analysis of a structural model pertaining to the unemployment dynamics which is the main interest. 
+Notably, our modest aim of gaining reliable \textit{partial identifying assumptions} obviates the need for 'extra-theoretical' parametric or distributional assumptions that has been the concern even for the supporters of the structural approach\cite{keane2011structural,todd2020best}
+
+We formulate the problem as an on-the-job search with endogenous effort. We basically stick to the canonical framework from \cite{faberman2022job,mortensen1999new,torgovitsky2019nonparametric}. While our notation basically builds upon \cite{torgovitsky2019nonparametric} , 
+the substantive crucially differs in that (i) their potential outcome denotes the previous time employment status, in our case, it is the job training participating status, and (ii) several modifications of their theorems and proofs are necessary due to the additional job training status, as we discuss below.
+
+Formally, consider the following setting. In stage t=0 , workers decide to join in job traiing program or not (W=1 , 0) based  on the their exante evaluation of the discounted sum of reward 
+\[W = 1 \Brace{ \sum_t \frac{ 1} { \delta^t }(Y_t( 1) - Y_t(0))  >0} \]
+worker i begins period t having
+ either been employed or unemployed in the previous period $( Y_{ i (t-1) } =1 , or \,0) $.
+ 
+They have exerted $E_{i (t-1) } $ units of search effort in the previous period. the worker receives a wage offe $ \omega ( Y_{i (t-1) } , E_{ i (t-1) } ,W_i, A_i , V_{it} ) $, depending  on their work status  and effort choices in the previous period ($Y_2$), whether they joined a job training program $W_i$, 
+(time-invariant) source of (unobserved) heterogeneity $ A_i$, and time varying wage shock $V_{it}$. 
+
+After observing the wage offer, the worker decides to either accept it and work in period t ( $Y_{it} =1$) or the remain unemployed$ Y_{it} =0 $ (Not receiving an offer or being laid off corresponds to receiving an offer $  - \infty$)
+
+The criteria for this decision is based on maximization of their expected present-discounted utility using discount factor $\delta \in (0,1)$.
+
+Specifically, under mild regularity conditions, ( e.g. \cite{stokey1989recursive,rust_chapter_1994}agent $i$'s problem can be written recursively in terms of the Bellman equation, maintaining that the wage shock follows a first order Markov process throughout \footnote{This is a commonly maintained assumption in the structural literature.}
+
+\begin{align}
+    \label{eq: bellman1}
+    &\nu(Y_{i(t-1)}, E_{i(t-1)}, V_{it}, A_i) \\
+    &= \max_{(y', e') \in \{0,1\} \times \mathcal{E}} \{ \mu(y', e', Y_{i(t-1)},A_i, V_{it} )  + \delta E[ \nu(y', e', V_{i(t+1)}, A_i) | Y_{i(t-1)}, E_{i(t-1)},V_{it}, A_i ] \}\\ 
+    &=: \max_{ (y', e') \in \{0,1\} \times \mathcal{E} }\dot{\nu}( Y_{i(t-1)}, E_{i(t-1)}, V_{it}, A_i)
+\end{align}
+where
+\begin{itemize}
+    \item $\nu$ : value function 
+    \item $\mu(y', e', Y_{i(t-1)},W_i,A_i, V_{it} ) = y' \omega (Y_{i(t-1)}, E_{i(t-1)}, W_i,A_i, V_{it}) - \kappa( y', e', W_i,A_i)$ is the worker's flow utility
+    \item $\omega (Y_{i(t-1)}, E_{i(t-1), W_i,A_i, V_{it}})$ : wage offer at time $t$.
+    \item $\kappa( y', e', A_i)$: cost of exerting $e'$ units of search effort when making employment choice $y'$
+    \item $\dot{\nu} $: short hand notation that combines flow utility and continuation value 
+    \item $S_{it}:= (Y_{i(t-1), E_{i(t-1)},W_i A_i, V_{it}})$ is the state variables at time $t$.
+\end{itemize}
+
+
+Assuming there is a solution to this problem, profiling the effort decision for a fixed employment decision $y'$ gives
+\begin{align}
+    \label{eq:estar1}
+     &e^ \star  (S_{it} || y' ) \\
+     &\quad: = \argmax _ { e' \in \mathcal{ E} } \dot{ \nu} ( y', e' , Y_{i (t-1) } , W_i , E_ { i(t-1) } , V_{it}, A_ i )\\
+    &\quad= \argmax _ { e' \in \mathcal{ E} } - \kappa ( y' , e', W_i, A_i ) + \delta E[ \nu ( y' , e' ,W_i, V_{ i (t+1) } , A_i ) | S_{it} ]
+\end{align}
+using this, we can rewrite the above by
+\begin{align*}
+    \nu(S_{it} ) = \max_{ y' \in \{ 0,1 \} } \dot{\nu} ( y' , e^\star ( S_{it} || y' ) , S_{it} ) =: \max _{ y' \in \{ 0,1 \} } \dot{ \nu} ( S_{it} || y' )
+\end{align*}
+The observed binary choice $ Y_{it}$ is assumed to be the optimizer of the above: 
+\begin{align*}
+    Y_{it} &= \argmax_{ y' \in \{0,1 \}} \dot{ \nu } ( S_{it} || y' ) = 1\{ \Delta \dot{ \nu} ( S_{it}) \geq 0 \}  \\
+\Delta \dot{\nu} ( S_{it} ) &: = \dot{ \nu} ( S_{it} || 1) - \dot{\nu} (S_{it} || 0 )
+\end{align*}
+and ties are broken in favor of $Y_{it} =1$.
+
+For our purposes of bounding the , we need to define the potential outcomes $Y_{it}(1)$ within this framework. We assume throughout that the wage shock $\{V_{it}\}_{t=1}^{t=T}$ follows a first order Markov process.
+Then, the the conditioning set for the continuation value portion of \ref{eq: bellman1} can be rewritten as
+\begin{equation}
+\nu(Y_{i(t-1)}, E_{i(t-1)}, V_{it}, A_i) = \max_{(y', e') \in \{0,1\} \times \mathcal{E}} \{ \mu(y', e', Y_{i(t-1)},A_i, V_{it} )  + \delta E[ \nu(y', e', V_{i(t+1)}, A_i) | W_i, V_{it}, A_i ] \} 
+\end{equation}
+Likewise, (\ref{eq:estar1}) can be rewritten as 
+\begin{equation}
+    \label{eq:estar2}
+    e^ \star  (W_i,V_{i(t-1)}, A_i  || y' ) : = \argmax _ { e' \in \mathcal{ E} } \dot{ \nu} ( y', e', W_i, V_{it}, A_ i ) 
+\end{equation}
+
+
+
+
+Moreover, note that the counterfactual state in period t had the worker chosen job training status $w \in \{0,1\}$ is 
+\begin{equation}
+    S_{it}(w) := ( Y_{i(t-1)}, e^*( w, V_{i(t-1)}, A_i || Y_{i(t-1)}), w, V_{it}, A_i)
+\end{equation}
+%note that the above   V_{i(t-1)}in e^* is correct,because it is the E_{i(t-1)}
+which depends on the past employment status $Y_{i(t-1)}$, the hypothesized job training status $w$, the previous and current period wage shocks $( V_{i(t-1), V_{it}})$and time invariant heterogeneity $A_i$.
+The worker's present-discounted net utility from choosing employment if the job status  was w can therefore be written as
+\begin{equation}
+    \Delta \dot{\nu}( S_{it}(w)) = \omega ( y, e^*( w, V_{i(t-1)}, A_i || Y_{i(t-1)}), A_i, V_{it} ) - \Delta \kappa ( V_{it}, A_i) + \Delta \gamma(w_i,V_{it}, A_i)
+\end{equation}
+where $\Delta \kappa $ and $\Delta \gamma $ are shorthand for 
+\begin{equation*}
+    \Delta \kappa( V_{it},A_i) = [ \kappa ( 1, e^*( w, V_{i(t-1)}, A_i || 1), A_i) - \kappa ( 0, e^*( w, V_{i(t-1)}, A_i || 0))]
+\end{equation*}
+and
+\begin{equation*}
+    \Delta \gamma( V_{it}, A_i ) = \delta E [ \nu(1, e^*( w, V_{i(t-1)}, A_i || 1), V_{i(t+1)})  - \nu(0, e^*( w, V_{i(t-1)}, A_i || 0), V_{i(t+1)}) | W_i = w ,V_{it}, A_i]
+\end{equation*}
+
+Then $Y_{it}(w)$ is defined as 
+\begin{equation}
+    Y_{it}(w) = \Delta \dot{\nu}( S_{it}(w)) = \omega ( y, e^*( w, V_{i(t-1)}, A_i || Y_{i(t-1)}), A_i, V_{it} ) - \Delta \kappa ( V_{it}, A_i) + \Delta \gamma(w_i,V_{it}, A_i)
+\end{equation}
+
+\section{Estimation}
+
+\subsection{estimation of ATETS under no state dependence}
+
+We provide the nonparametric influence function for estimating the ATETS, which coincides with the ATE . One paper we know that have derived the nonparametric influence function for this estimand is \cite{chen2021semiparametric}, which uses the projection upon the tangent space approach, and using an ad hoc guess and verify approach to getting the influence function. Here we provide an alternative, quicker, and mechanical approach to deriving the influence function using the path-wise derivative calculation, similar in spirit to \cite{ichimura2022influence}
+Note that in the nonparametric case, the influence function in the tangent space is unique, so the mean zero function with the appropriate inner product with the score will be what we wanted.
+\todo 
+\begin{theorem} 
+\label{the:atesteif}
+    The efficient influence function for $\tau = E[ Y_2(1) | Y_1(1) , G=1] - E[ Y_2(0) | Y_1(1)   ]=: \tau_1 - \tau_0 $ is 
+    \begin{align}
+        &\frac{ g w }{ p(G=1) } \biggl[ (y_2 - E[ Y_2 | W=1 , Y_1 , X, G =1]  ) \frac{ P( G =0| Y_1 , W=1 , X ) }{ P(G=1 | Y_1 , W=1 , X ) } \frac{1}{P( W=1 | X , G=1)}\\
+        &\quad+ E [ E[ Y_2 | W = 1, Y_1 , X, G =1 | W =1, X, G= 0 ] ] - \tau_1\biggr] \\
+        &\quad+\frac{ (1- g) P(G = 1|X)   }{ P(G= 1) P ( G =0 |X) } \\
+        &\quad\times\paren{ \frac{ w ( E [ Y _ 2 | Y_1,W =1 , X, G =1 ] - E [ E[ Y_2 | Y_1, W=1, X, G=1 ] | W =1, X, G= 0 ] ] ) }{ p ( W =1 | X, G =0 ) } }
+        \end{align}
+        \begin{align}
+        -[&\frac{ g (1-w) }{ p(G=1) } \biggl[ (y_2 - E[ Y_2 | W=0 , Y_1 , X, G =1]  ) \frac{ P( G =0| Y_1 , W=0 , X ) }{ P(G=1 | Y_1 , W=0 , X ) } \frac{1}{P( W=0 | X , G=1)}\\
+        &\quad+ E [ E[ Y_2 | W = 0, Y_1 , X, G =1 | W =0, X, G= 0 ] ] - \tau_0\biggr] \\
+        &\quad+\frac{ (1- g) P(G = 1|X)   }{ P(G= 1) P ( G =0 |X) } \\
+        &\quad\times\paren{ \frac{ (1-w) ( E [ Y _ 2 | Y_1,W =0 , X, G =1 ] - E [ E[ Y_2 | Y_1, W=0, X, G=1 ] | W =0, X, G= 0 ] ] ) }{ p ( W =0 | X, G =0 ) } }]
+    \end{align}
+\end{theorem}
+\begin{proof}
+    Based on the argument in Section \ref{sec: atets1} , by symmetry, it suffices to show the influence function  for$\tau_1 = E[ Y_2(1) | Y_1(1) , G=1] = E[ E[E [ Y_2 | Y_1 ,W=1,X, G=1] | W=1, X, G=0 ] | G=1]$
+    we use $ \partial_t f(t) $ to denote $\frac{ \partial f(t) }{ \partial_t } $ For parameter $\theta $, let $ \theta_t $ be the parameter under a regular parametric sub-model indexed by $t$, that includes the ground-truth model at $t=0$.
+    Let $V$ be the set of all observed variables. In order to obtain the influence function, we need to find a random variable $\psi $ with mean zero, that satisfies, 
+    \begin{equation}
+        \partial_t \psi_t = E [ \psi S(V) ]
+    \end{equation}
+    where $ S(V) = \partial_t log p_t (V) $.
+    To simplify notation, we assume that all variables are discrete. 
+
+    First note that 
+    \begin{align}\label{eq-eif-first-chain}
+        \partial_t \psi_t = \partial_t \sum_ { y_2, y_1,x} y_2 p_t ( y_2| y_1 , W= 1, X , G= 1) p_t ( y_1 | W =1 , x, G= 0 ) p_t( x | G =1 )   \\
+        = \sum_ { y_2 ,y_1,x} y_2 \partial_t p_t ( y_2| y_1 , W= 1, X , G= 1) p ( y_1 | W =1 , x, G= 0 ) p( x | G =1 )   \\
+        + \sum_ { y_2 ,y_1,x} y_2  p ( y_2| y_1 , W= 1, X , G= 1)\partial_t p_t ( y_1 | W =1 , x, G= 0 ) p( x | G =1 ) \\
+        + \sum_ { y_2 ,y_1,x} y_2  p ( y_2| y_1 , W= 1, X , G= 1) p ( y_1 | W =1 , x, G= 0 ) \partial_t p_t( x | G =1 )
+    \end{align}
+    for the first term in (\ref{eq-eif-first-chain}),  we have
+    \begin{align*}
+        &=\sum_ { y_2 ,y_1,x} y_2 \partial_t p_t ( y_2| y_1 , W= 1, X , G= 1) p ( y_1 | W =1 , x, G= 0 ) p( x | G =1 ) \\
+        &= \sum_ { y_2 ,y_1,x} y_2 p ( y_2| y_1 , W= 1, X , G= 1) p ( y_1 | W =1 , x, G= 0 ) p( x | G =1 ) S ( y_2| y_1 , W= 1, x , G= 1) \\
+        &= \sum_ { y_2 ,y_1,w, x, g}  w g  y_2  \frac{ p( y_2, w | y_1, x, g}{ p ( W = 1 | y_1(1) , x , g ) }\\
+        &\qquad\qquad\times p ( y_1 | W =1 , x, G= 0 ) \frac{ p ( g, x ) } { p(G =1)} S ( y_2| y_1 , W= 1, x , G= 1)
+    \end{align*}
+    \begin{align*}
+        &= \sum_ { y_2 ,y_1,w, x, g}   w g  y_2  \frac{ p( y_2, w | y_1, x, g}{ p ( W = 1 | y_1(1) , x , g ) }   p ( y_1 | W =1 , x, G= 0 ) \\
+        &\qquad\qquad\times\frac{ p ( g, x ) } { p(G =1)} S ( y_2| y_1 , w, x , g) \koko
+    \end{align*}
+    \begin{align*}
+        &= \sum_{ y_2 ,y_1,w, x, g}  w g   y_2   p( y_2, w | y_1, x, g)  \frac{ P( G =0 | Y_1 , W=1 , X ) }{ P(G=1 | Y_1 , W=1 , X ) } \frac{1}{P( W=1 | X , G=1)}   \\
+        &\qquad\qquad\times p ( y_1 | W =1 , x, G= 0 ) 
+        \frac{ p ( g, x ) }{ p(G =1)} S ( y_2| y_1 , w, x , g) \qquad( \because\text{Bayes rule, Assumption \ref{ass: ex1} and \ref{ass: exp1}})
+    \end{align*}
+    \begin{align*}
+        &= E \Square{  \frac{ w g }{ p (G = 1) } y_2     \frac{ P( G =0 | Y_1 , W=1 , X ) }{ P(G=1 | Y_1 , W=1 , X ) }\frac{1}{P( W=1 | X , G=1)}    S ( y_2| y_1 , w, x , g)}\\
+        &= E \biggl[  \frac{ w g }{ p (G = 1) } ( y_2 - E [ Y_2 | y_1 , W = 1, X, G =1 ] )     \frac{ P( G =0 | Y_1 , W=1 , X ) }{ P(G=1 | Y_1 , W=1 , X ) }\\
+        &\qquad\qquad\times \frac{1}{P( W=1 | X , G=1)}    S ( y_2| y_1 , w, x , g) \biggr]
+    \end{align*}
+
+    Note that
+    \begin{align*}
+        &E \biggl[  \frac{ w g }{ p (G = 1) } ( y_2 - E [ Y_2 | y_1 , W = 1, X, G =1 ] )\\
+        &\qquad\times\frac{ P( G =0 | Y_1 , W=1 , X ) }{ P(G=1 | Y_1 , W=1 , X ) }\frac{1}{P( W=1 | X , G=1)}    S (  y_1 , w, x , g) \biggr] = 0
+    \end{align*}
+    Therefore
+    \begin{align*}
+        &\sum_{ y_2 ,y_1,x} y_2 \partial_t p_t ( y_2| y_1 , W= 1, X , G= 1) p ( y_1 | W =1 , x, G= 0 ) p( x | G =1 ) \\
+        &= E \biggl[  \frac{ w g }{ p (G = 1) } ( y_2 - E [ Y_2 | y_1 , W = 1, X, G =1 ] )     \frac{ P( G =0 | Y_1 , W=1 , X ) }{ P(G=1 | Y_1 , W=1 , X ) }\frac{1}{P( W=1 | X , G=1)}   S ( V) \biggr]
+    \end{align*}
+
+    Likewise for the second term in \ref{eq-eif-first-chain}
+    \begin{align*}
+        &\sum_ { y_2 ,y_1,x} y_2  p ( y_2| y_1 , W= 1, X , G= 1)\partial_t p_t ( y_1 | W =1 , x, G= 0 ) p( x | G =1 ) \\
+    &=   \sum_ { y_2 ,y_1,x} y_2  p ( y_2| y_1 , W= 1, X , G= 1) p ( y_1 | W =1 , x, G= 0 ) p( x | G =1 ) S( y_1  | W =1, x, G = 0) 
+    \end{align*} 
+    noting that
+    \begin{align*}
+    p ( y_1 | w = 1, x g = 0 ) &= \frac{ p ( y _1 , w = 1, g  = 0 |x) } { p ( G =0, W =1 | X) } = \frac{ w ( 1 -g) p( y_1 , w g | x) }{ p  (g =0, w =1 | x) } , \\
+    p ( x | G= 1) &= \frac{ p(  G =1, x ) } { p(G =1 ) },
+    \end{align*}
+    and rearranging terms,
+    \begin{align*}
+    &\sum_ { y_2 ,y_1,x} y_2  p ( y_2| y_1 , W= 1, X , G= 1)\partial_t p_t ( y_1 | W =1 , x, G= 0 ) p( x | G =1 ) \\ 
+    = &\sum_ { y_2 ,y_1,w,x, g} \frac{ w ( 1 -g ) y_2   p ( y_2| y_1 , W= 1, X , G= 1) p(G =1 | X) }{ p(G=1) p ( G= 0 | X)  p ( W = 1 | X ,G =0) } E [ Y_2 |   Y_1 ,W = 1,X, G =1 ]   S( y_1  | w , x, g )  \\
+    = &E \Square{   \frac{ W ( 1 -G)   p(G =1 | X) }{ p(G=1) p ( G= 0 | X)  p ( W = 1 | X ,G =0) } E [ Y_2 |   Y_1 ,W = 1, X, G =1 ]   S( y_1  | w , x, g )}\\
+    = &E \biggl[  \frac{  W ( 1 -G)   p(G =1 | X) }{ p(G=1) p ( G= 0 | X)  p ( W = 1 | X ,G =0) } (E [ Y_2 |   Y_1 ,W = 1, X, G =1] \\
+    &\qquad -E [ E[ Y_2 | Y_1 , W =1 , X, G =1 ] | W=1, X, G= 0 ] )  S( y_1  | w , x, g ) \biggr]
+    \end{align*}
+    Note that,
+    \begin{align*}
+    &E \biggl[  \frac{  W ( 1 -G)   p(G =1 | X) }{ p(G=1) p ( G= 0 | X)  p ( W = 1 | X ,G =0) } (E [ Y_2 |   Y_1 ,W = 1, X, G =1 ] - \\
+    &E [ E[ Y_2 | Y_1 , W =1 , X, G =1 ] | W=1, X, G= 0 ]] )  S(  W , x, G ) \biggr] = 0
+    \end{align*}
+    therefore
+    \begin{align*}
+    &\sum_ { y_2 ,y_1,x} y_2  p ( y_2| y_1 , W= 1, X , G= 1)\partial_t p_t ( y_1 | W =1 , x, G= 0 ) p( x | G =1 ) \\ 
+    = &E \biggl[  \frac{  W ( 1 -G)   p(G =1 | X) }{ p(G=1) p ( G= 0 | X)  p ( W = 1 | X ,G =0) } (E [ Y_2 |   Y_1 ,W = 1, X, G =1 ] -\\
+    &E [ E[ Y_2 | Y_1 , W =1 , X, G =1 ] | W=1, X, G= 0 ]] )  S(  V) \biggr] 
+    \end{align*}
+    for the third term
+    \begin{align*}
+    &\sum_ { y_2 ,y_1,x} y_2  p ( y_2| y_1 , W= 1, X , G= 1) p ( y_1 | W =1 , x, G= 0 ) \partial_t p_t( x | G =1 )\\
+    &= \sum_ { y_2 ,y_1,x} y_2  p ( y_2| y_1 , W= 1, X , G= 1) p ( y_1 | W =1 , x, G= 0 ) p( x | G =1 ) S( x | G= 1) \\
+    &= \sum_ { y_2 , y_1, x}      \frac{ G } { P(G =1 ) }   y_2  p ( y_2| y_1 , W= 1, X , G= 1)\\
+    &\qquad\times p ( y_1 | W =1 , x, G= 0 ) p( x | G =1 ) S( x | G= 1) \\
+    &= \sum_ { y_2 , y_1, x, g}      \frac{ g } { P(G =1 ) }   (E[ E[Y_2| Y_1,  W =1, X, G = 1 ] | W =1 , X, G = 0 ]]  - \\
+    &\qquad \tau_1 ) p( x , g ) S( x | g)
+    \end{align*}
+    note that
+    \begin{align*}
+    &= \sum_ { y_2 , y_1, x, g}      \frac{ g } { P(G =1 ) }   (E[ E[Y_2| Y_1,  W =1, X, G = 1 ] | W =1 , X, G = 0 ]]  - \\
+    &\tau_1) p( x , g ) S(  g) = 0
+    \end{align*}
+    therefore,
+    \begin{align*}
+    \sum_ { y_2 ,y_1,x} y_2  p ( y_2| y_1 , W= 1, X , G= 1) p ( y_1 | W =1 , x, G= 0 ) \partial_t p_t( x | G =1 )\\
+    = E\biggl[      \frac{ g } { P(G =1 ) }   (E[ E[Y_2| Y_1,  W =1, X, G = 1 ] | W =1 , X, G = 0 ]  - \tau_1 ) p( x , g ) S(  V) \biggr]
+    \end{align*}
+    collectivizing the three results, we have
+    \begin{align*}
+    &\partial_t \psi_t = E \biggl[  \frac{ g w }{ p(G=1) } \biggl[ (y_2 - E[ Y_2 | W=1 , Y_1 , X, G =1]  ) \frac{ P( G =0 | Y_1 , W=1 , X ) }{ P(G=1 | Y_1 , W=1 , X ) }\frac{1}{P( W=1 | X , G=1)}  \\
+    & \qquad+ E [ E[ Y_2 | W = 1, Y_1 , X, G =1 | W =1, X, G= 0 ] ] - \tau_1    \biggr]  + \frac{ (1- g) P(G = 1|X)   }{ P(G= 1) P ( G =0 |X) } \\
+    &\qquad\times\paren{ \frac{ w ( E [ Y _ 2 | Y_1,W =1 , X, G =1 ] - E [ E[ Y_2 | Y_1, W=1, X, G=1 ] | W =1, X, G= 0 ] ] ) }{ p ( W =1| X, G =0 ) } }S(V) \biggr] 
+    \end{align*}
+    which implies that
+    \begin{align*}
+    &\frac{ g w }{ p(G=1) } \biggl[ (y_2 - E[ Y_2 | W=1 , Y_1 , X, G =1]  ) \frac{ P( G =0 | Y_1 , W=1 , X ) }{ P(G=1 | Y_1 , W=1 , X ) } \frac{1}{P( W=1 | X , G=1)}  \\
+    &+ E [ E[ Y_2 | W= 1,Y_1 , X, G =1 | W =1, X, G= 0 ] ] - \tau_1    \biggr]  + \\
+    &\frac{ (1- g) P(G = 1|X)   }{ P(G= 1) P ( G =0 |X) }  \frac{ w ( E [ Y _ 2 | Y_1,W =1 , X, G =1 ] - E [ E[ Y_2 | Y_1, W=1, X, G=1 ] | W =1, X, G= 0 ] ] ) }{ p (W =1| X, G =0 ) }
+    \end{align*}
+    Since this is mean zero and because the nonparametric influence is unique, this is the influence function for $\tau_1$.
+\end{proof}
+
+
+
+Next, we will prove that this efficient influence function is neyman orthogonal to its nuisance parameters. We verify this by showing that the functional taylor expansion is zero at its true value.
+\begin{theorem}
+Consider the setting above and $\tau_1 - \tau_0$. the efficient influence function provided in Theorem \ref{the:atesteif} is Neyman-orthogonal with respect to its nuisance parameters.
+\end{theorem}
+
+
+
+
+
+\subsection{ estimation of the duration models } 
+In this section, we provide the semiparametric estimation of the duration parameters provided in  section \todo
+
+However, it is well known that semiparametric duration models have several nonregular characteristics that make their estimation difficult. For example, %\cite
+{hahn 1994} proved that the mixed proportional hazard model cannot be $ \sqrt {n} $ estimable under conditions by first showing how their model was part of the mixture model in %\cite
+{chamberlain 1986} , and then indirectly using the result in %\cite
+{Pfanzagl  2000}.
+
+However, for our purposes, the alternative impossibility result based on classical semiparametric theory is sufficient. Specifically, using %\cite
+{van der vaart 1991}, which shows that if a parameter is regular estimable,the norm of its pathwise derivative is bounded. Therefore, it is sufficient to show that the pathwise derivative of a parametric sub model has a unbounded norm in our problem which implies non $\sqrt{n} $ estimability. Below shows the formal proof \todo
+
+In later work as in %\cite
+{ridder and weid 2003} , they show that $\sqrt{n} $ estimability for certain classed semiparametric duration models is quite sensitive to the shape of the hazard around zero, and the limiting distribution varies greatly, affecting the finite sample behavior significantly. An effective method around still seems to be an open question, which may be part of the reason for the relative lack of empirical research using such methods. Therefore, I provide non asymptotic Gaussian approximation method that is useable agnostic to the limiting distribution, as an application of the seminal works of %\cite
+{chernozhukov , 2012}
+
+
+\bibliographystyle{apalike}
+\bibliography{reference}
+\end{document}

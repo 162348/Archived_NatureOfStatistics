@@ -1,0 +1,1211 @@
+\documentclass[uplatex,dvipdfmx]{jsreport}
+\title{統計科学とは何か}
+\author{司馬博文}
+\date{\today}
+\pagestyle{headings} \setcounter{secnumdepth}{4}
+%\input{/Users/Hirofumi Shiba/NatureOfStatistics/preamble_no_fonts.tex}
+%\input{/Users/hirofumi.shiba48/NatureOfStatistics/preamble_no_fonts.tex}
+\input{/Users/hirof/NatureOfStatistics/preamble_no_fonts.tex}
+\usepackage[math]{anttor}
+\begin{document}
+\tableofcontents
+
+\begin{quotation}
+    豊かな統計理論の展開の歴史は，豊かな応用とともにある．
+    \begin{enumerate}
+        \item Fisherの統計はRothamsted農業研究所におけるデータ解析問題に深く根ざしている．
+        \item 1940sのNeyman-Pearsonの統計理論は統計的品質管理の問題があった．
+    \end{enumerate}
+    それぞれの大家をまとめる．
+    \begin{enumerate}
+        \item Ronald Fisher 90-62：近視だったために夜は音で数学を学び，独自の数学への適性を身に着け，奨学金を得てCambridge大学で数学と物理学を学んだが，その後は第一次世界大戦もあってうやむやになる（修士はとっていないのでは？）．
+        Pearsonへの反感から大学教員ではなく農事試験場のしごとを選び，36歳にはそこで実験計画法を確立する．その後にGalton教授職へ戻り，そこでは溜まりに溜まっていた優生学への興味を爆発させる．
+        \item Karl Pearson 57-36：本当はCarl．菊池大麓とCambridgeで学び，ドイツ留学経験も積んで（ここでマルクスに傾倒）中世ドイツ文学や法学にも打ち込んだが，最終的には数学に戻った真のアカデミアの人．Galtonと仲良くなって優生学に親しみ，優生学部の初代教授となる．生物測定学という全く独立のDarwin以来の流れから，記述統計学を作る．
+        \item Egon Pearson 95-80：もともとはCambridgeで天体物理学を専攻してから転向．25年にNeymanと会い，31年にShewhartと会う（ここで，統計的品質管理の問題意識と出会う）．父の退官後，Fisherは優生学教授で，Egonは応用統計学部教授となる．
+        \item Jerzy Neyman 94-81：父がロシアで仕事をしていた法律家で，ウクライナの大学でBernsteinに数学を学び，祖国ポーランドへ還る．ワルシャワ大学で仕事を持ちながら，ピアソンの下で留学したときに，息子と意気投合．
+    \end{enumerate}
+    \begin{enumerate}
+        \item FisherとGossetは大量生産できない農業・ビール醸造なる対象に対して，比較実験を通じて科学的結論を導く必要があった．このため，誤差の統制（分散分析）と精密分布の決定と有意性検定を作った．
+        \item Karl PearsonとGaltonは大量のデータから優生学的知見を引き出したかった，どちらかといえば社会科学的営みであった．このため，誤差を最小にするfittingの技法を開発した．
+        \item NeymanとEgon Pearsonは，企業の意思決定に必要なサンプリング問題から発展して，契約上の品質に関する合意形成手段としての統一検定方式を開発する必要があった．そこで，決定理論の枠組みと最適性が問題になった．\footnote{これはプログラムに関する法律などでも，採択されることになるだろう．}
+    \end{enumerate}
+    こう見ると，検定論は，最もコミュニケーションの道具，人類生態系を別の論理で飛び回るミームであり，言語の権化であるようだ．
+    品種・肥料の有効性について有意性を下す判定が有力者の権威から統計技法の権威へと移り，また品質管理についての権威が統計技法に移った．
+    デジタルかもその延長であるとみれる．
+
+    人々の行動指針を与えるようなミーム．
+    人生が模倣するような権威を帯びた形式として，芸術とは異なる作品．
+    このようなものを作るのが夢であった．
+    これはむしろ社会彫刻のようなものであって，統計技法だけではなく，周りの言論と社会実践が肝要になってくる．
+    端的にいえば，「立場が違う人を結ぶ形式」が好きなら，それはシミュレーションや統計の手法になるわけだ．
+    僕はコミュニケーションのプロでなくてはならない．
+\end{quotation}
+
+\chapter{統計の誕生}
+
+\begin{quotation}
+    人類が最初に直面した統計的問題は，次の3つである：
+    \begin{description}
+        \item[観測の誤差と確率論的問題] 同一観測を繰り返しても値がばらつくが，その中でどれを「最良値」「代表値」として採用すれば良いかの問題である．
+        答えは最小二乗法が与えるが，なぜこれが「良い」のか？\cite{安藤洋美-OLS}
+        この問題設定は実は線形回帰問題と関連し，誤差分布が正規性の仮定を満たすとき（根源誤差の集まりとみなせるとき），
+        最小二乗推定量が最尤推定量となる．
+        ここまでの問題に対する理論を誤差論という．
+        \item[政治算術] William Petty 1623-1687はpolitical arithmeticを著し，労働価値説を唱えて，古典派経済学と統計学の祖と呼ばれる．
+        \item[国状論] 
+    \end{description}
+    この3つを統合したのが，Queteletの社会物理学である．
+
+    20世紀のはじめに，英米の生物測定学と，ドイツの社会統計学とに分岐し，現代に至る．
+    英国統計学は特に数学との結びつきが強く，記述論から推測論・検定論を作り，数理統計学の系譜となる．
+    政治算術は，確率論の土壌を生かしたQuetletによって社会物理学となり，刺激を受けたドイツで国状論・社会統計学となり，
+    計量経済学の系譜となる．
+
+    Leonard Savage 1917-1971の『統計学の基礎』でBayes学派が復活し，そもそも母集団の前提がない際にも応用された．
+    現在実社会で最も中心的なのがBayes学派である．
+\end{quotation}
+
+\section{オランダ：英国政治算術とフランス確率論の衝突}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    イギリス経験論と大陸合理主義との二項対立がある．
+
+    英国的な統計的経験的確率と，伊・仏的な合理的先験的確率との，認識論的方法論的対立は最初からあった．
+    「確率統計学」というときの両極端から歩み寄った．
+\end{tcolorbox}
+
+\subsection{英国政治算術}
+
+英国で互いに友人である2人，William Pettyの『政治算術』(1690)とJohn Graunt『死亡表に関する自然的および政治的諸観察』(1660)が人口統計学の源流となった．
+
+\subsection{伊・仏の確率論}
+
+ガリレイに源流を持ちつつ，PascalとFermatが完成させたのがこの確率論的な見方である．
+
+\section{オランダでの人口統計と確率論}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    ちょうど2つの接点に居たのがオランダで，ここで真に豊かな理論が生まれた．
+\end{tcolorbox}
+
+Huygensの『チャンスの価格』は，完全にPascalの「勝負の値」の系譜にある．
+実はデカルトの祖国以上にデカルト学の拠点であったのがオランダであり，
+チャンスの値の算出方法が体系化された．
+スピノザも，これに関して「確率書簡」などの記録がある．
+しかしHuygensは，Grauntの『諸観察』を読んで，人口統計との融合を試みた．
+
+Johan de Witt 1625-1672は数学と法律学を学び，28にしてホラント州法律顧問（事実上の最高指導者）になり，
+財政再建を進めた．特に「償還年金と比べた終身年金の価格」を国会に提出した．
+これは独自の生命表と，Huygensの『チャンスの価格』をもとにしていた．
+
+\section{フランスでの最小二乗法の誕生}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    母関数の方法(Lagrange)も，特性関数(Laplace)も，最小二乗法の発展(Legendre)も，フランスで起こった．
+    確率論と結びつけて最適性を初めて指摘したのがGauss，最尤法の意味論を読み取り，推定論を初めて展開したのがLaplace，数理統計学の応用先として推定論の道をより広くしたのがQueteletである．
+
+    最尤法や十分統計量の命名はFisherだが本質的にはLaplaceが開拓していた，Laplaceの数学史の講義を拓いたのがPearson．
+
+    19世紀に，最小二乗法が工学者の常識となった中で，
+    初めて根源誤差の仮定に辿り着いたのがYoung．
+\end{tcolorbox}
+
+\subsection{天文学の大衆化}
+
+Tycho Brahe 1546-1601は助手たちに反復同一観測させ，互いに吟味させた．
+Lippershey 1570-1619が望遠鏡を発明したことより，天体観測は大衆化された．
+ガリレオは『天文対話』で，自然言語により誤差の扱いを議論した．
+
+\subsection{Lagrangeと確率変数の和}
+
+Thomas Simpson 1710-1761 (英)はKepler則として発見されていて，暗黙知としてもよく使われていた公式を，定積分の近似式であるSimpson式として名を残す．
+\textit{A Letter to the Right Honourable George Earl of Macclesfield, President of the Royal Society, on the Advantage of taking the Mean of a Number of Observations, in practical Astronomy} (1775)．
+にて，知識人でも「注意深くなされた1回の測定」神話を信じていた．
+そこで，Lagrangeらと共に，算術平均の統計量としての分布を調べた．
+L'utilt\`{e} de la M\`{e} thode de Prendre le Milieu.
+\textit{Miscellanea Taurinensia}
+にて，母関数の方法を用いて後継した．
+
+\subsection{Bernoulliと最尤法}
+
+Lambert, J. H. 1728-1777 (独)は円周率の無理性を証明もした．
+それとBernolliは最尤推定の考え方を育てていた．
+
+一方で，誤差に正規性の仮定がおけるとき，その分布に対応した最尤推定法が最小二乗法であることを初めて発見したのがLaplaceである．
+
+\subsection{Legendreと最小二乗法}
+
+\textit{Nouvelles M\`{e} thodes: Pour la D\`{e}termination} (1805)にて，
+normal equationを導く．
+しかし，確率論的な発想がなかった．
+
+Robert Adrain 1775-1843が最初に証明をしようとする．
+まずは誤差の従う分布がなにかを直接考察した．
+
+Karl Gauss 1777-1855は『天体運動論』で，正規性の仮定をおくと，算術平均が最確値であることを導く．
+また，先取権を巡って筆を執っている．一方でフランス学会は極めて鷹揚な態度を取る．
+
+Laplaceは著書『確率の解析的理論』の「試論」の中で，LegendreとGaussを同等に扱っている．
+
+\section{Queteletによる数理科学}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=自然科学を回転させようとした試み]
+    応用統計学の祖と呼ばれるのがベルギーのQueteletである．
+    フランスには，Laplaceが統計的推論の手法を得ていた土壌があった．
+    結局コンドルセも，次のLaplaceの精神の体現であった．
+    \begin{quote}
+        政治的・道徳的科学に対しても，観察と計算とに基礎を置くこの方法を，すなわち自然科学で役に立ったこの方法を適用してみよう．
+    \end{quote}
+\end{tcolorbox}
+
+\subsection{道徳統計学}
+
+『人間について』(1835)では「平均人の理論と社会体制の組織に関する」思想を社会物理学と呼んだ．
+その内実は，肉体的・知的，並びに道徳的諸性質を支配する諸法則を統計的に研究する学問であった．
+したがって，事実を確定する手法である統計学から派生する理論である（ちょうど生物測定学と同じ）．
+そして，官庁統計・人口学とも違う．
+
+なお，Queteletによる「統計学」とは，
+Gottfried Achenwall(アッヘンヴァル) 1719-1772 独の言葉を借りて，
+「事実・状態を解明するものであって，政治社会に影響を与えるすべての要素を解明するものである」という．
+または歴史学者Schl\''{o}zer(シュレーツァー)の言葉を借りて「歴史は動く統計であり，統計は静止した歴史である」と論じる．
+
+\subsection{コントの社会学}
+
+なお，コントも社会物理学を提唱したが，統計的方法，特に数学的方法を信用していなかった．
+事実，Queteletは道徳統計学というべきもので，コントの現象論的な態度とは全く趣旨が違っていた．
+が，一般から特殊へ進むのがコントで，平均人から社会を経て人類へ進むのがケトレーである．
+大雑把に言えば，コントはいささかMarxの社会進化論的である．
+
+\subsection{コンドルセの偉大な綜合}
+
+コンドルセの社会数学は，コントのような「人間精神の進歩」理論を，ケトレーのような
+科学的手法で，新科学として提唱した．
+コンドルセの地盤には，ダランベールがいた．
+
+\section{ドイツでの社会統計学}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    Adolf Wagner 1835-1917，Ernst Engel 1821-1896，Georg Mayrら．
+\end{tcolorbox}
+
+\section{現代誤差論}
+
+\subsection{田口玄一}
+
+海軍水路部天文部から統計数理研究所へ．
+田口メソッドは品質管理手法を開発・設計工程に取り入れた．
+
+\chapter{Ronald Fisherと農事試験，Pearsonと生物測定学}
+
+\begin{quotation}
+    Sir Ronald Aylmer Fisher 90-62は一時期ロザムステッド農事試験場 (Rothamsted Experimental Station) の統計研究員だったが，最終的にはUCLのPearsonの座（Galton教授職）を継いでいる．
+    Fisherが導入した精密標本論をまとめると，次のRaoの言葉になる．
+    \begin{quote}
+        特定の標本から一般化されて得た知識は不確実なものであるが，一度その不確実性を数量化できれば，種類は異なれど，それは確かな知識となる．
+    \end{quote}
+
+    また，Fisher以降，確率モデルを想定した上でパラメータを推定する「理論モデル主導的」な枠組みが支配したが，計算資源が豊かになったことで，「データ主導的方法」が興隆した．
+\end{quotation}
+
+\section{概観}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    Neyman-Pearson学派が巨視的で，Bayes学派が微視的であり，Fisher学派はその中間点で，あくまで物理学的実験計画法を主軸とする．
+    巨視的には確率は相対頻度であり，微視的には確からしさである．
+\end{tcolorbox}
+
+\subsection{３つの学派}
+
+\begin{history}
+    Pearsonが大標本論・記述統計学と説明され，Fisherの20sのしごとは精密標本論・推測統計学と説明される．
+    社会からの統計学への要請で最も大きなものは検定論である（この点がのちのちFisherが排撃したBayesを蘇らせることとなる）．
+    Fisherの有意性検定は農事試験のデータ解析であったが，これを1950sのNeyman-Pearsonの仕事は，大量生産を背景とした統計的品質管理が背景にあった．
+    ここからさらに，WaldやLehmannによって数学的に体系化されていく．
+    この「最適性」を指導原理とした数学的体系化，Neyman-PearsonやBayesなどの社会情勢に応えた派生は，原点であるFisherの理論とは違う色を帯びていくことになる．
+    この3派閥は，現在にもあとを引く．
+    \begin{enumerate}
+        \item Frequentistは頻度派ともいうが，Neyman-Pearson学派のことをいう．今日では数理統計学の本流となっている．
+        \item Bayesianはベイズ派と呼ばれる．産業応用派・意思決定理論への応用である．
+        \item FisherianはFisher学派のことをいう．実験家の統計学である．
+    \end{enumerate}
+\end{history}
+
+\begin{discussion}[Frequentist vs. Fisherian]
+    Fisherにとっては，統計的推測理論はあくまで物理学実験手法の延長であり，科学的な帰納的推論の一環である．
+    一方で，Frequentistは，現在の数理統計学同様，「最適性」を指導原理とする．
+\end{discussion}
+
+\begin{discussion}[Frequentist vs. Bayesian]
+    Bayesの「主観確率」の理論は一度はFisherによって排斥されたが，1950sに再構築された．
+\end{discussion}
+
+\subsection{Fisherの業績}
+
+\begin{enumerate}
+    \item 統計量の精密な標本分布について，Fisherが関わっていないものを見つける方が難しい．このとき母集団が正規分布に従うことを仮定していたが，これは主に生物データを扱っていたFisherにとっては現実的である．
+    \item さらにその間の関係まで整理し，$\chi^2$分布，$t$分布，正規分布，標本相関係数$r$の分布は，すべて$F$-分布の特別な場合であることを理解した．
+    \item 大標本理論に関する論文Fisher 22\cite{Fisher22}にて，逆確率法を排撃し，Pearsonのモーメント法に代わって最尤法を提示．\footnote{考え方自体は，Edgeworthの"genuine inverse"やPearsonの段階ですでにあった．}
+    十分性の概念もLaplaceがすでに用いていたが，有効性，一致性などの観点から検討し，一般的な方法として提示した．
+    母集団の母数と標本から得られる統計量を明確に区別．実際，農事試験データにBayesの方法はフィットしない，純粋な科学的帰納法のみが要請される現場であるからだ．また，この論文では，統計学の目的は，次の3ステップから成る「データの縮約(reduction of data)」であるとした．
+    \begin{enumerate}[(i)]
+        \item 特定化(specification)の問題：モデル選択．
+        \item 推定の問題：選択したモデルの母数を最適に推定する．
+        \item 分布の問題：構成した統計量の分布を求める．ここで漸近論を採用せず，精密な分布を求めたのがFisherの特徴である．
+    \end{enumerate}
+    \item あくまで関心は小標本にあり，情報量・十分性・尤度の概念をそちらに適用しようとした．
+    \item 実験計画法とは実験化のお家芸であったが，これが統計家の領域に引き込まれた．そして因果推論の基本となる分散分析(ANOVA)という検定法を開発．
+\end{enumerate}
+
+\begin{history}[日本での受容]
+    Pearsonまでの統計学で，母集団のパラメータと標本統計量が区別されなかったように，全数調査じゃなくてランダムサンプリングを使うという数学的トリックが生じたのがFisherからである．
+    そこで日本で受容する際も論争が起こり，数理統計学者が説得する形となった．
+\end{history}
+
+\section{Galtonまでの優生学}
+
+\subsection{Mendelの遺伝理論}
+
+\begin{history}[Gregor Johann Mendel 1822-84]
+    修道会に入会し，所属した修道院は学術研究・教育が盛んだった．
+    司祭になってから51年から2年間Dopplerの下で数学・物理学，ウンガーから植物生理学を学び，戻ってからえんどう豆の交配実験を行った．
+    論文\cite{Mendel66}は数学的で抽象的な議論が理解されず，「反生物的」とさえ評された．
+    後に井戸の水位や太陽の黒点などの気象との関係を研究し，没した時点ではむしろ気象学者としての評価のほうが高かった．
+\end{history}
+
+\begin{theory}[Hardy–Weinberg principle]
+    すべての生物の\textbf{因子型}は，2値変数$A,a$の非順序対$AA,Aa,aa\in[\{A,a\}]^2$によって表現される．
+    $A$の遺伝子頻度を$p$として測られる．
+    すると，3元状態空間$\{AA,Aa,aa\}$上の確率分布の世代毎の変化・発展が考え得る．
+    このとき，十分大きな集団においては，親の母集団の因子型の組成がどうであろうとも，ランダムな交配は１世代以内に，「近似的に安定な因子型分布」を持つ\cite{Hardy08}．
+\end{theory}
+\begin{remarks}
+    したがって，進化＝遺伝子頻度の時間発展の研究は，どのような要因でHardy-Weinbergの法則が破られているかに関する研究となる．
+\end{remarks}
+
+\begin{theory}[性染色体]
+    染色体のうち，性決定に関与する，雄雌異体の生物で唯一異なる染色体．
+    男性がXYであるから，性に関係する性質は父から息子へは遺伝し得ない．
+
+    色盲などのような性に伴う遺伝因子の多くは劣性で，$a$の男性すべてと$aa$の女性すべてに現れる．
+    したがって，起こる確率が男性で$\al$ならば，女性では$\al^2$になる．
+\end{theory}
+
+\section{最尤法}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    Pearsonのモーメント法は静的な解析であったが，最尤法は攻撃で動的で推論的である！
+    22年\cite{Fisher22}に系統的に提示する．
+\end{tcolorbox}
+
+\begin{history}[赤池さんはFisherの超克を意識していた]
+    \cite{赤池-AIC-数理科学}において，
+    \begin{quote}
+        MLEはFisherによって初めて詳細に論じられてから極めて広く用いられているが，その有効性の根拠が何にあるのかは明らかではなく，
+        その合理性の説明は通常直感に訴えてなされてきた．
+        前項で論じた因子分析法には最尤法が用いられている．
+        そこで，最尤法が何を最適化しようとしているのかが明らかになりさえすれば，先の問題は解決されることになる．
+    \end{quote}
+    この後すぐに，漸近論的な立場から，$M$-推定量のような発想「最尤法は$E[\log_ef(Y|\theta)]$を最大にする$\theta$の推定量である」さらに言い換えると，
+    「KL-情報量を規準として，真の分布を最もよく近似する$f(y|\theta)$を求めようとしている」と捉え直している．
+
+    AICの導入は，平均対数尤度$l(\theta)/N=\bP_n[\log f(Y|\theta)]$が，$E[\log_ef(Y|\theta)]$の推定値であるという着想の下に成立した．
+    この見方に従えば，$\{f(y|\theta)\}_{\theta\in\Theta}$の族が$Y$の真の分布を与える$g(y)$を含まない場合においても，最尤法が統計的モデルのパラメータ決定に有効なものでありうることが容易にわかる．
+    直交射影ではないが，集合$\{f(y|\theta)\}_{\theta\in\Theta}$の中で$g$に最もKL-距離の意味で近い点を選出する算譜なのだろう．
+    つまり，赤池さんの言葉で言えば，最尤推定量$\wh{\theta}$はエントロピーに関して$g$を最もよく近似する$f(y|\theta)$を与える$\theta$の，観測値$y_1,\cdots,y_N$に基づく推定値を与える．
+    ただし，適用条件は，平均対数尤度が$E[\log_ef(Y|\theta)]$の推定値として有効な限りであり，またモデル$\{f(Y|\theta)\}$も人間が勝手に自分の責任において取捨選択するものである．
+    「Fisherが明らかにし得なかった尤度の本質的に実験的帰納的な性格と，統計理論における尤度利用の必然性とが，ここに客観的に描き出されている」．
+\end{history}
+
+\section{実験計画法}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    農場実験での実験計画法を確立するために，精密分布を計算するなどの仕事は必要であった．
+    なぜならば，まず暗黙知であった有意性検定をするためには，誤差のコントロールが必要になった（分散分析の開発）．
+    特に，肥沃土の不均一性が一番大きな系統的誤差原因となるので，必然的に実験の規模は限られ，必然的に小標本理論になる．
+\end{tcolorbox}
+
+\subsection{農事実験}
+
+\begin{history}[高度農業]
+    1846年の穀物法撤廃を契機に，英国で「高度農業」が始まり，ここから農事実験は「品種改良」「化学肥料の効果比較」が中心となった．
+    Rothamstedを設立するLawesm J. B.は1842年にはじめて化学肥料を開発した．
+    このとき農事試験を科学化しなければいけないという要請が高まり，その最初の研究がJohnston, J. F. W. (1849). Experimental Agriculture, Being the Results of Past and Practical Agricultureである．
+    これはすごく自然言語で書かれた実験計画法の萌芽でもある．
+\end{history}
+
+\begin{history}
+    Rothamstedでは1919年時点で75年ほどの実験データが溜まっており，この分析法を考えあぐねていた．
+\end{history}
+
+\subsection{分散分析と有意性検定}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    農事実験では統制すべき変量が多いので，そのそれぞれについて，変動への寄与を分離することが必要だった．
+    当時Fisherは変動分析(analysis of variation)と呼んでいた．
+    そしてその後，処置による変動に対して，有意性を判定することが必要．
+    特に，精密標本分布を用いると，標本の大きさに拘わらず，正確な有意性検定を構成できる．
+
+    \textbf{特に，肥沃土の不均一性が一番大きな系統的誤差原因となるので，必然的に実験の規模は限られ，必然的に小標本理論になる}．
+\end{tcolorbox}
+
+\begin{history}
+    Fisher 18 \cite{Fisher18}で分散(variance)を命名し，遺伝学研究のときに発明され，翌年から就職したRothamstedで精緻化される．
+    ここで$F$分布を，当時は$z$分布と命名した．
+    唯一の先行研究は，Gosset=Student 08 \cite{Gosset08}の$t$分布が，当時の大標本理論に頼ることなく，標本統計量のみに基づいて検定を構成したものである．
+\end{history}
+
+そしてブロックデザインが大事になる．
+当時の実践家は誤差を最小にしようとしていたが，
+Fisher以後は誤差が統計的にコントロール可能であればよい．
+
+次に，実践家のお家芸であった有意性判定を，有意性検定で置き換えた．
+
+\section{有意性検定}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    Fisherの有意性検定以前にも，Pearsonの$\chi^2$-適合度検定，Gossetの$t$検定（当時は$z$検定）があったが，普及したのはFisherのものが初である．
+    その理由は，小標本にも適用可能であること（これは$t$-検定もそう），社会的要請の2点がある．
+    Gossetは観測値の精度評価を主な目的とした誤差論的な発想であったのに対し，誤差が系統的に把握できている時点でOKであり，有意性の検定に使える，という
+    発想の転換がある．これはある意味で用途の制限であるが，これが爆発的な応用を生んだ．
+\end{tcolorbox}
+
+\subsection{Fisher以前の検定論}
+
+\begin{history}[確率誤差検定 (Wood and Stratton 1910)]
+    基本的な問題設定は，ある正規分布を観測しており，その母平均を推定する問題である．
+    そのために，誤差の発生要因を統制する必要がある（これと付随する分散分析の技法をあわせて実験計画という）．
+
+    標本$X_1,\cdots,X_n\sim N(\mu,\sigma^2)$から定まる\textbf{確率誤差(probable error)}とは，
+    $0.67\sigma/\sqrt{n}$とする．すると，$\mu\pm0.67\sigma/\sqrt{n}$は確率0.5でこの範囲に入る．
+    これを用いて検定していたので，「帰無仮説」という概念はない．
+    Fisherを待つ必要がある．
+\end{history}
+
+Edgeworth, F. Y.は経済学の文脈で，Pearson, K.は優生学の分野で検定を構成した．
+前者はEconomic Journalの創刊から編集者で，後者はBiometrikaを主宰．
+
+\begin{history}[Francis Ysidro Edgeworth 1845-1926 アイルランド と 数理心理学]
+    発明家の祖父を持つ名家の出身．父はユグノーの子孫で，ドイツに向かう途中，英国博物館の階段であったスペインの難民と駆け落ち中に生んだ子供．
+    基本的にあらゆる学問をやっていたが（弁護士資格もある），King's College Londonで経済学の職に就く．
+    新古典派の主要人物となり，数学的形式を個人の意思決定へと応用した最初の人物となった．
+    効用理論と無差別曲線(indifference curve)でミクロ経済学，Edgeworth展開で数理統計学に名前を残す．
+    81 \cite{Edgeworth81}は数学も，フランス語・ラテン語・古典ギリシャ語にまたがる文章も，アホみたいに読みにくいらしい．
+
+    マーシャルとはともに数学と倫理学を通じて経済学に達したという類似点がある。エッジワースは社会科学に数学の手法を適用した先駆者の一人である。彼自身はその手法を「数理心理学」と名づけていた。
+\end{history}
+
+\begin{history}[Karl Pearsonの適合度検定]
+    Galtonが確立した相関・回帰の概念から出発して，ピアソン系，モーメント法，確率誤差論，$\chi^2$-適合度検定
+    を開発した．これらは記述統計学と呼ばれたが，Fisherのように標本の大小に拘らない枠組みを作ることはなかった．
+
+    $X_1,\cdots,X_n$に関する理論値と観測値の間の乖離の尺度を
+    \[\chi^2:=\sum^k_{i=1}\frac{(m'_i-m_i)^2}{m_i}\]
+    とする．ただし，$k\le n$について$m_i\;(i\in[k])$はそれぞれの値に対する頻度である．
+    すると，$\chi^2$なる統計量の漸近分布は，自由度$k-1$の$\chi^2(k-1)$に従うことを示した\cite{Pearson00}．
+\end{history}
+
+\begin{history}[Wiliam Sealy Gosset 76-37 とギネスビール]
+    Oxfordで化学と数学を学び，学士のままギネスビール社のダブリン醸造所に就職した（農事試験同様，数年前から統計家を積極採用していた）．
+    その後あまりの統計的困難さに，30歳前後でPearsonの研究室に赴いて，\cite{Gosset08}を出した．ギネスビール社は機密保護の観点から社員が論文を出すことを禁止していたので，Studentというペンネームで発表していた．
+    もともと$z=\frac{t}{\sqrt{n-1}}$を用いていたが，Fisherが自身の自由度理論に併せるために$t$に変えた．
+    FisherとPearsonの仲を取り持つ立ち回りをした．
+
+    醸造過程の共変量は互いに独立でなく，データも少ない．誤差の正規性も仮定できないので，当時の誤差論は適用不可能であった．
+    \cite{Gosset08}のアブストでは
+    \begin{quote}
+        繰り返すことが困難な実験は少なくない．このような場合，データ数は少なく，いくつかの化学実験，多くの生物学的実験，そして殆どの農事試験・大規模実験が当てはまり，従来これらはほとんど統計学の範囲外であった．
+
+        また，正規曲線の方法は大標本のみで適用可能であるが，いつ適用不可能になるかの研究がない．
+    \end{quote}
+    そこで，標本平均を$x$，標本不偏標準偏差を$s$として
+    \[z=\frac{\o{x}-\mu}{s}\]
+    とし，この分布と確率積分表を作った．
+    モデルを正規$N(\mu,\sigma)$として$\mu$を推定する際，2つの平均値の統計的有意性を検定できる．
+
+    しかし，Gossetはこれを\textbf{小標本の場合の正規近似}に用いただけで，検定を構成はしなかった．
+    ここでも確率誤差検定同様，棄却域を設定せず，検定に2つ以上の役割を持たせており，Waldの意味で「検定」とは言えない．
+\end{history}
+
+\subsection{Fisherの有意性検定}
+
+有意性検定に用いるには，Gossetの研究はほとんどそのまま使えるが，唯一，有意性査定のために特殊化する必要があった．これは，
+Gossetは観測値の精度評価を主な目的とした誤差論的な発想であったのに対し，誤差が系統的に把握できている時点でOKであり，有意性の検定に使える，という
+発想の転換がある．これはある意味で用途の制限であるが，これが爆発的な応用を生んだ．
+
+また，Pearsonの適合度検定は，事前に設定した棄却域の下で棄却するのではなく，単純に$P[\chi^2\ge c]$を見て判断する．
+
+
+さらに，母集団と標本との確率論的な関係を厳密に扱うために自由度の概念を導入し，$t$検定として作り直した．
+
+\section{Pearsonの統計理論}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    標本の理解と，特定の分布への当てはめ(fitting)を通じて，統計的手法を開発した．
+    もちろん推測への萌芽は含まれているが，あくまで，大数観察とそこから科学的な知見を引き出そうとすることが学問的興味であった．
+
+    Pearsonの検定は誤差が小さいことの確認であり（その上でマクロ生物理論を立てたいので），Fisherの検定は系統的な誤差の中に有意なものが混じっていないかの検出である．
+\end{tcolorbox}
+
+\subsection{記述統計学}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    ドイツに留学して，Karl Marxに心酔して，革命はいただけないが，社会を科学的に改善していく精神を汲み取った．
+\end{tcolorbox}
+
+\begin{quote}
+    記述の方法の発明―これは発見というより創造である．科学の進歩とはこういう記述の方法を創造することなのである」．
+\end{quote}
+
+標本が十分に大きいときに，これ自体を母集団とみなすならば，背後に分布を仮定することも，標本と母平均との確率的関係に頭を悩ませることもない．
+この特権を享受した下での統計的手法を，記述統計学という．
+これは，全体を見渡して知恵を得たい，複雑な大規模データを要約して理解したいという傾向のある学問（マクロ生物学など）で
+取られる手法となる．一方でGossetやFisherは推論が必要になり，Edgeworthは意思決定が必要であった．
+
+\subsection{生物測定学}
+
+Walter Weldon 1860-1906と創始した生物測定学は1890sから1920sまで唯一の
+統計学の高度の訓練をする組織であった．
+University Colledgeは世界の統計学の中心であった．
+
+メンデル遺伝学派との論争に明け暮れてから，生物測定学派は王立協会からも，
+生物学会からも締め出された．
+
+\subsection{モーメント法とピアソン系}
+
+しかし，Pearsonも非対称分布を持つ標本に出会い，これを正規分布の混合として説明しようと試みた．
+そのための方法としてモーメント法を開発した．
+4次までの積率に注目し，正規分布の歪度$\gamma_1=0$と尖度$\gamma_2=3$と比較することで
+近さを測れる．
+母モーメントを知っていれば，標本モーメントはそれに確率収束するだろうから，必要な次数までモーメント方程式を用意すれば，その解そして一致推定量が得られる，という手法である．
+このとき，母分布にパラメトリックな仮定をおくことになるが，これをピアソン系と呼ぶ．左右非対称性や尖り具合によって12に分類されている．
+
+こうして最後に，ピアソン系の適合度が知りたくなる．そこで適合度検定が要請された．
+
+\chapter{Neyman-Pearson理論}
+
+\begin{quotation}
+    統計的推測理論が次の発展をするのは，工業化が契機になる．
+    農事試験などの精密なものではなく，大量生産とその誤差管理が問題になる．
+    そこで，最適な有意性検定(optimal test of significance)の理論的枠組が生まれた．\cite{統計と社会経済分析1-社会的形成}
+\end{quotation}
+
+\section{統計的品質管理の父}
+
+\begin{history}[Walter A. Shewhart 91-67 米]
+    California Berkeleyで物理学博士を取ったのちに，AT\& Tの前身であるBell Telephoneで
+    通信システムの信頼性向上の仕事をした際に残した知的遺産により，
+    統計的品質管理の父と呼ばれる．プラグマティズム哲学者 C・I・ルイス の著作に影響されて操作主義的姿勢を鮮明に表し、それが彼の統計処理に影響していた。
+    \begin{quote}
+        シューハートの上司であった George D Edwards は「シューハート博士はほんの1ページのメモを書いた。その3分の1は、我々が今日概略の管理図と呼ぶような単純な図だった。その図と前後の文章には、今日の我々がプロセス品質管理として知っている基本原則と考慮すべきことが全て記述されていた」と回想している。
+    \end{quote}
+    製造工程のばらつきが正規分布の形になるならば，「特殊要因」がなくなり，「偶然要因」のみからなることになり，これが理想的な管理状態とした．
+    管理図とは，この2状態の区別をするツールである．
+
+    彼はアカデミアにいるWilliam E. Deming 00-93 米にも影響を及ぼした．
+    デミングはシューハートの考え方に基づいて科学的推論に関して研究を展開し、PDCAサイクルも生み出した。 
+    デミングはYaleで数学と物理学の博士を取ってからBellでインターンをしたのち，
+    ダグラス・マッカーサー将軍の下で日本政府の国勢調査コンサルタントを務め、統計的プロセス管理手法を日本の企業経営者に教えた。その後も何度も日本に赴き、1950年から日本の企業経営者に、Bell研究所で
+    Shewhartから学んだ設計/製品品質/製品検査/販売などを強化する方法を伝授していった。彼が伝授した方法は、分散分析や仮説検定といった統計学的手法の応用などである。デミングは、日本の製造業やビジネスに最も影響を与えた外国人であった。このため、以前から英雄的な捉え方をされていたが、アメリカでの認知は彼が死去したころやっと広まり始めたところであった。
+\end{history}
+
+\section{Neyman-Pearsonの統計的仮説検定理論}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    28, 33にて，対立仮説，第I,II種の過誤，検出力の枠組みからFisherの有意性検定を捉え直した．
+    そして検定の「最適性」の枠組みをこしらえた，このメタ視点が達成点である．意思決定理論的だね．
+    2種類の過誤はトレードオフの形になっていることに注目すると，過誤確率の最適制御の問題になる．
+    これについて，まず単純検定仮説・対立仮説なる対象に絞って，Neyman-Pearsonの補題を立てた．
+\end{tcolorbox}
+
+\begin{history}[Fisherの最尤法からアイデアを得て，検定論でも「最適性」を追求した．]
+    \cite{NeymanPearson28}では，尤度比検定が導入された．
+    \cite{NeymanPearson33}では，最強力検定(most efficient test)が定義された．
+    複合仮説の場合については一様最強力検定が最適だろうが，これが構成できる状況は稀である．
+    33年以降の研究は，次善策の提案が続き，38年まで共同研究を続ける．
+    不偏検定，一様不偏検定，相似検定(similar test)など．
+
+    Karl PearsonとFisherの一番の違いは，誤差への関心の高さと，最適性への関心の高さの別である．
+    このFisherの立場はNeyman-Pearsonに確かに受け継がれた．
+    \begin{quote}
+        統計的仮設検定の問題とは，棄却域を選択する問題である．
+    \end{quote}
+    しかし，この立場に対するFisherの反論としては，「有意性が棄却されるか」しかないのであって，その逆は「採択する」ではないはずである．
+    これは\textbf{帰納的推論}の枠組みであり，この立場からは「形式主義すぎる」ということになる．
+    一方でNeyman-Pearsonは\textbf{帰納的行動}の枠組みと言える．
+    いずれにしろ，検定の用途の違いである．
+\end{history}
+
+\begin{context}[sampling inspection]
+    1924年からBell研究所にて，Dodge, H. F. and Romig, H. G.が抜き取り検査の研究が始められた．
+    誤って合否を下すことは，producer's riskとconsumer's riskの狭間にある．
+    つまり，Neyman-Pearsonの応用先的には，どちらかに意思決定をする必要があったのだ！
+
+    最終的に，Stanfordで品質管理の集中講義が行われ，1945年夏の時点では各企業から派遣されて出席者は1万人を超えたという．
+    
+    ここにおいて，Neyman-Pearsonの検定技法は，\textbf{契約上の品質に関する合意形成手段として用いられた}のである！
+\end{context}
+
+\begin{tbox}{red}{}
+    このように，\cite{芝村-Fisher}の観点から見ると，統計手法に関する論争は全て応用先の
+    要請の違いから起因したものであり，その解決は，「立場の違い自体をモデル化し，決定理論を作る」ことでアルゴリズム的に解決されてきた．
+
+\end{tbox}
+
+\chapter{前期計算機時代の統計手法}
+
+\chapter{機械学習と統計科学}
+
+\begin{quotation}
+    機械学習の分野は数理統計学に基礎を置く「統計的機械学習」として目覚ましい発展を遂げている．
+    「学習」は統計的には「推定」「予測」と同義であるが，特に「機械」が行うアルゴリズム的行為を表現する際に使う，concept with an attitudeである．
+    同様に，「機械」とは関数のことをいう．
+\end{quotation}
+
+\section{機械学習の歴史}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    人工知能というのは，学習を実装する試みである．
+    論理計算の分野と脳型情報処理の分野との両輪が，統計的機械学習として結実して，実質的に現在はこの分野の業績が人工知能と呼ばれている．
+\end{tcolorbox}
+
+\begin{history}[第１次：記号処理と論理推論＋パーセプトロン (1960s)]
+    「論理的人工知能」の流れと「脳型情報処理」の流れが合流して一大潮流を作るが，
+    パーセプトロンはすぐに限界が見つかったために収束する．
+\end{history}
+
+\begin{history}[第２次：エキスパートシステム＋誤差逆伝播法 (1980s)]
+    2つの潮流は再び出会い，パーセプトロンを多層化する方法が模索された．
+\end{history}
+
+\begin{history}[統計的機械学習 (2000s)]
+    統計や凸最適化，カーネル法やベイズ推論などの成果が揃ってきた．
+\end{history}
+
+\begin{history}[深層学習 (2010s)]
+    確率的降下法，巨大深層モデルなどが提案され，次世代知能が模索されている．
+\end{history}
+
+\section{類型認識問題の枠組み}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    決定空間の元を「仮説」または「認識器」，決定関数の空間を「学習アルゴリズム」，一様に良い決定を「Bayes規則」という．
+    この意味で漸近最適な決定関数を\textbf{統計的一致性を持つ}という．
+    統計量を構成するに当っての計算機集約性に由来する．
+\end{tcolorbox}
+
+\subsection{決定理論からの概観}
+
+\begin{definition}[統計的決定理論との対応]\mbox{}
+    \begin{enumerate}
+        \item 実験$(\Om:=\X\times\Y,\A\otimes\B,P(\Om))$から得られる標本を\textbf{訓練標本}または\textbf{観測データ}という．観測データは学習用・検証用・テスト用に分けられることもあり，これを\textbf{交差検証法}という．
+        $\X$を\textbf{入力空間}または\textbf{パターン空間}，$\Y$を出力空間という．
+        \item 決定空間$\D\subset\L(\X,\Y)$の元を決定というより特に，\textbf{仮説}という．
+        決定関数$\delta:\Om^n\to P(\D)$を(確率的)\textbf{学習アルゴリズム}ともいう．
+        \item 決定関数$\wh{y}_n:\X\to\Y\in\D$が離散値であるとき，\textbf{類型認識器}または\textbf{判別器}(classifier)ともいう．
+        このとき，終域$\Y\subset\R$を\textbf{ラベルの空間}ともいう．
+    \end{enumerate}
+\end{definition}
+\begin{remark}
+    判別機$\X\to\Y$はしばしば，関数$\X\to\R$と商写像$\pi:\R\to\Y$との合成として構成される．
+    これを\textbf{判別／識別関数}(discrimination function)，$\pi$を\textbf{決定領域}という．
+\end{remark}
+
+\begin{problem}[classification problem]\mbox{}
+    \begin{enumerate}
+        \item 有限集合$\Y\subset\R$に値を取る関数$y:\X\to\Y$を\textbf{類型}(pattern)または\textbf{ラベリング}という．
+        これの全体を決定空間$\D\subset L(\X,\Y)$とし，良い推定量を構成するようなアルゴリズム$\delta\in\Delta\subset L(\Om^n;\D)$を考える．
+        これを構成するという問題$(\X,\D,\Delta,W)$を\textbf{判別問題}という．
+        \item 分布族$\P\subset P(\Om)$はしばしば，真のラベル$y\in\D$に基づいて設定される．
+        このときを\textbf{決定論的パターン認識問題}という．
+        多くの回帰分析と同様，殆どの場合はパターンは定かでない，統計的存在である．このときを\textbf{統計的パターン認識問題}という．
+        \item 
+        決定論的パターン認識の場合，危険関数$W:P(\Om)\times\D\to\R_+$は$\Y\times\Y\to\R_+$の言葉で次のように定められる：
+        \begin{enumerate}
+            \item $Y$上の分離度の指標としては，\textbf{0-1損失}$l(\wh{y},y)=1_{\Brace{\wh{y}\ne y}}$またはその非対称化$l(\wh{y},y)=l'(y)1_{\Brace{\wh{y}\ne y}}\;(l'\in L(\Y))$が用いられる．
+            これを\textbf{損失距離}とよぼう．
+            \item $l$を所与として，損失関数$W:P(\Om)\times\D\to\R_+$を
+            $R(P;h):=E_P[l(h(X),Y)]$を定める．
+            これを\textbf{予測損失}(predictive loss)という．\footnote{予測損失は損失関数であるが，危険関数の記号$R$を使いがちである．}
+            \item 
+            この$P$を経験分布で代用して得る推定量$\wh{R}(P;h)$を\textbf{経験損失}という．
+        \end{enumerate}
+        \item 一方で統計的パターン認識問題では，
+        訓練標本以外の類型も正しく分類する「汎化性能」が重視されるため，より特殊な損失関数が設定される．
+        \item 損失距離$l$に関する損失関数$W$の下限$R^*(P):=\inf_{h\in\D}R(P;h)$を\textbf{Bayes誤差}といい，これを達成する仮説$h\in\D=L(\X;\Y)$，すなわち，一様に良い決定を，\textbf{Bayes規則}という．
+        \item 危険関数$R:P(\Om)\times\Delta\to\R$は，損失関数の期待値とする：$R(P;\wh{h}_n):=E_{P^{\otimes n}}[W(P;\wh{h}_n)]$と定める．
+        したがって，Bayes決定則とは誤識別した際の損失が最小になる識別である．一方で，正しく識別出来る確率を最大にする，などの危険関数も考え得る．
+        これを\textbf{最大事後確率則}または\textbf{最小誤識別率則}という．
+        \item この危険関数の値$R(P;\wh{h}_n)$がBayes誤差$R^*(P)$に確率収束するとき，アルゴリズム$\wh{h}_n$は\textbf{統計的一致性を持つ}という．
+    \end{enumerate}
+\end{problem}
+\begin{example}\mbox{}
+    \begin{enumerate}
+        \item $\X$が2次元データであるときの2-値判別問題の例として，ランキング問題もある．
+        \item 決定論的パターン認識問題には，手書き文字認識などがある．この問題は一般にdomain specificになる．
+        \item 回帰問題では，損失関数$W$とそれが定める危険関数$R:P(\X)\times\Delta\to\R$を$l:\D\to\R_+$と同一視することは出来ないだろう．
+    \end{enumerate}
+\end{example}
+
+\subsection{学習アルゴリズム}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    カテゴリの事後確率分布$p(y|x)$を直接は推定せず，Bayesの定理に基づいてデータの生成モデル$p(x,y)$を代わりに推定する手法を\textbf{生成モデルに基づくパターン認識}という．
+    これと対照的に，識別境界の推定に特化した手法として，\textbf{識別モデルに基づくパターン認識}がある．
+\end{tcolorbox}
+
+\begin{model}
+    学習アルゴリズムは次の4段階に分けて設計される．
+    \begin{enumerate}
+        \item 観測：形態素解析，OCR．
+        \item 前処理：パターンの正規化，雑音消去．
+        \item 特徴抽出：次元を削減する．手書き文字のどこに注目して2次元まで削減するかなどは計算機科学者の腕の見せどころである．または主成分分析を用いる．
+        \item 識別：損失が大きすぎれば，前3段階をやり直す．
+    \end{enumerate}
+    (4)のみ，学習の対象に依らない設計ができる．
+\end{model}
+
+\begin{example}[最大事後確率則を満たす識別器の構成]
+    現実的にはBayes規則は複雑性故に，最大事後確率則を用いることも多い．
+    $f\in\D$を$f(x)=\argmax_{y\in\Y}p(y|x)$を満たすように構成する．
+    これは事後確率$p(y|x)$を推定する問題に等価であり，
+    \[p(y|x)=\frac{p(x|y)p(y)}{p(x)}\propto p(x|y)p(y)=p(x,y)\]
+    より，事前分布$p(y)$を推定した下で(経験分布を使う)，条件付き確率$p(x|y)$を推定する問題に等価．
+    このアプローチを\textbf{生成モデルに基づくパターン認識}という．
+    $p(x|y)$の推定は，次のようなものがある：
+    \begin{enumerate}
+        \item Guassモデル下での最尤推定法：決定境界は二次の超曲面になる．さらに分散の均一性を仮定するときは超平面となり，この場合の生成モデルに基づくパターン認識を\textbf{線型判別分析}という．計算が簡単で非常に実用性が高い．
+        \item $p(x|y)$が多峰性を持つときは，少しモデルを拡張して，混合Gaussモデル下での最尤推定法を用いる．しかしこの場合は最尤推定量の解析的な構成が困難になり，繰り返しアルゴリズムによる計算がなされる．勾配法・EM算譜などがある．
+        勾配法は，単純に目的関数である尤度関数を最大化する，最適化一般の数値計算算譜である．実装が非常に容易で局所最適解への収束が保証されている．大域的最適解を探すには，これを別々の初期値から何度か繰り返す(多点探索)．ただしステップ$\ep>0$の設定は繊細な注意が必要で，だんだん小さくしていく手法を焼きなまし法というが，その実装は練度が必要である．
+        \item Bayes推定法を用いることも出来る．事後確率を最大にするパラメータ$\theta\in\Theta$を選択する．この手法の利点は，共役な事前分布に対しては解析的な方法でBayes推定量が求められることである．
+        \item 一方で任意のモデル$\Theta$と事前分布に関するBayes推定では，数値計算法が欠かせない．
+        \item 以上と違ってノンパラメトリックな手法には，カーネル密度推定がある．これは尤度交差検証法と併せれば，非常に汎用的かつ実用性が高い．
+        \item カーネル法に替わって，最近傍密度推定法があり，こちらはパターン認識と非常に相性が良い．
+    \end{enumerate}
+\end{example}
+
+\subsection{決定空間が有限な場合}
+
+\begin{problem}
+    $\Y=2$の2値判別問題について，決定空間を$\H=\Brace{h_1,\cdots,h_T}\subset L(\X;\Y)$とする．
+\end{problem}
+\begin{observation}
+    経験判別誤差を最小にする仮説を出力する学習アルゴリズム$\Om\supset S\mapsto h_S:=\argmin_{h\in\H}\wh{R}(h)$が構成出来たとする．
+    $\H$がBayes規則を含むならば，$h_S$の予測判別誤差はBayes誤差に収束する(一致性)．
+    しかし一般にそんなことは期待できない．
+    したがって，$\H$をなるべく大きくしてバイアスを小さくしたいが，そうすると分散が大きくなる．
+    よって，適切な大きさの$\H$を設定することが難しい．
+    こうして，$\H$が大きすぎることに対する罰則を課すことで対処する，これを\textbf{正則化}という．
+    正則化パラメータは，交差検証法などで設定する．
+\end{observation}
+
+\section{教師なし学習の枠組み}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    統計的決定理論では捉えられない枠組みであり，いわば「標本が存在しない」．
+\end{tcolorbox}
+
+\begin{example}
+    クラスタリング，外れ値検出，独立成分分析などは教師なし学習問題である．
+\end{example}
+
+\chapter{ビッグデータと知識発見}
+
+\begin{quotation}
+    \begin{description}
+        \item[知識発見] knowledge discovery in databases とはビッグデータからあらゆる技術を用いて，通常の統計の意味とは違い，よりヒューリスティック・発見的な知識獲得を目指す分野である．
+        \item[データ前処理] \begin{enumerate}
+            \item 自然言語処理： 形態素解析によりテキストデータを構造化し，機械学習に繋げる．
+        \end{enumerate}
+    \end{description}
+\end{quotation}
+
+
+
+\section{歴史}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    データマイニング，テキストマイニング，機械学習，自然言語処理，情報検索，ナレッジマネジメントなどの分野で培われてきた技術の集合体を用いて，情報爆発という危機的問題の解決に挑む分野である．
+\end{tcolorbox}
+
+\begin{history}
+    起源は1989年である．
+    \begin{enumerate}
+        \item 1980sは関係データベースとSQLの開発で，オンデマンドかつ動的なデータ解析が可能になった．
+        \item 1990sからハードディスクが安くなったことから，汎用PCにより構成出来るようになったことで、データを長期間に渡り蓄積するという観点を実現出来るようになった．
+        \item 2000sにKevin Ashtonにより，IoTによって実データが大量に収集・供給される世界の到来が一般認知された．
+        \item 2010sはGoogleのBigQueryやAmazon Redshiftなど，Data Warehouseは我々には見えなくなっている．そのおかげで，クラウドサービスとして，多くの企業がデータを蓄積することが可能になった．こうしてビッグデータ解析が席巻している(big dataはThe Economist誌による)．次はなんだろうか？
+    \end{enumerate}
+    2011年にデータマイニングと推論を応用した質問応答システムである"IBM Watson"がアメリカのクイズ番組"Jeopady!"に出場して人間に勝利する．
+\end{history}
+
+\begin{remarks}
+    その手法の要諦は次のようなものである：
+    \begin{enumerate}
+        \item パターン抽出：特に「似たような商品を購入した人はこんなものも購入しています」という知能は，Market Basket Analysisと呼ばれる．「おむつとビール」は知識発見の例である．
+        \item クラス分類(カテゴリの予測)，クラスタ分析(類似度解析)，回帰分析など．
+    \end{enumerate}
+\end{remarks}
+
+\section{形態素解析}
+
+\begin{example}
+    MeCab，Janome，GiNZAを用いる．
+    \begin{enumerate}
+        \item PythonにはspaCyというフレームワークがあり，これで日本語を解析するモジュールがGiNZA．
+    \end{enumerate}
+\end{example}
+\begin{remark}
+    
+\end{remark}
+
+\chapter{統計的因果推論}
+
+\begin{quotation}
+    因果推論は従来哲学の分野であった．
+    この分野も近年急速に統計化しつつある．
+    \begin{enumerate}
+        \item 確率空間を観測可能な形で広げる行為が，その確率的現象をより詳しく知る行為だとすれば，
+        まず独立試行を繰り返すことによって直積を取ることが出来る．
+        \item これが確率統計学の最初の歴史となった．
+        続いて，反実仮想をすることで，確率空間の直和を取ることも出来る！
+    \end{enumerate}
+\end{quotation}
+
+\section{歴史と発展}
+
+\begin{tbox}{red}{統計的因果推論の要諦}
+    統計的推定・検定は，
+    統計的実験$(\Om,\F,(P_\theta))$の直積の列上で展開される漸近論であった．
+    しかし，多くの分野で関心の対象となるような，データの生成過程に関する問いは，この枠組みでは十分な回答を得られない．
+    データの生成過程に対する模型として，部分的解決を与えていたのが構造方程式模型である．
+    これに対して，反実仮想確率変数$Z$を通じて，統計的実験$(\Om,\F,(P_\theta))$の直和を考える営みが，統計的因果推論である\cite{清水昌平10-slide}．
+\end{tbox}
+
+\subsection{総覧}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    以前はどのように対処されていたのだろうか？
+    因果分析手法をまとめた\cite{Asher83-Causal}では因子分析やSimonの方法を挙げており，
+    同時に，簡単な方法のみが注目され，Wrightの逐次パス解析の方法などの利用が進まない状況に警鐘を鳴らしている．
+    1980年に付された役者後書では，\cite{Asher83-Causal}は因果分析最良の教科書の一つだと言っているが，
+    文中では構造方程式模型に当たるものが「多重指標模型」と呼ばれており，\cite{Joreskog70}の結果を「彼の確認的因子分析法を因果分析に利用したユニークなもので，LISRELとして
+    プログラム化されたとも聞いている」としている．
+\end{tcolorbox}
+
+\begin{history}\mbox{}
+    \begin{enumerate}
+        \item Pearsonを初めとしたGaltonのグループが相関関係1880sを研究し，その途中で線形回帰の手法を用いた．
+        最も，手法自体は，天体観測から真の軌道の模型をfittingする仮定で，Legendre (1805)やGauss (1809)によって，
+        Gauss-Markovの定理の原型まで得られていた．
+        回帰模型の正規性の仮定を弱めたのは\cite{Fisher22-Regression}である．
+        \item 心理学の分野にて，\cite{Spearman04}が因子分析を始めた．
+        \item 遺伝学の文脈でモルモットの研究を通じて，\cite{Wright18}, \cite{Wright21}がパス解析を展開した．
+        \item \cite{Neyman-23}は潜在結果の概念を定義したが，1990年まで英訳は出版されなかった．
+        \item 生物統計にて，\cite{Cox58}は$Z$への介入が有効なのは他の独立変数に影響を受けないときに限ることに継承を鳴らした．
+        因果分析に関する知識の欠如が自覚され始める．
+        60年代に，統計学としては無視されていたパス解析が再発見される．
+        \item 社会学にて，\cite{Joreskog70}は一連の因果模型の前身を構造方程式模型として枠組みを作ったが，
+        一度定型化した手続きに落ちると，因果についての議論は覆い隠されるようになった．
+        特にパス分析の部分を同時方程式模型と呼んで経済学が取り入れたが，因果の議論は不十分なままでひたすらに研究が生産された．
+        \item 数学者Samuel Karlinの批評を受けて，Wrightは60年前の自身の論文を要約するような論文を発表した．
+        \item 元々心理学を専攻していたRubinは\cite{Rubin74-Causal}にて，因果を扱うための語彙として「潜在結果」を定義した．
+        \item 心理学雑誌にて\cite{Baron-Kenny86}が線型方程式系の中で中間変数の存在を検出する手法を提出し，33番目の引用数を誇る．
+        \item 同年にGreenlandとRobinsは交換可能性によって交絡を取り扱う手法を導入した．すなわち，\textbf{交絡がない}とは，処置群が処置を受けなかった場合の効果が対照群のそれに等しいことをいう．
+    \end{enumerate}
+\end{history}
+
+\begin{history}[主な研究者]\mbox{}
+    \begin{enumerate}
+        \item Judea Pearl 36- イスラエル 
+        \begin{enumerate}
+            \item 「因果推論のための解析手法を開発し，人工知能研究に本質的な貢献をした」として2011年Turing賞を受賞した計算機科学者．
+            \item Tel Avivの生まれであり，電気工学学士を取ると渡米し，引き続き電気工学修士(New Jerzy工科大学)，物理学修士(Rutgers大学)，電気工学博士(現New York大学)．
+            \item 王手電機メーカーのRCAから始まり，民間で記憶デバイスの開発に携わるが，「半導体により仕事が奪われた」のちにUCLA工学科へ(1970年)．研究テーマがここで人工知能に移る．
+            \item Bayesian Networkの手法の基本的な提案者であり，これをはじめとして人工知能界隈に確率統計学的手法を取り入れた第一世代である．このテーマにおける著書は\cite{Pearl84-Heuristics}, \cite{Pearl88-IntelligentSystem}．
+            \item 計算機が因果律を理解するための形式・認知模型としての興味もあった(計算機科学者であると同時に認知科学者でもある)ことが，因果推論の極めて一般的な枠組みを提案することができた背景の一つであろう．
+            \item 現在UCLAでCognitive Systems Laboratoryの所長を務める．
+        \end{enumerate}
+        \item Donald B. Rubin 43- 米 Harvard大学John L. Loeb教授職（統計学）．
+        \begin{enumerate}
+            \item ワシントンで生まれ，Princeton大学で心理学学士，Harvard大学で計算機科学修士，統計学博士(Cochranの下で)．
+            \item 1983以来，Harvard大学教授．そもそも欠測データ\cite{Little-Rubin19-MissingData}，Bayes統計\cite{BDA}の専門家でもある．
+            \item Imbensと\cite{Imbens-Rubin15}を共著．
+        \end{enumerate}
+        \item Paul R. Rosenbaum 54- 米 Pennsylvania大学Wharton校Robert G. Putzel教授職（統計学）．
+        \begin{enumerate}
+            \item 統計学博士(Harvard大学, 1980)ののち，1986以降Pennsylvania大学Wharton校に勤務．
+            \item Rubinとの共同研究\cite{Rosenbaum-Rubin83-PropensityScore}で傾向スコアを提案．
+        \end{enumerate}
+        \item David R. Cox 24-22 英 Imperial College Londonで数学科長を務める：学士（数学，St John's College），博士（統計，Leeds）．
+        \item Steffen Lauritzen 47- 英 Oxford：Pearlの構造的因果模型をグラフィカルモデルから受容した論文\cite{Lauritzen00-Graphical}を書いている．
+    \end{enumerate}
+\end{history}
+
+\begin{history}[疫学分野]\mbox{}
+    \begin{enumerate}
+        \item James Robins 米 Harvard公共衛生学校 Mitchell L. and Robin LaFoley Dong教授職（疫学）．
+    \end{enumerate}
+\end{history}
+
+\begin{history}[計量経済学分野]\mbox{}
+    \begin{enumerate}
+        \item Guido Imbens 63- 米 Stanford：Angristと自然実験に対するLATEの枠組みを開発\cite{Imbens-Angrist94-LATE}し，その可能性と限界についての基本的な貢献をした．
+        \item Joshua Angrist 60- 米 MIT：擬実験研究(quasi-experimental)の枠組みを用いた政策提言など．
+        \item Scott Cunninghum
+        \item Charles Manski
+    \end{enumerate}
+\end{history}
+
+\begin{history}[日本の主な研究者]\mbox{}
+    \begin{description}
+        \item[因果探索] \mbox{}\begin{enumerate}
+            \item 清水昌平＠滋賀大学：大阪大学 基礎工学研究科 博士．
+            \item 狩野裕＠大阪大学 基礎工学研究科 数理科学領域．
+        \end{enumerate}
+        \item[疫学] \mbox{}\begin{enumerate}
+            \item 佐藤俊哉＠京都大学 医学研究科 社会健康医学系専攻 医療統計学 教授：東京大学 医学系研究科 保健学専攻 博士．
+            \item 松山裕＠東京大学 医学系研究科 公共健康医学専攻 生物統計学分野 教授：同上の博士（保健学）．
+        \end{enumerate}
+        \item[経済学] \mbox{}\begin{enumerate}
+            \item 竹内啓 33- ：東大経済学部卒業後そのまま助手採用．
+            経済学部教授時代のゼミで，佐和隆光，竹村彰通，国友直人を教える．
+            退官後は明治大学．
+            \item 佐和隆光 42- ：修士を得ると助手採用の後に京都大学経済学部助教授へ．退官後は立命館大学，滋賀大学学長．
+            \item 美添泰人 46- ：博士を得た後にPh. D. (Harvard)も取り，立正大学，Carnegie-Mellon大学，青山大学で教授．
+            \item 国友直人 50- ＠東京大学 ：修士を得るとStanford統計学科へ．帰国後は経済学部教授．
+            \item 竹村彰通 52- ＠滋賀大学 ：芸大ピアノ科ののちに東大経済学部へ．博士はStanford統計学科にて．日本に戻ると，東大経済学部・情報理工学系研究科を得て，滋賀大学データサイエンス教育研究センターへ．
+        \end{enumerate}
+        \item[数学] \mbox{}\begin{enumerate}
+            \item 林知己夫 18- ：学士（数学，東京帝国大学）の後に陸軍航技候補生として水戸陸軍飛行学校に入校．４年後に統計数理研究所へ．国立大学共同利用機関への改組転換と総合研究大学院大学の創設準備に力した．John Pelzelの提案による日本語ローマ字化計画を阻止した社会調査のサンプリングを実施した．
+            \item 赤池弘次 27- ：学士（数学，東京大学）の後に文部省統計数理研究所，そのまま勤め上げる．
+            自動制御理論で扱った時系列解析・因子分析の知見を基に\cite{Akaike74-AIC}を発表．
+            \item 鈴木雪夫 29- ：学士（数学，東京大学）の後に文部省統計数理研究所，初代統計学会理事長，経済学部助教．定年後は多摩大学へ．
+            \item 赤平昌文 45- ：博士（数学，早稲田大学）の後に筑波で勤め上げる．
+            \item 北川源四郎 48- ：修士（数学，東京大学）の後に博士を中退して統計数理研究所研究員．その後ずっと統計数理研究所．
+            \item 岩崎学 52- ＠横浜市立大学：修士（数学，東京理科大学）ののちに防衛大学校，成蹊大学を経て横浜市立大学．
+        \end{enumerate}
+    \end{description}
+\end{history}
+
+\subsection{PearsonとFisher}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=]
+    統計学者は，「因果」の用語こそ表向きに使わなかったものの，ずっと関心を持ってきた\cite{Cox-Wermuth04-review}．
+    Yule (1900)が因果と相関の違いを特に時系列解析の分野で声高に警鐘を鳴らした．
+    Fisherはランダム化によって因果推論は可能であるとした\cite{Fisher26}, \cite{Fisher35-Design}．
+    これがRCTである．
+    Fisherと協業していた\cite{Cochran65}は，より因果についての分析を推し進めるため，Wrightのパス解析を発展させるべきだと論じた．
+    後にその弟子がNeyman-Rubin因果模型を作ることになる．
+\end{tcolorbox}
+
+\subsection{回帰模型}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    回帰模型はただの径数的な確率模型ではなく，変量間の回帰関係を分析する，一歩踏み込んだデータ解析法である．
+    \begin{enumerate}
+        \item 回帰関係は新しい観測の「予測」に役に立つ．変量$x$が大きいとわかっているなら，$y$も大きい確率が高い，というのがBayes推定になる．
+        \item 一方で，「制御」「操作」「介入」「干渉」の予測や評価には，このままでは一切の知識を与えない．
+    \end{enumerate}
+\end{tcolorbox}
+
+\begin{issue}
+    Box (1966)は化学工学の文脈で回帰分析の結果を因果の言葉で翻訳する際には注意すべき点が多い行為だという警鐘を鳴らした\cite{Cox-Wermuth04-review}．
+\end{issue}
+
+\subsection{パス解析}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    米国の遺伝学者であるWrightは\cite{Wright18}, \cite{Wright21}でパス解析を
+    展開し，因果の模型とグラフの使用の先駆けとなった．
+    これは計量経済学ではその双方向性（潜在変数を持たない点）を強調した名前「同時方程式模型」を持って継承された\cite{豊田秀樹-理論編}．
+    特にKeynes経済学におけるマクロな経済計画の発想で模型として採用された\cite{統計科学のフロンティア5}．
+\end{tcolorbox}
+
+\begin{history}[Sewall Wright 89-88 米]
+    Haldane, Wright, Fisherらは集団遺伝学(population genetics)の創始者3人衆で，
+    ある．Newton以来の性淘汰の理論を蘇らせた点も新しい．
+    彼らには，Maynard Smith, Hamiltonらが続く．
+    パス解析の一連の論文\cite{Wright18}, \cite{Wright21}は，モルモットの体表面の模様の遺伝法則を調べる際に，
+    介入を記述するためであった．
+\end{history}
+
+\subsection{操作変数法・Simon-Blalock法}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    擬似相関への対処法としてHerbert Simonによる因果関係検証法が社会学で知られていた．
+    彼はもちろん当時暗黙理には構造方程式模型の枠組みを持っていたと考えて良いだろうが\cite{Asher83-Causal}，
+    後に実際に計量経済学の発展に結びついた．
+\end{tcolorbox}
+
+\begin{example}
+    $X_1,X_2$の間に$X_1\to X_2$の方向に相関があったときに
+    \[\begin{cases}
+        X_1=p_{1u}R_u,\\
+        X_2=p_{21}X_1+p_{2v}R_v
+    \end{cases},\qquad R_u\indep R_v\]
+    なる模型を想定できるとする．
+    すなわち，交絡因子は存在しないとする．
+    このとき，$p_{21}$の値を推定し，非零であったならば因果関係があると言えるだろう．
+    「上述の種々の仮定の下では，相関は因果を意味する」という基準をSimonの方法という．
+    \cite{Herbert-Simon57-ModelsOfMan}による．
+    同様に地道な方法で3変数以上の場合に拡張できるかもしれない．
+    これを実際に行ったのがBlalockであった．
+    本人も「もっと強力な方法を使うべきだ」と主張したが，この方法は盲目的に使用され続けた．
+\end{example}
+
+\subsection{構造方程式模型}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    主に経済学，そして実験・観察データを扱うビジネス・社会・行動科学を渡る多くの実践では，構造方程式模型／同次方程式模型という，線型な因果模型を持っていた\cite{Hoyer-Shimizu-08}．
+    数理的には「推定方程式(estimating equation)模型」と同等であるが，
+    歴史と文脈が違う．
+\end{tcolorbox}
+
+\begin{problem}[因果関係の暗黙的取り扱い]
+    問題点は次のように指摘できる（竹内啓による前文\cite{統計科学のフロンティア5}）．
+    \begin{quote}
+        ベクトル変数の各成分はいずれも形式的に対等なものとして扱われ，それらの変量の間には
+        論理的な前後関係，あるいは因果関係の存在が仮定されていなかった．
+        因果関係が想定される場合には，原因を表す変量は外生変数，または独立変数として，モデルの外で決定されるものとして扱われ，
+        確率的に変動する変量はそれらによって決定される内生変数，または従属変数とされたのである．
+        そうして内生変数の外生変数に対する回帰関係が，因果関係を数量的に表現するものとしてモデル化されたのである\cite{統計科学のフロンティア5}
+    \end{quote}
+    しかし，潜在変数の存在によって，交絡因子を模型内部に取り入れることが出来る点は極めて柔軟性の高い模型である．
+\end{problem}
+
+\begin{problem}[非線形性の扱い]
+    模型から線形性の仮定を取り払うと，構造方程式から誘導形を導くことが解析的には不可能になる．
+    その場合，解の一意性と連続性が破れる．
+\end{problem}
+
+\subsection{独立成分分析}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    上述した相関分析法では対処できない問題の一つに，「変量の独立性」がある\cite{統計科学のフロンティア5}．
+    無相関は独立性を含意しないためである．
+\end{tcolorbox}
+
+\subsection{因果を扱うにあたっての問題点}
+
+\begin{remark}
+    特に従来の手法から敢行された変化は
+    \begin{enumerate}
+        \item 実証的でない，理論的・主観的な仮定を置かなければ因果分析には着手できないということ．
+        特に，Neyman-Rubin模型では下添字で表される．
+        \item 確率の解析に新たな語彙を追加する必要があること．
+        例えば，\cite{Pearl-Overview09}は，\cite{Cox58-Planning}における仮定
+        「共変量は処置によって影響を受けない」ことを，
+        単に自然言語によって説明しているのみで数式による定式をしていない点を指摘している．
+    \end{enumerate}
+    の2点で，新規参入の心理的障害になっているであろうということ．
+\end{remark}
+
+\subsection{因果探索}
+
+\section{因果推論の枠組み}
+
+\begin{history}
+    \cite{Rubin74-Causal}が教育心理学の雑誌にて，
+    RCTをモデルケースにして因果を取り扱う枠組みを提案した．
+    これは\cite{Neyman-23}の思想的直系に当たり，
+    実験を中心に扱う分野に広まった．
+    その後，Pearlは構造方程式模型の拡張として，その枠組みを大きく一般化した．
+\end{history}
+
+\subsection{Neyman-Rubin因果模型}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    確率空間を割当変数$Z:\Om\to2$に沿った直和によって拡張し，新たな統計量として潜在結果(potential outcome)を定義する．
+    その差を「因果効果」として推定することで，因果についての知識を深めることが出来る．
+    これを「因果関係である」と断定するには，この模型の他に共変量の統制が取れていることを議論せねばならない（これにはPearlによる手法などが必要になる）．
+    すなわち，因果関係そのものを模型内で十分に扱うわけではない\cite{Pearl-Overview09}．
+\end{tcolorbox}
+
+\begin{model}[Neyman-Rubin potential-outcome framework]
+    Neyman-Rubin因果模型では，次のデータを所与とする：
+    \begin{enumerate}
+        \item $(\Om,\F,(P_\theta))$を統計的実験，$u\in[n]$を実験単位(experimental unit)とする．
+        \item その上の確率変数$Z\in L(\Om;2)$を割り当てとする．
+        \item すると，$Z$に沿った可測空間の直和$(\Om\oplus\Om,\F\oplus\F)$が考えられ，同様に確率測度も押し出されて実験$(\Om\oplus\Om,\F\oplus\F,(P_*))$を得る．
+        $Z$は自然にこの実験上の確率変数とみなせる．
+        \item $u\in[n]$で添字付けられた$Z$-可測な確率変数の族$\{Y(u)\}_{u\in[n]}\subset L_Z(\Om\otimes\Om)$を\textbf{単位ごとの結果}(unit-based response variable)とする．
+        すなわち，$Z$の実現値$z\in2$で条件付けた$Y_z(u):=E[Y(u)|Z=z]$は確定的な実数である．
+        よって，実数列$\{Y_z(u)\}_{z\in 2,u\in[n]}\subset\R$に等価である．
+    \end{enumerate}
+    このデータを通じて，\textbf{潜在結果}とは，$Z$-可測な確率変数$Y\in L_Z(\Om\otimes\Om)$であって，
+    \[Y:=zY_1+(1-z)Y_0,\qquad z\in2\]
+    で定まるものとする．
+    実験により得られるデータは$Y(u)$
+\end{model}
+
+\begin{remark}\mbox{}
+    \begin{enumerate}
+        \item 上述のデータ，特に$Y(u)$を挙動で
+        \[Y=xY_1+(1-x)Y_0\]
+        で定義する
+        よりも正確な定義を与える基礎理論を与えるのがPearlの構造因果模型である\cite{Pearl-Overview09}．
+        \item 直和確率空間$\Om\oplus\Om$上の確率測度$P_*$をPearlは$P^*$と表して"super" probability functionと呼んでいる．
+    \end{enumerate}
+\end{remark}
+
+\begin{definition}
+    
+    \begin{enumerate}
+        \item 
+    \end{enumerate}
+\end{definition}
+
+\subsection{Pearlの因果の認知模型}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    例えば\cite{Pearl00-Causality}には「因果の本性、確率との関係、反
+    事実条件、単称因果と般因果、決定論、法則とメカ
+    ニズム、因果と時間の矢などといった哲学における伝        
+    統的なトピックが、随所で顔を出す」ことが指摘されている\cite{大塚淳-書評-Causality}．
+\end{tcolorbox}
+
+\begin{issue}
+    次の主張は正しいか？（竹内啓による前文\cite{統計科学のフロンティア5}）
+    \begin{quote}
+        つまり因果性の存在や，その方向を積極的に確立するということは不可能である．
+        このことは統計的方法にのみ関わることではなく，そもそも本質的に「因果性」は経験的事実だけからは言うことが出来ないものなのである\cite{統計科学のフロンティア5}
+    \end{quote}
+\end{issue}
+
+\subsection{Pearlの構造因果模型}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    構造方程式模型，Neyman-Rubin模型，そしてグラフィカルモデル\cite{Pearl88-IntelligentSystem}の綜合である．
+\end{tcolorbox}
+
+\begin{history}
+    社会科学による継承\cite{Morgan-Winship14}，疫学による継承\cite{Greenland-Pearl-Robins99}と，
+    統計による受容\cite{Cox-Wermuth04-review}．
+    特に統計の立場からは，\cite{Lauritzen00-Graphical}はグラフィカルモデルの観点から捉え直した．
+    \cite{Lindley02-SeeingAndDoing}は\cite{Pearl00-Causality}をレビューして重要な指摘をした．
+    \cite{Dawid02-InfluenceDiagram}は
+\end{history}
+
+\begin{definition}[intervent]
+    まず，確率測度の変換として，\textbf{介入}という操作を定義する．
+    ただし，その確率測度の変換の仕方は条件付き確率のそれに酷似するはずであるから，記法を借用して次のように定める：
+    \begin{enumerate}
+        \item $P[Y=y|\Do\Brace{Z=z}]$によって，事象$\{Z=z\}$が被験者$u\in[z]$上に一様に課す介入を行った際の，
+        事象$\Brace{Y=y}$の条件付き期待値を表す\cite{Pearl95-CausalDiagram}．
+    \end{enumerate}
+    しかし，最も大事な点は\textbf{介入と条件付けは違う}という点である．
+\end{definition}
+
+\begin{example}
+    交絡の定義と検出は「介入」の語彙がないと達成出来ない．
+    \begin{quote}
+        Hence the definition must be false. Therefore, to the bitter
+        disappointment of generations of epidemiologist and social science researchers,
+        confounding bias cannot be detected or corrected by statistical methods alone \cite{Pearl-Overview09}
+    \end{quote}
+\end{example}
+
+\subsection{構造的因果模型の問題点}
+
+\begin{problem}
+    いつ第一レベルの因果が結論付けられるかの特徴付けを初めて（？）与えたことになるが，
+    これが満たされているかのチェックは現実的でないほど難しくなり得る\cite{Lindley02-SeeingAndDoing}．
+\end{problem}
+
+\subsection{因果のBayes確率論との比較での理解}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    \cite{Cox-Wermuth04-review}による，
+    相関関係に対して因果関係を認めることが出来るための必要十分条件へ向けた
+    理解と消化を試みる．
+    推定のための模型と，因果分析のための模型は違う，という点も強調している．
+\end{tcolorbox}
+
+\begin{notation}\mbox{}
+    \begin{enumerate}
+        \item $C$を反応$R$に対する因果の候補(candidate cause)とする．
+        \item $I$を中間変数(intermediating variable)，$B$を背景変数(background variable)とする．
+    \end{enumerate}
+    ただしこの４変数は，結合分布関数$f_{RICB}$が
+    \[f_{RICB}=f_{R|ICB}f_{I|CB}f_{C|B}f_B\]
+    を満たすように取る．$i\in I$について積分すれば，上の式から$I$を無視しても問題ない．
+    ここには，種々の因果関係が想定出来る．ただし，辺がないことは条件付き独立性を意味する：
+    \[\xymatrix@R-2.5pc{
+        &C\\
+        &&B\ar[ul]\ar[dll]\\
+        R
+    }\]
+    は$R\indep C|B$を意味する．
+\end{notation}
+
+\begin{assumption}
+    さらに，次の2条件を仮定する．
+    \begin{enumerate}
+        \item $f_{R|C},f_{R|B}$は介入$\Do\Brace{C=c}$によって変わらない．
+        \item $f_{I|C},f_{I|B}$は介入$\Do\Brace{C=c}$によって変わらない．
+    \end{enumerate}
+    深刻な介入をすると，経済システム内のあらゆる関係は影響を受けて変化してしまうため，
+    これらの前提が破られてしまうだろう，という点がLucas批判\cite{Lucas76}の本質であった．
+\end{assumption}
+
+\begin{observation}[従来のBayes法による回帰関係の推定]
+    従来の分析法を考える．単に$C=c$と条件付け，
+    背景変数$B$も消去することを考えると，
+    \[f_{R|C}:=\int f_{R|CB}f_{B|C}dB,\qquad(f_{B|C}:=f_{CB}/f_C).\]
+    これを通じて$C$の$R$への回帰関係について良い推定が行える．
+\end{observation}
+
+\begin{definition}[介入を通じた因果効果の推定]
+    $B$の分布を変えない
+    介入$\Do\Brace{C=c}$を行った際，$f_{B|C}=f_B$であるから，
+    \[f_{R||C}:=\int f_{R|CB}f_BdB.\]
+    ただし右辺の記法は\cite{Lauritzen00-Graphical}による．
+\end{definition}
+\begin{remarks}
+    $B$を周辺化した際の，Pearlの意味での\textbf{因果効果}の定義である．
+    したがって，相関関係と因果関係の違いとは，$f_{R|C}$と$f_{R||C}$の違いにほかならない．
+\end{remarks}
+
+\begin{issue}
+    残る論点は，観測されていない共変量の扱いである．
+    特に，感度分析によって，仮定の違反が大きな影響を与えないと分かるならば，
+    その方面での解決もあり得るかもしれない，と最後に結んでいる\cite{Cox-Wermuth04-review}．
+    もしかしたら統計の真意は，「不確実性・不確定性を取り扱える」という点で光るのかもしれない．
+    譲歩しているように見えて，何一つ譲歩していないのである．
+\end{issue}
+
+\chapter{参考文献}
+
+\bibliography{../StatisticalSciences.bib,../SocialSciences.bib,../mathematics.bib,../statistics.bib}
+
+\end{document}

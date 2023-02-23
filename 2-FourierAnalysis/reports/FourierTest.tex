@@ -1,0 +1,46 @@
+\documentclass[uplatex,dvipdfmx]{jsarticle}
+\title{Fourier解析(解析学VI)・期末試験問題 (2013.1.26)}
+\author{}
+\pagestyle{headings} \setcounter{secnumdepth}{4}
+%\input{/Users/Hirofumi Shiba/NatureOfStatistics/preamble_no_fonts.tex}
+%\input{/Users/hirofumi.shiba48/NatureOfStatistics/preamble_no_fonts.tex}
+\input{/Users/hirof/NatureOfStatistics/preamble_no_fonts.tex}
+\usepackage[math]{anttor}
+\begin{document}
+
+$T=\R/2\pi\Z$とする．$f\in L^1(\R^d)$のFourier変換を次で定める：
+\[\wh{f}(\xi)=\int_{\R^d}f(x)e^{-i\xi\cdot x}dx,\qquad\xi\in\R^d.\]
+\begin{enumerate}[{[}1{]}]
+    \item $\R^d$上の$L^1$-関数に対する反転公式の主張を答えよ．
+    \item \begin{enumerate}
+        \item $\R^d$上のGauss核$G(x)=\frac{1}{(2\pi)^{d/2}}e^{-\frac{\abs{x}^2}{2}}\;(x\in\R^d)$のFourier変換を答えよ．
+        \item 次で定まる$\R^2$上の関数$f$のFourier変換を求めよ：
+        \[f(x,y)=xy^2G(x,y),\qquad(x,y)\in\R^2.\]
+    \end{enumerate}
+    \item $\bT$上の関数$f(t)=(\sin t)^4$のFourier係数を求めよ．
+    \item $N\in\N$に対し，$\bT$上の関数$L_N(t)$を次で定める：
+    \[L_N(t)=\sum_{n=1}^N\paren{1-\frac{n}{N+1}}e^{int}.\]
+    \begin{enumerate}
+        \item $f\in L^1(\bT)$に対し，$L_N*f$を求めよ．
+        \item $f\in L^1(\bT)$で$\norm{L_N*f-f}_{L^1(\bT)}\to0$を満たすものは，どのようなFourier係数を持つものか答えよ．
+    \end{enumerate}
+    \item $\bT$上の関数
+    \[f(t)=t^{2/3}(2\pi-t)^{2/3},\qquad t\in\cointerval{0,2\pi}.\]
+    に対し，そのFourier部分和$S_N[f]$は$N\to\infty$で$f$に$\bT$上で一様収束するか？
+    \item $\R$上の関数$f(x)=\frac{1}{x^4+4}$に対し，
+    \begin{enumerate}
+        \item $\wh{f}$は$\R$上の偶関数であることを示せ．
+        \item $\wh{f}$を求めよ．必要ならば，$g(x)=e^{-\abs{x}}$に対して$\wh{g}(\xi)=\frac{2}{1+\xi^2}$であることを用いてよい．
+    \end{enumerate}
+    \item この問題では，微分とは超関数の意味でとるものとする．
+    \begin{enumerate}
+        \item $f\in C_c(\R)$で$f''=\delta$を満たすものの非存在を示せ．
+        \item $\R^2$上の局所可積分関数$f\in L^1_\loc(\R^2)$で$\pp{^2f}{x\partial y}=\delta$を満たすものを一つ与えよ．
+    \end{enumerate}
+    \item \begin{enumerate}
+        \item $\varphi\in\S(\R)$に対するPoissonの和公式を述べよ．
+        \item $f(x)=x\abs{\sin x}\in\S'(\R)$のFourier変換を求めよ．
+    \end{enumerate}
+\end{enumerate}
+
+\end{document}

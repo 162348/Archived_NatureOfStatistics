@@ -1,0 +1,138 @@
+\documentclass[uplatex,dvipdfmx]{jsarticle}
+\title{総合研究大学院大学複合科学研究科統計科学専攻\\
+博士課程（５年一貫制）入学試験(8/20/2019実施)\\
+問題と解答}
+\author{あの\footnote{e-mail address : anomath57@gmail.com\\URL : \url{https://anomath.com/}}}
+\date{\today}
+\pagestyle{headings} \setcounter{secnumdepth}{4}
+\input{/Users/Hirofumi Shiba/NatureOfStatistics/preamble_no_fonts.tex}
+%\input{/Users/hirofumi.shiba48/NatureOfStatistics/preamble_no_fonts.tex}
+\usepackage[math]{anttor}
+\begin{document}
+\maketitle
+
+\begin{tcolorbox}[title=記法についての注意]
+    次の記法は以後断りなく用いる．
+    \begin{enumerate}
+        \item $n=1,2,\cdots$について，$n:=\Brace{0,1,2,\cdots,n-1}$，$[n]:=\{1,2,\cdots,n\}$．$\N=\{0,1,2,\cdots\}$，$\N^+=\N_{>0}=\{1,2,3,\cdots\}$．
+        \item 同様にして，$\R_+:=\Brace{x\in\R\mid x\ge0}$，$\R^+:=\Brace{x\in\R\mid x>0}$，$\o{\R_+}:=[0,\infty]$．
+        \item $M_{mn}(\R)$で$(m,n)$の実正方行列の全体，$\GL_n(\R)\subset M_n(\R)$でそのうち可逆なものの全体を表す．
+        \item $I_d\in M_d(\R)$を単位行列，$O_d\in M_d(\R)$を零行列とする．
+        \item $f(x)=O(x^n)\;(x\to0)$で$\limsup_{x\to0}\Abs{\frac{f(x)}{x^n}}<\infty$を表す．
+        \item $\R$上のLebesgue測度を$m$，距離空間$S$上のBorel $\sigma$-代数を$\B(S)$で表す．
+        \item $1_A$で集合$A$の指示関数を表す．
+        \item $U(S)$で集合$S$上の一様分布，$N(\mu,\sigma^2)$で平均$\mu$分散$\sigma^2$の正規分布を表す．
+        \item $\Exp(\gamma)\;(\gamma>0)$で指数分布$f(x)=\gamma e^{-\gamma x}1_{\Brace{x>0}}$を表す．
+    \end{enumerate}
+    問題文の表現は筆者の都合で一部変えています．
+    過去3年分の入学試験問題は\href{https://www.ism.ac.jp/senkou/admission/kakomon.html}{こちら}から見れます．
+\end{tcolorbox}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=第１問]
+    \begin{enumerate}
+        \item 次の行列$M$の逆行列を求めよ：
+        \[M=\begin{pmatrix}2&1&0\\1&0&1\\0&1&2\end{pmatrix}\]
+        \item 次の定積分を求めよ：
+        \[\int^1_{-1}\frac{x-1}{x^2+2x+5}dx.\]
+        \item $\lambda\in\R$について，次の等式を示せ：
+        \[\sum_{k\in\N}(k-\lambda)^2\frac{\lambda^ke^{-\lambda}}{k!}=\lambda,\quad\sum_{k\in\N}(k-\lambda)^3\frac{\lambda^ke^{-\lambda}}{k!}=\lambda.\]
+        \item 
+    \end{enumerate}
+\end{tcolorbox}
+\begin{proof}[\textbf{\underline{［解答例］}}]\mbox{}
+    \begin{enumerate}
+        \item $\frac{1}{4}\begin{pmatrix}1&2&-1\\2&-4&2\\-1&2&1\end{pmatrix}$．
+        \item \begin{align*}
+            \int^1_{-1}\frac{x-1}{x^2+2x+5}dx&=\int^1_{-1}\frac{x+1}{x^2+2x+5}dx-2\int^1_{-1}\frac{1}{x^2+2x+5}dx
+        \end{align*}
+        と分解して，第一項は$\frac{1}{2}\frac{(x^2+2x+5)'}{x^2+2x+5}$とみて，第二項は$x+1=2\tan\theta$の置換により，$\frac{\log 2}{2}-\frac{\pi}{4}$．
+        \item それぞれの式をPoisson分布の2次と3次の中心積率を表していると見て，$\mu_2,\mu_3$とおく．
+        Poisson分布の積率母関数は$M(t)=e^{\lambda(e^t-1)}$と表せるから，
+        \[M'(t)=\lambda e^{t}M(t),\quad M''(t)=(\lambda^2 e^{2t}+\lambda e^t)e^{\lambda(e^t-1)}.\]
+        \[M'''(t)=(\lambda^3e^{3t}+3\lambda^2e^{2t}+\lambda e^t)e^{\lambda(e^t-1)}.\]
+        の$t=0$での値を考えることで，積率は$\al_1=\lambda,\al_2=\lambda^2+\lambda,\al_3=\lambda^3+3\lambda^2+\lambda$．
+        よって，
+        \[\mu_2=\al_2-2\lambda\al_1+\lambda^2=(\lambda^2+\lambda)-2\lambda\lambda+\lambda^2=\lambda.\]
+        \[\mu_3=\al_3-3\lambda\al_2+3\lambda^2\al_1-\lambda^3=\lambda.\]
+        \item $E[x^\top Ax]=\Tr(A)$．
+    \end{enumerate}
+\end{proof}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=第２問]
+    $d\ge3$とする．
+    \begin{enumerate}
+        \item 互いに直交する単位列ベクトル$a_1,a_2\in\R^d$に対して，行列$A\in M_d(\R)$を$A:=I_d-a_1a_1^\top-a_2a_2^\top$で定める．
+        \begin{enumerate}
+            \item $A^2=A$を示せ．
+            \item $A$の固有値を求めよ．
+        \end{enumerate}
+        \item $B\in M_d(\R)$について，$\rank(B)+\rank(I_d-B)=d$ならば$B^2=B$であることを示せ．
+    \end{enumerate}
+\end{tcolorbox}
+\begin{proof}[\textbf{\underline{［解答例］}}]\mbox{}
+    \begin{enumerate}
+        \item $a_1,a_2$は互いに直交する単位ベクトルであるから，
+        \[(a_1a_1^\top)^2=a_1(a_1^\top a_1)a_1^\top =a_1a_1^\top,\quad (a_1a_1^\top)(a_2a_2^\top)=0\]
+        で，$a_1,a_2$を逆にしても同様であることから，
+        \begin{align*}
+            A^2&=(I_d-a_1a_1^\top-a_2a_2^\top)(I_d-a_1a_1^\top-a_2a_2^\top)\\
+            &=I_d+(a_1a_1^\top)^2+(a_2a_2^\top)^2-2a_1a_1^\top-2a_2a_2^\top+(a_1a_1^\top)(a_2a_2^\top)+(a_2a_2^\top)(a_1a_1^\top)\\
+            &=I_d-a_1a_1^\top-a_2a_2^\top=A.
+        \end{align*}
+        $A$の固有値を$\lambda_1,\lambda_2,\cdots,\lambda_d\in\C$とし，$D:=\diag(\lambda_1,\cdots,\lambda_d)$とすると，$A=U^{-1}DU$を満たす正則行列$U\in\GL_d(\C)$が存在するから，$A^2=U^{-1}D^2U=U^{-1}DU=A$が必要．すなわち，$\lambda_i^2=\lambda_i\;(i=1,\cdots,d)$が必要．
+        よって，$\lambda_1,\cdots,\lambda_d\in\{0,1\}$が必要．もし全て$0$であったら，
+        $\rank A=0,\rank(a_1a_1^\top)=\rank(a_2a_2^\top)=1$より，
+        $d\ge3$に矛盾．
+        もし全て$1$であったら，
+        \[Aa_1=(I_d-a_1a_1^\top-a_2a_2^\top)a_1=a_1-a_11-a_20=0\]
+        より$\rank A<d$に矛盾．よって，$\Sp(A)=\{0,1\}$．
+        \item $B(I_d-B)=O$を示せば良い．
+        任意の$x\in\Im(B(I_d-B))$を取ると，$B(I_d-B)=(I_d-B)B$より
+        $x\in\Im(B)\cap\Im(I_d-B)$であるが，次の議論より$\Im(B)\cap\Im(I_d-B)=0$である．
+
+        一般に，\[\Ker(I_d-B)\subset\Im B,\Ker(B)\subset\Im(I_d-B)\]である．$\rank B+\rank(I_d-B)=d$のとき，$\Ker B,\Ker(I_d-B)$の次元の和も$d$であるから，
+        上式の包含関係$\subset$は実は$=$である．ここで，明らかに$\Ker(I_d-B)\cap\Ker(B)=0$であるから，$\Im(B)\cap\Im(I_d-B)=0$である．
+    \end{enumerate}
+\end{proof}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=第３問]
+    \begin{enumerate}
+        \item 微分方程式$\dd{x}{t}=f(t,x)$の解$x$について，
+        \[\wh{x}(t_0+\Delta t):=x(t_0)+w_1\De tf(t_0,x_0)+w_2\De tf(t_0+\De t,x_0+\De x),\quad\De x=\De tf(t_0,x_0)\]
+        が$x(t_0+\De t)$に対する2次近似になるように$w_1,w_2\in\R$を定めよ．
+        \item 次の微分方程式の解で$x=\al t+\beta$の形を持つものを求めよ：
+        \[\dd{x}{t}=-2(t+1)x-2t^2+1.\]
+        \item (2)の微分方程式の一般解を求めよ．
+        \item $t=0$のとき$x(0)=0$を満たす特殊解の$t=0.1$のときの$x$の値を(1)の近似を用いて小数第2位まで求めよ．
+    \end{enumerate}
+\end{tcolorbox}
+\begin{proof}[\textbf{\underline{［解答例］}}]\mbox{}
+    \begin{enumerate}
+        \item $x$の$t_0$での3次についてのTaylor定理を考えると，
+        \begin{align*}
+            x(t_0+\De t)&=x(t_0)+\dd{x}{t}(t_0)\De t+\frac{1}{2}\dd{^2x}{t^2}(t_0)(\De t)^2+o(\abs{\De t}^3)\\
+            &=x(t_0)+f(t_0,x_0)\De t+\frac{1}{2}\paren{\pp{f}{t}(t_0,x_0)+\pp{f}{x}(t_0,x_0)f(t_0,x_0)}(\De t)^2+o(\abs{\De t}^3)
+        \end{align*}
+        より，$w_1=1,w_2=1/2$．
+        \item 
+    \end{enumerate}
+\end{proof}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=第４問]
+    $X,Y\sim\Exp(1)$を独立同分布とする．
+    \begin{enumerate}
+        \item $Z:=\sqrt{\frac{Y}{X}}$の確率密度関数を求めよ．
+        \item $E[Z]$を求めよ．
+    \end{enumerate}
+\end{tcolorbox}
+\begin{proof}[\textbf{\underline{［解答例］}}]\mbox{}
+    \begin{enumerate}
+        \item 
+    \end{enumerate}
+\end{proof}
+
+\end{document}

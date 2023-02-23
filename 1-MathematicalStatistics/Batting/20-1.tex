@@ -1,0 +1,177 @@
+\documentclass[uplatex,dvipdfmx]{jsarticle}
+\title{総合研究大学院大学複合科学研究科統計科学専攻\\
+博士課程（５年一貫制）入学試験(1/21/2020実施)\\
+問題と解答}
+\author{あの\footnote{e-mail address : anomath57@gmail.com\\URL : \url{https://anomath.com/}}}
+\date{\today}
+\pagestyle{headings} \setcounter{secnumdepth}{4}
+\input{/Users/Hirofumi Shiba/NatureOfStatistics/preamble_no_fonts.tex}
+%\input{/Users/hirofumi.shiba48/NatureOfStatistics/preamble_no_fonts.tex}
+\usepackage[math]{anttor}
+\begin{document}
+\maketitle
+
+\begin{tcolorbox}[title=記法についての注意]
+    次の記法は以後断りなく用いる．
+    \begin{enumerate}
+        \item $n=1,2,\cdots$について，$n:=\Brace{0,1,2,\cdots,n-1}$，$[n]:=\{1,2,\cdots,n\}$．$\N=\{0,1,2,\cdots\}$，$\N^+=\N_{>0}=\{1,2,3,\cdots\}$．
+        \item 同様にして，$\R_+:=\Brace{x\in\R\mid x\ge0}$，$\R^+:=\Brace{x\in\R\mid x>0}$，$\o{\R_+}:=[0,\infty]$．
+        \item $M_{mn}(\R)$で$(m,n)$の実正方行列の全体，$\GL_n(\R)\subset M_n(\R)$でそのうち可逆なものの全体を表す．
+        \item $I_d\in M_d(\R)$を単位行列，$O_d\in M_d(\R)$を零行列とする．
+        \item $f(x)=O(x^n)\;(x\to0)$で$\limsup_{x\to0}\Abs{\frac{f(x)}{x^n}}<\infty$を表す．
+        \item $\R$上のLebesgue測度を$m$，距離空間$S$上のBorel $\sigma$-代数を$\B(S)$で表す．
+        \item $1_A$で集合$A$の指示関数を表す．
+        \item $U(S)$で集合$S$上の一様分布，$N(\mu,\sigma^2)$で平均$\mu$分散$\sigma^2$の正規分布を表す．
+        \item $\Exp(\gamma)\;(\gamma>0)$で指数分布$f(x)=\gamma e^{-\gamma x}1_{\Brace{x>0}}$を表す．
+    \end{enumerate}
+    問題文の表現は筆者の都合で一部変えています．
+    過去3年分の入学試験問題は\href{https://www.ism.ac.jp/senkou/admission/kakomon.html}{こちら}から見れます．
+\end{tcolorbox}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=第１問]
+    \begin{enumerate}
+        \item 次の行列の逆行列を求めよ：
+        \[\begin{pmatrix}2&1&1\\-1&0&2\\1&1&2\end{pmatrix}.\]
+        \item 確率変数列$\{X_n\}\subset L^2(\Om)$が$\lim_{n\to\infty}E[X_n^2]=0$を満たすならば$\forall_{\ep>0}\;P[\abs{X_n}>\ep]=0$が成り立つことを示す．
+        \item 確率変数列$\{X_n\}\subset L^2(\Om)$であって，$\forall_{\ep>0}\;P[\abs{X_n}>\ep]=0$であるが$\lim_{n\to\infty}E[X_n^2]\ne0$であるものの例を挙げよ．
+    \end{enumerate}
+\end{tcolorbox}
+\begin{proof}[\textbf{\underline{［解答例］}}]\mbox{}
+    \begin{enumerate}
+        \item 略．
+        \item 任意の$\ep>0$を取る．$\ep<\abs{X_n}$ならば$\ep^2<\abs{X_n}^2$であるから，事象集合について
+        \[\Brace{\om\in\Om\mid\ep<\abs{X_n(\om)}}\subset\Brace{\om\in\Om\mid\ep^2<\abs{X_n^2(\om)}}\]
+        が成り立つ．よって，
+        \begin{align*}
+            (0\le)P[\ep<\abs{X_n}]&\le P[\ep^2<\abs{X_n}^2]\le\frac{E[\abs{X_n}^2]}{\ep^2}\xrightarrow{n\to\infty}0.
+        \end{align*}
+        \item 確率空間$([0,1],\B([0,1]),m)$上の実確率変数$Y_n:[0,1]\to\R$を
+        \[Y_n:=\sqrt{n}1_{[0,1/n]}\quad(n\in\N^+)\]
+        と定める．すると，$\lim_{n\to\infty}\frac{1}{n}=0$より，$\forall_{\ep>0}\;\exists_{N>0}\;\forall_{n\ge N}\;\frac{1}{n}<\ep$．
+        よって，$\forall_{n\ge N}\;P[\abs{Y_n}>\ep]=0$より当然$\lim_{n\to\infty}P[\abs{Y_n}>\ep]=0$．
+        一方で，$\forall_{n\in\N^+}\;E[Y_n^2]=1$である．
+    \end{enumerate}
+\end{proof}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=第２問]
+    次の定積分を求めよ：
+    \begin{enumerate}
+        \item \[\int^1_0\frac{dx}{x^2-x+1}.\]
+        \item \[\int^1_0\frac{dx}{x^3+1}.\]
+    \end{enumerate}
+\end{tcolorbox}
+\begin{proof}[\textbf{\underline{［解答例］}}]\mbox{}
+    \begin{enumerate}
+        \item $x-\frac{1}{2}=\frac{\sqrt{3}}{2}\tan\theta$によって変数変換を行うと，次のように計算できる：
+        \begin{align*}
+            \int^1_0\frac{dx}{x^2-x+1}&=\int^1_0\frac{1}{\paren{x-\frac{1}{2}}^2+\frac{3}{4}}dx\\
+            &=\int^{\pi/6}_{-\pi/6}\frac{4}{3}\frac{1}{\tan^2\theta+1}\frac{\sqrt{3}}{2}\frac{d\theta}{\cos^2\theta}\\
+            &=\int^{\pi/6}_{-\pi/6}\frac{4}{3}\frac{\sqrt{3}}{2}d\theta
+            =\int^{\pi/6}_{-\pi/6}\frac{2}{\sqrt{3}}=\frac{2\pi}{3\sqrt{3}}.
+        \end{align*}
+        \item 被積分関数の部分分数分解
+        \[\frac{1}{x^3+1}=\frac{1}{3}\paren{\frac{1}{x+1}-\frac{x-2}{x^2-x+1}}\]
+        を考えることにより，次のように計算できる．
+        \begin{align*}
+            \int^1_0\frac{dx}{x^3+1}&=\frac{1}{3}\int^1_0\paren{\frac{1}{x+1}-\frac{x-2}{x^2-x+1}}dx\\
+            &=\frac{1}{3}\int^1_0\frac{dx}{x+1}-\frac{1}{6}\int^1_0\frac{(x^2-x+1)'}{x^2-x+1}dx+\frac{2}{3}\int^1_0\frac{dx}{x^2-x+1}\\
+            &=\frac{\log 2}{3}+\frac{4}{9\sqrt{3}}\pi.
+        \end{align*}
+    \end{enumerate}
+\end{proof}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=第３問]
+    この問題で登場する行列は全て$n\times n$の可逆行列であるとする．ブロック行列
+    \[A=\begin{pmatrix}
+        A_{11}&A_{12}\\A_{21}&A_{22}
+    \end{pmatrix},\quad B=\begin{pmatrix}B_{11}&O\\B_{21}&B_{22}\end{pmatrix},\quad A_{11},A_{12},A_{21},A_{22},B_{11},B_{21},B_{22}\in\GL_n(\R).\]
+    を考える．
+    \begin{enumerate}
+        \item 次を満たす行列$Q_1\in M_n(\R)$を$A_{11},A_{12},A_{21},A_{22}$とその逆行列を用いて表せ：
+        \[\begin{pmatrix}
+            A_{11}&A_{12}\\A_{21}&A_{22}
+        \end{pmatrix}=\begin{pmatrix}A_{11}&O\\A_{21}&Q_1\end{pmatrix}\begin{pmatrix}I_n&Q_2\\O&I_n\end{pmatrix}.\]
+        \item 次を満たす行列$Q_3\in M_n(\R)$を$B_{11},B_{21},B_{22}$とその逆行列を用いて表せ：
+        \[\begin{pmatrix}
+            B_{11}&O\\B_{21}&B_{22}
+        \end{pmatrix}^{-1}=\begin{pmatrix}
+            B_{11}^{-1}&O\\Q_3&B_{22}^{-1}
+        \end{pmatrix}\]
+        \item 次の行列の成分$A^{11},A^{12},A^{21},A^{22}$を$A_{11},A_{12},A_{21},A_{22}$とその逆行列を用いて表せ：
+        \[A^{-1}=\begin{pmatrix}
+            A^{11}&A^{12}\\A^{21}&A^{22}
+        \end{pmatrix}\]
+        \item 次の等式を示せ：
+        \[(A_{22}-A_{21}A_{11}^{-1}A_{12})^{-1}=A_{22}^{-1}+A_{22}^{-1}A_{21}(A_{11}-A_{12}A_{22}^{-1}A_{21})^{-1}A_{12}A_{22}^{-1}.\]
+    \end{enumerate}
+\end{tcolorbox}
+\begin{proof}[\textbf{\underline{［解答例］}}]\mbox{}
+    \begin{enumerate}
+        \item 右辺を計算すると$\begin{pmatrix}A_{11}&A_{11}Q_2\\A_{21}&A_{21}Q_2+Q_1\end{pmatrix}$となるから，
+        \[\begin{cases}
+            A_{12}=A_{11}Q_2\quad\Leftrightarrow\quad Q_2=A_{11}^{-1}A_{12}\\
+            A_{22}=A_{21}Q_2+Q_1
+        \end{cases}\]
+        が必要．よって，$Q_1=A_{22}-A_{21}A_{11}^{-1}A_{12}$．
+        \item 
+        \[\begin{pmatrix}I_n&O\\B_{21}B_{11}^{-1}+B_{22}Q_3&I_n\end{pmatrix}=\begin{pmatrix}
+            B_{11}&O\\B_{21}&B_{22}
+        \end{pmatrix}\begin{pmatrix}B_{11}^{-1}&O\\Q_3&B_{22}^{-1}\end{pmatrix}=I_{2n}\]
+        が必要．
+        よって，$Q_3=-B_{22}^{-1}B_{21}B_{11}^{-1}$．
+        \item まず，$\begin{pmatrix}I_n&Q_2\\O&I_n\end{pmatrix}$の逆行列は$\begin{pmatrix}I_n&-Q_2\\O&I_n\end{pmatrix}$である．
+        実際，
+        \[\begin{pmatrix}I_n&Q_2\\O&I_n\end{pmatrix}\begin{pmatrix}I_n&-Q_2\\O&I_n\end{pmatrix}=I_{2n},\quad \begin{pmatrix}I_n&-Q_2\\O&I_n\end{pmatrix}\begin{pmatrix}I_n&Q_2\\O&I_n\end{pmatrix}=I_{2n}\]
+        が成り立つ．よって，
+        \begin{align*}
+            \begin{pmatrix}
+                A_{11}&A_{12}\\A_{21}&A_{22}
+            \end{pmatrix}^{-1}&=\begin{pmatrix}I_n&Q_2\\O&I_n\end{pmatrix}^{-1}\begin{pmatrix}A_{11}&O\\A_{21}&Q_1\end{pmatrix}^{-1}\\
+            &=\begin{pmatrix}I_n&-Q_2\\O&I_n\end{pmatrix}\begin{pmatrix}A_{11}^{-1}&O\\-Q_1^{-1}A_{21}A_{11}^{-1}&Q_1^{-1}\end{pmatrix}\\
+            &=\begin{pmatrix}I_n&-A_{11}^{-1}A_{12}\\O&I_n\end{pmatrix}\begin{pmatrix}A_{11}^{-1}&O\\-(A_{22}-A_{21}A_{11}^{-1}A_{12})^{-1}A_{21}A_{11}^{-1}&(A_{22}-A_{21}A_{11}^{-1}A_{12})^{-1}\end{pmatrix}\\
+            &=\begin{pmatrix}A_{11}^{-1}+A_{11}^{-1}A_{12}(A_{22}-A_{21}A_{11}^{-1}A_{12})^{-1}A_{21}A_{11}^{-1}&-A_{11}^{-1}A_{12}(A_{22}-A_{21}A_{11}^{-1}A_{12})^{-1}\\-(A_{22}-A_{21}A_{11}^{-1}A_{12})^{-1}A_{21}A_{11}^{-1}&(A_{22}-A_{21}A_{11}^{-1}A_{12})^{-1}\end{pmatrix}
+        \end{align*}
+        \item $A^{-1}$をもう一通りで表す．元の行列のUL分解を考えると，
+        \[\mtrx{A_{11}}{A_{12}}{A_{21}}{A_{22}}=\mtrx{I}{R_2}{O}{I}\mtrx{R_1}{O}{A_{21}}{A_{22}}=\mtrx{R_1+R_2A_{21}}{R_2A_{22}}{A_{21}}{A_{22}}\]
+        より，
+        \[R_2=A_{12}A_{22}^{-1},\quad R_1=A_{11}-A_{12}A_{22}^{-1}A_{21}.\]
+        続いて，このL部分の逆行列は
+        \[\mtrx{R_1^{-1}}{O}{-A_{22}^{-1}A_{21}R_1^{-1}}{A_{22}^{-1}}\]
+        と表せるから，
+        \begin{align*}
+            \mtrx{A_{11}}{A_{12}}{A_{21}}{A_{22}}^{-1}&=\paren{\mtrx{I}{R_2}{O}{I}\mtrx{R_1}{O}{A_{21}}{A_{22}}}^{-1}\\
+            &=\mtrx{R_1^{-1}}{O}{-A_{22}^{-1}A_{21}R_1^{-1}}{A_{22}^{-1}}\mtrx{I}{-R_2}{O}{I}\\
+            &=\mtrx{R_1^{-1}}{-R_1^{-1}R_2}{-A_{22}^{-1}A_{21}R_1^{-1}}{A_{22}^{-1}A_{21}R_1^{-1}R_2+A_{22}^{-1}}\\
+            &=\mtrx{(A_{11}-A_{12}A_{22}^{-1}A_{21})^{-1}}{-(A_{11}-A_{12}A_{22}^{-1}A_{21})^{-1}A_{12}A_{22}^{-1}}{-A_{22}^{-1}A_{12}(A_{11}-A_{12}A_{22}^{-1}A_{21})^{-1}}{A_{22}^{-1}A_{21}(A_{11}-A_{12}A_{22}^{-1}A_{21})^{-1}A_{12}A_{22}^{-1}+A_{22}^{-1}}.
+        \end{align*}
+        以上より，$A^{-1}$の成分$A^{22}$を比べることで，
+        \[(A_{22}-A_{21}A_{11}^{-1}A_{12})^{-1}=A_{22}^{-1}A_{21}(A_{11}-A_{12}A_{22}^{-1}A_{21})^{-1}A_{12}A_{22}^{-1}+A_{22}^{-1}\]
+    \end{enumerate}
+\end{proof}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=第４問]
+    $X_1,X_2,X_3$を独立同分布確率変数とし，その分布関数を$F$で表す．
+    $F$は狭義単調増加かつ連続で，従って逆関数$F^{-1}$を持つとする．
+    $E_1,E_2,E_3$を標準指数分布$\Exp(1)$に従う独立同分布確率変数とする．
+    それぞれ３つの中で，昇順の並び替えを$X_{(1)}\le X_{(2)}\le X_{(3)},E_{(1)}\le E_{(2)}\le E_{(3)}$とする．
+    \begin{enumerate}
+        \item $(F^{-1}(e^{-E_{(1)}}),F^{-1}(e^{-E_{(2)}}),F^{-1}(e^{-E_{(3)}}))$と$(X_{(3)},X_{(2)},X_{(1)})$は同分布であることを示せ．
+        \item 
+    \end{enumerate}
+\end{tcolorbox}
+\begin{proof}[\textbf{\underline{［解答例］}}]\mbox{}
+    \begin{enumerate}
+        \item 一般に，$E_1\sim\Exp(1)$のとき，$e^{-E_1}\sim U([0,1])$であるから，
+        \[P[F^{-1}(e^{-E_1})\le a]=P[e^{-E_1}\le F(a)]=F(a)\]
+        より，$F^{-1}(e^{-E_1})$は$X_1$に分布が等しい．
+        後は順序を考えると，$e^{-E_{(1)}}\ge e^{-E_{(2)}}\ge e^{-E_{(3)}}$で，$F^{-1}$も順序を保存するから，
+        分布は$X_1,X_2,X_3$を降順に並び替えた確率ベクトル，すなわち$(X_{(3)},X_{(2)},X_{(1)})$に等しい．
+        \item 
+    \end{enumerate}
+\end{proof}
+
+\end{document}

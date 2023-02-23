@@ -1,0 +1,357 @@
+\documentclass[uplatex,dvipdfmx]{jsarticle}
+\title{偏微分方程式論 レポート\\12月8日発表分}\author{05-210520 司馬博文}\date{\today}
+\pagestyle{plain} \setcounter{secnumdepth}{4}
+\input{/Users/Hirofumi Shiba/NatureOfStatistics/preamble_no_fonts.tex}
+%\input{/Users/hirofumi.shiba48/NatureOfStatistics/preamble_no_fonts.tex}
+\usepackage[math]{anttor}
+\begin{document}
+\setcounter{section}{1}
+
+\begin{problem}
+    対流付き拡散方程式の初期値問題
+    \[\begin{cases}
+        u_t=u_{xx}-u_x&\In\R\times\R^+,\\
+        u=\varphi&\on\R\times\{0\}.
+    \end{cases}\qquad \varphi\in L^\infty(\R)\]
+    を考える．
+    \begin{enumerate}
+        \item $v(x,t):=u(x+t,t)$の満たすべき方程式を求めよ．
+        \item $u:=\psi w$によって定めた$w$が熱方程式を満たすような$\psi(x,t)$を見つけよ．
+    \end{enumerate}
+\end{problem}
+\begin{proof}[\bf\underline{［解］}]\mbox{}
+    \begin{enumerate}
+        \item 
+    \end{enumerate}
+\end{proof}
+
+\begin{problem}
+    非斉次な熱方程式の初期値境界値問題
+    \[\begin{cases}
+        u_t=u_{xx}+f(x,t)&\In\R^+\times\R^+,\\
+        u=h&\on\{0\}\times\R^+,\\
+        u=\varphi&\on\R^+\times\{0\}.
+    \end{cases}\qquad f\in C^1_b(\R_+\times\R_+),h\in C^1_b(\R_+),\varphi\in C_b(\R_+),h(0)=\varphi(0).\]
+    を考える．
+    $v(x,t):=u(x,t)-h(t)$を考えよ．
+\end{problem}
+\begin{proof}[\bf\underline{［解］}]
+    
+\end{proof}
+
+\begin{problem}
+    方程式$u_t=xu_{xx}$を考える．
+    \begin{enumerate}
+        \item $u(x,t)=-2xt-x^2$は$u_t=xu_{xx}$を満たす．
+        \item $u$の$R:=[-2,2]\times[0,1]$上での最大値を求めよ．
+        \item $u$は放物型境界$([-2,2]\times\{0\})\cup(\{-2,2\}\times[0,1])$上で最大値を達成するか？
+    \end{enumerate}
+\end{problem}
+\begin{proof}[\bf\underline{［解］}]
+    
+\end{proof}
+
+\begin{problem}
+    退化放物型方程式
+    \[u_t=(xu_x)_x\quad\In\R^+\times\R^+\]
+    を考える．
+    \begin{enumerate}
+        \item 任意の解$u$と$\lambda>0$について，$v(x,t):=u(\lambda^\al x,\lambda t)$も解になる．
+        \item $u(x,t):=t^{-1}\varphi(t^{-\al}x)$が解になるような関数$\varphi$はどんな微分方程式を満たすか？
+        \item $\varphi(0)=1$を満たす解により，自己相似解であって$u(0,t)=t^{-1}\;(t>0)$を満たすものを得よ．
+    \end{enumerate}
+\end{problem}
+\begin{proof}[\bf\underline{［解］}]\mbox{}
+    \begin{enumerate}
+        \item 方程式の$(x,t)$に$(\lambda^\al x,\lambda t)$を代入すれば，$u_t(\lambda^\al x,\lambda t)=u_x(\lambda^\al x,\lambda t)+\lambda^\al xu_{xx}(\lambda^\al x,\lambda t)$をみたす．
+        また，\[v_t(\lambda^\al x,\lambda t)=\lambda u_t(\lambda^\al x,\lambda t)=\lambda u_x+\lambda^{\al+1}u_{xx}=\lambda^{1-\al}v_x+\lambda^{1-\al}xv_{xx}.\]
+        より，$\al=1$が必要．
+        \item $u(x,t)=\frac{1}{t}\varphi\paren{\frac{x}{t}}$を微分すると，$u_t=u_x+xu_{xx}$は
+        \[-\frac{1}{t^2}\varphi\paren{\frac{x}{t}}-\frac{x}{t^3}\varphi'\paren{\frac{x}{t}}=\frac{1}{t^2}\varphi'\paren{\frac{x}{t}}+\frac{x}{t^3}\varphi''\paren{\frac{x}{t}}\]
+        となる．$s:=x/t$とすると，
+        \[s\varphi''+(1+s)\varphi'+\varphi=0.\]
+        \item 特性関数$st^2+(1+s)t+1=0$からの類推から，$\varphi(x)=e^{-x}$が解の1つだと予想でき，実際その通りである．
+        よって，$u(x,t):=\frac{1}{t}e^{-\frac{x}{t}}$は1つの自己相似解である．
+    \end{enumerate}
+\end{proof}
+\begin{remark*}[途中で出現したKummerの微分方程式について]
+    途中の変数係数ODE
+    \[s\varphi''+(1+s)\varphi'+\varphi=0.\]
+    は$s=0,\infty$に特異点を持っている．この解空間は1次元と決まっているのであろうか？
+    実は特異点が2つしかないように，Kummerの方程式
+    \[tx''+(b-t)x'-ax=0\qquad(a,b\in\C)\]
+    と関係が深く，
+    一般解は$e^{-s}$と$e^{-s}\Ei(s)$で張られるらしい．
+    Eiは指数積分というが，$0,\infty$に分岐点を持つ（したがって問題文の中の条件$\varphi(0)=1$は解を一意に定めている）．
+    Eiを複素関数とみるときは適切な分枝を取って$E_1$と表され，$-E_1(x)=\Ei(x)\;(x>0)$の関係を持つ．
+    $b=1,a=0$としたKummerの微分方程式も通常は合流型超幾何関数$M$と$U$で張られる2次元の解空間を持つが，
+    $E_1(-z)$も解にもつ．合流型超幾何関数と
+    \[E_1(z)=e^{-z}U(1,1;z)\]
+    の関係にある．
+\end{remark*}
+
+
+\begin{problem}[熱方程式の球面平均定理]
+    $\Om\subset\R^n$を領域，$Q_T:=Q\times{(0,T]}\;(T>0)$とし，$u\in C^{2,1}(Q_T)$は$u_t-\Lap u=0\;\In Q_T$を満たすとする．
+    このとき，任意の熱球$E(x,t;r)\ssub Q_T$に対して，次が成り立つ：
+    \[u(x,t)=\frac{1}{4r^n}\iint_{E(x,t;r)}u(y,s)\frac{\abs{x-y}^2}{(t-s)^2}dyds.\]
+\end{problem}
+\begin{proof}
+    熱球$E(x,t;r)\ssub Q_T$を任意にとる．すると，平行移動した関数$v(y,s):=u(y+x,s+t)$を考えると，
+    \[(y+x,s+t)\in E(x,t;r)\quad\Leftrightarrow\quad(y,s)\in E(0,0;r)\]
+    に注意すれば，
+    \[v(x,t)=\frac{1}{4r^n}\iint_{E(0,0;r)}v(y,s)\frac{\abs{x-y}^2}{(t-s)^2}dyds\]
+    を示せばよい．以降，$v$を$u$と書き，$E(0,0;r)$を$E(r)$と書く．
+    \begin{enumerate}[{Step}1]
+        \item 関数
+        \[\phi(r):=\frac{1}{r^n}\iint_{E(r)}u(y,s)\frac{\abs{y}^2}{s^2}dyds\]
+        の微分を考える．まず，
+        \[r^n\Phi(y,s)=\frac{1}{\sqrt{4\pi(s/r^2)}^n}e^{-\frac{\abs{y/r}^2}{s/r^2}}=\Phi(y/r,s/r^2)\]
+        に注意すれば，変数変換$x:=y/r,t:=s/r^2$により
+        \begin{align*}
+            \phi(r)&=\frac{1}{r^n}\iint_{E(1)}u(rx,r^2t)\frac{r^2\abs{x}^2}{r^4t^2}r^ndxr^2dt=\iint_{E(1)}u(rx,r^2t)\frac{\abs{x}^2}{t^2}dxdt.
+        \end{align*}
+        と書き直せる．するとこの微分は
+        \begin{align*}
+            \phi'(r)&=\iint_{E(1)}\paren{\sum_{i=1}^nu_{x_i}x_i\frac{\abs{x}^2}{t^2}+2ru_t\frac{\abs{x}^2}{t}}dxdt\\
+            &=\frac{1}{r^{n+2}}\iint_{E(r)}\paren{\sum_{i=1}^nu_{y_i}\frac{y_i}{r}\frac{r^2\abs{y}^2}{s^2}+2ru_s\frac{\abs{y}^2}{s}}dyds\\
+            &=\frac{1}{r^{n+1}}\iint_{E(r)}\paren{\sum_{i=1}^nu_{y_i}y_i\frac{\abs{y}^2}{s^2}+2u_s\frac{\abs{y}^2}{s}}dyds=:A+B.
+        \end{align*}
+        と計算できる．
+        \item まず$B$を評価することを考える．いま，
+        \[\partial E(r)=\Brace{(y,s)\in\R^{n+1}\;\middle|\;s\le0,\Phi(-y,-s)=\frac{1}{r^n}}\]
+        上では
+        \[\Phi(-y,-s)=\frac{1}{(-4\pi s)^{n/2}}e^{\frac{\abs{y}^2}{4s}}=\frac{1}{r^n}\]
+        より，特に
+        \[\psi(y,s):=\log\Phi(-y,-s)-\log r^{-n}=-\frac{n}{2}\log(-4\pi s)+\frac{\abs{y}^2}{4s}+n\log r=0,\qquad(y,s)\in\partial E(r)\]
+        に注目する．
+        以降，
+        \[\psi_s(y,s)=-\frac{n}{2}\frac{1}{s}-\frac{\abs{y}^2}{4s^2},\quad\psi_{y_i}(y,s)=\frac{y_i}{2s}.\]
+        を用いる．
+        $y_i$に関する
+        部分積分により，$B$は
+        \begin{align*}
+            B&=\frac{1}{r^{n+1}}\iint_{E(r)}\paren{\sum_{i=1}^n2u_s\frac{y_i^2}{s}}dyds\\
+            &=\frac{1}{r^{n+1}}\iint_{E(r)}\paren{4\sum_{i=1}^nu_sy_i\psi_{y_i}}dyds\\
+            &=-\frac{1}{r^{n+1}}\iint_{E(r)}4\sum_{i=1}^n\paren{u_{sy_i}y_i\psi+_s\psi}dyds\\
+            &=-\frac{1}{r^{n+1}}\iint_{E(r)}\paren{4nu_s\psi+4\sum_{i=1}^nu_{sy_i}y_i\psi}dyds.
+        \end{align*}
+        と変形できる．引き続き第二項に，$s$に関する部分積分を考えることで，
+        \begin{align*}
+            B&=\frac{1}{r^{n+1}}\iint_{E(r)}\paren{-4nu_s\psi+4\sum_{i=1}^nu_{y_i}y_i\psi_s}dyds\\
+            &=\frac{1}{r^{n+1}}\iint_{E(r)}\paren{-4nu_s\psi+4\sum_{i=1}^nu_{y_i}y_i\paren{-\frac{n}{2s}-\frac{\abs{y}^2}{4s^2}}}dyds\\
+            &=\frac{1}{r^{n+1}}\iint_{E(r)}\paren{-4nu_s\psi-\frac{2n}{s}\sum_{i=1}^nu_{y_i}y_i}dyds-\underbrace{\frac{1}{r^{n+1}}\iint_{E(r)}\frac{\abs{y}^2}{s^2}\sum_{i=1}^nu_{y_i}y_idyds}_{=A}
+        \end{align*}
+        \item 以上の計算と，$u$が熱方程式の解であることを併せれば，部分積分から
+        \begin{align*}
+            \psi'(r)&=A+B=\frac{1}{r^{n+1}}\iint_{E(r)}\paren{-4nu_s\psi-\frac{2n}{s}\sum_{i=1}^nu_{y_i}y_i}dyds\\
+            &=\frac{1}{r^{n+1}}\iint_{E(r)}\paren{-4n\underbrace{\Lap u\psi}_{=\sum_{i=1}^nu_{y_iy_i}\psi}-\frac{2n}{s}\sum_{i=1}^nu_{y_i}y_i}dyds\\
+            &=\frac{1}{r^{n+1}}\iint_{E(r)}\sum_{i=1}^n\paren{4nu_{y_i}\psi_{y_i}-\frac{2n}{s}u_{y_i}y_i}dyds\\
+            &=\frac{1}{r^{n+1}}\sum_{i=1}^n\iint_{E(r)}u_{y_i}\paren{4n\psi_{y_i}-\frac{2n}{s}y_i}dyds=0.
+        \end{align*}
+        が解る．よって関数$\psi$は定数であるから，次の補題より，
+        \begin{align*}
+            \phi(r)&=\lim_{r\to0}\phi(r)=\lim_{r\to0}\frac{1}{r^n}\iint_{E(r)}u(y,s)\frac{\abs{y}^2}{s^2}dyds\\
+            &=\lim_{r\to0}\iint_{E(1)}u(rx,r^2t)\frac{\abs{x}^2}{t^2}dxdt\\
+            &=u(0,0)\iint_{E(1)}\frac{\abs{x}^2}{t^2}dxdt=4u(0,0).
+        \end{align*}
+        を得る．途中の収束は，$E(1)$がコンパクトであることに注意すれば，
+        $\{u(rx,r^2t)\}_{0\le r\le 1}$がすべて可積分であるため，Lebesgueの優収束定理による．
+    \end{enumerate}
+\end{proof}
+
+\begin{lemma*}
+    \[\iint_{E(1)}\frac{\abs{x}^2}{t^2}dxdt=4.\]
+\end{lemma*}
+\begin{proof}
+    \[E(1)=\Brace{(y,s)\in\R^{n+1}\;\middle|\;s\le0,\Phi(-y,-s)\ge1}\]
+    であるが，
+    \begin{align*}
+        \Phi(-y,-s)&=(-4\pi s)^{-\frac{n}{2}}e^{\frac{\abs{y}^2}{4s}}\ge1\\
+        &\Leftrightarrow e^{\frac{\abs{y}^2}{4s}}\ge(-4\pi s)^{\frac{n}{2}}\\
+        &\Leftrightarrow \frac{\abs{y}^2}{4s}\ge\frac{n}{2}\log(-4\pi s)\\
+        &\Leftrightarrow\abs{y}^2\le 2ns\log(-4\pi s).
+    \end{align*}
+    と同値変形できる．$e^{\frac{\abs{y}^2}{4s}}\le1$に注意すれば，$s\in\Square{-\frac{1}{4\pi},0}$が必要であるため，特に$E(1)$はコンパクトで，次のように表せる：
+    \[E(1)=\Brace{(y,s)\in\R^{n+1}\;\middle|\;-\frac{1}{4\pi}\le s\le0,\abs{y}^2\le 2ns\log(-4\pi s)}.\]
+    $R:=\sqrt{2ns\log(-4\pi s)}$とおく．
+    よって，
+    積分は次のように計算できる：
+    \begin{align*}
+        \iint_{E(1)}\frac{\abs{y}^2}{s^2}dyds&=\int^0_{-1/4\pi}\int^R_0\int_{\partial B(0,r)}\frac{r^2}{s^2}dSdrds\\
+        &=\int^0_{-1/4\pi}\int^R_0\frac{n\om_nr^{n+1}}{s^2}drds&\because\abs{\partial B(0,r)}=r^{n-1}n\om_n\\
+        &=\int^0_{-1/4\pi}\frac{n\om_n}{s^2}\frac{R^{n+2}}{n+2}ds\\
+        &=\frac{2n}{n+2}(2n)^{n/2}n\om_n\int^0_{-1/4\pi}s^{\frac{n-2}{2}}(\log(-4\pi s))^{\frac{n+2}{2}}ds.
+    \end{align*}
+    ここで，変数変換$z:=-\log(-4\pi s)$より，
+    \begin{align*}
+        \int^0_{-1/4\pi}s^{\frac{n-2}{2}}(\log(-4\pi s))^{\frac{n+2}{2}}ds&=\int^\infty_0\paren{\frac{e^{-z}}{4\pi}}^{\frac{n}{2}}z^{\frac{n+2}{2}}dz\\
+        &=\frac{1}{(4\pi)^{\frac{n}{2}}}\int^\infty_0e^{-w}w^{\frac{n}{2}+2-1}\paren{\frac{2}{n}}^{\frac{n}{2}+2}dw\\
+        &=\frac{1}{(2n\pi)^{n/2}}\frac{4}{n^2}\Gamma\paren{\frac{n}{2}+2}.
+    \end{align*}
+    と計算できるから，
+    $n$次元単位球の表面積の関係
+    \[n\om_n=\frac{2\pi^{n/2}}{\Gamma\paren{\frac{n}{2}}}\]
+    に注意すれば，総じて，
+    \begin{align*}
+        \iint_{E(1)}\frac{\abs{y}^2}{s^2}dyds&=\frac{2n}{n+2}(2n)^{n/2}n\om_n\frac{1}{(2n\pi)^{n/2}}\frac{4}{n^2}\Gamma\paren{\frac{n}{2}+2}\\
+        &=\frac{2n}{n+2}2\frac{4}{n^2}\frac{n+2}{2}\frac{n}{2}=4.
+    \end{align*}
+\end{proof}
+\begin{problem}[強最大値原理]
+    $\Om\subset\R^n$を領域，$Q_T:=Q\times{(0,T]}\;(T>0)$とし，$u\in C^{2,1}(Q_T)$は$u_t-\Lap u=0\;\In Q_T$を満たすとする．
+    このとき，ある点$(x_0,t_0)\in Q_T$において$u(x_0,t_0)=\max_{\o{Q_T}}u$を満たすならば，$u$は$\o{Q_{t_0}}$上定数であることを示せ．
+\end{problem}
+\begin{proof}
+    点$(x_0,t_0)\in Q_T$にて$u(x_0,t_0)=\max_{\o{Q_T}}u=:M$を達成するとする．
+    \begin{enumerate}[{Step}1]
+        \item 任意の$E(x_0,t_0;r)\subset Q_T$について，平均値の定理から
+        \[M=u(x_0,t_0)=\frac{1}{4r^n}\iint_{E(x_0,t_0;r)}u(y,s)\frac{\abs{x_0-y}^2}{(t_0-s)^2}dyds\]
+        が成り立つが，
+        補題より，
+        \[\frac{1}{4r^n}\iint_{E(x_0,t_0;r)}\frac{\abs{x_0-y}^2}{(t_0-s)^2}dyds=1\]
+        であることから，
+        \[\iint_{E(x_0,t_0;r)}\Paren{u(y,s)-M}\frac{\abs{x_0-y}^2}{(t_0-s)^2}dyds=0.\]
+        $u$が連続であることと併せれば，$u\equiv M\;\on E(x_0,t_0;r)$を得る．
+        \item $(y_0,s_0)\in Q_T$で$s_0<t_0$を満たす点と$(x_0,t_0)$とを結ぶ線分$L$は$Q_T$に含まれるとすると，$u\equiv M\;\on L$である．
+        
+        実際，
+        \[r_0:=\min\Brace{s\ge s_0\mid \forall_{(x,t)\in L}\;s\le t\le t_0\Rightarrow u(x,t)=M}.\]
+        が$r_0>s_0$を満たすとすると矛盾が導ける．$u$は連続であるから，$r_0$の定義でminを取っている所の集合は閉集合である．特に，$r_0$について，
+        $(z_0,r_0)\in L$を満たす任意の$z_0\in Q$について，$u(z_0,r_0)=M$を満たす．
+        よってStep1から，任意の$E(z_0,r_0;r)\subset Q_T$について，$u(z_0,r_0)\equiv M\;\on E(z_0,r_0;r)$を満たす．
+        このとき，$E(z_0,r_0;r)$はある$\ep>0$について$L\cap\Brace{r_0-\ep\le t\le r_0}$という形の集合を含むから，$r_0$の最小性に矛盾する．
+        \item あとは，任意の点$(x,t)\in Q\times\cointerval{0,T}$が$(x_0,t_0)$と線分の有限個のつなぎ合わせによって結べることを示せばよい．
+        
+        まず，$Q$が連結であるために，ある有限個の点$x_0,x_1,\cdots,x_m=x$であって，これらを結ぶ折れ線は$Q$内に存在するように出来る．
+        これは，この性質を持つ$Q$の点$x\in Q$の全体$V\subset Q$は，非空の，$Q$の開かつ閉集合であるためである．
+        $V$が開集合であることは明らか．閉集合であることも，$V$の任意の収束列$\{x_n\}\subset V$に対して，$Q$内の開球$B\osub Q$であって$x_n$を無限個含むものが取れるから，$n_0:=\min\Brace{n\in\N\mid x_n\in B}$とすれば，$[x_0,x_{n_0}],[x_{n_0},x_\infty]$は$x_0$と$x_\infty:=\lim_{n\to\infty}x_n$を結ぶから，$x_\infty\in V$である．
+
+        これに対して，対応するだけの$t_0>t_1>\cdots>t_m=t$を任意に取れば，$(x_0,t_0),(x_1,t_1),\cdots,(x_m,t_m)$を結ぶ折れ線は$Q_T$に含まれる．
+    \end{enumerate}
+\end{proof}
+
+\begin{problem}[時間後方一意性]
+    $Q\subset\R^n$を有界領域，$Q_T:=Q\times{(0,T]}\;(T>0)$とし，$u,v\in C^{2,1}(Q_T)$は
+    いずれも熱方程式
+    $u_t-\Lap u=0\;\In Q_T$を満たすとする．
+    このとき，$u=v\;\on\partial Q\times(0,T]$ならば，次が成り立つ：
+    \begin{enumerate}
+        \item $w:=u-v,E(t):=\int_\Om w^2dx$とおくと，$\forall_{t\in(0,T)}\;(E'(t))^2\le E(t)E''(t)$．
+        \item $u(-,T)=v(-,T)\;\on\o{Q}$ならば，$u=v\;\on\o{Q_T}$．
+    \end{enumerate}
+\end{problem}
+\begin{proof}\mbox{}
+    \begin{enumerate}
+        \item 
+        \begin{description}
+            \item[2階微分の計算] \[E(t):=\int_Qw^2(x,t)dx,\qquad t\in[0,T].\]
+            の微分は，部分積分より
+            \begin{align*}
+                \dot{E}(t)&=2\int_Qww_tdx\\
+                &=2\int_Qw\Lap wdx=-2\int_Q\abs{Dw}^2dx.
+            \end{align*}
+            さらにもう一度微分すると，
+            \begin{align*}
+                \ddot{E}(t)&=-4\int_Q(Dw|Dw_t)dx\\
+                &=4\int_Q\Lap ww_tdx=4\int_Q(\Lap w)^2dx.
+            \end{align*}
+            \item[2階微分の評価] 任意の$t\in[0,T]$について$w(-,t)=0\;\on\partial Q$より，部分積分とCauchy-Schwarz不等式から
+            \begin{align*}
+                (\dot{E}(t))^2&=4\paren{\int_Q\abs{Dw}^2dx}^2=4\paren{\int_Qw\Lap wdx}^2\\
+                &\le\paren{\int_Qw^2dx}\paren{4\int_Q(\Lap w)^2dx}=E(t)\ddot{E}(t).
+            \end{align*}
+        \end{description}
+        \item $E\equiv0$を示せば良いから，ある$[t_1,t_2]\subset[0,T]\;(t_1<t_2)$が存在して$\forall_{t\in\cointerval{t_1,t_2}}\;E(t)>0$かつ$E(t_2)=0$を満たすと仮定して矛盾を導く．
+        \[f(t):=\log E(t),\qquad t\in\cointerval{t_1,t_2}.\]
+        を考えると，(1)での議論より，
+        \[f''(t)=\frac{\ddot{E}(t)}{E(t)}-\frac{\dot{E}(t)^2}{E(t)^2}\ge0.\]
+        よって，$f$は$(t_1,t_2)$上凸である：
+        \[f((1-\tau)t_1+\tau t)\le(1-\tau)f(t_1)+\tau f(t),\qquad t\in(t_1,t_2),\tau\in(0,1).\]
+        すなわち，
+        \[E((1-\tau)t_1+\tau t)\le E(t_1)^{1-\tau}E(t)^{\tau},\qquad t\in(t_1,t_2),\tau\in(0,1).\]
+        であるが，$t=t_2$と取ると，特に
+        \[(0\le)E((1-\tau)t_1+\tau t_2)\le E(t_1)^{1-\tau}E(t_2)^\tau=0,\qquad\tau\in(0,1).\]
+        より，$E=0\;\on[t_1,t_2]$．
+    \end{enumerate}
+\end{proof}
+
+\begin{problem}[正則性]
+    $\Om\subset\R^n$を領域，$Q_T:=Q\times{(0,T]}\;(T>0)$とし，$u\in C^{2,1}(Q_T)$は$u_t-\Lap u=0\;\In Q_T$を満たすとする．
+    このとき，次が成り立つ：
+    \begin{enumerate}
+        \item $u\in C^\infty(Q_T)$．
+        \item 任意の
+        \[C(x,t;r):=\Brace{(y,s)\in\R^n\times\R\mid\abs{x-y}\le r,t-r^2\le s\le t}\subset Q_T\]
+        と$k,l\in\N$に対して，ある定数$C\ge0$が存在して，
+        \[\max_{(y,s)\in C\paren{x,t;\frac{r}{2}}}\Abs{D^k_xD^l_tu(y,s)}\le\frac{C}{r^{k+2l+n+2}}\norm{u}_{L^1(C(x,t;r))}.\]
+    \end{enumerate}
+\end{problem}
+\begin{proof}\mbox{}
+    \begin{enumerate}
+        \item 任意の$(x_0,t_0)\in Q_T$と$C:=C(x_0,t_0;r)\subset Q_T$をとる．
+        $(\eta_\ep)_{\ep>0}$を$(x,t)\in\R^{n+1}$上の軟化子とし，
+        $u^\ep:=\eta_\ep*u$と表す．
+        $n$次元閉球を$B(x,r):=\Brace{y\in\R^n\mid\abs{y-x}\le r}$と表す．
+        $C':=C(x_0,t_0;3r/4)$上で$1$で，$C$の放物境界$\partial B(x_0,r)\times[t_0-r^2,t_0]\cup B(x_0,r)\times\{t_0-r^2\}$の近傍で$0$な，$C$上に台を持つ可微分関数$\zeta$を取り，
+        これを用いてカットオフをかけたものを
+        \[v^\ep(x,t):=\zeta(x,t)u^\ep(x,t),\qquad x\in\R^n,t\in[0,t_0]\]
+        と表す．
+        \begin{enumerate}[{Step}1]
+            \item いま，
+            \[v_t^\ep=\zeta u^\ep_t+\zeta_tu^\ep,\quad\Lap v^\ep=\zeta\Lap u^\ep+2(D\zeta|Du^\ep)+u^\ep\Lap\zeta\]
+            であるから，
+            \[\begin{cases}
+                v^\ep_t-\Lap v^\ep=\zeta_tu^\ep-2(D\zeta|Du^\ep)-u^\ep\Lap\zeta=:\wt{f}&\In\R^n\times(0,t_0),\\
+                v^\ep=0&\on\R^n\times\{0\}.
+            \end{cases}\]
+            を満たす．
+            $u^\ep$は$Q_T$の近傍で可微分であるために，解公式を用いるための$f$の可微分性の条件はみたされており，また$\zeta$の存在よりコンパクトな台を持つ．
+            さらに$v^\ep$はこの有界な解であるから，一意性から
+            \[v^\ep(x,t)=\int^t_0\int_{\R^n}\Phi(x-y,t-s)\wt{f}(y,s)dyds\]
+            を結論付けられる．
+            \item 任意の$(x,t)\in C'':=C(x_0,t_0;r/2)$について，十分小さい$\ep>0$についてこの上で$u^\ep=v^\ep$であるから，
+            \begin{align*}
+                u^\ep(x,t)&=\iint_C\Phi(x-y,t-s)\wt{f}(y,s)dyds\\
+                &=\iint_C\Phi(x-y,t-s)\Paren{(\zeta_s(y,s)-\Lap\zeta(y,s))u^\ep(y,s)-2(D\zeta(y,s)|Du^\ep(y,s))}dyds.
+            \end{align*}
+            $\Phi(x-y,t-s)$は$(y,s)=(x,t)$で特異性を持つが，
+            $(x,t)\in C''$の近傍で$\wh{f}=v_t^\ep-\Lap v^\ep=Q_T^\ep-\Lap u^\ep=0$より，部分積分によって次のように計算を進めることができる：
+            \begin{align*}
+                u^\ep(x,t)&=\iint_C\Phi(x-y,t-s)(\zeta_s-\Lap\zeta)u^\ep dyds\\
+                &\qquad\quad+2\iint_C\Paren{(D_y\Phi(x-y,t-s)|D\zeta)u^\ep+\Phi(x-y,t-s) u^\ep\Lap\zeta} dyds\\
+                &=\iint_C\Paren{\Phi(x-y,t-s)(\zeta_s+\Lap\zeta)+2(D_y\Phi(x-y,t-s)|D\zeta)}u^\ep dyds.
+            \end{align*}
+            $\ep\to0$の極限を取ることで，
+            \[u(x,t)=\iint_C\Paren{\Phi(x-y,t-s)(\zeta_s+\Lap\zeta)+2(D_y\Phi(x-y,t-s)|D\zeta)}u dyds.\]
+            を得る．
+            \item Step2で得た$C''$上での$u$の表示の積分核
+            \[K(x,t,y,s):=\Phi(x-y,t-s)(\zeta_s+\Lap\zeta)+2(D_y\Phi(x-y,t-s)|D\zeta)\]
+            は$C'$上で$0$で，$C$上で可微分である．よって，$u$は$C''$上で可微分である．
+        \end{enumerate}
+        \item $(x,t)=(0,0)$と仮定して議論する．一般の$(x,t)\in Q_T$については，$v(y,s):=u(y+x,s+t)$についての議論の帰着させることが出来る．
+        \begin{enumerate}[{Step}1]
+            \item $C(1):=C(0,0,1)\subset Q_T$が成り立つとする．このとき，(1)と同様にして
+            \[u(x,t)=\iint_{C(1)}K(x,t,y,s)u(y,s)dyds\qquad(x,t)\in C(1/2).\]
+            という表示を得る．$K\in C_c^\infty$より，この微分は$C(1/2)$上で
+            \[\abs{D_x^kD_t^lu(x,t)}\le\iint_{C(1)}\abs{D_x^kD_t^lK(x,t,y,s)}\abs{u(y,s)}dyds\le C\norm{u}_{L^1(C(1))}.\]
+            と評価できる．
+            \item 任意の$C(r)\subset Q_T$を取ると，
+            \[v(x,t):=u(rx,r^2t)\]
+            は$C(1)$の近傍で定義されており，$C(1)$上の熱方程式を満たす．
+            よって，Step1での議論から，
+            \[\abs{D_x^kD_t^lv(x,t)}\le C\norm{v}_{L^1(C(1))},\qquad (x,t)\in C(1/2).\]
+            という評価を得る．
+            関係
+            \[D_x^kD_t^lv(x,t)=r^{2l+k}D_x^kD_t^lu(rx,r^2t).\]
+            \[\norm{v}_{L^1(C(1))}=\iint_{C(1)}\abs{u(rx,r^2t)}dxdt=\frac{1}{r^{n+2}}\iint_{C(r)}\abs{u(y,s)}dyds=\frac{1}{r^{n+2}}\norm{u}_{L^1(C(r))}.\]
+            に注意して，結論を得る．
+        \end{enumerate}
+    \end{enumerate}
+\end{proof}
+
+
+\bibliography{../../StatisticalSciences.bib,../../SocialSciences.bib,../../mathematics.bib,../../statistics.bib}
+
+\end{document}
+

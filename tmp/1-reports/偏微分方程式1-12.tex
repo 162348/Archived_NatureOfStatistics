@@ -1,0 +1,29 @@
+\documentclass[uplatex,dvipdfmx]{jsarticle}
+\title{偏微分方程式論 レポート\\1月12日発表分}\author{05-210520 司馬博文}\date{\today}
+\pagestyle{plain} \setcounter{secnumdepth}{4}
+\input{/Users/Hirofumi Shiba/NatureOfStatistics/preamble_no_fonts.tex}
+%\input{/Users/hirofumi.shiba48/NatureOfStatistics/preamble_no_fonts.tex}
+%\input{/Users/hirof/NatureOfStatistics/preamble_no_fonts.tex}
+\usepackage[math]{anttor}
+\begin{document}
+\setcounter{section}{1}
+\maketitle
+
+\begin{problem}
+    $p>0$について，$\R$上の関数を
+    \[g(x):=e^{-x^p}1_{\Brace{x>0}}.\]
+    と定める．
+    \begin{enumerate}
+        \item ある定数$\theta\in\R$が存在し，任意の$y>0,\al\in\N$について，
+        \[\abs{g^{(k)}(y)}\le\frac{k!}{(\theta y)^k}e^{-\frac{y^{-p}}{2}}.\]
+        \item ある定数$C,r\in\R$が存在し，任意の$x\in\R,\al\in\N$について，
+        \[\abs{g^{(k)}(x)}\le C(k!)^{1+\frac{1}{p}}r^{-k}.\]
+    \end{enumerate}
+\end{problem}
+\begin{remark}[Gervey class]
+    Cauchyの積分公式がヒント．$g\in C^\infty(\Om)$が次を満たすとき，\textbf{Gervey class $\sigma$}であるという：
+    任意の$\Om'\ssub\Om$に対して，ある$M,r\in\R$が存在して，任意の$y\in\Om',\beta\in\N^N$について$\abs{D^\beta g(y)}\le M(\abs{\beta}!)^\sigma r^{-\abs{\beta}}$．
+    $g$が解析的であることと，Gervey class $1$であることは同値であることが知られていいる．
+\end{remark}
+
+\end{document}

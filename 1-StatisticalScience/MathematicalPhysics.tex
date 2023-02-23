@@ -1,0 +1,1216 @@
+\documentclass[uplatex,dvipdfmx]{jsreport}
+\title{統計力学と普遍性}
+\author{司馬博文}
+\date{\today}
+\pagestyle{headings} \setcounter{secnumdepth}{4}
+%\input{/Users/Hirofumi Shiba/NatureOfStatistics/preamble_no_fonts.tex}
+\input{/Users/hirofumi.shiba48/NatureOfStatistics/preamble_no_fonts.tex}
+\usepackage[math]{anttor}
+\begin{document}
+\tableofcontents
+
+\begin{quotation}
+    量子論も情報理論となった．
+    統計物理は，その変数選択の問題である．
+    統計物理は，基礎となる力学は交換可能で，これをマクロに繋げる基礎理論として，さらに多くの応用先を見つけてもおかしくないだろう．
+    マクロな系には普遍性がある．特に強力な普遍性が正規分布とBrown運動である．
+    これを記述するのに確率論を採択することになったのは全ての物理学理論共通の結論となってしまった．
+\end{quotation}
+
+\chapter{解析力学}
+
+\begin{quotation}
+    Newton力学を数学的に整理すると，巨視的運動を多様体上に映し取る理論だと理解された．
+    接空間は位置と速度の組の全体となる．
+    最小作用の原理は，さらにRiemannとEinsteinを経由して，
+    物体は測地線に沿って動くという幾何学が出来た．
+
+    力学は、幾何学→Euler的解析学とLagrange的代数学の洗練を受ける→Fermatの原理を主軸にしてHamiltonとJacobiによる最小作用の原理を中心にした展開→幾何学が拾う（Poincareの手による）、の旅程を辿った。
+    Hamilton-Jacobi理論以降は数学史的な先行研究もない．
+\end{quotation}
+
+\section{歴史}
+
+\subsection{Newton力学}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    当時は幾何学の対義語が「代数」「幾何」であった．
+    Euclidの原論から，力学を引き剥がす試みが「解析力学」(Lagrange)であった．
+    初めて，代数・幾何の離陸，という意味で，応用数学の故郷である．
+    Eulerの時点で変分法まで揃っていた．
+\end{tcolorbox}
+
+\begin{history}[幾何学の時代]
+    Issac Newton 1642-1727 は『プリンキピア』(1687)天体の運動を幾何学の言葉で書いた．
+    その後の18世紀では，Euler, Bernoulli, Leibniz, Laplaceらにより，微積分学・変分学が両輪となって相互作用を持ちながら大きく発展した．
+    その過程で，Newtonの運動方程式を２階の常微分方程式として得て，幾何学の言葉から代数・解析学の言葉に翻訳したのがEulerであった(1747,\cite{Euler1747})．
+    Eulerは微積分学を「無限小解析」，代数学を「有限解析」と呼んでおり，2つは地続きのものと捉えていた．この立場から，Newton力学を超克する立場を「解析力学」と呼ぶことは不自然ではない．
+\end{history}
+
+\begin{history}[Leonhard Euler 1707-1783 による常微分方程式への翻訳]
+    Euler 1747 \cite{Euler1747}「天体の運動一般の研究」でNewtonの運動方程式を定式化した．
+    EulerはLeibnizの方法の方が数学的に発展性があると気づいて，多いに発展させた．これでNewtonの質点力学を剛体力学，弾性体力学，流体力学へと発展させた．
+
+    さらには，最速降下線や等周問題を統一的に扱う変分法という分野を創始したのもEulerであった．
+    1744年には，変分問題の極値
+    を与える曲線がみたす方程式を導いている．その
+    論文の付録では，質量と軌道要素上の速さの積を
+    軌道に沿って積分したものを作用量と定義し，そ
+    れを最小にする最小作用の原理によって運動が規
+    定されることも提唱している．
+\end{history}
+
+\begin{history}[Joseph Louis Lagrange 1736-1813]
+    Eulerが才能を見出した数学者に，Lagrangeがいる．まず，2人は，変分問題の解曲線が満たすべき方程式を導き，現在ではEuler-Lagrange方程式と呼ばれている．
+    まず，変分法を$\delta$の記法を用いて完全に脱幾何学し，
+    まず極値曲線の方程式を解いて，Eulerに招聘された．さらに，力学
+    解析・代数の言葉で書き直したのが『解析力学』1788,\cite{Lagrange1788}．
+    事実，運動方程式から，最小作用の原理などは定理として導かれる．
+    ポテンシャルなどの技法は既に多様体的な考え方を内包していた．なお，ポテンシャルが存在するとは，保存系であることに同値．
+    この考え方を用いて運動方程式を書き直したもの，すなわち
+    Lagrangeの方程式
+    \[\dd{}{t}\pp{t}{\dot{q}_i}-\pp{T}{q_i}+\pp{U}{q_i}=0\]
+    も導かれる．
+
+    Siméon Denis Poisson 1781-1840の1809の仕事を盛り込んだ第二版も，定理を増やした．
+\end{history}
+
+\subsection{Hamiltonの研究}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    イギリスで代数と論理学が出会い，Booleなどの結節点が，計算機を産んだ．Leibnizの夢である．
+    その中でHamiltonはたくましく当時の数理科学優等生であったフランスに学び，イギリスらしい進展を付け加えた．
+
+    実は，変分原理(今ではHamiltonの原理と呼ばれる)から，Lagrangeの方程式も導ける．2つは同値なのだ！
+    すると，連立1階常微分方程式系を解く問題が出現し，こちらの方が発展性があるのであった．
+
+    作用汎関数1つが系に関する情報を湛えている，というのが基本的手法であった．
+\end{tcolorbox}
+
+\begin{history}[William Rowan Hamilton 1805-1865]
+    本格的に数学を始めたのは15歳の頃で、当時最先端のラグランジュ、ラプラスの書物を学ぶ。この頃わずか16歳にしてラプラスの『天体力学』に誤りを発見し、専門家を驚かせた。
+    Hamiltonは実は詩人になりたかったのかもしれない．ワーズワースに憧れていたのだろうか．
+
+    夏目漱石の『趣味の遺伝』(1906)で「ハミルトンのクオータニオンを発明したのもおおかたこんなものだろう」
+    という表現があるが，これが受け入れられるはずがあろうか？
+    そういえば線形変換を行列ではなく，四元数で書いていたのだっけか．
+\end{history}
+
+\subsubsection{光学研究}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    「光線系の理論」と題する一連の考作が1828年から発表されている．
+    光学と力学が共進化したのは極めて興味深い事実である．
+    Fermatの原理をどの程度着想源としたかは不明である．
+\end{tcolorbox}
+
+\begin{history}
+    幾何光学に注目し，Lagrangeの力学理論に新たな光を入れたのがHamiltonであった．
+    Hamiltonはまず，光学を解析的な言葉で定式化する仕事をしている．
+    Hamiltonは，Fermatの原理を念頭に，「特性関数」という量$I$を定義し，この変分が零になる道が実現されるという意味で「最小作用の原理」と呼びえる定理が成り立つことを導いた．
+
+    ハミルトンは反射・屈折の法則から，Fermatの原理を「証明」している．
+    そして，Fermatの原理の翻訳として得たのは，
+    \[\delta I=\delta\int\nu(x,y,z)d\rho=0.\]
+    である．ただし，$\nu$は屈折率，$\rho$は線分要素とした．
+    $I$を特性関数という．
+\end{history}
+
+\subsubsection{力学への応用}
+
+\begin{history}
+    そこで仕事が力学に移る際にも，一つの量を定義して，そこから事実を演繹する，というパラレルな理論展開をおこなった．
+    どうやら，Hamiltonはその手法に詩の美しさに通じるような美しさを感じていたとも考えられる．
+    こうして，「力学における特性関数」の方法を，「動力学の一般的手法」として2つの論文で発表した(1834\cite{Hamilton34},1835\cite{Hamilton35})．
+    特に，第二論文における「主関数$S$」に対する変分原理として，Lagrangeの方程式が導けることも言及したが，あくまで「特性関数」の手法の有用性の例くらいの位置付けに留まっている．
+
+    1834年に発表した「動力学の一般的方法」\cite{Hamilton34}では，Newtonの原理から出発して，
+    \[S:=\int^t_0(T-U)dt\]
+    なる，「特性関数」にあたる量を定義した．
+    そして最小作用の原理を示した．
+\end{history}
+
+\begin{remarks}
+    つまり，"Hamiltonの原理"から他を導出する手法は，確かに持ち味であり，副産物として得たことは間違いないが，そこを出発点に据えた訳ではない．
+\end{remarks}
+
+\subsection{Jacobiの研究}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    王立協会の紀要に発表されたHamilton力学研究は大陸
+    の有力な研究者たちの注目を引いた。
+    1842-43年冬学期におこなった講義録『力学講義』が集大成になる．
+
+    ハミルトンが示したのは，運動方程式を直接解かず，偏微分芳程式を解いて主関数を求め，それを
+    使って運動方程式の解が得られることである．ヤコビは，この着想を常微分方程式系を偏微分方程式に帰着して解く方法として整備した．
+    すなわち，
+    あるクラスの連立1階常微分方程式系（正準方程式）を，非線形1階偏微分方程式に帰着して解く技法をつなげた(Hilbert\cite{Hilbert37})．
+    一般に，偏微分方程式のほうが常微分方程式を解くより難しい．
+    しかしヤコビは，適当な変数変換を施し，変数を完全に分離で
+    きれば，HJ方程式は求積法で容易に解けることを指摘した．
+    これは正準変換と呼ばれている．
+\end{tcolorbox}
+
+\begin{history}[Carl Gustav Jacob Jacobi 1804-1851]
+    ドイツにおいてHamiltonの研究に影響を受けた数学者にJacobiがいる．
+    彼はHamiltonの方法は，変分問題とそれと等価な微分方程式系(Euler-Lagrangeの方程式とも呼べる)を解くことは，対応するある偏微分方程式を解くことに帰着できる，という形の理論へ一般化することを考えた．
+    特にこのとき，力を定めるポテンシャルが$t$に陽に依存するときも同様の手法が適用可能であるという意味で，たしかにHamiltonの議論より一般的になっている．
+    特にその象徴とも言える形の定理は，次の形で表現できる(1837,\cite{Jacobi37B})：
+    \begin{theorem}[Jacobi,\cite{Hilbert37}]
+        偏微分方程式$u_x+H(x_1,\cdots,x_n,x,u_{x_1},\cdots,u_{x_n})=0$の完全積分$u=\varphi(x_1,\cdots,x_n,x,a_1,\cdots,a_n)$が知られているならば，
+        $2n$個の任意のパラメータ$a_1,\cdots,a_n,b_1,\cdots,b_n$を持った方程式$\varphi_{a_i}=b_i,\varphi_{x_i}=p_i$から正準な連立微分方程式
+        \[\dd{x_i}{x}=H_{p_i},\quad\dd{p_i}{x}=-H_{x_i}\]
+        の解の$2n$-パラメータの群が得られる．
+    \end{theorem}
+    特にこの定理は，上の形をした偏微分方程式(Hamilton-Jacobi方程式)が，あるクラスの変数をとることで変数分離可能である，という結果(1837,\cite{Jacobi37C})と併せると，
+    正準方程式の解法理論として実用的なものになる．
+
+    1842-43のケーニヒスベルク大学講義録では，
+    JacobiもNewtonの原理から出発して，種々の結果を定理として導く．
+    しかし，Hamiltonの原理を出発点に据えて，等価に導出し直したりもした．
+
+    1836の論文\cite{Jacobi36}では，
+    2つの固定中心から引きつけられる質点の運動に対応するHJ方程式の変数を，
+    楕円座標を導入して完全に分離させ，オイラー以
+    来の難問を解いてみせた．
+    ヤコビの解法は時とし
+    て強力なのである．ヤコビが自覚するように，既
+    知の変数変換で変数が分離するような問題に対し
+    てしか適用できない方法だが，19世紀後半には近
+    似計算法が発展していくので，彼の着想は有効に
+    活用されていった．
+
+    1837の論文\cite{Jacobi37}「変分法と微分方程式の研究」と「偏微分方程式の解を常微分方程式系に帰着することについて」と「力学の微分方程式の積分について」で，
+    変分問題を偏微分方程式に帰着し，「正準性」を定義して解法を提示し「正準変換定理」を導き，
+\end{history}
+
+\begin{remarks}
+    しかし実は，正準方程式の解法理論を提示するにあたって，正準変換のピースを完成させていなかった．
+    つまり，母関数の原型$\psi$とH-Jの完全解との関係に気づいていない．
+\end{remarks}
+
+\begin{history}[Jacobiの定理]
+    一方で，Jacobiの結果はあくまで「偏微分方程式に帰着して解けるタイプの微分方程式を見つけた」という形のものであり，これを現代理解されている形に提示しなおしたのはPoincareであった．
+    中でも特に，正準変換の概念を通じてJacobiの理論を見直し，Jacobiの主定理とは，正準変換が，正準形の微分方程式を定数関数へ写す変換であるための十分条件を与えているものである，という観点に到達した．
+    Poincareは最終的に，現代的な表現を用いた定理の形にまとめれば，次の結果を本質的には得ている(1905,Poincare1905)：
+    \begin{theorem*}\mbox{}
+        \begin{enumerate}
+            \item 変換$(q_1,\cdots,q_n,p_1,\cdots,p_n)\mapsto(q_1',\cdots,q'_n,p'_1,\cdots,p'_n)$が，ある関数$S$について$dS=\sum q_i'dp_i'-\sum q_idp_i$を満たすならば，正準変換である．
+            \item 正準変換後のHamiltonian $K$が零関数ならば，新たな正準変数は定数関数である．
+            \item 正準変換を定める母関数$S$が次の偏微分方程式を満たすならば，変換後のHamiltonian $K$は零関数である：
+            \[H\paren{q_1,\cdots,q_n,\pp{S}{q_1},\cdots,\pp{S}{q_n};t}+\pp{S_t}{t}=0.\]
+        \end{enumerate}
+    \end{theorem*}
+\end{history}
+
+\subsection{正準変換への過程}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    ここまでの理論では「正準変換（正準形の射）」の考え方が入っていない．
+    以降，Hamilton-Jacobi理論は天体力学と呼ばれていた．
+\end{tcolorbox}
+
+\begin{history}[幾何学との出会い]
+    PoincareはJacobiの理論を，変換の観点から捉え直した．正準変換も，他の多くの数学的構造を保つ変換のように，群をなす．
+    そこで特に，Lie代数の知見が応用できることをWhittakerが『解析力学』にて触れる．
+    というのも，正準変換を，純粋に群論的な視点から，相空間の連続変換のなすLie代数の中で，Poissonの基本括弧式の関係を満たすもの，と特徴付けられる，という見方を提示した．
+    そこで，一時期は正準変換は「接触変換(contact transformation)」とも呼ばれていた．
+
+    この知見は一見脈絡のないもののように見えるが，LieとKleinが着々と準備を進めていた数学理論であった．
+    Lieはそもそも微分方程式の古典的に知られていた解法はすべて変換の連続な族に関して不変であるという事実に注目し，
+    当時発展を極めていた不変式論の成果を幾何・解析学に流入させた．
+    なお，この方面のLieの論文を出版したのはKleinである\cite{Bourbaki}．
+\end{history}
+
+\begin{history}[Poincaréの本質的貢献]
+    1892年，彼の
+    代表作『天体力学の新しい方法』で，
+    Newton方程式からHamilton方程式を導き，その後Jacobiの解法を紹介する．
+    しかしここでさらに一歩踏み込んで，Hamilton-Jacobi方程式の完全解が
+    正準変換の母関数になることを示唆した．
+    第3版で，正準変換の導入法の現代的なものが得られた．
+
+    解こう
+とするハミルトン方程式を単純にするよ
+変換の母関数を求めるためにHJ方程式の完全解を求めることにより，元の方程式の解を得る，という
+    こうした現代的な解法を"Jacobiの解法"と呼んだが，実際Poincaréの業績である．
+\end{history}
+
+\subsection{天の力学から原子の力学へ}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    原子模型の提案から，Hamilton光学が見直された．
+    ハミルトン光学ないしは光学のHJ理論という分野が，1920年代には確立していた．
+    そしてBornがHamilton-Jacobi理論を，天体力学と量子力学をつなげる数学的形式として見直し，『原子の力学』(1925)として刊行した．
+    「量子力学」と題する論文が刊行されたのも，同年のすぐ後の出来事であった．
+\end{tcolorbox}
+
+\begin{history}[『天の力学』]
+    周期運動に関してHamilton-Jacobiの方法を適用した際に出てくる，作用変数と，それによるHamiltonの特性関数の偏微分として得られる角変数という2つの正準変数は，Hamilton-Jacobi方程式の完全解を得ずにして，周期運動の振動数を得るための強力な手段として知られていた．
+    特に，天体力学におけるKepler問題に対して，作用-角変数は有用であった．
+    ことさら，Bohr (1913)の原子の量子論が出現してからは，量子条件は作用変数を用いて自然に記述されることが理解されたため，その後すぐに作用-角変数へ強い関心が持たれた．
+    特に前期量子論は，古典力学における対応する問題を作用-角変数を用いて解き，作用変数$J$の値をPlanck定数$h$の整数倍に離散化することで，運動が量子化される，という方向で発展した\cite{Goldstein},\cite{Born25}．
+    こうして，原子のモデルの古典力学における類比物として，天体力学，特にKepler問題などの設定は強い関心を持たれたのである．
+        当時の量子物
+    理学者の間でよく読まれたのは，スウェーデンの
+    天文学者力ール・シヤリニ(1862-1934)による
+    『天の力学』であった.
+\end{history}
+
+\begin{history}[David Hilbert]
+    これらの歴史を経て，変分原理を基調として，幾何光学と力学を最初に統一的に扱ったのはHilbertの1922から1923年にかけてのゲッティンゲン大学での講義『量子論の数学的基
+    礎』であった．
+    すなわち，今日におけるHamilton-Jacobiの理論にまで整備が進んだ大事な要因の一つに，前期量子論からの要請と，天体力学と原子模型との偶然の設定の類似がある．
+    特に，Hamilton自身が，変分原理を中心に据えた，幾何光学と力学の統一的視点を提案したわけでは全くなかった．
+\end{history}
+
+\begin{history}[Max Born]
+    ヒルベルトの定式化を押さえた上でボルンは，
+    1925年に『原子の力学』を刊行する．
+    Hilbertの講義録は2009まで世に出なかったので，
+    今日の前期量子論を理解するためのHamilton-Jacobiの理論の教科書としての流れを作った．
+
+    しかし
+    その後，Hamilton-Jacobiの理論は突然関心を失った．その理由はBohrの量子論の限界がすぐに知れたからである．特に，水素原子よりも少しでも複雑になり，問題が2体問題ではなくなると，古典的には問題が解けなくなるため，同様の天体力学との類比は実行困難となる．
+    これは波動力学と行列力学との登場によって打開され，これらはHamilton-Jacobiの理論の直接の延長線上にあるわけではない．
+\end{history}
+
+\begin{history}[古典力学の再評価]
+    しかし，古典力学の標準的な教科書の一つ\cite{Goldstein}では，天体力学のみならず，電磁気学やプラズマ物理学などにおいて，作用-角変数は実り多い応用を生み出し続けていることが指摘されている．
+    またさらに，Hamilton-Jacobiの理論と幾何光学の関係の中に，波動力学への芽生えが含まれていることを指摘している．
+    幾何光学におけるアイコナール$L$に対する方程式$(\nabla L)^2=n^2$は，力学における特性関数$W$に対するHamilton-Jacobiの方程式と酷似しており，これはHamilton-Jacobiの方程式が，古典力学が，ある波の運動の幾何光学的な極限の場合に対応していることを示唆する．
+    こうして，光などの量子論的対象は，粒子でありながら波動でもある，という現代でも人々を驚かせる発想への架け橋となったことは間違いないだろう．
+    古典極限としてHamilton-Jacobiの理論をSchrodinger方程式から回復することもできる．
+\end{history}
+
+\section{古典力学の観察}
+
+\subsection{解析力学の3つの形式}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    大雑把には，多様体$M$上の直接の記述，接束$T(M)$上の記述，余接束$T^*(M)$上の記述の3つと見れる．
+    つまり，状態空間を徐々に抽象化していき，それに従って理論が再幾何学化される行程とも見れる．
+    どうやらそれぞれを配位空間，状態空間，相空間と呼び分けるようだ．
+\end{tcolorbox}
+
+\begin{model}[Newton-Euler形式]\mbox{}
+    \begin{description}
+        \item[形式] \begin{enumerate}
+            \item 一般の$3n$次元多様体$M$に拘束条件を定める．これが関数$f$を用いて$f_s(x^1,\cdots,x^{3n},t)=0$と表せる時，\textbf{holonomic}であるという．さらに$f$が$t$に依らないとき，scleronomousといい，そうでない場合をrheonomousという．
+            \item 拘束条件を満たす部分多様体$N$を\textbf{配位空間}という．
+        \end{enumerate}
+        \item[法則] 拘束力と印加力との合計$F$を与える．すると，
+        物体の位置$x:\R\to N$は，運動方程式
+        \[m\dd{^2x}{t^2}=F\]
+        と拘束力に関する仮想変位の条件
+        \[\sum_\al F_\al'\cdot\delta r_a=0\]
+        とによって，初期条件$(x,\dot{x})$を与えることで時間発展が定まる．
+
+        この力学原理にしたがってLagrange方程式を導出する立場に，d'Alembertの原理がある．
+    \end{description}
+\end{model}
+
+\begin{model}[Lagrange形式]\mbox{}
+    \begin{description}
+        \item[形式] 一般の$s$次元多様体$M$上の運動を考える．この上の近傍座標を\textbf{一般化座標}$(q_1,\cdots,q_s)$，その導関数を一般化速度という．
+        関数$L:\R^{2s+1}\to\R$を\textbf{Lagrangian}といい，
+        \[S:=\int^{t_2}_{t_1}L(q,\dot{q},t)dt\]
+        を\textbf{作用}という．配置空間とLagrangianの組$(\R^{2s},L)$をLagrange系という．
+        \item[法則] 作用が停留する道$[t_1,t_2]\to M$が実現される．その条件は次の2階の微分方程式系に同値：
+        \[\dd{}{t}\pp{L}{\dot{q}_i}-\pp{L}{q_i}=0\quad i\in[s].\]
+        これを\textbf{Lagrangeの運動方程式}という．
+    \end{description}
+\end{model}
+
+\begin{model}[Hamilton形式]\mbox{}
+    \begin{description}
+        \item[形式] 一般の$n$次元多様体$M$上の運動を考える．
+        この上の相空間$T^*(M)$(以降$M=\R^n$として$\R^{2n}$とみる)上の関数
+        $f\in C^\infty(\R^n\times\R^n)$を\textbf{Hamiltonian}という．$x$は位置，$y$は運動量と解せば良い．
+        \item[法則] この$f$が定めるHamilton系
+        \[\begin{cases}
+            \dd{x_i}{t}=\pp{f}{y_i}\\
+            \dd{y_i}{t}=-\pp{f}{x_i}.
+        \end{cases}\quad i\in[n].\]
+        の積分曲線が運動を規定する．この相空間$T^*(M)$上の条件式を\textbf{正準方程式}ともいい，その近傍座標を\textbf{正準変数}という．
+    \end{description}
+\end{model}
+
+\begin{remarks}
+    Lagrange形式からHamilton形式への変換は，基本変数の取替に当たる（一般化速度が一般化運動量になる）．
+    特に，条件式の数を増やし，階数を1階化することで，運動法則を余接束上の条件として記述することに成功している．
+    なお，この観点から，一般化速度は接空間のベクトルであったが，一般化運動量とすることで余接空間のベクトルに変換している．
+    そう，一般化座標と一般化運動量との組は，配置空間$N$の余接束$T^*(N)$上の近傍座標であったのである．
+    これが力学の幾何学化を成功させた原理である．
+\end{remarks}
+
+\begin{history}
+    Goldstein \cite{Goldstein}は初版1950，Landau and Lifshitz \cite{Landau}は初版1960で，いずれもHamilton系への比重が極めて小さい．
+    その後に起こったのが数学者における「力学の再幾何学化」であり，Arnold (1974) によると「Hamilton力学は相空間の幾何学であり，微分形式なしには理解できない」という．
+\end{history}
+
+\subsection{力学の内容}
+
+\begin{observation}[Lagrangianの形の決定]
+    Lagrangianは，空間と時間の一様性により$q,t$には依存しないから，$\dot{q}$の関数である．そして空間の等方性により速度の方向にも依存しないから，速さ$\norm{v}$にのみ依存する．
+    ここにGallileiの相対性原理を加味すると，$L=a\norm{v}^2$の関数系を要求する．
+    他粒子系で，その相互作用が存在するとき，座標の関数$U(q)$が追加される．
+    これは不変の外場の中にある１粒子系とも見れる：
+    \[L=\frac{1}{2}a(q)\dot{q}^2-U(q).\]
+\end{observation}
+
+\begin{example}\mbox{}
+    \begin{enumerate}
+        \item 時間の一様性が要求する$\dd{L}{t}=0$はエネルギー$E:=\sum_{i}\dot{q}_i\pp{L}{\dot{q}_i}-L$という保存量を生む．
+        \item 空間の一様性が要求する$\forall_{\ep\in M}\;\ep\cdot\sum_{a}\pp{L}{r_a}=0$は運動量$P:=\sum_{a}\pp{L}{v_a}$という保存量を生む．
+        \item 空間の等方性が要求する条件は，角運動量$M=\sum_a(r_a\times p_a)$という保存量を生む．
+    \end{enumerate}
+\end{example}
+
+\section{Hamilton系の観察}
+
+\subsection{微分方程式論の枠組み}
+
+\begin{definition}
+    ベクトル値関数$\gamma:\R\to\R^n$についての正規形の常微分方程式
+    \[\dd{\gamma}{t}=V(\gamma,t)\]
+    について，
+    \begin{enumerate}
+        \item ベクトル場$V$は$t$に陽に依存せず，$\gamma:\R\to\R^n$を通じてのみ$t$に依存するとき，\textbf{自励系}であるという．または，ベクトル場$V$が定める\textbf{力学系}であるという．
+        \item この解$\gamma:\R\to\R^n$を，\textbf{ベクトル場}$V:\R^n\to\R^n$に対する\textbf{積分曲線}という．
+        \item 積分曲線は無数に存在する．各$x\in\R^n$に対して，これを時刻$t=0$に通る積分曲線を対応させる過程$\R^n\times\R\to\R^n$を\textbf{大域フロー}という．
+        \item 解$\gamma$が定値であるとき，これを\textbf{定常解}といい，対応する値$x\in\R^n$を\textbf{平衡点}という．
+        \item 解$\gamma$が周期関数となるとき，これを\textbf{周期解}という．
+    \end{enumerate}
+\end{definition}
+
+\begin{example}[勾配ベクトル場の積分曲線]
+    ある関数$f\in C(\R^n)$に対して，これが$\R^n$上に定める\textbf{勾配ベクトル場}とは，
+    \[V:=\grad f=\paren{\pp{f}{x_1},\cdots,\pp{f}{x_n}}\]
+    をいう．このとき，勾配ベクトル場が定める自励系方程式
+    \[\dd{\gamma(t)}{t}=\grad f(\gamma(t))\]
+    について，
+    次が成り立つ：
+    \begin{enumerate}
+        \item 単調性：$\dd{f\circ\gamma}{t}\ge0$．
+        \item 非周期性：勾配ベクトル場の積分曲線には，定常解以外の周期軌道はない．
+    \end{enumerate}
+    \begin{Proof}
+        勾配ベクトル場の積分曲線$\gamma:\R\to\R^n$は，
+        \[\forall_{i\in[n]}\;\dd{\gamma_i}{t}=\pp{f}{x_i}\]
+        を満たす必要がある．
+        \begin{enumerate}
+            \item 連鎖律より，
+            \begin{align*}
+                \dd{f(\gamma(t))}{t}&=\sum_{i\in[n]}\pp{f}{x_i}\dd{\gamma_i}{t}\\
+                &=\sum_{i\in[n]}\pp{f}{x_i}\pp{f}{x_i}=\sum_{i\in[n]}\paren{\pp{f}{x_i}}^2.
+            \end{align*}
+            \item $\dd{f\circ\gamma}{t}>0$のとき，$f(\gamma(t))$は狭義単調増加であり，これは$\gamma$が周期を持たないことを意味するから，$\dd{f\circ\gamma}{t}=0$が必要．
+            これは，$\exists_{t_0\in\R}\;\grad(f(\gamma(t_0)))=0$に同値．すると定値関数$\gamma(t)=c$はこれを満たす解である．
+            微分方程式の解の一意性(Picard-Lindelof)より，解はこれに限る．
+        \end{enumerate}
+    \end{Proof}
+\end{example}
+
+\subsection{Hamilton力学系の定義}
+
+\begin{definition}[Hamiltonベクトル場の積分曲線]
+    ある関数$f\in C(\R^n\times\R^n)$に対して，これが$\R^{2n}$上に定める\textbf{Hamiltonベクトル場}が定める\textbf{Hamilton方程式}または\textbf{Hamilton力学系 }とは，次の$2n$個の常微分方程式をいう：
+    \[\begin{cases}
+        \dd{x_i}{t}=\pp{f}{y_i}\\
+        \dd{y_i}{t}=-\pp{f}{x_i}.
+    \end{cases}\quad i\in[n].\]
+    これは$n=1$のとき，勾配ベクトル場の$n=2$の場合を各店に置いて$90$度回転させたベクトル場に等しい．
+    このときの関数$f$を\textbf{Hamiltonian}という．
+\end{definition}
+\begin{remarks}[一般のHamiltonベクトル場]
+    $(X,\om)$が\textbf{シンプレクティック多様体}であるとは，
+    \begin{enumerate}
+        \item $X$は偶数次元$\dim X=2n$を持つ可微分多様体である．
+        \item $\om\in\Om_\cl^2(X)$は滑らかな二次の閉形式で，非退化である：$\om^{\wedge n}$は$X$上で常にフルランクを持つ．
+    \end{enumerate}
+    を満たすことをいう．(2)の非退化性より，同型$\om:\Gamma(T(X))\iso\Gamma(T^*(X));v_x\mapsto\om(v_x,-)$が誘発される．すなわち，ベクトル場と微分1-形式の間に同型が存在する．
+    この同型による，完全1-形式の像として得られるベクトル場を\textbf{Hamiltonベクトル場}という．
+    すなわち，ある関数$H\in C^\infty(X)$を用いて$dH\in\Om(X)$として得られる1-形式は完全であり，$dH=\om(v_H,-)$として対応するベクトル場$v_H\in\Gamma(T(X))$をHamiltonベクトル場という．
+    対応$C^\infty(X)\to \Gamma(T(X));H\mapsto v_H$は線型である．
+\end{remarks}
+
+\begin{theorem}[Hamiltonianは保存量である]
+    $\gamma=(x,y):\R\to\R^{2n}$を解とする．$f\circ\gamma:\R\to\R$は定値である．
+\end{theorem}
+\begin{Proof}
+    導関数が零であることを示せば良い．実際：
+    \begin{align*}
+        \dd{f(\gamma(t))}{t}&=\sum_{i\in[n]}\paren{\pp{f}{x_i}\dd{\gamma}{t}+\pp{f}{y_i}\dd{\gamma}{t}}\\
+        &=\sum_{i\in[n]}\paren{\pp{f}{x_i}\pp{f}{y_i}+\pp{f}{y_i}\paren{-\pp{f}{x_i}}}=0.
+    \end{align*}
+\end{Proof}
+\begin{remarks}[Poisson bracket]
+    Hamilton形式の力学では，これをエネルギーと呼ぶ．
+    さらに，Poisson括弧について$\Brace{F,H}=0$が成り立つとき，
+    $F$も$H$の積分曲線$\gamma$に沿って定値である．これがNoetherの定理の背後にある消息である．
+    なお，Poisson括弧$\Brace{-,-}:C^1(X)\times C^1(X)\to\R$は歪対称な双線型写像であり，Lie括弧に対して$X_{\Brace{f,g}}=[X_f,X_g]$を満たす．
+    すなわち，$C^1(X)\to\Gamma(T(X));f\mapsto X_f$はLie環の準同型である．
+\end{remarks}
+
+\subsection{作用積分}
+
+\begin{definition}[action]
+    Hamiltonフローを$\grad S$が与えるような関数$S\in C(\R^n)$を\textbf{作用}と言い，次の偏微分方程式の解とも見れる：
+    \[\pp{S}{t}+H\paren{x,\pp{S}{x}}=0.\]
+    この偏微分方程式を\textbf{Hamilton-Jacobi方程式}という．
+\end{definition}
+
+
+
+\chapter{量子力学}
+
+\begin{quotation}
+    
+\end{quotation}
+
+\section{自然の量子論的消息}
+
+\subsection{原子模型}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    はじめに破綻したのは原子の模型の構築である．
+    初めて実験に合致したBohrの模型は，謎の「量子化条件」を採用する必要があった．
+\end{tcolorbox}
+
+\subsection{素朴実在論の棄却}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=確定的に実在するものは「状態」だけである]
+    全く同じ「状態」の電子を用意して可観測量を観測しても，一定の値を得ることはない．
+    こうして「状態」と「物理量」の関係の一種の逆転が起こる理論である．
+\end{tcolorbox}
+
+\begin{definition}
+    局所実在論とは，次の2条件を満たす理論をいう：
+    \begin{enumerate}
+        \item 局所性：原因の結果が光速より速く伝播することはない．
+        \item 実在論：
+        \begin{enumerate}
+            \item 物理量はそれぞれが各瞬間で決まった値を持ち，
+            \item 測定によってこれを知ることが出来る．
+            \item 物理量の組(これを\textbf{基本変数}という)によって物理状態が記述できる．例えば古典論の「相空間」はこの仮定に沿って構成されている．
+            \item 従って物理量の変化によって時間発展は記述出来る．
+        \end{enumerate}
+    \end{enumerate}
+\end{definition}
+
+\begin{example}[Bellの不等式]
+    局所実在論ならば必ず満たすべき不等式を提出した(1964)．
+    多くの人が理論的に修正し，数々のベル型の不等式を得た．
+    ClauserとFreedmanは光子の偏光を用いて，Bell不等式の破れを観測した(1972)．
+\end{example}
+
+
+\section{量子論の枠組み}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    有限自由度の閉鎖系の純粋状態の理論を見る．
+    演算子形式のSchrödinger描像．
+\end{tcolorbox}
+
+\subsection{理論の枠組み}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    統計力学は「十分大きな$N$を取れば，十分良い精度で理論に従う」という漸近理論であった．
+    量子力学は，可観測量とは任意精度で正確に測定出来る量のことで，これの測定に対して返ってくる値の頻度の極限を与える，という理論である．
+\end{tcolorbox}
+
+\begin{example}
+    次のような，等価な形式がある．
+    \begin{enumerate}
+        \item 演算子形式と経路積分．運動方程式を原理とするか，運動の経路に注目して変分原理を採用するかの違いである．
+        \item Schrodinger描像とHeisenberg描像．前者で時間発展すると考えるのは状態$\psi$で，後者では物理量$A$とする．
+    \end{enumerate}
+\end{example}
+
+\begin{definition}[state]
+    $\psi\in H$を状態とする．
+    \begin{enumerate}
+        \item 任意の物理量について，その確率分布が特定の2つの状態$\psi_1,\psi_2$の凸結合となるとき，これを\textbf{混合状態}という．
+        \item そうでない状態を\textbf{純粋状態}という．
+    \end{enumerate}
+    古典論においてもマクロ系は最悪の混合状態である．
+    しかし量子論とは違い，古典論では純粋状態への分解が一意的に与えられる．
+\end{definition}
+
+\begin{notation}[bracket記法]
+    内積構造ではなく，双対構造に適合するように開発されているDiracによる記法である．
+    内積構造の有無に拠らない，ペアリングである．
+    Hilbert空間に話を限ると，内積を通じてペアリングを考えるが，Diracの記法はその前から存在する構造を捉える．
+    \begin{enumerate}
+        \item 線型空間の元を$\chi=:\ket{\chi}\in X$で表す．
+        \item 線型空間の上の汎関数を$\psi=:\bra{\psi}:X\to\C$で表すと，$\bra{\psi}(\ket{\chi})=:\bracket{\psi|\chi}\in\C$と表せる．
+        \item 標準的な双対ペア$X,X^*$を考え，$\ket{\psi}\in X$の随伴を$\bra{\psi}=\ket{\psi}^\dagger\in X^*$と表す．随伴とは，双対基底への対応にあたる．
+        \item $X$には内積構造$(\ket{\chi_1},\ket{\chi_2})$が定義されていることがある．この定義は，ペアリングの半双線型化$(\ket{\varphi},\ket{\psi}):=\bracket{\varphi|\psi}$とする．
+    \end{enumerate}
+\end{notation}
+
+\subsection{演算子形式のSchrödinger描像}
+
+\begin{notation}\mbox{}
+    \begin{enumerate}
+        \item 物理量$A$を実確率変数とし，平均を$\brac{A}$，標準偏差を$\delta A$と表す．
+        \item 中心化された確率変数$\De A:=A-\brac{A}$を揺らぎという．
+        \item $\wh{A}$を対応する$H$内の自己共役作用素とする．
+        \item $a\in\Sp(\wh{A})$を固有値，$\ket{a}:=\ket{a_l}\in H$を対応する固有ベクトルとする．
+        \item 元$\ket{\psi}\in H$の，$\wh{A}$の定める正規直交基底$(\ket{a})_{a\in\Sp(A)}$へのFourier変換を$\psi:\Sp(A)\to\C$で表す．
+    \end{enumerate}
+\end{notation}
+
+\begin{axiom}
+    有限自由度の閉鎖系の純粋状態について，
+    \begin{enumerate}
+        \item (状態) $\C$-Hilbert空間$H$のノルム1の射線の元$\ket{\psi}\in\Brace{e^{i\theta}\ket{\psi}\mid\theta\in\R}\cap\partial B$で表される．
+        \item (可観測量) その可観測量は$H$内の自己共役作用素$A$によって表される．
+        \item (状態の観測) 状態$\ket{\psi}\in H$における物理量$A$の(誤差が十分小さい)観測は
+        \begin{enumerate}
+            \item $\Sp(A)$が離散集合のとき，$\Sp(A)$上の離散分布$P(a)=\Norm{\wh{P}(a)\ket{\psi}}^2=\sum_{l\in[m_a]}\abs{\psi(a,l)}^2$に従う．
+            \item $\Sp(A)$が集積点を持つとき，$\Sp(A)$上の連続分布$P(a)$に従う．\footnote{射影値測度の言葉を使えばきれいに書ける？？}
+        \end{enumerate}
+        \item (時間発展) その時間発展は，エネルギー$H$に対応する演算子を用いた方程式
+        \[ih\dd{}{t}\ket{\psi(t)}=\wh{H}\ket{\psi(t)}\]
+        に従う．
+        \item (強制発展) 十分時間経過の短く，精度の高い実験であって，次を満たす実験が存在する：
+        状態$\ket{\psi}$の測定結果が$a\in\Sp(\wh{A})$であったとき，その直後の状態$\ket{\psi'}$は次で与えられる：
+        \[\ket{\psi'}=\frac{1}{\Norm{\wh{P}(a)\ket{\psi}}}\wh{P}(a)\ket(\psi).\]
+    \end{enumerate}
+\end{axiom}
+
+\begin{remark}[Bornの確率解釈について]
+    確率は頻度論主義の定義を採用する．
+    すると，仮想的な，$N$個の全く同一の状態にある系を想定していることになる．これを\textbf{統計的集団}(ensemble)という．
+    さらにこの系に対して「同じ実験を多数回独立に実行できる」という反復可能性も仮定している．
+\end{remark}
+
+\begin{remark}[量子干渉]
+    純粋状態とは$H$の極点である．極点の線形結合は極点たり得る．
+    その場合は，重ね合わせて得られる状態の確率分布が，分布の重ね合わせにはならない！線形則が破れるのだ．
+    これは量子系特有の現象である．
+    一方で，純粋状態を重ね合わせて混合状態が得られる場合は，このようなことは起こらない．
+    しかしこのような重ね合わせが存在する系は「\textbf{超選択則}がある」という．
+    しかし，中間状態$\ket{i}$が測定されたり，環境と相互作用した場合，量子デコヒーレンスが発生して干渉項が消える．
+\end{remark}
+
+\subsection{原理からの数学的な展開}
+
+\begin{remarks}[可観測量]
+    $A\in B(H)_\sa$を有界な可観測量とする．
+    $a\in\Sp(A)$に属する固有ベクトルを$\ket{a,l}\;(l\in[m_a])$で表す．
+    ただし，$\{\ket{a,l}\}_{a\in\Sp(A),l\in[m_a]}$は完全正規直交系になるように取る．
+    \begin{enumerate}
+        \item $A\in B(H)_\sa$にはスペクトル分解：
+        \[A=\sum_{a\in\Sp(A)}a\wh{P}(a),\quad \wh{P}(a):=\ket{a}\bra{a}\]
+        が存在する．
+        \item このとき，$\psi:\Sp(A)\to\C$を，状態$\ket{\psi}\in H$の$A\in B(H)_\sa$が定める固有ベクトルのなす正規直交基底のFourier係数への対応として，\textbf{波動関数}という．
+        $\psi$の具体的な関数形は$A\in B(H)_\sa$に依るが，$\norm{\psi}=1$より，Parsevalの等式が次を要請する：
+        \[\sum_{(a,l)\in\Sp(A)\times[m_a]}\abs{\psi(a)}^2=1.\]
+        これがBornの確率解釈を可能にしている．
+        \item 状態ベクトル$\ket{\psi}\in H$だけでなく，他の可観測量$B\in B(H)_\sa$の他の固有ベクトル$\ket{b,l}$もFourier係数への対応$\varphi_b(a):=\brac{a|b}$が定まる．これを$B$の\textbf{固有関数}という．
+    \end{enumerate}
+    なお，波動関数という名前は，物理量$A$が位置演算子$\wh{x}$であるときからの直観で名付けられた．
+    古典論では位置を表すこの物理量がそのまま状態を構成するはずであるが，量子論では随分と脇役になったものだし，そもそも可観測量ではなくなった．
+\end{remarks}
+
+\begin{remark}[有界とは限らない$H$内の自己共役作用素について]
+    これは$H$内の\underline{稠密部分空間で定義されているエルミート作用素}(=対称作用素)で，さらに$A^*$と定義域も一致することをいう．
+    \begin{enumerate}
+        \item Hilbert空間\textbf{$H$内の作用素}$A\in H$と言った時，$D(A)$は$H$の稠密部分空間であることを要請する．稠密とは限らない一般の場合を$A:D(A)\to H$と表そう．
+        \item 作用素$A:D(A)\to H$が\textbf{エルミート性を持つ}とは，$\forall_{\ket{\al},\ket{\beta}\in D(A)}\;\brac{\al|A\beta}=\brac{A\al|\beta}$が成り立つことをいう．
+        \item 稠密に定義されたエルミート作用素を\textbf{対称作用素}という．特に，$T=T^*\land D(T)=D(T^*)$も満たすとき，\textbf{自己共役作用素}という．
+        \item $A:D(A)\to H$の\textbf{随伴}とは，$\brac{A\al|\beta}=\brac{\al|A^*\beta}$を満たす最大の$A^*\in H$とするが，これは稠密に定義されているとは限らない．
+        \item 実は稠密に定義された作用素については，対称性と$S\subset S^*$が同値．自己共役ならばエルミート性を持つ(特に極大な対称作用素である)が，逆は必ずしも成り立たないことに注意．極大な対称作用素でさえ自己共役とは限らない．
+    \end{enumerate}
+    以上より，自己共役$\Rightarrow$対称$\Rightarrow$エルミートであるが，逆は一般に一切登れない．
+    理論で使われる作用素は稠密に定義された可閉作用素に限ることはせめてもの救いである．
+    ここで，\textbf{演算子}と言ったら，稠密に定義された可閉作用素を指すこととしよう．
+\end{remark}
+
+\begin{theorem}[物理量の期待値公式と揺らぎ]
+    物理量$A$の状態$\ket{\psi}\in H$における観測$(a^{(j)}_\psi)_{j\in\N^+}$について，
+    \begin{enumerate}
+        \item その標本期待値は，$\wh{A}$が定める計量による波動関数$\psi:\Sp(A)\to\C$のノルムに等しい：
+        \[\lim_{N\to\infty}\frac{1}{N}\sum_{j=1}^Na^{(j)}_\psi=:\brac{A}=\bracket{\psi|\wh{A}|\psi}.\]
+        \item 状態$\ket{\psi}\in H$が物理量$A$の固有値$a\in\Sp(A)$に属する固有状態であることは，$\forall_{j\in\N^+}\;a_j=\brac{A}$に同値．すなわち，$A$が確定している．
+    \end{enumerate}
+\end{theorem}
+
+\begin{remarks}[状態の観測]
+    状態を観測して物理量を得ると，これが確定し，状態は固有状態に落ちる．これを俗に波束の収縮という．
+    古典論では反作用のない測定が可能であることが仮定されていたが，それが破れる精度の理論を得たわけだ．
+\end{remarks}
+
+\subsection{不確定性原理}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    不確定性は交換子$[-,-]:B(H)_\sa^2\to B(H)_\sa$によって測れる．
+    これが純虚数定数作用素に値を取るとき，不確定性原理の式が成り立つ．
+\end{tcolorbox}
+
+\begin{theorem}
+    物理量$A,B$は
+    \begin{enumerate}
+        \item $[\wh{A},\wh{B}]=ik\;(k\in\R)$を満たすとする．このとき，
+        \[\forall_{\ket{\psi}\in H}\quad\delta A\delta B\ge\frac{\abs{k}}{2}.\]
+        \item より一般に$[\wh{A},\wh{B}]=i\wh{C}$が成り立つとする．このとき，
+        \[\forall_{\ket{\psi}\in H}\quad\brac{\psi|(\De A)^2|\psi}\brac{\psi|(\De B)^2|\psi}\ge\frac{\brac{\psi|\wh{\C}|\psi}^2}{4}.\]
+    \end{enumerate}
+\end{theorem}
+\begin{remark}
+    量子測定理論によると，$[\wh{A},\wh{B}]=ik$のとき，その物理量の測定誤差$\delta A_\err,\delta B_\err$についても同様の不等式が成り立ち，「同時に2つの物理量を測った際の不確定性」というと，上の定理が示唆する「原理的な不確定性」の２倍になるという．
+    このように，操作・測定も理論の射程に入れる必要がある点で，熱力学に似ている．
+    なお，Heisenbergが思考実験の上で示唆した「不確定性」は後者の量子測定理論的な方であった．
+\end{remark}
+
+\begin{definition}\mbox{}
+    \begin{enumerate}
+        \item $\cC\subset B(H)_\sa$は，任意の2元$\wh{A},\wh{B}\in\cC$が可換で，さらに任意の元と可換な物理量ならば$\cC$の元であり，また$\cC$の任意の元は他の元の関数でないとする．これを\textbf{交換する物理量の完全集合}という．
+        \item 交換する物理量の完全集合であって有限なものが存在するとき，系を\textbf{有限自由度系}という．そうでない場合を無限自由度系という．
+    \end{enumerate}
+\end{definition}
+
+\subsection{ハミルトニアンの性質}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    閉鎖系の純粋状態の状態ベクトルは1-径数ユニタリ群に従って時間発展する．
+    また確率は$\wh{A}$が与える$H$上の計量についての波動関数のノルムであるから，1のまま保存される．
+\end{tcolorbox}
+
+\begin{definition}\mbox{}
+    \begin{enumerate}
+        \item Hamiltonian $\wh{H}$のある固有値$E_n\in\Sp(\wh{H})$に属する固有状態$\ket{n}\in H$について，閉鎖系のSchrodinger方程式に従う時間発展は位相因子$e^{-iE_nt/h}$を変えるのみである．
+        すなわち，同じ状態にとどまり続ける．これを\textbf{定常状態}という．
+        \item $\om_n:=E_n/h$を\textbf{固有角振動数}という．
+    \end{enumerate}
+\end{definition}
+
+\begin{theorem}[Schrodinger方程式の線型性]
+    初期条件$\ket{\psi(0)}=\ket{\psi_j}\in H$に関するSchrodinger方程式の解を$\ket{\psi_j(t)}$とする．
+    このとき，初期条件としてこれらの線型結合$\ket{\psi(0)}=\sum_{j}c_j\ket{\psi_j}$を与えたとき，そのときの解も線形結合
+    \[\ket{\psi(t)}=\sum_{j}c_j\ket{\psi_j(t)}\]
+    が与える．
+\end{theorem}
+\begin{remarks}
+    こうして，Schrodinger方程式は$H$上に1-径数ユニタリ群を定める．
+\end{remarks}
+
+\section{正準量子化による構成}
+
+\chapter{統計力学}
+
+\begin{quotation}
+    物理学の歴史は分析の歴史であってきたが，統計物理学は綜合の方法論である．
+    それゆえ応用の幅が広い．
+    そしてエントロピー増大の法則という自然現象は段階に属するメカニズムである．
+    力学の殆どの理論は時間反転対称な理論であるが，不可逆性はこの段階で入る．
+
+    統計物理学は，ミクロ状態の巨大な集合を，割って得る状態空間に確率分布を考え，$(\Ens,P)$を統計集団という．
+    割り方が違えば$P$も変わるだろうが，$P$を離散一様分布にする割り方が小正準集団である．
+    この際の
+    マクロ変数の選択は，本質的に統計学的な行為である．
+\end{quotation}
+
+\section{歴史}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    
+\end{tcolorbox}
+
+\begin{history}[Boltzmann equation]
+    Boltzman方程式からMaxwell-Boltzmann分布が導かれ，統計熱力学を基礎づける．
+    このように，ミクロの対象に関する確率分布の時間変化を考えていく方法「運動論的方法(kinetic method)」の原形になった．
+    しかしこれを高密度の粒子系には適用できない．
+    しかし，同じ状況を繰り返すことで，統計熱力学の一般的体系がその上にあることを築いた．
+    $S=k\log W$は統計力学を生んだ一行だという．
+    その後，W. Gibbsが見事に整理し直した．
+    次はこれを量子論の上に移植し直すことが問題になる．そもそも熱力学の基本的な構成にさえ，自然の量子的構造は現れている（示量変数の存在など）．
+    そして統計力学の論理構造は，あたかも量子力学を予期していたかのように吸収した．
+    \textbf{ミクロとマクロの架橋自体はミクロに依らない}のである．
+\end{history}
+\begin{remarks}[Gibbsという男]
+    Boltzmann 44-06 はオーストリアの早熟の天才で，躁鬱的な傾向を徐々に強め，大学を休講にしがちだったり，最終的には自死に至る．
+    Boltzmannの業績は熱力学と，それの気体分子運動論からの正当化であった．
+    気体分子運動論の成功をふまえて，熱力学の普遍性を見直すことで，普遍的な統計力学への道が拓ける．
+    これを行ったのがGibbs (1902)と理解されている．
+    「Gibbsの熱力学についての業績は，数学的な構造を明確に捉えることが，実用的に重要な進歩につながりうることを示す好例である」\cite{田崎}．
+    これはGibbs本人も自覚していてBoltzmannの「結果の綺麗さは仕立て屋と靴屋にまかせておけ」という立場とは真反対で，Rayleigh卿に「ぜひとも長い解説も書いてくれ」と頼まれた時には「それは長すぎるものになると思う」と答えており，
+    さらにその手紙の中には「自分が何か特別に新しい実質的な内容をもっているかどうかはわかりませんが，この分野についてのより簡明な味方を得ることを私の役割とするだけで，私は満足なのです．」と言っている．
+\end{remarks}
+
+\begin{history}[ゆらぎの物理学]
+    統計熱力学が確立してから，平衡状態における平均値である平衡値だけでなく，その周りの揺らぎを求めることも可能にした．
+    この「ゆらぎの統計力学」はEinsteinが切り開いた．
+\end{history}
+
+\begin{history}[統計物理学の歩み]
+    量子統計力学は30s以降の物性物理学の発展の本質であり，両輪で発展してきた．
+    そして非平衡の状態を含む量子統計力学へ脱皮していく．
+    ものの見方の粗さの様々な段階があり，それぞれの段階で情報が失われ，それに応じた確率化が行われる．
+    この枠組みは物性物理との中で生まれた．
+    現象論は物理系を制御する際に物質内に起こる現象の描像を得るために作られる理論であり，それに使用される概念はどうしても制御手段を反映することになる．
+    制御手段が静的に近い間は熱力学的概念で済むが，手段が高振動数の動的なものに発展すると，電気回路論などからの概念を援用する必要が出る．
+    こうして「線型応答論」が生まれる．
+\end{history}
+
+\section{平衡系の統計力学の枠組み}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    平衡統計力学ではエルゴード仮説はあまり使わない．
+    \begin{enumerate}
+        \item 孤立系を小正準集団という．熱力学のUVN表示に対応する．
+        \item 等温条件にある非孤立的な閉鎖系を正準集団という．熱力学のTVN表示に対応する．
+        \item 非孤立的な開放系(ミクロ変数のやり取りも伴う)を大正準集団という．
+    \end{enumerate}
+    この他にも，種々の熱力学関数に対応して，種々の集団が考え得る．
+    どの集団を用いても，そこから計算した熱力学関数は互いに逆Legendre変換で結ばれており，完全に等価である（アンサンブルの等価性）．
+\end{tcolorbox}
+
+\subsection{熱力学の原理}
+
+\begin{axiom}
+    マクロ系について，
+    \begin{enumerate}
+        \item 平衡状態の存在：系を孤立させて十分長い時間放置すると，全てのマクロ変数が定常する．この状態を平衡状態という．
+        \item エントロピーの存在と平衡状態の特徴付け：系の平衡状態には次を満たすエントロピー$S\in\R$が定まる：
+        \begin{enumerate}
+            \item エネルギー$E$と有限個の相加変数の組$X_1,\cdots,X_t$の関数である：$S=S(E,X_1,\cdots,X_t)$．これを基本関係式という．
+            \item $S\in C^1(\R^{t+1})$かつ$\pp{S}{E}>0$．
+            \item 系の状態空間：平衡状態の系の任意の球状の部分系の状態は，空間的に均一ならば，その部分系のエントロピーの自然な変数の値$(E,X_1,\cdots,X_t)$と一対一に対応する．
+            \item \textbf{エントロピー最大の原理}：複合系は，その単純な部分系が全て平衡状態にあり，かつエントロピーの和が最大になるときに限り平衡状態にある．
+        \end{enumerate}
+    \end{enumerate}
+\end{axiom}
+
+\subsection{統計力学の原理}
+
+\begin{axiom}
+    「殆ど孤立した体系」について，
+    \begin{enumerate}
+        \item ボルツマン方程式：$S(E,X_1,\cdots,X_t)=k_B\ln W(E,X_1,\cdots,X_t)+o(V)$．$E,X_1,\cdots,X_t$をエントロピーの自然な変数とする単純系では，熱力学的極限において$k_B\ln W$が熱力学のエントロピーに漸近する．
+        \item \textbf{エルゴード仮説の成立}：力学量の時間平均は集団平均に等しい．
+        \item \textbf{等確率の原理}：アプリオリ確率は一様分布を仮定する．
+    \end{enumerate}
+    これを仮定すると，母集団は量子状態全体の集合$\N$とする．これを\textbf{熱力学的状態空間}という．
+    このように，「状態の数」が本質的に重要になるのが，等確率の原理である．
+\end{axiom}
+\begin{remarks}
+    (1)が平衡系特有の仮定である．
+    リウヴィルの定理は、統計力学の基礎としても重要である。
+    粒子の衝突など、正準方程式に従わない場合はリウヴィルの定理はそのままでは成り立たず、これを記述するのがボルツマン方程式である。
+    (2),(3)の仮定を力学から導出する試みから始まったのがエルゴード理論であるが，
+    その本来の試みは難航している．
+\end{remarks}
+
+\begin{proposition}
+    Liouvolleの定理(1)の仮定の下で，量子力学・古典力学のいずれかに従う集団が定常であるためには，密度がエネルギーの関数であることが必要である．
+    これを満たす統計集団を\textbf{Gibbs集合}という．
+\end{proposition}
+\begin{remarks}
+    統計的集団が力学に従う場合に当然満たすべき性質である．
+\end{remarks}
+
+\subsection{ミクロカノニカル集団}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    力学同様，初めに孤立した単純系を扱う．
+    このとき，ミクロ状態の集合を，エントロピーの自然な変数$E,X_1,\cdots,X_t$の値が適切なマクロ基準で等しいものを同一視して得る状態空間を\textbf{小正準集団}という．
+    そしてこのように構成した状態空間はマクロな平衡状態に，熱力学極限において一対一対応することを要請する．
+    実はこれは等確率の原理に含まれる．
+\end{tcolorbox}
+
+\begin{model}[micro anonical ensemble]
+    系のエネルギーが，不確実性を$\delta E$として，$[E,E+\delta E]$の間にあるとする．
+    \begin{enumerate}
+        \item この間のエネルギーを持つ量子状態$n\in \Ens(E,X_1,\cdots,X_t):=[W]$は全て等確率で実現される：$(w_n)\sim U([W])$．
+        \item (1)を満たす統計集団を\textbf{小正準集団}または\textbf{一定エネルギー集合}といい，$[W]$上の離散一様分布を\textbf{小正準分布}という．
+        \item エネルギーの分布は$[E,E+\delta E]$上に台を持つ連続一様分布を採用する．各エネルギーの値$E$に対応した状態の数は密度関数で表せるとし，これを$\Om(E)$として\textbf{状態密度}という．$j(E)$をエネルギーが$E$以下の微視的状態の数とれば，形式的には$\Om(E):=\dd{j(E)}{dE}$である．
+        \item 実はこの揺らぎ$\delta E$はかなり任意で良い(これは大偏差原理的現象である！このときエントロピー密度$s$はレート関数に対応する．しかしこの事実は基底の力学に強い要請を課してしまう(エントロピー密度$s$の形など)．
+    \end{enumerate}
+\end{model}
+
+\begin{example}
+    $N$個の自由粒子からなる理想気体は小正準集団である．
+    \begin{enumerate}
+        \item $N$個の粒子が互いに区別出来るという古典粒子とする．すると，この仮定を基に計算した量子状態の数$j(E)$から導出されるエントロピーは，この系の粒子数を$2N$に増やすと2倍以上になってしまい，自然法則と違う．これを\textbf{Gibbsのパラドクス}という．
+        \item これは単に古典粒子が「互いに区別できる」という仮定が量子力学に矛盾するためである．互いに区別出来ないとすると，量子状態の数$j(E)$の数え方が変わり($N!$で割る必要がある)，これで正しい理論を得る．
+        \item 実際，Bose気体やFermi気体で希薄の極限を取れば，この$j(E)$に従う．
+        \item このモデルを\textbf{古典統計}または\textbf{Boltzmann統計}という．
+    \end{enumerate}
+\end{example}
+\begin{remarks}
+    小正準集団を求めると，種々の状態を
+\end{remarks}
+
+\subsection{熱力学極限}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    エントロピーの自然な変数の密度$E,X_1,\cdots,X_t$の比を一定にして体積を無限大にする極限を，\textbf{熱力学極限}という．
+\end{tcolorbox}
+
+\begin{definition}[statistical weight]\mbox{}
+    \begin{enumerate}
+        \item 巨視的な体系の取り得る微視的状態の数(ミクロカノニカル分布ではエネルギー$E$の関数$W:=\Om(E)\delta E$)を\textbf{統計的重率}または\textbf{熱力学的重率}という．
+        \item ここから定義される値$S:=k\log W$を\textbf{エントロピー}という．$k=k_B$をBoltzmann定数という．
+        \item これは，熱力学極限において熱力学におけるエントロピーに殆ど確実に一致する量であり，これにより熱力学が統計力学に接続する．これを\textbf{Boltzmannの原理}という．
+    \end{enumerate}
+\end{definition}
+\begin{remark}
+    さらに，エントロピーはミクロ変数の関数であってほしい．
+    古典力学ではGibbsエントロピー，量子力学ではvon Neumannエントロピーが提案されている．
+    基本的には，ミクロ状態をマクロ状態に割る同一視を実行する連続関数は見つかっておらず，本質的な問題をはらんでいる．
+\end{remark}
+
+\begin{example}
+    エントロピーは物質の量$N$に比例して増大する．このような物理量を\textbf{示量変数}という．
+    一方で温度・圧力は\textbf{示強変数}であり，純粋に熱力学的存在である．
+    すなわち，統計力学では，次の極限
+    \[n=\frac{N}{V}=\const,\quad \ep=\frac{E}{N}=\const,\quad N\to\infty\]
+    が存在することを仮定している．これを\textbf{熱力学的極限}という．
+\end{example}
+\begin{remarks}
+    統計力学や熱力学は，系のサイズ$N$を無限大にするとこの理論に従う，という形で与えられる\textbf{漸近理論}である．
+    あるいは，要求する精度に応じて，必要最低限の$N$が変わる理論である．
+\end{remarks}
+
+\subsection{部分系}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    熱力学の原理としてはエントロピー表示で十分だが他にエネルギー表示$E=E(S,V,N)$も用いるように，統計力学はマイクロカノニカル集団で原理的に十分だが，他の統計集団も考え得る．
+    温度$T$の熱浴に浸かった単純系の，$T,X$で指定される平衡状態は，カノニカル集団と熱力学的極限で同じ状態になる．
+\end{tcolorbox}
+
+\begin{definition}
+    物理系について，
+    \begin{enumerate}
+        \item 熱力学の対象を\textbf{マクロ系}という．これはミクロな視点では孤立しているとみなせる系をいう．
+        \item さらに，マクロな意味でも外部とやり取りしない系を孤立系，そうでない系を開放系という．
+        \item マクロ系の分割として得るマクロ系を部分系といい，この立場から元の系を複合系という．
+        \item 複合系の内部に存在する，マクロなやり取りを制限する仕掛けを\textbf{内部束縛}という．
+        \item 内部束縛がない系で，外場がかかっていてもそれによって生じる空間的な不均一が無視できるほど小さい系を\textbf{単純系}という．
+    \end{enumerate}
+\end{definition}
+
+\begin{model}[canonical ensemble]
+    着目している単純系が，熱浴に接しているとする（熱のみをやり取りする）．
+    この場合，ミクロ状態とどう対応した状態空間と分布を持つかを考える．次のように導出出来る：
+    \begin{enumerate}
+        \item 着目系のエネルギー$E$，熱浴のエネルギー$E_b$を用いて，複合系のエネルギーは$E_t=E+E_b$と表せる．
+        \item この複合系はミクロカノニカル集団である．分布関数$\Phi$は$\Phi_\lambda=\frac{W_b(E_t-E_\lambda)}{W_t(E_t)}$と表せる．ただし，$\lambda$はこの複合系のミクロ状態を表す．
+        \item ここから，着目している部分系での分布は$\Theta_\lambda=\frac{1}{Z}e^{-\beta E_\lambda}$と表せる．$\beta:=\frac{1}{k_BT}$は逆温度といい，$T$は熱浴の温度である．
+        \item $Z$は規格化定数であるが，$\beta$を通じて$T$に依存し，$E_\lambda$を通じて$V,N$に依存する：$Z=Z(T,V,N)$．これを\textbf{分配関数}という．要は，$e^{-\beta E_j}$を$j$が状態空間を走る際の和である．
+    \end{enumerate}
+\end{model}
+\begin{remarks}
+    カノニカル分布は指数型分布で，エントロピー最大の原理の痕跡が見える．
+    また，理想気体からなる正準集団の分子の速度は正規分布に従い，これにはMaxwellの名前がついている．
+    これは，系のエネルギーの平均値が与えられた中で，連続エントロピーを最大にする分布が平衡状態に現れるためにほかならない．
+\end{remarks}
+
+\begin{example}
+    古典粒子系とみなせる系については，エネルギー等分配則と同様，常に成り立つ．
+    どんなに強い相互作用があろうが，系の状態が気体だろうが液体だろうが個体だろうが成り立っている．
+\end{example}
+
+\begin{model}[grand canonical ensemble]
+    2つの系が粒子もやり取りするとする．
+    すると，確率分布は着目系の粒子数$N$に応じて$e^{-\beta(E_j-\mu N)}$と修正される．
+    これを\textbf{大正準集団}という．
+\end{model}
+
+\section{量子統計力学}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    「統計力学の枠組み」の下に，量子力学を敷くと，量子統計力学を得る．
+    量子力学においては同種粒子の個別性が否定され，粒子系の波動関数の対称性によって，粒子はBose粒子とFermi粒子に大別される．
+\end{tcolorbox}
+
+\subsection{スピン統計定理}
+
+\begin{axiom}
+    この時空はMinkowski空間であるとみなせるとする．
+    \begin{enumerate}
+        \item Hamiltonianの固有値に下限がある．
+        \item 座標変換について物理法則が不変である．
+    \end{enumerate}
+\end{axiom}
+
+\begin{theorem}[Pauliのスピン統計定理]
+    上の２つの仮定の下で，占有数$n_\nu$の値域は，$2$か$\N$である．
+    前者のときを\textbf{Fermi統計}，後者のときを\textbf{Bose統計}という．
+\end{theorem}
+
+\subsection{}
+
+\begin{example}
+    相互作用のない(自由粒子)同種粒子からなる系の，一粒子状態$|\psi_\nu\rangle$の占有数$n_\nu$の期待値は，
+    \begin{enumerate}
+        \item Fermi粒子の場合，$\brac{n_\nu}=\frac{1}{e^{\beta(\ep_\nu-\mu)}+1}$．(logistic分布の分布関数??)
+        \item Bose粒子の場合，$\brac{n_\nu}=\frac{1}{e^{\beta(\ep_\nu-\mu)}-1}$．
+    \end{enumerate}
+    ただし，一粒子状態において$\nu$とは，これを指定する変数である．
+    Bose分布関数は恐ろしい事実を表現している，粒子密度$\brac{N}/V$を一定にして温度$T$を下げると，$\brac{n_0}\propto\brac{N}$となり，マクロな数の粒子が，たった１つのミクロ状態$|\psi_0\rangle$を専有する．この現象を\textbf{Bose-Einstein凝縮}という．
+\end{example}
+
+\section{Brown運動とGauss過程}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    Brown運動の拡散係数を$D$として，その移動速度$\mu$に対して，$D=\mu kT$が成り立つ．
+    Einsteinが与えた関係式が，Brown運動が本当に熱運動に因るかの検証を可能にしたが，同時に非平衡統計力学の重要な柱である\textbf{揺動散逸定理}(fluctuation dissipation theorem)の最初の例となった．
+    また同時にこれにより決定的な意味で(非常に直感的に)アボガドロ定数の測定(Perrin 1908)がなされ，原子・分子の存在を疑う人は殆どなくなり，量子論の時代への基盤を作った．
+\end{tcolorbox}
+
+\begin{history}
+    1827年のRobert Brownの発見から，実験で検証可能な明確な理論を与えたのはEinstein (1905)である．
+    なお，Einsteinがこの理論を抱いた際には，Brown運動の存在を知らなかったという．
+    さらにはその前の1902から1904までの3本の論文で統計力学の一般論を構築した際も，BoltzmannとGibbsの一般論を知らなかったという．
+    なお，Feynmanの経路積分を構想した際も，Wienerの仕事を知らなかったという．
+\end{history}
+
+\begin{model}[Einsteinの関係式]
+    Brown粒子は，一様でない密度分布が一様になるように運動する．
+    これは拡散過程に間違いないのであった．密度分布$n(t,x)$についての拡散方程式
+    \[\pp{n(x,t)}{t}=-D^pp{^2n}{x^2}.\]
+    について考える．ここに重力を含めた外力$K$が作用しているとし，媒質との間の摩擦力と外力とで決まる終端速度を持つはずである．
+    すると摩擦係数を$m\gamma$として
+    \[\pp{n(x,t)}{t}=-\pp{}{x}\paren{\frac{nK}{m\gamma}}+D\pp{^2n}{x^2}\]
+    を得る．一方で，この方程式が与える速度の平衡分布は，外力がなければ一様分布であるが，外力$K$に関する\textbf{沈降分布}に収束し，
+    \[n(x)=n(x_0)\exp\paren{\frac{K(x-x_0)}{kT}}\]
+    を持つはずである．これを代入して，外力を持つ拡散方程式が平衡分布について成り立つための必要条件
+    \[D=\mu kT,\quad\mu=\frac{1}{m\gamma}\]
+    を得る．
+\end{model}
+
+\begin{model}
+    Brown粒子の速度$u$とランダムな外力$R$とについて，Brown粒子の運動方程式は確率微分方程式
+    \[m\dd{v}{t}(t)=-m\gamma v(t)+R(t)\]
+    となる．これを\textbf{Langevin方程式}という．
+    これには調和分析の手法がよく使われる(Wiener-Khinchinの定理など)．
+    $R$は白色なスペクトルを持つGauss過程という仮定を置くことが多く，これが本質的になる．
+\end{model}
+
+\begin{remarks}
+    Gaussの誤差法則は，多数の小さい誤差の積み重ねである観測誤差が正規分布に従うことを教える．
+    Brown運動の小さな変位$\Delta x$が多数の微粒子の衝突によるとすれば，その運動も正規分布に従うことが期待できる．
+\end{remarks}
+
+\section{Markov過程}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    統計物理学的な問題のMarkov過程としての把握は物理学では頻繁に現れる重要なものである．
+    統計物理学は確率過程を射影していく過程の学問として見れる．
+    力学的現象は確率過程で，最終的に決定的な理論を得る，人類は粒度を調節しながら知識を抽出出来るのみである．
+\end{tcolorbox}
+
+\begin{model}
+    拡散方程式という放物型微分方程式を一般化したFokker-Planck方程式は，Markov過程の特別な型であり，物理学では頻繁に現れる：
+    \[\pp{}{t}P(q,t)=\paren{-\pp{}{q}\al_1(q)+\frac{1}{2}\pp{^2}{q^2}\al_2(q)}P(q,t).\]
+\end{model}
+
+\begin{remarks}[情報の縮約がMarkovを破る]
+    統計物理学の基本的な論理構造は，ミクロな法則から次々の段階を経てマクロな法則を導いていくことである．
+    これらの段階を１歩進むごとに，我々の記述は精細なものから，より粗大なものに移行し，情報は次々に縮約されていく．
+    この縮約は，対象のそのある断面への射影によって捉えることである．
+    射影された過程がどんな法則によって記述出来るか，という問題がここに生まれる．
+    \begin{enumerate}
+        \item 例えば，コロイド粒子とその周りの媒質粒子の全てのミクロな運動を，単にコロイド粒子の運動に投影したものがBrown運動という確率過程である．
+        また，そのコロイド粒子の変位だけに注目し，速度には目を覆えば，Brown粒子の拡散過程である．
+        媒質粒子がコロイド粒子に比べて遥かに小さいという極限において理想的なWiener過程となるが，実際には「摩擦のおくれ」によりMarkov性が破れる．
+        \item $N$粒子系の位置座標に目を覆い，運動量だけに注目すれば，分布関数の確率的変化として気体分子の運動を捉えることになる．
+        この変化を記述する方程式をマスター方程式という．これはMarkovにはならない．
+    \end{enumerate}
+    この点に注目すれば豊かな統計物理が生まれるが，要は「隠れた変数によってMarkov性が破れる」ということである．
+\end{remarks}
+
+\section{相転移}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    相転移とpercolationの関係など，数学の方面からも研究されている\cite{宮本},\cite{Robert Minlos}．
+\end{tcolorbox}
+
+\chapter{場の理論}
+
+\begin{quotation}
+    経路(path)の空間という対象は，一番最初には物理学で生まれた．
+    古典論が経路ごとの変分理論だとすれば，量子論は経路に渡った積分理論となる．
+    この積分を量子化という．
+
+    量子論では経路というものが人間の素朴な感覚ではwell-definedではなくなる．
+    スリット実験でわかる通り，一つの経路というのを通るわけではない．
+    重ね合わせの原理というのは，それぞれの状態の重ね合わせが物理状態であることをいう，そしてSchrodinger方程式は線形な偏微分方程式であるから，この構造を保って発展する．
+    ここで測度論的な観点に至る．
+    パラメトリックに有限次元で見るとちょうどMarkov連鎖のようであり，Hermite作用素とは転移作用素に他ならない．
+    この線形変換を繰り返すことは，全てのあり得る経路に関して積分していることになる．
+    行列の積を考えると意味がわかりやすい．
+    経路積分は分配関数＝数え上げの母関数とも見れる．
+\end{quotation}
+
+\section{経路積分}
+
+パラメトリックな理論では，方向微分と多重積分が使われるが，
+変分は汎関数微分だとすれば，経路積分が汎関数積分である．
+経路の空間$\Map(X,Y)$上の汎関数$W$を
+\[a\]
+と定めて，遷移振幅の$m$乗($m$ステップの発展)が
+\[(A^m)_{i_0i_m}:=\sum_{\phi\in\Map(X,Y),\phi(0)=i_0,\phi(m)=i_m}W(\phi)\]
+と表せる．
+
+\subsection{場とは切断の全体である}
+
+例えば解析力学では$M=\R,F=\R^3$とし，
+底空間$E=\R\times\R^3$を4次元空間とする（一般の多様体でも良い）．
+こうしてファイバー束$\iota:F\to E,\pi:E\to M$を考える．
+場の空間は切断の全体$\fF:=\Gamma(M,E)$とする．
+変分原理で考えられるのは，作用汎関数$S:\Gamma(M,E)\to\C$をいう．
+
+よって解析力学は1次元の場の理論の最も標準的な理論である．
+場の古典論は，Euler-Lagrangeの方程式$dS=0$から停留点を見つける問題であった．
+解全体がパラメトリックならば，解のモジュライ空間が得られる．
+いくつかの連結成分を持っていることがある．
+
+一方で場の量子論は，場の部分集合のみに興味があるわけではない（収束する前の混沌）．
+全体空間$\fF$上の測度を考えなければいけないから，大域的な情報が必要．
+分配関数(partition function)とは，
+\[Z=\int_{\fF}\exp\paren{-\frac{i}{h}S[\phi]}\D\phi\]
+として定義したい．$h\to0$とすると古典論につながる（対応原理）．
+この式は$h$がGauss密度関数の分散に見える！
+（中心極限定理により？）古典極限を取るとデルタ測度に収束する．
+
+そこで$\fF$上に確率分布が与えられているような設定と数学的には同値である．
+「揺らぎ」の期待値が欲しいことになる．
+場のノルムについて足し上げているので，$Z$は数論のzeta関数の$Z$が意識されていて，
+正規化変数にあたる（確率測度なら$1$だったが）．
+
+Yang-Mills理論などの場の理論としては
+初等的なものでも，数学的な基礎付けは出来ていない．
+
+重み$W$はある局所的な性質を満たす．
+その貼り合わせとして大域的なものが得られるかどうかが問題になるので，
+非常に層のような議論になる．
+したがって層は非常に場の量子論的である．
+
+\subsection{母関数との対応}
+
+トポロジーにおけるリボングラフなどにも応用されている．
+$\dim\fF<\infty$として考える（この場合を格子gauge理論という）．
+$\fF=\Gamma(M,E)\simeq\R^N$となり，経路積分は$N$変数関数の積分となる．
+\[Z(t_3,t_4)=\int^\infty_{-\infty}\exp\frac{1}{h}\paren{\frac{1}{2}+\frac{1}{3}+\frac{1}{4}}.\]
+有限次元の場合でも簡単ではない．
+
+そこで，古典解（微分が消える場所）を中心としたTaylor展開を考える．
+これを摂動展開（＝一種の近似）といい，2次項から始まる級数が得られる．
+2次項というのは大体正規分布となる．
+場$\phi$は平均$\phi_0$，標準偏差$\sqrt{h/a}$の正規分布にしたがって揺らぐことになる．
+3次以降の項を無視することは，場の相互作用を無視することになり，このような場を自由場という（作用汎関数が場$\phi$の正定値な2次形式で表されるような理論）．
+電磁気学はAbelなもので，ここに入る．
+このとき，正規分布を用いて厳密に記述できる．
+自由場の相関関数＝期待値を与えるのがWickの定理である．
+\begin{theorem}[Wick]
+    $\brac{x^{i_1}x^{i_2}}=A^{i_1i_2}$．
+\end{theorem}
+これは積分を，$2n$の座標のペアの取り方(Wich縮約)の全体について足しあげる有限和で表せたことになる．
+$A^{i_1i_2}=(A^{-1})_{i_1i_2}$を伝播関数(propagator)という．
+
+調和積分論も自由場の理論とみなせる．
+
+Wich縮約の取り方に関する和を表したのがFeynman図形である．
+Wickの定理はあらゆるつなぎ方に対して和を取れ，ということであるが，
+頂点をつなげて和をとって得られるのがFeynman図形．
+縮約の場合の数は爆発しても，その位相的な同型類は少ないままである．
+その同型類に測度を考えれば，なんとか計算可能でないか？というのがFeynmanのアイデアであった．
+
+\chapter{参考文献}
+
+\begin{thebibliography}{99}
+    %%% 解析力学
+    \bibitem{Isozaki}
+    磯崎洋 (2020). 『解析力学と微分方程式』 共立出版，数学と物理の交差点．]
+    \bibitem{Arnold}
+    Arnold, V. I. (1989). \textit{Mathematical Methods of Classical Mechanics}. 2nd. Springer.
+    \bibitem{Fukaya}
+    深谷賢治 (1996). 『解析力学と微分形式』 岩波講座，現代数学への入門9．
+    \bibitem{山本}
+    山本義隆，中村孔一 (1998). 『解析力学I』 朝倉物理学大系1．
+    \bibitem{Landau}
+    Landau, L. and Lifshitz, E. (2008). 『力学・場の理論』（筑摩書房）．
+    \bibitem{Goldstein}
+    Goldstein, H. (瀬川富士，矢野忠，江沢康生訳) (2005). 『新版 古典力学(下)』．吉岡書店．
+    %%%　解析力学の歴史
+    \bibitem{オイラーの生涯}
+    Fellman, E. A. (山本敦之訳). (2002). 『オイラーの生涯』 シュプリンガー・フェアラーク東京．
+    \bibitem{Bourbaki}
+    Bourbaki, N. (村田全，清水達雄，杉浦光夫訳). (2006). 『数学史(下)』 ちくま学芸文庫．
+    \bibitem{Euler1747}
+    Euler, L. (1747). Reserches sur le mouvement des corps céleste général. Omera Omnia, Ser.II, Vol.25.
+    \bibitem{Lagrange1788}
+    (1788) Méchanique analitique . Paris.
+    \bibitem{Lagrange1811}
+    Mécanique analytique. 2nd ed., Volume 1.(1811) Vol.2 (1813) Paris.
+    \bibitem{Hamilton34}
+    Hamilton, W. R. (1834). On a General Method in Dynamics; by which the Study of the Motions of all
+    free Systems of attracting or repelling Points is reduced to the Search and Differentiation
+    of one central Relation, or characteristic Function.
+    \bibitem{Hamilton35}
+    Hamilton, W. R. (1835). \textit{Second Essay on a General Method in Dynamics}.
+    \bibitem{Jacobi36}
+    Jacobi, C. G. J. (1836). Sur le Mouvement d’un Point et sur un Cas particulier du Probl`em des trois Corps. \textit{Lettre adresséeà l’Académie des Sciences de Paris}, Comptes Rendus, t.3, pp.59-61 = Werke 4, pp.37-38.
+    \bibitem{Jacobi37B}
+    Jacobi, C. G. J. (1837). Uber die Reduction der Integration der partiellen Differentialgleichungen erster Ordnung zwischenirgend einer Zahl Variabeln auf die Integration eines einzigen Systems gewohnlicher Differentialgleichungen \textit{Journal fur die Reine und Angewandte Mathematik}. 17::97-162.
+    \bibitem{Jacobi37C}
+    Jacobi, C. G. J. (1837). Note sur l’intgration des ́equations diff erentielles de la dynamique. \textit{Comptes rendus de l’Acadmiedes Sciences} 5::61-67.
+    \bibitem{Born25}
+    Max Born. (1925). \textit{Vorlesungen über Atommechanik}. Berlin, Springer.
+    \bibitem{Hilbert37}
+    Courant, R., and Hilbert, D. (1937). \textit{Methoden der Mathematischen Physik}. Berlin, Verlag von Julius Springer.
+    \bibitem{Poincare1892}
+    Poincare, H. (1892). 『天体力学の新しい方法』
+    \bibitem{Poincare1905}
+    Poincare, H. (1915). 『天体力学講義』
+
+    %%% 量子力学
+    \bibitem{Konishi}
+    Kenichi Konishi, and Giampiero Paffuti. (2009). \textit{Quantum Mechanics: A New Introduction}. Oxford University Press.
+    \bibitem{清水-量子}
+    清水明 (2004). 『新版 量子論の基礎』（サイエンス社）．
+    \bibitem{JJSakurai}
+    Sakurai, J. J. and Tuan, S. F. (1989). 『現代の量子力学（上）』（吉岡書店，物理学叢書）．
+
+    %%% 統計力学
+    \bibitem{統計物理学}
+    戸田盛和，斎藤信彦，久保亮五，橋爪夏樹 (1978). 『統計物理学』（岩波書店，現代物理学の基礎）．
+    \bibitem{清水-統計}
+    清水明 (2015). \href{https://as2.c.u-tokyo.ac.jp/lecture_note/statmech.pdf}{統計力学の基礎}．
+    \bibitem{Robert Minlos}
+    Minlos, R. A. (1999). \textit{Introduction to Mathematical Statistical Physics}. AMS.
+    \bibitem{宮本}
+    宮本宗実 (2004). 『統計力学 数学からの入門』（日本評論社）．
+    \bibitem{田崎}
+    田崎晴明. (2008). 『統計力学I』（培風館）．
+\end{thebibliography}
+
+\end{document}

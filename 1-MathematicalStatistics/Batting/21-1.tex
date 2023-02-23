@@ -1,0 +1,216 @@
+\documentclass[uplatex,dvipdfmx]{jsarticle}
+\title{{\huge 入学試験(1/19/2021実施)}\\
+{\Large 総合研究大学院大学複合科学研究科統計科学専攻
+博士課程（５年一貫制）}\\
+{\LARGE 問題と解答}}
+\author{あの\footnote{e-mail address : anomath57@gmail.com\\URL : \url{https://anomath.com/}}}
+\date{\today}
+\pagestyle{empty} \setcounter{secnumdepth}{4}
+\input{/Users/Hirofumi Shiba/NatureOfStatistics/preamble_no_fonts.tex}
+%\input{/Users/hirofumi.shiba48/NatureOfStatistics/preamble_no_fonts.tex}
+\usepackage[math]{anttor}
+\begin{document}
+\maketitle
+
+\begin{tcolorbox}[title=記法についての注意]
+    次の記法は以後断りなく用いる．
+    \begin{enumerate}
+        \item $n=1,2,\cdots$について，$n:=\Brace{0,1,2,\cdots,n-1}$，$[n]:=\{1,2,\cdots,n\}$．$\N=\{0,1,2,\cdots\}$，$\N^+=\N_{>0}=\{1,2,3,\cdots\}$．
+        \item 同様にして，$\R_+:=\Brace{x\in\R\mid x\ge0}$，$\R^+:=\Brace{x\in\R\mid x>0}$，$\o{\R_+}:=[0,\infty]$．
+        \item $M_{mn}(\R)$で$(m,n)$の実正方行列の全体，$\GL_n(\R)\subset M_n(\R)$でそのうち可逆なものの全体を表す．
+        \item $I_d\in M_d(\R)$を単位行列，$O_d\in M_d(\R)$を零行列とする．
+        \item $f(x)=O(x^n)\;(x\to0)$で$\limsup_{x\to0}\Abs{\frac{f(x)}{x^n}}<\infty$を表す．
+        \item $\R$上のLebesgue測度を$m$，距離空間$S$上のBorel $\sigma$-代数を$\B(S)$で表す．
+        \item $U(S)$で集合$S$上の一様分布，$N(\mu,\sigma^2)$で平均$\mu$分散$\sigma^2$の正規分布を表す．
+        \item $\Exp(\gamma)\;(\gamma>0)$で指数分布$f(x)=\gamma e^{-\gamma x}1_{\Brace{x>0}}$を表す．
+    \end{enumerate}
+    問題文の表現は筆者の都合で一部変えています．
+    過去3年分の入学試験問題は\href{https://www.ism.ac.jp/senkou/admission/kakomon.html}{こちら}から見れます．
+\end{tcolorbox}
+\vspace{1cm}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=第１問]
+    \begin{enumerate}
+        \item 行列$A$とベクトル$b$を次のように定めたとき，$\rank(b,Ab,A^2b)$を求めよ：
+        \[A:=\begin{pmatrix}0&1&0\\0&-1&1\\0&0&-1\end{pmatrix},\quad b:=\begin{pmatrix}0\\1\\0\end{pmatrix}.\]
+        \item 次の関数を$x$について微分せよ：
+        \[f(x):=\frac{x^2}{\sqrt{1+x^2}+x}.\]
+        \item $x\in\R^n$に関する等式制約\[Cx=d\in\R^m\quad(C\in M_{mn}(\R),m\le n,\rank C=m)\]の下で，$\norm{x}^2$を最小にする$x\in\R^n$を求めよ．なお，ノルムはEuclidノルム$\norm{x}^2=\sum_{i\in[n]}x_i^2$とする．
+    \end{enumerate}
+\end{tcolorbox}
+\begin{proof}[\textbf{\underline{［解答例］}}]\mbox{}
+    \begin{enumerate}
+        \item $Ab,A^2b$を計算すると，
+        \[Ab=\begin{pmatrix}
+            1\\-1\\0
+        \end{pmatrix},\quad A^2b=\begin{pmatrix}-1\\1\\0\end{pmatrix}.\]
+        $A^2b=-Ab$と，$Ab,b$が線型独立であることに注意すると，$\rank(b,Ab,A^2b)=2$．
+        \item 商の微分則より，
+        \begin{align*}
+            f'(x)&=\frac{2x(\sqrt{1+x^2}+x)-x^2\paren{\frac{x}{\sqrt{1+x^2}}+1}}{(\sqrt{1+x^2}+x)^2}\\
+            &=\frac{x}{\sqrt{1+x^2}}\frac{2+2x^2+2x\sqrt{1+x^2}-x^2-x\sqrt{1+x^2}}{(\sqrt{1+x^2}+x)^2}\\
+            &=\frac{x}{\sqrt{1+x^2}}\frac{x^2+x\sqrt{1+x^2}+2}{(\sqrt{1+x^2}+x)^2}=\frac{x}{\sqrt{1+x^2}}\frac{2\sqrt{1+x^2}-x}{\sqrt{1+x^2}+x}.
+        \end{align*}
+        \item 解空間は$\R^n$の$m$次元affine部分空間であり，任意の$Cx=d$の解$x_0\in\R^n$を用いて$\Brace{x\in\R^n\mid Cx=d}=x_0+\Ker C$と表せ，特に$x_0\perp\Ker C$を満たすときの$x_0$が求める$x\in\R^n$である．
+        実際，任意の解$x\in\R^n$は$x_0+x_1\in x_0+\Ker C$と表せるから，Pythagorasの定理から$\norm{x}^2=\norm{x_0}^2+\norm{x_1}^2\ge\norm{x_0}^2$が成り立つ．
+        $x_0\in(\Ker C)^\perp=\Im C^*$より，$\exists_{y_0\in\R^m}\;x_0=C^*y_0$．元の式に代入して$d=CC^*y_0$であるから，$CC^*\in\GL_m(\R)$に注意すると$y_0=(CC^*)^{-1}d$．よって，$x_0=C^*y_0=C^*(CC^*)^{-1}d$．
+    \end{enumerate}
+\end{proof}
+\begin{remarks*}[一般化逆行列]
+    (3)の答えに現れる$C^*(CC^*)^{-1}\in M_{nm}(\R)$とは，$C\in M_{mn}(\R)$の一般化逆行列(の一つ，特にMoore-Penrose型と言われるもの)である．
+    一般に，1次方程式系$Ax=b\;(A\in M_{mn}(\R),x\in\R^n,b\in\R^m)$のノルムが最小の解は，$A$の一般化逆行列$A^-$によって$A^-b$で与えられる．
+\end{remarks*}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=第２問]
+    次の重積分を考える：
+    \[I:=\iint_De^{x+y}\sin^2(x-2y)dxdy,\quad D:=\Brace{(x,y)\in\R^2\mid\pi\le x-2y\le 3\pi,0\le x+y\le\pi}.\]
+    \begin{enumerate}
+        \item 次の変数変換のJacobianを求めよ：
+        \[\begin{pmatrix}u\\v\end{pmatrix}=\begin{pmatrix}1&-2\\1&1\end{pmatrix}\begin{pmatrix}x\\y\end{pmatrix}.\]
+        \item 上の変数変換によって対応する積分領域$D$を，$xy$平面上と$uv$平面上でそれぞれ図示せよ．
+        \item 積分$I$を求めよ．
+    \end{enumerate}
+\end{tcolorbox}
+\begin{proof}[\textbf{\underline{［解答例］}}]\mbox{}
+    \begin{enumerate}
+        \item 変数変換は
+        \[\begin{cases}
+            u=x-2y\\
+            v=x+y
+        \end{cases}\]
+        と表せるから，Jacobi行列は
+        \[\begin{pmatrix}\pp{u}{x}&\pp{u}{y}\\\pp{v}{x}&\pp{u}{y}\end{pmatrix}=\begin{pmatrix}1&-2\\1&1\end{pmatrix}.\]
+        この行列の行列式は3である．
+        \item 省略する．
+        \item 次のように計算できる：
+        \begin{align*}
+            I&=\iint_De^{x+y}\sin^2(x-2y)dxdy\\
+            &=3\int^\pi_0 e^vdv\int^{3\pi}_\pi\sin^2udu\\
+            &=\frac{3}{2}(e^\pi-1)\Square{u-\frac{\sin2 u}{2}}^{3\pi}_\pi=3\pi(e^\pi-1).
+        \end{align*}
+    \end{enumerate}
+\end{proof}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=第３問]
+    次を満たす時間について一様なMarkov連鎖$X=(X_n):\Om\times\N\to[2]$
+    \[P[X_{n+1}=i|X_{n}=i]=p,\quad p\in(0,1)\setminus\Brace{1/2},n\in\N,i\in[2],\]
+    を考える．$X_n$の$[2]$上の確率分布を$\b{x}_n:=(x_n,1-x_n)^\top$で表す．
+    \begin{enumerate}
+        \item このMarkov連鎖の遷移行列$P\in M_2([0,1])$を求めよ．
+        \item $\b{x}_\infty:=\lim_{n\to\infty}\b{x}_n\in[0,1]^2$を求めよ．
+        \item $\forall_{n\in\N}\;\norm{\b{x}_n-\b{x}_\infty}^2\le\frac{1}{2}\abs{2p-1}^{2n}$を示せ．
+    \end{enumerate}
+\end{tcolorbox}
+\begin{proof}[\textbf{\underline{［解答例］}}]\mbox{}
+    \begin{enumerate}
+        \item $p_{ij}:=P[X_{n+1}=i|X_n=j]\;(i,j\in[2])$とおくと，
+        \[P=\begin{pmatrix}p_{11}&p_{12}\\p_{21}&p_{22}\end{pmatrix}=\begin{pmatrix}p&1-p\\1-p&p\end{pmatrix}.\]
+        \item まず$P$の対角化$Q$を求める．すると，直交行列$U\in O_2([0,1])$を用いた表示$P=UQU^{-1}$を用いて，$P^n=UQ^nU^{-1}$と表せるため，
+        $\b{x}_n=UQ^nU^{-1}\b{x}_0$によって$\b{x}_n$が計算できることが期待できる．
+        その後，$n\to\infty$の極限を取ることで答えに至るであろう．
+        \begin{enumerate}
+            \item 固有方程式$\det(P-I\lambda)=0$を解いて固有値を求めると次のようになる．固有方程式は
+            \[\begin{vmatrix}p-\lambda&1-p\\1-p&p-\lambda\end{vmatrix}=(p-\lambda)^2-(1-p)^2=(2p-1-\lambda)(1-\lambda)=0\]
+            と表せるから，$\lambda=1,2p-1$が解である．
+            \item 対応する固有ベクトルを求めると，
+            \begin{enumerate}
+                \item $P\begin{pmatrix}x\\y\end{pmatrix}=\begin{pmatrix}x\\y\end{pmatrix}$の解空間は$\R \begin{pmatrix}1\\1\end{pmatrix}$と表せる．
+                \item $P\begin{pmatrix}x\\y\end{pmatrix}=(2p-1)\begin{pmatrix}x\\y\end{pmatrix}$の解空間は$\R \begin{pmatrix}-1\\1\end{pmatrix}$と表せる．
+            \end{enumerate}
+            \item 以上により，基底変換行列を$U:=\frac{1}{\sqrt{2}}\begin{pmatrix}1&-1\\1&1\end{pmatrix}$とおくことが考えられる．
+            実際，$Q:=\diag(1,2p-1)=UPU^{-1}$が成り立っている：
+            \begin{align*}
+                U^{-1}PU&=\frac{1}{2}\begin{pmatrix}1&1\\-1&1\end{pmatrix}\begin{pmatrix}p&1-p\\1-p&p\end{pmatrix}\begin{pmatrix}1&-1\\1&1\end{pmatrix}\\
+                &=\frac{1}{2}\begin{pmatrix}1&1\\1-2p&2p-1\end{pmatrix}\begin{pmatrix}1&-1\\1&1\end{pmatrix}\\
+                &=\begin{pmatrix}1&0\\0&2p-1\end{pmatrix}.
+            \end{align*}
+            \item 故に，
+            \[P^n=UQ^nU^{-1}=\frac{1}{2}\begin{pmatrix}1&-1\\1&1\end{pmatrix} \begin{pmatrix}1&0\\0&(2p-1)^n\end{pmatrix}\begin{pmatrix}1&1\\-1&1\end{pmatrix}=\frac{1}{2}\begin{pmatrix}1+(2p-1)^n&1-(2p-1)^n\\1-(2p-1)^n&1+(2p-1)^n\end{pmatrix},\]
+            であるから，
+            $-1<2p-1<1$より，
+            \[\lim_{n\to\infty}P^n=\frac{1}{2}\begin{pmatrix}1&1\\1&1\end{pmatrix}=:P^\infty.\]
+            行列積の連続性より，
+            \[\b{x}_\infty=\lim_{n\to\infty}P^n\b{x}_0=P^\infty\b{x}_0=\frac{1}{2}\begin{pmatrix}1&1\\1&1\end{pmatrix}\begin{pmatrix}x_0\\1-x_0\end{pmatrix}=\begin{pmatrix}\frac{1}{2}\\\frac{1}{2}\end{pmatrix}.\]
+        \end{enumerate}
+        \item (2)の議論を踏まえて，
+        \begin{align*}
+            \norm{\b{x}_n-\b{x}_\infty}^2&=\norm{P^n\b{x}_0-P^\infty\b{x}_0}^2\\
+            &\le\norm{(P^n-P^\infty)\b{x}_0}^2\\
+            &\le\Norm{\frac{1}{2}\begin{pmatrix}(2p-1)^n&-(2p-1)^n\\-(2p-1)^n&(2p-1)^n\end{pmatrix}\begin{pmatrix}x_0\\1-x_0\end{pmatrix}}^2\\
+            &=\frac{(2p-1)^{2n}}{4}\Norm{\begin{pmatrix}1&-1\\-1&1\end{pmatrix}\begin{pmatrix}x_0\\1-x_0\end{pmatrix}}^2\\
+            &=\frac{(2p-1)^{2n}}{4}\paren{\sqrt{(2x_0-1)^2+(1-2x_0)^2}}^2=\frac{(2p-1)^{2n}}{4}2(2x_0-1)^2\le\frac{(2p-1)^{2n}}{2}.
+        \end{align*}
+        と評価出来る．
+    \end{enumerate}
+\end{proof}
+\begin{remark*}
+    (3)の不等式は，確率ベクトル$\b{x}_n\ge0$についてのみ成り立つ不等式である．実際，一般のベクトル$\b{x}_n=(x_n,1-x_n)^\top\in[0,1]^2$について，作用素ノルムを用いて
+    \begin{align*}
+        \norm{\b{x}_n-\b{x}_\infty}^2&\le\norm{P^n-P^\infty}^2\norm{\b{x}_0}^2\\
+        &\le\Norm{\frac{1}{2}\begin{pmatrix}(2p-1)^n&-(2p-1)^n\\-(2p-1)^n&(2p-1)^n\end{pmatrix}}^2\\
+        &=\frac{(2p-1)^{2n}}{4}\Norm{\begin{pmatrix}1&-1\\-1&1\end{pmatrix}}^2,&A:=\begin{pmatrix}1&-1\\-1&1\end{pmatrix}\text{とする}
+    \end{align*}
+    と評価出来るが，肝心の$A$の作用素ノルムは$\norm{A}^2=4$となってしまう．
+    行列$A$の固有値は$0,2$で，$2$に属する固有空間は$\R \begin{pmatrix}1\\-1\end{pmatrix}$と表され，この元は確率ベクトルではない．
+    すなわち，$A$の作用素ノルムを達成するベクトルは確率ベクトルではない．
+    実際，(3)の答案中で評価したように，
+    \[\sup\Brace{\norm{Ax}\in\R_+\mid x\in[0,1]^2\text{は確率ベクトル}}=\sqrt{2}\]
+    である！
+    なお，正な確率行列は必ず極限$\lim_{n\to\infty}P^n$を持つことが知られている．
+\end{remark*}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=第４問]
+    \begin{enumerate}
+        \item 次の$g:\R\to\R$に関する微分方程式の一般解を求めよ：
+        \[\dd{g(t)}{t}=a(1-g(t)),\quad a>0.\]
+        \item $\R_+$上に台を持つ連続分布に従う確率変数$X$について，次を満たすならば，$X$は指数分布$\Exp(a)\;(a>0)$に従うことを示せ：
+        \[\forall_{x,y\in\R}\quad P[X>x+y|X>x]=P[X>y].\]
+        \item $X_1,X_2,X_3\sim\Exp(a)\;(a>0)$を独立同分布とする．このとき，次の$U,V$は分布同等であることを示せ：
+        \[U:=X_1+\frac{1}{2}X_2+\frac{1}{3}X_3,\quad V:=\max\Brace{X_1,X_2,X_3}.\]
+    \end{enumerate}
+\end{tcolorbox}
+\begin{proof}[\textbf{\underline{［解答例］}}]\mbox{}
+    \begin{enumerate}
+        \item まず$1-g(t)=Ae^{-\al t}\;(A,\al\in\R)$という形の解を決定することを考える．
+        両辺を微分すると$g'(t)=A\al e^{-\al t}$より，所与の微分方程式は
+        \[Ae^{-\al t}(a-\al)=0\]
+        に同値．$t\in\R$は任意だから，$a=\al$が必要．よって，$g(t)=1-Ae^{-at}\;(A\in\R)$は解であるが，1階線型常微分方程式の解空間は1次元だから，これがすべてである．
+        \item 分布関数を$F(x):=\int^x_0f(t)dt$と定めると，与えられた条件は
+        \[\frac{1-F(x+y)}{1-F(x)}=1-F(y)\quad\Leftrightarrow\quad 1-F(x+y)=1-F(x)-F(y)+F(x)F(y)\]
+        に同値．両辺の$y=0$での微分係数を考えると，
+        \[f(x)=f(0)(1-F(x))\]
+        が必要だから，(1)から
+        \[\int^x_0f(t)dt=F(x)=1-Ae^{-f(0)x}\]
+        すなわち$f(x)=Af(0) e^{-f(0) x}$が必要．
+        ここで，$f$は確率密度関数であることを考えると，$\int_0^\infty f(t)dt=1$より$A=1$が必要．
+        よって，$X\sim\Exp(f(0))$．
+        \item $U,V$の特性関数$\varphi,\psi$が等しいことを証明する．
+        \begin{enumerate}
+            \item $U$の特性関数は，
+            \begin{align*}
+                \varphi(u)&=\int_{\R_+^3}e^{iu\paren{x_1+\frac{1}{2}x_2+\frac{1}{3}x_3}}f(x_1)f(x_2)f(x_3)dx_1dx_2dx_3\\
+                &=a^3\int_{\R_+}e^{(iu-a)x_1}dx_1\int_{\R_+}e^{\paren{\frac{iu}{2}-a}x_2}dx_2\int_{\R_+}e^{\paren{\frac{iu}{3}-a}x_3}dx_3\\
+                &=-a^3\frac{1}{iu-a}\frac{2}{iu-2a}\frac{3}{iu-3a}.
+            \end{align*}
+            \item $V$の特性関数は，$V$の確率密度関数$f_V$が，\[f_V(x)=3f(x)F(x)^2=3f(x)\paren{\int_0^xf(t)dt}^2=3a(1-e^{-ax})^2e^{-ax}=3ae^{-ax}(1-2e^{-ax}+e^{-2ax})\]
+            であることに注意すれば，
+            \begin{align*}
+                \psi(u)&=\int_{\R_+}e^{iux}f_V(x)dx\\
+                &=3a\int_{\R_+}\paren{e^{(iu-a)x}-2e^{(iu-2a)x}+e^{(iu-3a)x}}dx\\
+                &=3a\paren{-\frac{1}{iu-a}+\frac{2}{iu-2a}-\frac{1}{iu-3a}}\\
+                &=3a\frac{-(-u^3-5aui+6a^2)+2(-u^2-4aui+3a^2)-(-u^2-3aui+2a^2)}{(iu-a)(iu-2a)(iu-3)}\\
+                &=3a\frac{-2a^2}{(iu-a)(iu-2a)(iu-3)}.
+            \end{align*}
+        \end{enumerate}
+    \end{enumerate}
+\end{proof}
+\begin{remarks*}[無記憶性による指数分布の特徴付け]
+    (2)の条件を無記憶性といい，これを持つ連続分布は指数分布に限る．
+    分布関数$F$に対して$S:=1-F$を生存関数という．
+\end{remarks*}
+
+\end{document}

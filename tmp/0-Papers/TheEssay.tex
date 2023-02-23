@@ -1,0 +1,107 @@
+\documentclass[uplatex, dvipdfmx]{jsarticle}
+\title{志望理由書}
+\date{\today}
+\pagestyle{empty} \setcounter{secnumdepth}{4}
+\input{/Users/Hirofumi Shiba/NatureOfStatistics/preamble_no_fonts.tex}
+%\input{/Users/hirofumi.shiba48/NatureOfStatistics/preamble_no_fonts.tex}
+\usepackage[math]{anttor}
+\begin{document}
+
+\begin{description}
+    \item[(1) 大学院での志望研究内容] \mbox{}\\
+    筆者は主に因果推論とロバスト統計の分野で，次のような貢献をすることを現時点では志望している：
+    \vspace{1em}
+    \begin{enumerate}[(i)]
+        \item 因果推論のための統計モデルは，従来の統計推測のためのモデルよりも遥かに多くの仮定を要する．
+        そのため，因果モデルを実際のデータに当てはめるにあたって，すべての仮定が満たされていると確約出来る状況は稀だろう．
+        そのため因果推論において，種々の仮定に対する感度分析や，仮定への違反に対して頑健な統計的手法の開発は極めて肝要な課題であり，
+        実際「二重に頑健な推定量(doubly robust estimator)」と呼ばれるクラスの推定量が近年注目されている\cite{Robins-Rotnitzky01-Comments}．
+        しかしこの統計量を構成するための手段はばらばらに提案されているのみ\cite{Chernozhukov-Ichimura-Newey22-LocallyRobust}, \cite{Rotnitzky-Smucler-Robins21-MixedBiasProperty}, \cite{Chernozhukov-Newey-Singh22-DebiasedMachineLearning}で，特徴付ける試みは筆者の見識では未だ見当たらない．
+        その主な障害は数学的な困難さにあると筆者は目しており，特徴付けを得ることで頑健統計に対する理解を深める貢献を目指したい．\vspace{1em}
+        \item 因果推論は幅広い応用範囲を持ち，
+        対象が依存構造を持つことも多い．
+        例えば，割当を完全にランダムにするわけではなく，既存のデータを基に予め定められたルールで割当を変えていく実験計画を採用した場合(batched bandit問題)，
+        経時データはpartial mixingと言われる構造を持ち\cite{YechanPark-Zhan-Yoshida22}，これによって統計量の高次な漸近的近似を与えることが出来る．
+        このように，近年目覚ましい発展を経験した「確率過程に対する極限定理」などの数学分野の結果を応用し，
+        非独立性や非線形性や小標本性にも対応可能な新しい統計手法を開発する研究は，莫大な可能性を秘めていると筆者は考えており，自身も助力出来ることを志している．
+    \end{enumerate}\vspace{1em}
+    \item[(2) 強調したい自身の能力や実績] \mbox{}\vspace{1em}
+    \begin{enumerate}[(i)]
+        \item 統計モデルの仮定を減らし，
+        非正規性・非独立性・非線形性の下でも適用可能な手法を開発する研究は殆ど厳密な確率論を，
+        特に前述のような漸近展開なる数学手法\cite{Shigeo-Yoshida00-GeometricMixing}, \cite{Yoshida04-Partial-Mixing}では
+        さらに踏み込んだ確率解析に関連する数理を本質的な形で用いる．
+        また，因果推論はしばしばNeyman-Rubinモデルを通じて，
+        欠測を持つデータの統計分析の文脈でも語られるが，
+        この問題は伝統的に興味のある母数以外の仮定をなるべく取り除いた統計モデルであるセミパラメトリックモデルの一般的な枠組みで取り扱われることが多く\cite{Tsiatis06-Semiparametric}，
+        その際には母数の空間は無限次元になり，特に前述のような新たなクラスの頑健な統計量を創出したり，
+        その性質を調べたりするには，
+        関数解析などの数理を本質的に必要とする．
+        前述の２つのトピックにはそれぞれ\cite{Bhattacharya-LargeSampleTheory}, \cite{LeCam-Yang00-Asymptotics}と\cite{BKRW98-Semiparametric}などの教科書があるが，
+        これらが基礎に置く数学理論をすでに十分な度合いまで学習済みであるため，
+        今後は統計理論としての議論に集中することが出来る．\vspace{1em}
+        \item 上述のように筆者は統計手法の開発を通じて，各統計科学分野への間接的貢献を志しているが，この際にコンピュータプログラムの形で，多くの人に使いやすいプラットフォームに落とし込む社会実装が欠かせないと考える．
+        その際に必要と考えられる計算機能力を，セキュリティコンテスト(SECCON 2019)への出場や，データ解析の実務を通じて養った．
+        また，IMIS研究所にて，
+        顧客アンケートなどのテキストデータを解析し，企業の経営を支援するためのPythonプログラムを
+        作成するプロジェクトにおける特別研究員として，
+        データ解析とパッケージ作成を行う業務は現在も継続中である．
+    \end{enumerate}\vspace{1em}
+    \item[(3) これまで読んだ本・科学論文などのうち興味を持ったものについての自分の考え] 
+    \mbox{}
+    \vspace{1em}
+    
+    筆者は高校生時，米国の心理学者や経済学者らが出版する科学についての一般書を読むことが好きで，
+    英語の練習として巻末に付された論文の概要などに当たり，
+    学問に対する淡い憧れを募らせていた．
+    特に心酔したのは上述の２分野を横断する行動経済学における\cite{DanielKahneman13-FastAndSlow}で，
+    無意識下の認知(システム１)の解説をする第４章にて引用された研究，
+    老齢の観念を暗示された被験者は歩行速度が遅くなる\cite{JohnBargh-Priming}（プライミング効果）ことや，
+    恥の感情を誘発された被験者は手を洗う衝動が起きる\cite{06-LadyMacbeth}（Macbeth効果）ことは，
+    特に強く印象に残っていた．
+    しかし，後に大学に進学してから，
+    前者は\cite{12-ANTIBehavioralPriming}によって，後者は\cite{11-AntiLadyMacbeth}, \cite{14-AntiLadyMacbeth}
+    によって，より多い標本数で再現に失敗していることを報告している．
+
+\end{description}
+
+\section*{お得な付録：候補だったが省いた話}
+
+\begin{enumerate}[(a)]
+    \item \cite{MalcolmGladwell08-Outliers}は「１万時間の法則」を有名にした本である．
+    これは極度の集中を伴う練習(deliberate practice)を１万時間行うことは，世界的な成功をもたらす，という法則のことをいい，
+    これは音楽，スポーツ，ゲームなどの分野ではdeliberate practiceの寄与率が極めて高いとする因子分析を中心とする研究
+    \cite{EricssonEA93-GRIT}を基礎にしている．
+    なお，Ericsson本人の著書\cite{Ericsson16-PEAK}ではdeliberate practice「限界的練習」と訳されている．
+    本の中ではカナダのプロアイスホッケープレイヤー，Bill GatesやBeatlesを例にあげて解説されている．
+    これは思想として極めて訴求力を持つもので，関連して多くの啓発書が出版されている\cite{CalNewport16}．
+    が，実は2014年にすでに2つ反証する論文\cite{Hambrick14-AntiGRIT}, \cite{Brooke14-AntiGRIT}が発表されており，
+    前者はチェスと音楽においては「極度の集中を伴う練習」は1/3の寄与率しか持たないこと，
+    後者はdeliberate practiceが調査された殆どの分野にまたがるメタ分析により平均して約12\% の寄与率であることを結論としている．
+    なお，これらを踏まえたEricsson本人の著書\cite{Ericsson16-PEAK}は，
+    卓越を作り出すためのdeliberate practiceの要件の研究としての側面を追求し，
+    \begin{enumerate}[(1)]
+        \item 明確に定義された具体的目標があること
+        \item やるべき行動に全神経を集中すること
+        \item 迅速なフィードバックが得られること
+        \item コンフォートゾーンから飛び出していること
+    \end{enumerate}
+    としており，例を上げて解説した書籍となっている．
+    \item \cite{ThalmaLobel16-Sensation}は第４章と第５章で赤色が人間に与える影響を論じており，
+    第５章のタイトルが文藝春秋社から出版された和訳本のタイトル「赤を身につけるとなぜもてるのか?」と同じになっている．
+    この章の内容は主に\cite{Pazda12-SexyRed}に依拠しているが，より標本数の多い\cite{16-AntiSexiRed}では再現されなかった．
+    \item \cite{DanielKahneman13-FastAndSlow}は，人間の認知機能を，追加の努力なく無意識化で常時稼働してヒューリスティックな判断をするシステム１と，複雑な計算など困難な知的活動が出来るが十分な注意力を必要とするシステム２とに分けて，
+    それぞれの性質を種々の研究を引用しながら見ていく著作である．
+    その最も基本的な働きとして，第四章にて「連想記憶で活性化された観念の整合的なパターンを形成する」ことが解説されており，
+    最も驚愕させるような研究の例として\cite{JohnBargh-Priming}を引く．
+    これは老齢を連想させるような単語(Florida, old, lonely, wrinkleなど)を事前に多く扱った実験参加者は，
+    次の実験室へ移動する際の曲がり角を通り過ぎる際の歩行速度が遅く，また実験参加者は誰も扱った単語に共通性があることに気づいたものは居なかった．
+    また逆に，遅い歩行速度で5分歩かされた実験参加者はその後老齢と関連する単語の認識速度が上がったという報告もある\cite{Mussweiler06-Priming}．
+    また，恥の概念をプライムされた被験者に単語ゲームをさせた所，他の選択肢よりもWISHやSOAPなど洗い流す行為に関連する語彙を連想したというLady Macbeth効果\cite{06-LadyMacbeth}を続いて紹介している．
+    しかしこの研究結果は，前者は\cite{12-ANTIBehavioralPriming}で，
+    後者は\cite{11-AntiLadyMacbeth}, \cite{14-AntiLadyMacbeth}で，より大きな標本で結果の再現が得られなかった．
+\end{enumerate}
+
+\bibliography{../../StatisticalSciences.bib,../../SocialSciences.bib,../../mathematics.bib,../../statistics.bib}
+
+\end{document}

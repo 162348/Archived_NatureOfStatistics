@@ -1,0 +1,614 @@
+\documentclass[uplatex,dvipdfmx]{jsarticle}
+\title{偏微分方程式論 レポート\\12月8日発表分}\author{05-210520 司馬博文}\date{\today}
+\pagestyle{plain} \setcounter{secnumdepth}{4}
+\input{/Users/Hirofumi Shiba/NatureOfStatistics/preamble_no_fonts.tex}
+%\input{/Users/hirofumi.shiba48/NatureOfStatistics/preamble_no_fonts.tex}
+%\input{/Users/hirof/NatureOfStatistics/preamble_no_fonts.tex}
+\usepackage[math]{anttor}
+\begin{document}
+\tableofcontents
+
+\section{10月13日発表分}
+
+方程式の線型性の分類と，2階線型方程式の分類の問題は要確認．
+
+\begin{problem}
+    次の2階線型偏微分方程式を分類せよ
+    \begin{enumerate}
+        \item $u_{xx}+4u_{xy}+u_{yy}-u_x+2u_y-3u=0$．
+        \item $u_{xx}+u_{yy}+2u_{zz}-2u_{xy}+u_x+u_y=0$．
+    \end{enumerate}
+\end{problem}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item 主要部は
+        \[u_{xx}+4u_{xy}+u_{yy}=(\partial_x\;\del_y)\mtrx{1}{2}{2}{1}\vctr{\del_x}{\del_y}u\]
+        と表せるが，$\smtrx{1}{2}{2}{1}$の固有多項式は
+        \[\Phi(t)=(1-t)^2-4=(t-3)(t+1).\]
+        であるから，ただ一つだけ符号が違うため，双曲型．
+        \item 主要部は
+        \[u_{xx}+u_{yy}+2u_{zz}-2u_{xy}=(\del_x\;\del_y\;\del_z)\begin{pmatrix}1&-1&0\\-1&1&0\\0&0&2\end{pmatrix}\begin{pmatrix}\del_x\\\del_y\\\del_z\end{pmatrix}u.\]
+        と表せるが，この固有多項式は
+        \[\Phi(t)=(1-t)^2(2-t)-(2-t)=-(2-t)^2t\]
+        より，$0$を固有値に持つから広義の放物型．
+        さらに，ただ一つだけ固有値$0$を持ち，他の固有値の符号が等しい．加えて，
+        \[u_{xx}+u_{yy}+2u_{zz}-2u_{xy}=(\del_x\;\del_y\;\del_z)\begin{pmatrix}-1/\sqrt{2}&0&1/\sqrt{2}\\1/\sqrt{2}&0&1/\sqrt{2}\\0&1&0\end{pmatrix}\begin{pmatrix}2&0&0\\0&2&0\\0&0&0\end{pmatrix}\begin{pmatrix}-1/\sqrt{2}&0&1/\sqrt{2}\\1/\sqrt{2}&0&1/\sqrt{2}\\0&1&0\end{pmatrix}^\top\begin{pmatrix}\del_x\\\del_y\\\del_z\end{pmatrix}u\]
+        という変換に対して，残りの項は
+        \[u_x+u_y=\sqrt{2}u_Z,\qquad Z=(x\;y\;z)\begin{pmatrix}1/\sqrt{2}\\1/\sqrt{2}\\0\end{pmatrix}\]
+        と表せ，2階の項が消えている変数$Z$の1階の項は消えていないから，狭義の放物型である．
+    \end{enumerate}
+\end{Proof}
+
+\section{10月27日発表分}
+
+Hopfの補題とKelvin変換の問題．
+もう一つが簡単な最大値原理の問題．ラストが次の，解公式の制限$f\in C_c^2(\R^n)$を$C^1_c(\R^n)$まで取り払う問題．
+ただし，有界領域$\Om$上で考えることとなる．
+
+\begin{problem}
+    $\Om\subset\R^n$を有界領域とする．
+    \begin{enumerate}
+        \item $f\in L^\infty(\Om)$について，
+        \[u(x):=f*\Phi(x)=\int_\Om\Phi(x-y)f(y)dy.\]
+        は$C^1(\Om)$-級で，
+        \[D_iu(x)=\int_\Om D_i\Phi(x-y)f(y)dy.\]
+        \item さらに$f\in C^1(\Om)$のとき，$u\in C^2(\Om)$かつ$-\Lap u=f\;\In\Om$である．
+    \end{enumerate}
+\end{problem}
+
+\section{11月24日発表分}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    Laplace方程式のGreen関数のよい練習問題．
+\end{tcolorbox}
+
+\begin{problem}[Green関数を求め方]
+    次の領域$\Om\osub\R^n$上のGreen関数$G$を求めよ：
+    \begin{enumerate}
+        \item $n\ge2$について
+        \[\Om:=\R^n_+:=\Brace{x\in\R^n\mid x_n>0}.\]
+        \item $n=2$について，
+        \[\Om:=\Brace{(x_1,x_2)\in\R^2\mid x_1,x_2>0}.\]
+    \end{enumerate}
+\end{problem}
+\begin{Proof}
+    $x\in\R^n$の反射を
+    \[x^*:=(x_1,\cdots,x_{n-1},-x_n).\]
+    と定める．
+    \begin{enumerate}
+        \item \[G(x,y):=\Phi(y-x)-\Phi(y-x^*).\]
+        \item 
+        \[x_*:=(-x_1,x_2),\qquad x\in\R^2.\]
+        と表すと，
+        \[G(x,y):=\Phi(y-x)-\Phi(y-x^*)-\Phi(y-x_*)+\Phi(y-x^*_*).\]
+    \end{enumerate}
+\end{Proof}
+
+\begin{problem}[上半平面上のPoisson核]
+    $g(x)=\abs{x}\;(\abs{x}\le1)$を満たす$g\in L^\infty(\R^{n-1})$が定める境界値問題
+    \[\begin{cases}
+        -\Lap u=0&\In\R^n_+,\\
+        u=g&\on\partial\R^n_+.
+    \end{cases}\]
+    の解
+    \[u(x)=\frac{2x_n}{n\om_n}\int_{\partial\R^n_+}\frac{g(y)}{\abs{x-y}^n}dS(y).\]
+    の微分$Du$は原点の近傍で非有界である．
+\end{problem}
+\begin{Proof}
+    $x_n$に関する導関数
+    \[u_{x_n}(x)=\frac{2}{n\om_n}\int_{\R^n_+}\frac{g(y)}{\abs{x-y}^n}dy-\frac{2x_n^2}{n\om_n}\int_{\partial\R^n_+}\frac{g(y)}{\abs{x-y}^{n+2}}dy.\]
+    を考える．$x_1=\cdots=x_{n-1}=0$を代入し，$x_n=h>0$と表すと
+    \[u_{x_n}(he_n)=\frac{2}{n\om_n}\int_{\partial\R^n_+}\frac{g(y)}{(h^2+\abs{y}^2)^{n/2}}dy=\frac{2}{n\om_n}\paren{\int_{\partial\R^n_+\cap\Brace{\abs{y}\le1}}\frac{\abs{y}}{(h^2+\abs{y}^2)^{n/2}}dy+\int_{\partial\R^n_+\cap\Brace{\abs{y}>1}}\frac{g(y)}{(h^2+\abs{y}^2)^{n/2}}dy}.\]
+    と分解できるが，第１項は$h\to0$の極限で非有界である．実際，第１項はFubiniの定理より
+    \[\frac{2}{n\om_n}\int^1_0\int_{\partial B^{n-1}(0,r)}\frac{r}{(h^2+r^2)^{n/2}}dSdr=\frac{2(n-1)\om_{n-1}}{n\om_n}\int^1_0\frac{r^{n-1}}{(h^2+r^2)^{n/2}}dr.\]
+    と計算できるが，$h\to0$の極限でこの積分は発散する．
+\end{Proof}
+
+\begin{problem}[熱方程式の上半空間上の解公式]
+    \[\begin{cases}
+        u_t-u_{xx}=0&\In\R^+\times\R^+,\\
+        u=\phi&\on\R^+\times\{0\},\\
+        u=0&\on\{0\}\times\R^+.
+    \end{cases},\qquad\phi\in C_b(\R_+),\phi(0)=0.\]
+    の解は，奇関数拡張を$\wt{\phi}$として，
+    \[u(x,t)=\frac{1}{\sqrt{4\pi t}}\int_\R\wt{\phi}(y)e^{-\frac{(x-y)^2}{4t}}dy.\]
+    で与えられる．
+\end{problem}
+\begin{Proof}
+    3つ目の条件$u(0,t)=0$を確認すればよいが，
+    \[u(0,t)=\frac{1}{\sqrt{4\pi t}}\int_\R\wt{\phi}(y)e^{-\frac{y^2}{4t}}dy\]
+    の被積分関数が$y$に関して奇関数であることに注意すればよい．
+\end{Proof}
+
+\begin{problem}
+    \[\begin{cases}
+        u_t-u_{xx}=0&\In\R^+\times\R^+,\\
+        u=\phi&\on\R^+\times\{0\},\\
+        u_x+u=0&\on\{0\}\times\R^+.
+    \end{cases},\qquad\phi\in C^1(\R_+)\cap L^\infty(\R_+),\phi_x(0)+\phi(0)=0.\]
+    の解を与えよ．
+\end{problem}
+\begin{Proof}\mbox{}
+    \begin{description}
+        \item[方針] \[v:=u_x+u\]
+        の形が先に求まるから，$v$を所与として先にこのODEを解いておく．
+        これは，斉次化$u_x+u=0$の解である$Ce^{-x}$と特解の和であるが，特解は定数変化法により，
+        $u(x)=C(x)e^{-x}$の形を予想すると
+        \[u_x+u=C'(x)e^{-x}=v\]
+        が必要．これを積分して
+        \[C(x)=\int^x_ae^{y}v(y)dy,\qquad a\in\R.\]
+        は特解になる．以上より，$u$の表示は
+        \[u(x,t)=e^{-x}\paren{\int^x_ae^{y}v(y)dy+C},\qquad a,C\in\R.\]
+        という形であることが必要．方程式は1階であったから，$C=0$としても一般性は失われない．
+        \item[$v$の表示] $v$は
+        \[\begin{cases}
+            v_t-v_{xx}=0&\In\R^+\times\R^+,\\
+            v=\phi_x+\phi&\on\R^+\times\{0\},\\
+            v=0&\on\{0\}\times\R^+.
+        \end{cases}\]
+        を満たすから，$\wt{\phi'},\wt{\phi}$を$\R$上への奇関数拡張とすると，
+        \[v(x,t)=\frac{1}{\sqrt{4\pi t}}\int_\R\Paren{\wt{\phi'}(y)+\wt{\psi}(y)}e^{-\frac{(x-y)^2}{4t}}dy.\]
+        \item[初期条件の確認] 以上によれば，
+        \[u(x,t)=\frac{e^{-x}}{\sqrt{4\pi t}}\int^x_ae^z\int_\R \Paren{\wt{\phi'}(y)+\wt{\psi}(y)}e^{-\frac{(z-y)^2}{4t}}dydz.\]
+        という形が必要であることが解り，まだ確認していない条件は$u(x,0)=\phi(x)$である．部分積分により
+        \[u(x,0)=\phi(x)-e^{a-x}\phi(a).\]
+        と計算できるから，$a=-\infty$と取ればよい．
+    \end{description}
+    以上から，
+    \[u(x,t)=\int^x_{-\infty}e^{y-x}v(y,t)dy=\frac{1}{\sqrt{4\pi t}}\int^x_{-\infty}e^{y-x}\int^\infty_{-\infty}(\wt{\phi'}(z)+\wt{\phi}(z))e^{-\frac{(y-z)^2}{4t}}dzdy.\]
+\end{Proof}
+
+\section{12月8日発表分}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    熱方程式のよい練習問題．
+\end{tcolorbox}
+
+\begin{problem}
+    対流付き拡散方程式の初期値問題
+    \[\begin{cases}
+        u_t=u_{xx}-u_x&\In\R\times\R^+,\\
+        u=\varphi&\on\R\times\{0\}.
+    \end{cases}\qquad \varphi\in L^\infty(\R)\]
+    を考える．
+    \begin{enumerate}
+        \item $v(x,t):=u(x+t,t)$の満たすべき方程式を求めよ．
+        \item 積分因子$\psi(x,t):=e^{\frac{x}{2}-\frac{t}{4}}$について$u:=\psi w$によって定めた$w$が熱方程式を満たすような$\psi(x,t)$を見つけよ．
+    \end{enumerate}
+\end{problem}
+\begin{proof}[\bf\underline{［解］}]\mbox{}
+    \begin{enumerate}
+        \item \[\begin{cases}
+            v_t(x,t)&=u_x(x+t,t)+u_t(x+t,t),\\
+            v_{xx}(x,t)&=u_{xx}(x+t,t)
+        \end{cases}\]
+        より，$v_t-v_{xx}=0$が$\R\times\R^+$内で成り立ち，$t=0$の際の初期条件は変わらず$v(x,0)=u(x,0)=\varphi(x)$を満たす．
+        よって，
+        \[v(x,t)=\frac{1}{\sqrt{4\pi t}}\int_\R \varphi(y)e^{-\frac{(x-y)^2}{4t}}dy.\]
+        \[u(x,t)=v(x-t,t)=\frac{1}{\sqrt{4\pi t}}\int_\R \varphi(y)e^{-\frac{(x-y-t)^2}{4t}}dy.\]
+        \item $\psi$は
+        \[\psi_t=-\frac{1}{4}\psi,\quad\psi_x=\frac{1}{2}\psi.\]
+        を満たすから，
+        \[u_t=\psi_tw+\psi w_t=\paren{w_t-\frac{1}{4}w}\psi,\]
+        \[u_{xx}-u_x=\paren{w_{xx}-\frac{1}{4}w}\psi.\]
+        と計算できる．よって特に，$w_t=w_{xx}$が必要で，初期条件は$w(x,0)=u(x,0)\psi^{-1}(x,0)=\varphi(x)e^{-\frac{x}{2}}$．よって，
+        \[w(x,t)=\frac{1}{\sqrt{4\pi t}}\int_\R e^{-\frac{\abs{x-y}^2}{4t}-\frac{y}{2}}\varphi(y)dy.\]
+        \[u(x,t)=\psi(x,t)w(x,t)=\frac{1}{\sqrt{4\pi t}}\int_\R e^{-\frac{\abs{x-y}^2}{4t}+\frac{x-y}{2}-\frac{t}{4}}\varphi(y)dy=\frac{1}{\sqrt{4\pi t}}\int_\R \varphi(y)e^{-\frac{(x-y-t)^2}{4t}}dy.\]
+    \end{enumerate}
+\end{proof}
+
+\begin{problem}
+    非斉次な熱方程式の初期値境界値問題
+    \[\begin{cases}
+        u_t=u_{xx}+f(x,t)&\In\R^+\times\R^+,\\
+        u=h&\on\{0\}\times\R^+,\\
+        u=\varphi&\on\R^+\times\{0\}.
+    \end{cases}\qquad f\in C^1_b(\R_+\times\R_+),h\in C^1_b(\R_+),\varphi\in C_b(\R_+),h(0)=\varphi(0).\]
+    の解は
+    \[u(x,t)=\int^t_0\frac{x}{\sqrt{4\pi(t-s)^3}}e^{-\frac{x^2}{4(t-s)}}h(s)ds+\frac{1}{\sqrt{4\pi t}}\int^\infty_0\paren{e^{-\frac{\abs{x-y}^2}{4t}}-e^{-\frac{\abs{x+y}^2}{4t}}}\varphi(y)dy\]
+    \[+\int^t_0\frac{1}{\sqrt{4\pi(t-s)}}\int^\infty_0\paren{e^{-\frac{\abs{x-y}^2}{4(t-s)}}-e^{-\frac{\abs{x+y}^2}{4(t-s)}}}f(y,s)dyds.\]
+    が与える．
+\end{problem}
+\begin{Proof}[\underline{\bf【解】}]
+    $v:=u-h$と定めると，
+    \[\begin{cases}
+        v_t-v_{xx}=f(x,t)-h'(t)&\In\R^+\times\R^+,\\
+        v=0&\on\{0\}\times\R^+,\\
+        v=\varphi-h(0)&\on\R^+\times\{0\}.
+    \end{cases}\]
+    を満たす．これは$\R_+$上の解公式とDuhamelの原理を併せて，
+    \[v(x,t)=\frac{1}{\sqrt{4\pi t}}\int^\infty_0\paren{e^{-\frac{\abs{x-y}^2}{4t}}-e^{-\frac{\abs{x+y}^2}{4t}}}(\varphi(y)-h(0))dy+\int^t_0\frac{1}{\sqrt{4\pi(t-s)}}\int^\infty_0\paren{e^{-\frac{\abs{x-y}^2}{4(t-s)}}-e^{-\frac{\abs{x+y}^2}{4(t-s)}}}(f(y,s)-h'(s))dyds.\]
+    $u=v+h$に代入すると式を得る．
+\end{Proof}
+
+\begin{problem}
+    方程式$u_t=xu_{xx}$を考える．
+    \begin{enumerate}
+        \item $u(x,t)=-2xt-x^2$は$u_t=xu_{xx}$を満たす．
+        \item $u$の$R:=[-2,2]\times[0,1]$上での最大値を求めよ．
+        \item $u$は放物型境界$([-2,2]\times\{0\})\cup(\{-2,2\}\times[0,1])$上で最大値を達成するか？
+    \end{enumerate}
+\end{problem}
+\begin{Proof}[\underline{\bf【解】}]
+    
+\end{Proof}
+
+\begin{problem}
+    退化放物型方程式
+    \[u_t=(xu_x)_x\quad\In\R^+\times\R^+\]
+    を考える．
+    \begin{enumerate}
+        \item 任意の解$u$と$\lambda>0$について，$v(x,t):=u(\lambda^\al x,\lambda t)$も解になる．
+        \item $u(x,t):=t^{-1}\varphi(t^{-\al}x)$が解になるような関数$\varphi$はどんな微分方程式を満たすか？
+        \item $\varphi(0)=1$を満たす解により，自己相似解であって$u(0,t)=t^{-1}\;(t>0)$を満たすものを得よ．
+    \end{enumerate}
+\end{problem}
+\begin{proof}[\bf\underline{［解］}]\mbox{}
+    \begin{enumerate}
+        \item 方程式の$(x,t)$に$(\lambda^\al x,\lambda t)$を代入すれば，$u_t(\lambda^\al x,\lambda t)=u_x(\lambda^\al x,\lambda t)+\lambda^\al xu_{xx}(\lambda^\al x,\lambda t)$をみたす．
+        また，\[v_t(\lambda^\al x,\lambda t)=\lambda u_t(\lambda^\al x,\lambda t)=\lambda u_x+\lambda^{\al+1}u_{xx}=\lambda^{1-\al}v_x+\lambda^{1-\al}xv_{xx}.\]
+        より，$\al=1$が必要．
+        \item $u(x,t)=\frac{1}{t}\varphi\paren{\frac{x}{t}}$を微分すると，$u_t=u_x+xu_{xx}$は
+        \[-\frac{1}{t^2}\varphi\paren{\frac{x}{t}}-\frac{x}{t^3}\varphi'\paren{\frac{x}{t}}=\frac{1}{t^2}\varphi'\paren{\frac{x}{t}}+\frac{x}{t^3}\varphi''\paren{\frac{x}{t}}\]
+        となる．$s:=x/t$とすると，
+        \[s\varphi''+(1+s)\varphi'+\varphi=0.\]
+        \item 特性関数$st^2+(1+s)t+1=0$からの類推から，$\varphi(x)=e^{-x}$が解の1つだと予想でき，実際その通りである．
+        よって，$u(x,t):=\frac{1}{t}e^{-\frac{x}{t}}$は1つの自己相似解である．
+    \end{enumerate}
+\end{proof}
+\begin{remark*}[途中で出現したKummerの微分方程式について]
+    途中の変数係数ODE
+    \[s\varphi''+(1+s)\varphi'+\varphi=0.\]
+    は$s=0,\infty$に特異点を持っている．この解空間は1次元と決まっているのであろうか？
+    実は特異点が2つしかないように，Kummerの方程式
+    \[tx''+(b-t)x'-ax=0\qquad(a,b\in\C)\]
+    と関係が深く，
+    一般解は$e^{-s}$と$e^{-s}\Ei(s)$で張られるらしい．
+    Eiは指数積分というが，$0,\infty$に分岐点を持つ（したがって問題文の中の条件$\varphi(0)=1$は解を一意に定めている）．
+    Eiを複素関数とみるときは適切な分枝を取って$E_1$と表され，$-E_1(x)=\Ei(x)\;(x>0)$の関係を持つ．
+    $b=1,a=0$としたKummerの微分方程式も通常は合流型超幾何関数$M$と$U$で張られる2次元の解空間を持つが，
+    $E_1(-z)$も解にもつ．合流型超幾何関数と
+    \[E_1(z)=e^{-z}U(1,1;z)\]
+    の関係にある．
+\end{remark*}
+
+\section{12月22日発表分}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    波動方程式について無双した問題．
+\end{tcolorbox}
+
+\begin{problem}\mbox{}
+    \begin{enumerate}
+        \item 初期値問題
+        \[\begin{cases}
+            u_{tt}=c^2u_{xx}&\In\R\times\R^+,\\
+            u=g,\quad u_t=0&\on\R\times\{0\},
+        \end{cases}\quad g(x):=1_{(-\pi/2,\pi/2)}\cos x\in C_c(\R).\]
+        の解$u(x,t)$を求めよ．
+        \item $A,B,C\in\C\setminus\{0\}$が定めるPDE
+        \[Au_{xx}+2Bu_{xt}+Cu_{tt}=0\]
+        について，次は同値である：
+        \begin{enumerate}
+            \item ある実数$c_1<c_2$が存在して，任意の関数$f,g\in C^2(\R)$に対して，
+            \[u(x,t):=f(x-c_1t)+g(x-c_2t)\]
+            は$Au_{xx}+2Bu_{xt}+Cu_{tt}=0$の解になる．
+            \item 方程式は双曲型である：$B^2-AC>0$である．
+        \end{enumerate}
+    \end{enumerate}
+\end{problem}
+\begin{proof}[\bf\underline{［解］}]\mbox{}
+    \begin{enumerate}
+        \item $g$が偶関数，$g'$が奇関数であることに注意すると，
+        \[u(x,t):=\frac{1}{2}\Paren{g(x+ct)+g(x-ct)}\]
+        は解を与えている．
+        \item \begin{description}
+            \item[(1)$\Rightarrow$(2)] 必要条件をまず考えると，各微分を計算することより，任意の$f,g\in C^2(\R)$に対して
+            \[Au_{xx}+2B_{xt}+Cu_{tt}=(A-2Bc_1+Cc_1^2)f''(x-c_1t)+(A-2Bc_2+Cc_2^2)g''(x-c_2t)=0\]
+            が必要である．このためには，例えば$f(x)=x^31_{(0,\infty)},g(x)=x^31_{(-\infty,0)}\in C^2(\R)$を考えると，2階微分はそれぞれ$(0,\infty),(-\infty,0)$に台と持つから，
+            \[\begin{cases}
+                A-2Bc_1+Cc_1^2=0\\
+                A-2Bc_2+Cc_2^2=0
+            \end{cases}\]
+            が必要であるが，これは$B^2-AC>0$と同値．
+            \item[(2)$\Rightarrow$(1)] 実際にこれで十分であることは，上の連立方程式を満たす$c_1<c_2$を取れば，任意の$f,g\in C^2(\R)$に対して構成した$u$は常に方程式を満たすようになる．
+        \end{description}
+    \end{enumerate}
+\end{proof}
+\begin{remarks*}
+    $g$は$C^1$-級でさえなく，したがって古典解ではない．
+    殆ど至る所の解と考えても，超関数解と考えても良い．
+\end{remarks*}
+
+\begin{problem}
+    初期値問題
+    \[\begin{cases}
+        u_{tt}=c^2u_{xx}+f(x,t)&\In\R\times\R^+,\\
+        u=u_t=0&\on\R\times\{0\}.
+    \end{cases}\qquad f(x,t)=F'''(x)t\;(F\in C^3(\R)),c>0\]
+    の解$u(x,t)$を求めよ．
+\end{problem}
+\begin{proof}[\bf\underline{［解］}]
+    \[v(x,t):=u(x,t/c)+F'(x)\frac{t}{c^3}\]
+    とおくと，これは
+    \[\begin{cases}
+        v_{tt}=v_{xx}&\In\R\times\R^+,\\
+        v=0\quad v_t=\frac{1}{c^3}F'(x)&\on\R\times\{0\}.
+    \end{cases}\]
+    を満たす．$F'\in C^2(\R)$に注意すれば，これはd'Alembertの公式を適用することができる．
+    実際，
+    \[v_{xx}=u_{xx}(x,t/c)+F'''(x)\frac{t}{c^3},\quad v_{tt}=c^{-2}u_{tt}(x,t/c)\]
+    であり，2つは
+    \[c^2u_{xx}(x,t/c)+F'''(x)\frac{t}{c}=c^2u_{xx}(x,t/c)+f(x,t/c)=u_{tt}(x,t/c)\]
+    と，確かに等号で結ばれている．
+    よって，d'Alembertの公式より，
+    \[v(x,t)=\frac{1}{2c^3}\int^{x+t}_{x-t}F'(y)dy.\]
+    \[\therefore\qquad u(x,t)=\frac{1}{2c^3}\int^{x+tc}_{x-tc}F'(y)dy-F'(x)\frac{t}{c^2}.\]
+\end{proof}
+\begin{remarks*}
+    外力項はいくらでも滑らかだと思って良いという．
+\end{remarks*}
+
+\begin{problem}
+    次のそれぞれについて，$E'=0\;\In\R^+$を示せ．
+    \begin{enumerate}
+        \item 境界値問題
+        \[\begin{cases}
+            u_{tt}-c^2u_{xx}+f(u)=0&\In\R^+\times\R^+\\
+            u(0,t)=u_x(0,t)=0&t\in\R^+.
+        \end{cases}\]
+        を満たす古典解$u\in C^2_c(\R_+\times\R_+)$について，
+        \[E(t):=\frac{1}{2}\int^\infty_0(u_t^2+c^2u_x^2+2F(u))dx,\qquad F(x):=\int^x_0f(y)dy\]
+        とする．
+        \item 境界値問題
+        \[\begin{cases}
+            u_{tt}-c^2u_{xx}=0&\R^+\times\R^+,\\
+            u_x(0,t)+Au(0,t)=0&t>0.
+        \end{cases}\qquad c>0,A\in\R\]
+        を満たす古典解$u\in C^2_c(\R_+\times\R_+)$について，
+        \[E(t):=\frac{1}{2}\int^\infty_0(u_t^2+c^2u_x^2)dx+\frac{1}{2}au(0,t)^2,\qquad a:=-\textcolor{red}{c^2}A\]
+        と定める．
+    \end{enumerate}
+\end{problem}
+\begin{proof}[\bf\underline{［解］}]\mbox{}
+    \begin{enumerate}
+        \item 無限遠での減衰条件と$x=0$での境界条件から$u_x(\infty,t)u_t(\infty,t)-u_x(0,t)u_t(0,t)=0$で，
+        \[\int^\infty_0u_xu_{tx}dx=\SQuare{u_xu_t}^\infty_0-\int^\infty_0u_{xx}u_tdx=-\int^\infty_0u_{xx}u_tdx.\]
+        だから，
+        \begin{align*}
+            \dd{}{t}E(t)&=\int^\infty_0(u_tu_{tt}+c^2u_xu_{tx}+f(u)u_t)dx\\
+            &=\int^\infty_0u_t(u_{tt}-c^2u_{xx}+f(u))dx=0.
+        \end{align*}
+        \item \[\int^\infty_0u_xu_{tx}dx=\SQuare{u_xu_t}^\infty_0-\int^\infty_0u_{xx}u_tdx=-u_x(0,t)u_t(0,t)-\int^\infty_0u_{xx}u_tdx\]
+        で，境界条件より$-u_{x}(0,t)=Au(0,t)$であるから，
+        \begin{align*}
+            \dd{E(t)}{t}&=\int^\infty_0(u_tu_{tt}+c^2u_xu_{tx})dx+au(0,t)u_t(0,t)\\
+            &=\int^\infty_0u_t(u_{tt}-c^2u_{xx})dx+A\rednote{c^2}u(0,t)u_t(0,t)+au(0,t)u_t(0,t)=0.
+        \end{align*}
+    \end{enumerate}
+\end{proof}
+
+\begin{problem}
+    \[\begin{cases}
+        u_{tt}=\Lap u&\In\R^2\times\R,\\
+        u(x,y,0)=g(x,y)&\In\R^2,\\
+        u_t(x,y,0)=0&\In\R^2.
+    \end{cases}\qquad g(x,y)=\frac{1}{1+x^2+y^2}.\]
+    の解$u(x,y,t)$の$\{0\}\times\{0\}\times\R$上での具体的な表示を求めよ．
+\end{problem}
+\begin{proof}[\bf\underline{［解］}]
+    
+\end{proof}
+\begin{consideration*}
+    まず，$\R^2\times\R^+$上での解$u$を考えたのちに，これを偶関数に延長$u(x,t):=u(x,-t)\;(t<0)$すれば，元の方程式を満たす．
+    $\R^2\times\R^+$上での解は，Poissonの公式より，
+    \begin{align*}
+        u(z,t)&=\frac{1}{2}\dint_{B(z,t)}\frac{tg(\zeta)+tDg(\zeta)\cdot(\zeta-z)}{\sqrt{t^2-\abs{\zeta-z}^2}}d\zeta\\
+        &=\frac{1}{2}\frac{t}{\abs{B(z,t)}}\int_{B(z,t)}\frac{1}{\sqrt{t^2-\abs{\zeta-z}^2}}\frac{1-\abs{\zeta}^2}{(1+\abs{\zeta}^2)^2}d\zeta,\quad z=\vctr{x}{y}\in\R^2.
+    \end{align*}
+    さらに$z=0$とすれば，被積分関数は動径$\abs{\zeta}$のみに依存することになる．
+\end{consideration*}
+
+\begin{problem}
+    次の境界値問題の十分速く減衰する古典解$u$について，$E'=0\;\In\R^+$を示せ．
+    \begin{enumerate}
+        \item \[\begin{cases}
+            u_{tt}+Ku_{xxxx}=0,&x,t>0,\\
+            u(0,t)=u_t(0,t)=0,&t>0.
+        \end{cases}\qquad K>0,\]
+        に対して，
+        \[E(t):=\frac{1}{2}\int^\infty_0(u_t^2+Ku^2_{xx})dx.\]
+        \item \[\begin{cases}
+            u_{tt}-c^2u_{xx}=0,&\In(0,L)\times(0,\infty),\\
+            u_x(0,t)+Au(0,t)=0,&t>0,\\
+            u_x(L,t)+Bu(L,t)=0,&t>0.
+        \end{cases}\qquad c>0,\;a,b\in\R,\]
+        に対して，
+        \[E(t):=\frac{1}{2}\int^L_0(u^2_t+c^2u_x^2)dx+\frac{1}{2}au(0,t)^2+\frac{1}{2}bu(L,t)^2,\qquad a,b\in\R.\]
+    \end{enumerate}
+\end{problem}
+\begin{proof}[\bf\underline{［解］}]\mbox{}
+    \begin{enumerate}
+        \item $u$とその4階までの微分が十分速く減衰するとき，微分と積分の記号を交換することで
+        \[\dd{E(t)}{t}=\frac{1}{2}\int^\infty_0(2u_tu_{tt}+2Ku_{xx}u_{xxt})dx=\int^\infty_0(u_{t}u_{tt}+Ku_{xx}u_{txx})dx\]
+        と計算できる．$u$は古典解と仮定しており，十分滑らかだとするから，$u_{xxt}=u_{txx}$が成り立つことを用いた．
+        するとこの最右辺の第二項は，部分積分により，
+        \[\int^\infty_0u_{xx}u_{txx}dx=\SQuare{u_{xx}u_{tx}}^\infty_0-\int^\infty_0u_{xxx}u_{tx}dx=-\int^\infty_0u_{xxx}u_{tx}dx\]
+        と計算できる．なお，減衰条件より$u_{xx}(\infty,t)u_{tx}(\infty,t)=0$で，さらに境界条件$u_x(0,t)=0$から$u_{xt}(0,t)=0$より，
+        $u_{xx}(0,t)u_{tx}(0,t)=0$であることを用いた．
+        よって，再び部分積分を用いれば，
+        \[-\int^\infty_0u_{xxx}u_{tx}dx=-\SQuare{u_{xxx}u_t}^\infty_0+\int^\infty_0u_{xxxx}u_tdx=\int^\infty_0u_{xxxx}u_tdx\]
+        を得る．ただし，$u(0,t)=0$より$u_t(0,t)=0$が従うことを用いた．
+        以上より，
+        \[\dd{E(t)}{t}=\int^\infty_0u_t(u_{tt}+Ku_{xxxx})dx=0.\]
+        \item $a=-A,b=B$と定めれば良い．
+        まず，(1)と同様にして微分は
+        \[\dd{E(t)}{t}=\int^L_0(u_tu_{tt}+c^2u_xu_{xt})dx+au(0,t)u_t(0,t)+bu(L,t)u_t(L,t)\]
+        と計算できる．$u_{xt}=u_{tx}$に注意すれば，第一項は部分積分より，
+        \begin{align*}
+            \int^L_0u_xu_{xt}dx&=\SQuare{u_xu_t}^L_0-\int^L_0u_{xx}u_tdx\\
+            &=u_x(L,t)u_t(L,t)-u_x(0,t)u_t(0,t)-\int^L_0u_{xx}u_tdx\\
+            &=-Bu(L,t)u_t(L,t)+Au(0,t)u_t(0,t)-\int^L_0u_{xx}u_tdx.
+        \end{align*}
+        ただし，最後の等号では，2つの境界条件を用いた．
+        以上の考察より，
+        \begin{align*}
+            \dd{E(t)}{t}&=\int^L_0u_t(u_{tt}-c^2u_{xx})dx-Bu(L,t)u_t(L,t)+Au(0,t)u_t(0,t)+au(0,t)u_t(0,t)+bu(L,t)u_t(L,t)\\
+            &=(b-B)u(L,t)u_t(L,t)+(A+a)u(0,t)u_t(0,t)
+        \end{align*}
+        であるが，$b=B,a=-A$としたから，これは$=0$である．
+    \end{enumerate}
+\end{proof}
+
+\section{1月12日発表分}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    最後，特性曲線法とCauchy-Kowalevskiの定理に向けた調整．
+\end{tcolorbox}
+
+\begin{problem}
+    1階偏微分方程式
+    \[u_t+(x^2+1)u_x=0\]
+    を考える．
+    \begin{enumerate}
+        \item 特性曲線の方法によって一般解を求めよ．
+        \item 初期値問題
+        \[\begin{cases}
+            u_t+(x^2+1)u_x=0&\In\R^2,\\
+            u=f&\on\R\times\{0\}.
+        \end{cases}\]
+        はどのような$f\in C^1(\R)$に対して古典解$u\in C^1(\R)$を持つか？
+        \item (2)の解が一意的になるような領域$D\osub\R^2$のうち最大のものを求めよ．
+    \end{enumerate}
+\end{problem}
+\begin{Proof}
+    この方程式は
+    \[F(p,z,x):=\vctr{(x^1)^2+1}{1}\cdot\vctr{p^1}{p^2}\]
+    が与えており，$F_p(p,z,x)=\vctr{(x^1)^2+1}{1}$であるから，簡略化された特性方程式は
+    \[\begin{cases}
+        \dot{\x}(s)=F_p(p,z,x)=\vctr{(x^1)^2+1}{1}\\
+        \dot{z}(s)=F_p(p,z,x)\cdot p=0
+    \end{cases}\]
+    特性方程式を初期値$\vctr{x^0}{0}\;(x^0\in\R)$と$z^0:=u(x^0,0)$の下で解くと，
+    \[\begin{cases}
+        x^1=\tan(s+C)&C:=\arctan x^0\in(-\pi,\pi)\\
+        x^2=s,\\
+        z=z^0=u(x^0,0)=f(x^0)
+    \end{cases}\]
+    を得る．任意の$(x,t)\in\R^2$について，
+    \[\vctr{x^0}{s}:=\vctr{\tan(\arctan(x)-t)}{t}\]
+    と取れば$\x(s)=(x,t)$を満たす．
+    \begin{enumerate}
+        \item よって，任意の関数$\varphi:\R\to\R$に対して，
+        \[u(x,t)=\varphi(\tan(\arctan(x)-t))\]
+        は解を与える．
+        \item 
+        任意の$f\in C^1(\R)$に対して，
+        \[u(x,t)=f(\tan(\arctan(x)-t))\]
+        は区分的$C^1$-級の解である．
+        $f$が$\abs{x}\to\infty$の極限を同じに持つとき，$C^1$-級になる．
+        \item 
+    \end{enumerate}
+\end{Proof}
+
+\begin{problem}
+    2つの1階偏微分方程式
+    \begin{enumerate}[(a)]
+        \item $xu_x+yu_y=0$．
+        \item $xu_x-yu_y=0$．
+    \end{enumerate}
+    を考える．
+    \begin{enumerate}
+        \item (a)の$\R^2\setminus\{(0,0)\}$上の一般解を求めよ．
+        \item どのようなときに$(0,0)$上で連続になるか？
+        \item (b)の$\R^2\setminus\{(0,0)\}$上の一般解を求めよ．
+        \item どのようなときに$(0,0)$上で連続になるか？
+    \end{enumerate}
+\end{problem}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item この方程式は
+        \[F(p,z,x):=\vctr{x^1}{x^2}\cdot\vctr{p^1}{p^2}=0\]
+        が与える方程式であり，$F_p(p,z,x)=\vctr{x^1}{x^2}$．よって，特性方程式は
+        \[\begin{cases}
+            \dot{x^1}=x^1\\
+            \dot{x^2}=x^2\\
+            \dot{z}=0.
+        \end{cases}\]
+        これを$(x^0,1)$を初期値にして解くと，$x^0\in\R$で，
+        \[\begin{cases}
+            x^1=x^0e^s,\\
+            x^2=e^s,\\
+            z=z^0=u(x^0,1)
+        \end{cases}\]
+        を得る．任意の$(x,y)\in\R^2\setminus\{(0,0)\}$に対して，
+        \[\vctr{x}{y}=\vctr{x^0e^s}{e^s}\quad\Leftrightarrow\quad\vctr{x^0}{s}=\vctr{\frac{x}{y}}{\log y}\]
+        より，一般解は
+        \[u(x,y)=u\paren{\frac{x}{y},1}=\varphi\paren{\frac{x}{y}},\qquad\varphi:\R^2\setminus\{(0,0)\}\to\o{\R}.\]
+        \item ?
+        \item この方程式は
+        \[F_p(p,z,x):=\vctr{x^1}{-x^2}\cdot\vctr{p^1}{p^2}=0\]
+        が与える方程式であり，$F_p(p,z,x)=\vctr{x^1}{-x^2}$．よって，特性方程式は
+        \[\begin{cases}
+            \dot{x^1}=x^1,\\
+            \dot{x^2}=-x^2,\\
+            \dot{z}=0.
+        \end{cases}\]
+        これを$(x^0,1)$について解くと，
+        \[\begin{cases}
+            x^1=x^0e^s,\\
+            x^2=e^{-s}\\
+            z=u(x^0,1)
+        \end{cases}\]
+        任意の$(x,y)\in\R^2\setminus\{(0,0)\}$に対して，
+        \[\vctr{x}{y}=\vctr{x^0e^s}{e^{-s}}\quad\Leftrightarrow\quad\vctr{x^0}{s}=\vctr{xy}{-\log y}\]
+        より，一般解は
+        \[u(x,y)=\varphi(xy),\qquad\varphi:\R^2\setminus\{(0,0)\}\to\R\]
+    \end{enumerate}
+\end{Proof}
+\begin{remark*}
+    ものの本では，特性方程式を解く際に便宜的な初期値$(x^0,1)$や$(x^0,0)$をおくことを回避するために，
+    \[P(x,y,u)p+Q(x,y,u)q=R(x,y,u)\]
+    の形の式をLagrangeの偏微分方程式といい(1階の準線型PDEのこと)，これに対する特性微分方程式は
+    \[\dd{x}{P(x,y,u)}=\dd{y}{Q(x,y,u)}=\dd{z}{R(x,y,u)}(=ds)\]
+    である，という導入をする．
+\end{remark*}
+
+\begin{problem}
+    Burgers方程式の初期値問題
+    \[\begin{cases}
+        u_t+uu_x=0&\In\R^2,\\
+        u=f&\on\R\times\{0\}.
+    \end{cases}\]
+    を考える．次の初期値について，解が一意に定まる領域$D\osub\R^2$のうち最大のものを求めよ：
+    \begin{enumerate}
+        \item $f(x)=\tanh(x)$．
+        \item $f(x)=\begin{cases}
+            -1&x<-1,\\
+            x&-1\le x\le 1,\\
+            1&1<x.
+        \end{cases}$
+    \end{enumerate}
+\end{problem}
+
+\begin{problem}
+    $\Om\osub\R^N$を開集合とし，$f\in C^\infty(\Om)$とする．
+    \begin{enumerate}
+        \item 次の多変数のTaylorの定理を示せ：任意の線分$[x,y]\subset\Om$と$K\in\N^+$について，
+        \[f(y)=\sum_{\abs{\al}\le K}\frac{1}{\al!}D^\al f(y)(y-x)^\al+\int^1_0\sum_{\abs{\al}=K+1}\frac{K+1}{\al!}D^\al f((1-t)x+ty)(y-x)^\al(1-t)^Kdt.\]
+        \item $f$が$x\in\Om$において解析的であるとする．このとき，$x$の近傍点$y$について，
+        \[f(y)=\sum_{\al\in\N^N}\frac{1}{\al!}D^\al f(y)(y-x)^\al.\]
+        \item 点$x\in\Om$について，次の2条件は同値：
+        \begin{enumerate}
+            \item $f$は$x$において解析的である．
+            \item ある$\delta,r,C>0$が存在して，任意の$y\in B(x,\delta),\al\in\N^N$について，$\abs{D^\al f(y)}\le C\al!r^{-\abs{\al}}$．
+        \end{enumerate}
+        \item $\Brace{x\in\Om\mid f\text{は}x\text{に於て解析的}}$は開集合である．
+    \end{enumerate}
+\end{problem}
+
+\end{document}

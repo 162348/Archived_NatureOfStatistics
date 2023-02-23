@@ -1,0 +1,4271 @@
+\documentclass[uplatex,dvipdfmx]{jsreport}
+\title{確率分布論}
+\author{司馬博文}
+\date{\today}
+\pagestyle{headings} \setcounter{secnumdepth}{4}
+\input{/Users/Hirofumi Shiba/NatureOfStatistics/preamble_no_fonts.tex}
+%\input{/Users/hirofumi.shiba48/NatureOfStatistics/preamble_no_fonts.tex}
+%\input{/Users/hirof/NatureOfStatistics/preamble_no_fonts.tex}
+\usepackage[math]{anttor}
+\begin{document}
+\tableofcontents
+
+\chapter{分布の扱い}
+
+\begin{quotation}
+    統計推測は$(\R^n,\B(\R^n))$上の確率分布に関する逆問題である．
+    確率分布に対して使える数学的な道具をまとめる．
+    \begin{enumerate}
+        \item 積率母関数は$M(t):=E[e^{tX}]$．定義域が左側半平面をなすが，収束さえすれば正則性が保証される．$0$の微分係数が積率である．
+        \item 特性関数は$\varphi(u):=E[e^{iuX}]$．定義域は全平面であるが，$\beta_n<\infty$が成り立つ度に$C^n$-級であることが保証されるのみである．$0$の$p$次微分係数は積率の$i^p$倍である．
+        \item 確率母関数は$g(z):=E[z^X]$．係数に質量関数の値$p_z$を並べて得る母関数である．
+        \item キュムラント母関数は$C(t):=\log M(t)=\log E[e^{tX}]$．
+    \end{enumerate}
+\end{quotation}
+
+\begin{notation}\mbox{}
+    \begin{enumerate}
+        \item 距離空間$S$について，$P(S)$でその上の確率測度の全体とする．
+        \item Euclid空間$\R^n$について，$\P(\R^n)$でその上のLebesgue測度に関して絶対連続な確率測度の全体とする．
+    \end{enumerate}
+\end{notation}
+
+\section{分布関数と密度関数}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    分布関数には3つの同値な定義がある．これらが同値である理由は，Riemann-Stieltjes積分による．
+    任意の単調増加関数$F$に対して，有界関数$f$の積分が定まるが，次の3条件を満たすことと，$F$が絶対連続な確率分布を定めることとが同値になる．
+\end{tcolorbox}
+
+\subsection{１次元の場合の分布関数の定義と特徴付け}
+
+\begin{definition}[distribution function]\mbox{}\label{def-distribution-function}
+    \begin{enumerate}
+        \item 次の3条件を満たす有界関数$F:\R\to[0,1]$を\textbf{分布関数}という．
+        \begin{enumerate}[(i)]
+            \item 有界性： $\lim_{x\to-\infty}F(x)=0,\lim_{x\to\infty}F(x)=1$．
+            \item 右連続性：$\forall_{x\in\R}\;\lim_{y\to x-0}F(y)=F(x)$．
+            \item 広義単調増加性：$x\le y\Rightarrow F(x)\le F(y)$．
+        \end{enumerate}
+        \item 実確率変数$X$に対して，$F^X(x):=P[X\le x]$により定まる関数$F^X:\R\to[0,1]$は分布関数になる．これを\textbf{$X$の（累積）分布関数}という．
+        \item $(\R,\B_1)$上の確率測度$\nu$に対して，$F_\nu(x):=\nu(\ocinterval{-\infty,x})=\int^x_{-\infty}f(y)dy$により定まる関数$F^X:\R\to[0,1]$は分布関数になる．これを\textbf{$\nu$の（累積）分布関数}という．
+    \end{enumerate}
+\end{definition}
+
+\begin{lemma}[任意の分布関数はある確率分布の累積分布関数である]
+    $F:\R\to\R$を有界関数とする．このとき，次は同値：
+    \begin{enumerate}
+        \item $F$は分布関数である．
+        \item ある正則確率測度$\nu\in P(\R)$が存在して，この累積分布関数である：$F=F_\nu$．
+    \end{enumerate}
+    このときの$\nu$を，$F$の\textbf{Lebesgue-Stieltjes測度}という．
+\end{lemma}
+\begin{Proof}\mbox{}
+    \begin{description}
+        \item[(1)$\Rightarrow$(2)] 任意のBorel集合${(-\infty,x]}\in\B_1$について，$\nu({(-\infty,x]}):=F(x)$とすると，
+        ${(-\infty,x]}$は任意の$\R$の開・閉区間を生成するので，
+        $\B_1$を生成することから，
+        $\nu$は$\B_1$上の測度に延長する．
+        さらに，$\nu(\R)=F(\infty)=1$だから，$\nu$は確率測度である．
+        \item[(2)$\Rightarrow$(1)] $F(x)={\nu((\infty,x])}$であるから，
+        \begin{enumerate}[(i)]
+            \item 明らか．
+            \item 確率測度の連続性より．
+            \item 確率測度の正性より．
+        \end{enumerate}
+    \end{description}
+\end{Proof}
+
+\subsection{１次元の密度関数}
+
+\begin{definition}
+    確率分布$\nu\in P(\R^d)$に対して，
+    \begin{enumerate}
+        \item $\nu$が原子を持たないとき，\textbf{連続型確率分布}という．実はこれは，分布関数$F_\nu$が連続であることに同値．
+        \item $\nu$が原子を持ち，さらに$\nu=\sum_{i\in\N}a_i\delta_{x_i}$と表せるとき，\textbf{離散型確率分布}という．
+        \item $\nu$が連続型で，さらにLebesgue測度に対して絶対連続であるとき，\textbf{絶対連続型確率分布}といい，その全体を$\P(\R^d)$で表す．
+    \end{enumerate}
+\end{definition}
+
+\begin{definition}[mass function, density function]\mbox{}
+    \begin{enumerate}
+        \item 離散分布$\nu\in P(\R^d)$に対して，$f(x):=P[\{x\}]$を\textbf{質量関数}という．
+        \item 絶対連続確率分布$\nu\in\P(\R^d)$に対して，$f(x):=F'(x)$を\textbf{密度関数}という．
+    \end{enumerate}
+\end{definition}
+
+\subsection{一意性定理}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    Rieszの表現定理$C_c(\R)^*\simeq\BV(\R)$により，実数上のRadon測度は有界変動関数によって表現されるという事実の系である．
+\end{tcolorbox}
+
+\begin{proposition}[一意性定理]
+    任意の確率分布$\nu_1,\nu_2\in P(\R^d)$について，次は同値：
+    \begin{enumerate}
+        \item $\nu_1=\nu_2$．
+        \item $F_{\nu_1}=F_{\nu_2}$．
+    \end{enumerate}
+\end{proposition}
+
+\subsection{多次元の場合}
+
+\begin{definition}
+    $X=(X_1,\cdots,X_n):\Om\to\R^n$を確率変数とする．
+    \begin{enumerate}
+        \item \textbf{同時分布関数}$F:\R^n\to[0,1]$を次で定義する：
+        \[F(x_1,\cdots,x_n):=P[X_1\le x_1,\cdots,X_n\le x_n].\]
+        \item \textbf{同時密度関数}と次の関係がある：
+        \[f(x_1,\cdots,x_n)=\pp{^n}{x_1\cdots\partial x_n}F(x_1,\cdots,x_n).\]
+        \item $F_i(x_i):=F(\infty,\cdots,\infty,x_i,\infty,\cdots,\infty)=P[X_i\le x_i]$を\textbf{周辺分布関数}という．
+    \end{enumerate}
+\end{definition}
+
+\section{確率表現関数}
+
+\subsection{確率表現関数の定義}
+
+\begin{definition}[quantile function / representing function]\mbox{}
+    \begin{enumerate}
+        \item 累積分布関数$F$が連続かつ狭義単調増加であるとき，逆関数$F^{-1}$を\textbf{分位点関数}または\textbf{確率表現関数}と定める．
+        \item 一般の場合，$F_L^{-1}(u):=\inf\Brace{x\in\R\mid F(x)\ge u},F_R^{-1}(u):=\sup\Brace{x\in\R\mid P(X\ge x)\ge1-u}$と定める．
+    \end{enumerate}
+\end{definition}
+\begin{history}
+    Moriguti (1953)の内容をTennessee州Knoxvilleで報告した際の座長のTukeyのコメントからの命名だという\cite{森口繁一-確率表現関数}．
+\end{history}
+
+\begin{lemma}\mbox{}
+    \begin{enumerate}
+        \item $F^{-1}_L$は左連続である．
+        \item $F^{-1}_R$は右連続である．
+    \end{enumerate}
+\end{lemma}
+
+\begin{definition}
+    分布関数$F(x)$において，$x\to\pm\infty$としたときの収束の速さを\textbf{裾の重さ}という．
+    期待値や分散は積分で定義されるために，裾の重さに影響を受けやすい．
+\end{definition}
+
+\section{共分散}
+
+\subsection{1次元の共分散}
+
+\begin{definition}[covariance, correlation coefficient]
+    $X,Y\in L^1(\Om)$について，
+    \begin{enumerate}
+        \item $\Cov[X,Y]=E[(X-E[X])(Y-E[Y])]$
+        を$X,Y$の共分散という．
+        \item $\Var[X]\Var[Y]\ne 0$のとき，$\rho(X,Y)=\frac{\Cov[X,Y]}{\sqrt{\Var[X]}\sqrt{\Var[Y]}}$を\textbf{相関係数}という．
+    \end{enumerate}
+\end{definition}
+\begin{remark}
+    $X,Y\in L^2(\Om)$ならば$\Cov[X,Y]<\infty$だが，$X,Y\in L^1(\Om)$でも，$X,Y$が独立ならば$\Cov[X,Y]<\infty$．
+\end{remark}
+
+\begin{proposition}[1次元分散の性質]\label{prop-1d-covariance}
+    $X,Y,Z\in L^2(\Om)$について，
+    \begin{enumerate}
+        \item 対称性：$\Cov[X,Y]=\Cov[Y,X]$．
+        \item 双線型性：$\Cov[aX+bY,Z]=a\Cov[X,Z]+b\Cov[Y,Z]$．
+        \item $\Cov[X,1]=0$．特に，$\Cov[aX+b,Y]=a\Cov[X,Y]$．
+        \item 共分散公式：$\Cov[X,Y]=E[XY]-E[X]E[Y]$．
+        \item 正：$\Cov[X,X]=\Var[X]\ge 0$．等号成立条件は$X=E[X]\;\as$
+        \item Schwarzの不等式：$\abs{\Cov[X,Y]}\le\sqrt{\Var[X]}\sqrt{\Var[Y]}$．
+    \end{enumerate}
+\end{proposition}
+\begin{Proof}
+    (1),(2)は定義に戻って計算するのみ．(3)は1の定める$\sigma$-代数が$2$であり，これは任意の$\sigma$-代数と独立であることからも分かる．
+\end{Proof}
+
+\begin{proposition}[分散の性質]
+    $X,Y\in L^2(\Om)$とする．
+    \begin{enumerate}
+        \item $\Var[aX+b]=a^2\Var[X]$．
+        \item $\Var[aX+bY]=a^2\Var[X]+2ab\Cov[X,Y]+b^2\Var[Y]$．
+    \end{enumerate}
+\end{proposition}
+
+\subsection{独立性と共分散}
+
+
+\begin{proposition}[和の分散]
+    $X_1,\cdots,X_n\in L^2$について，
+    \[\Var\paren{\sum^n_{i=1}X_i}=\sum^n_{i=1}\Var(X_i)+2\sum_{(i,j):1\le i<j\le n}\Cov(X_i,Y_j).\]
+\end{proposition}
+
+\begin{proposition}[独立ならば共分散は零]
+    $X,Y\in L^1(\Om)$を独立とする．このとき，$\Cov[X,Y]=0$である．特に，$\rho[X,Y]=0$．
+    逆は成り立たない．
+\end{proposition}
+\begin{example}
+    $U\sim U((0,1))$として，$X:=\cos 2\pi U,Y:=\sin 2\pi U$とすると，$X^2+Y^2=1$の関係式があるため，独立ではない．例えば，$X=1$の下で$Y$は$[-1.1]$上の一様分布には従わない．
+    しかし，$\rho=0$である．
+\end{example}
+
+\subsection{多次元の共分散}
+
+
+\begin{notation}[期待値作用素の拡張]
+    期待値作用素$E$を行列値確率変数$M=[M_{ij}]\in M_{ij}(\R)$上に対しても$E:M_{ij}(\R)\to M_{ij}(\R);E[M]=[E[M_{ij}]]$と拡張すると，平均ベクトルは$E[M]$，共分散行列は$\Cov(X,Y)=E[(X-E[X])(Y-E[Y])^T]$と表せる．
+\end{notation}
+
+\begin{definition}[covariance matrix,  variance-covariance matrix]
+    $X\in L^1(\Om;\R^d)$とする．
+    \begin{enumerate}
+        \item $X$が可積分のとき，項別積分
+        \[E[X]=\begin{bmatrix}
+            E[X_1]\\\vdots\\E[X_d]
+        \end{bmatrix}\]
+        を$X$の\textbf{平均ベクトル}という．
+        \item $X,Y$が２乗可積分のとき，
+        \[\Cov[X,Y]=E[(X-E[X])(Y-E[Y])^\top]=\begin{bmatrix}
+            \Cov[X_1,Y_1]&\cdots&\Cov[X_1,Y_s]\\
+            \vdots&\ddots&\vdots\\
+            \Cov[X_d,Y_1]&\cdots&\Cov[X_d,Y_s]
+        \end{bmatrix}\]
+        を$X,Y$の\textbf{共分散行列}という．
+        \item $\Var[X]:=\Cov[X,X]$を$X$の\textbf{分散共分散行列}または\textbf{分散行列}と呼ぶ．\footnote{分散共分散行列からは、データの相関を完全に失わせるような写像を作る変換行列を作ることができる。これは、違った見方をすれば、データを簡便に記述するのに最適な基底を取っていることになる。(分散共分散行列のその他の性質やその証明については、en:Rayleigh quotientを参照) これは、統計学では主成分分析 (PCA) と呼ばれており、画像処理の分野では、カルーネン・レーベ変換(KL-transform) と呼ばれている。}
+        \item $\Corr[X]=(\rho(X_i,X_j))_{i,j\in[n]}$で定まる$r\times r$行列を\textbf{相関行列}という．これは，対角要素が１に基準化された無次元量だと考えられる．
+    \end{enumerate}
+\end{definition}
+
+\begin{proposition}[多次元分散の性質]
+    $X\in L^2(\Om;\R^d),Y\in L^1(\Om;\R^s)$とする．
+    \begin{enumerate}
+        \item $\Cov[X,Y]=\Cov[Y,X]^\top$．
+        \item $\Cov[X,Y]=E[XY^\top]-E[X]E[Y]^\top$．
+        \item 双線型性：$\Cov[AX+a,BY+b]=A\Cov[X,Y]B^\top$．
+    \end{enumerate}
+\end{proposition}
+
+\begin{proposition}[確率ベクトルの２次形式の平均]
+    $X,Y\in L^2(\Om;\R^d),G\in M_d(\R)$とする．
+    このとき，
+    \[E[X^\top GY]=\Tr(G\Cov[X,Y])+E[X]^\top GE[Y].\]
+\end{proposition}
+
+\begin{proposition}[共分散行列の双線型性]\mbox{}
+    \begin{enumerate}
+        \item 可積分確率変数$X_1,\cdots,X_m,Y_1,\cdots,Y_n$の積$X_iY_j$も可積分とする．
+        このとき，
+        \[\forall_{a_1,\cdots,a_m,b_1,\cdots,b_n\in\R}\quad\Cov\paren{\sum^m_{i=1}a_iX_i,\sum_{j=1}^nb_jY_j}=\sum^m_{i=1}\sum^n_{j=1}a_ib_j\Cov(X_i,Y_j)\]
+        \item 各$X_i\;(i\in[m])$を$r_i$次元確率変数，各$Y_j\;(j\in[n])$を$c_j$次元確率変数とする．
+        すべての$X_i,Y_j,X_iY_j\in L^1$のとき，任意の$r\times r_i$定数行列$A_i$と$c\times c_j$定数行列$B_j$について
+        \[\Cov\paren{\sum_{i=1}^mA_iX_i,\sum^n_{j=1}B_jY_j}=\sum^m_{i=1}\sum^n_{j=1}A_i\Cov(X_i,Y_j)B_j^\perp\]
+    \end{enumerate}
+\end{proposition}
+\begin{remark}[行列の絶対値]
+    行列$M$に関して，$\abs{M}=(\Tr(MM^\perp))^{1/2}$とすると，$\abs{X_i\otimes Y_j}=\abs{X_i}\abs{Y_j}$だから，$\abs{X_i}\abs{Y_j}$が可積分であることと，$\abs{X_i\otimes Y_j}$が可積分であることと，$X_i,Y_j$の要素のペアの積がすべて可積分であることは同値になる．
+\end{remark}
+
+\subsection{半正定値行列としての特徴付け}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    分散共分散行列と半正定値行列は同一視出来る．\footnote{\url{https://ja.wikipedia.org/wiki/分散共分散行列}}
+\end{tcolorbox}
+
+\begin{lemma}
+    分散共分散行列$\Var[X]$は半正定値である．
+\end{lemma}
+\begin{Proof}
+    $\forall_{u\in\R^{d'}}\;u^\perp\Var[X]u=E[(u\cdot(X-E[X]))^2]$より．
+\end{Proof}
+\begin{remark}[退化した多次元確率変数]
+    $\Var[X]$が正定値でないとすると，$\exists_{u\in\R^d\setminus\{0\}}\;u^\perp\Var[X]u=E([u^\perp(X-E(X))]^2)=0$である．
+    すなわち，$X$は確率１で超平面$u^\perp(X-E(X))=0$上に値を取る．
+\end{remark}
+
+\section{積率母関数}
+
+\subsection{積率母関数の定義と収束性}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    積率母関数は左側半平面を定義域に持ち，これが$0$を超えると，虚軸を含むために特性関数の解析接続でもある．
+    関係としては$\varphi(u)=M(iu)$．
+\end{tcolorbox}
+
+\begin{definition}[moment generating function]
+    $(\R,\B_1)$上の確率測度$\nu\in P(\R)$に対して，
+    \[M_\nu(t):=\int_R e^{tx}\nu(dx)\]
+    により定まる関数$\R\nrightarrow\R$を\textbf{積率母関数}という．
+    収束域を$\Dom(M_\nu)\subset\R$で表す．
+\end{definition}
+
+\begin{theorem}[収束域は左半平面をなす]
+    分布$\nu$は$\R_+$上に台を持ち，
+    積率母関数$M$はある$x\in\R$にて収束するとする．
+    このとき，
+    \begin{enumerate}
+        \item ある$x\le a$が存在して，$M$は$\Dom(M)=(-\infty,a)$上で収束する．
+        \item $M$を複素関数と見ると，半平面$\Brace{z\in\C\mid\Re z< a}$上でも収束する．
+        \item さらに，分布がLebesgue測度に対して絶対連続である$\nu\in\P(\R^d)$とき，$M$は半平面$\Brace{z\in\C\mid\Re z< a}$上正則である．
+    \end{enumerate}
+\end{theorem}
+
+\begin{observation}
+    積率母関数が$0$の近傍での存在が危うくなるのは，$0$を中心として両側に裾が重い場合である．
+    離散分布で考えれば，Poisson分布など片側の場合は全く問題外だが，
+    $p(x)=\frac{C}{x^2}\;(x\in\Z\setminus\{0\})$という確率質量関数を考えると，これは$\Dom(M)=\{0\}$となる．
+\end{observation}
+
+\begin{proposition}[指数減衰するならば原点の近傍で収束する]
+    分布$\nu\in P(\R)$について，
+    次の2条件は同値：
+    \begin{enumerate}
+        \item $M_\nu$は$0$の近傍で存在する．
+        \item $\nu$は指数減衰する：$\exists_{C,t_0>0}\;\forall_{x\in\R}\;P[\abs{X_\nu}>x]\le Ce^{-t_0x}$．
+    \end{enumerate}
+\end{proposition}
+
+\subsection{確率母関数のMaclaurin展開}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=]
+    積率母関数は正則だから，$0$を定義域に含んだ瞬間に任意階数の積率が存在する．
+\end{tcolorbox}
+
+\begin{theorem}[マクローリン展開係数は積率である]
+    $\nu=P^X$の積率母関数$M_\nu$が原点の近傍で存在するとする．
+    すると定義域上$C^\infty$級であり，
+    \[\forall_{n\in\N^+}\;\partial^nM_\nu(t)=E[X^ne^{tX}].\]
+    特に，$\forall_{n\in\N^+}\;\partial^nM_\nu(0)=\al_n$で，
+    \begin{enumerate}
+        \item $\al_1=\partial M_\nu(0)=\partial(\log M_\nu)(0)=\partial\fC_\nu(0)$．
+        \item $\mu_2=\partial^2(\log\fM_\nu)(0)=\partial^2\fC_\nu(0)$．
+    \end{enumerate}
+\end{theorem}
+\begin{Proof}
+    \[M_\nu(t)=\int_\R e^{tx}\nu(dx)\]
+    の両辺を$t$で$n$階微分すると，
+    \[\dd{^nM(t)}{t^n}=\int_\R x^ne^{tx}\nu(dx).\]
+    よって$t=0$を代入すると，
+    \[\dd{^nM(0)}{t^n}=\int_\R x^n\nu(dx)=E[X^n]=\al_n.\]
+\end{Proof}
+
+\begin{remark}[確率母関数との関係]
+    なお，積率母関数は，確率母関数$G(z):=E[z^X]$に対して$G[e^t]=M_X(t)$なる関係もある．
+\end{remark}
+
+\subsection{一意性定理}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    $\R_+$上の分布に限っては，特性関数と同等にLaplace変換も扱う．
+    コンパクト台を持つ超関数$\E'(\R^n)\subset\S'(\R^n)$のFourier変換は，整関数に延長する．
+    さらに繊細な消息として，Paley-Wienerの定理により，$L^2(\R_+)$の元は，上半平面上の正則関数であって指数型の増加速度を持つ関数のクラスに対応する．
+\end{tcolorbox}
+
+\begin{theorem}[特性関数との関係と一意性定理]
+    $\nu\in P(\R^d)$とする．
+    \begin{enumerate}
+        \item $\Dom(M_\nu)$が$0\in\R^d$の近傍ならば，ある整数$\ep$が存在して，積率母関数$M_\nu$は$\cR_\ep:=((-\ep,\ep)\times i\R)^d$上の正則関数$M^\dagger_\nu$に解析接続され，$\varphi_\nu(-)=M^\dagger_\nu(i-)$が成り立つ．
+        \item 正則関数$M^\dagger_\nu$は，$z\in\D_\ep:=\Brace{\zeta\in\C\mid\abs{\zeta}<\ep}^d$上において，絶対収束級数
+        \[M^\dagger_\nu(z)=\sum^\infty_{k=1}\frac{1}{k!}\int(z\cdot x)^k\nu(dx)\]
+        なる展開を持つ．
+        \item $\nu_1,\nu_2\in P(\R^d)$のとき，原点のある開近傍$U\subset D_{\nu_1}\cap D_{\nu_2}$上で$M_{\nu_1}=M_{\nu_2}$ならば，$\nu_1=\nu_2$が成り立つ．
+    \end{enumerate}
+\end{theorem}
+
+\section{キュムラント母関数}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    積率母関数の対数をキュムラント母関数という．一方で，特性関数の対数は第2キュムラント母関数という．
+\end{tcolorbox}
+
+\subsection{キュムラント母関数}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    積率母関数の対数の展開係数をキュムラントといい，この特徴量の列も分布を特徴付ける．
+\end{tcolorbox}
+
+\begin{definition}[cumulant generating function]
+    $\nu\in P(\R^d)$に対して，
+    $C_\nu(t):=\log M_\nu(t)$で定まる$\Dom(M_\nu)$上の関数を，$F$の\textbf{キュムラント母関数}という．
+\end{definition}
+\begin{history}
+    キュムラントのことは，その性質を研究したThorvald N. Thieleに因み、ティエレの半不変数(semi-invariant)とも呼ぶ。\footnote{統計学の分野で尤度に関する初期の考察を行い、保険数学の分野でHafnia保険会社を設立し、数学部長を務め、デンマーク保険統計協会を設立した。}
+    積率との繋がりが深い．
+\end{history}
+
+\begin{proposition}
+    \[\kappa_n=\left.\pp{^n}{t^n}C_\nu(t)\right|_{t=0}=\left.\pp{^n}{t^n}\log M_\nu(t)\right|_{t=0}\]
+\end{proposition}
+
+\begin{remark}[affine変換に対する半不変性]
+    半不変数というのは，積率は
+    $Y=\al X+\beta$なるaffine変換に対して
+    $E[Y^2]=\al^2 E[\al^2]+2\al\beta E[X]+\beta^2$なるように変換されるのに対して，
+    \[\kappa_1^Y=\al\kappa_1^X+\beta,\quad\kappa_n^Y=\al^n\kappa_n^X\;(n=2,3,\cdots)\]
+    というように殆ど形を変えないことにちなむ．
+\end{remark}
+
+\begin{example}[キュムラント母関数は極めて少ししか変わらなくても，密度関数は見かけ上全く異なる例]
+    
+\end{example}
+
+\subsection{積率問題}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    $n$次の積率の列$(\al_n:=E[X^n])$に対して，これを持つ確率分布は構成できるか？という問題は，極限定理に関するChebyshev P. L. (1874)の漸近論の研究で初めて議論された(\cite{Hazewinkel89-EncyclopaediaOfMath3}p. 945, Prokhorov, A.V.担当部分)．
+    積率法を用いた中心極限定理の証明はMarkov (1898)によって達成された．
+    積率問題の解の存在は，Hahn-Banachの定理の応用である．
+    ここでは確率的な文脈であるが，物理的にも，電荷密度$\rho$に関する条件として読める．
+\end{tcolorbox}
+
+\begin{problem}[moment problem]
+    $\al_n=0$と満たす実数列$\al:\N\to\R$に対して，これを積率の列に持つ分布$P$
+    \[\al_n=\int x^nP(dx).\]
+    が一意に定まるか？
+\end{problem}
+\begin{history}
+    続いてStieltjes (1894)が無限連分数に関連して，任意の実数列$\{\mu_n\}_{n\in\N}$に対して，$\R_+$上の単調増加な有界関数$\psi$であって
+    \[\int^\infty_0x^nd\psi=\mu_n,\qquad(n\in\N)\]
+    を求めるという問題を定式化し，補間理論として成長した．
+\end{history}
+
+\begin{proposition}
+    任意の有限個への制限$\al|_{[N]}$について，これを満たす積率問題の解は存在する．
+\end{proposition}
+
+\begin{theorem}[存在の必要十分条件]
+    区間$[a,b]$上の分布であって，積率$\al$を持つものを考える．次の2条件は同値．
+    \begin{enumerate}
+        \item 積率問題は解を持つ．
+        \item $\exists_{c>0}\;\forall_{N\in\N}\;\forall_{a_k\in\R}\;\Abs{\sum^N_{k=0}a_k\al_k}\le c\max_{a\le x\le b}\Abs{\sum^N_{k=0}a_kx^k}$．
+    \end{enumerate}
+\end{theorem}
+
+\begin{theorem}[一意性の十分条件]
+    $(\al_n)_{n\in\N}$が
+    次の条件のいずれか
+    を満たすならば，$\al$を積率とする分布はただ一つである．
+    \begin{enumerate}
+        \item $\exists_{t_0>0}\;\sum^\infty_{n=1}\frac{\abs{\al_n}}{n!}t^n_0<\infty$．
+        \item Carleman条件\cite{Hazewinkel89-EncyclopaediaOfMath3}：$\sum_{n=1}^\infty\frac{1}{a_{2n}^{1/2n}}=\infty$．
+    \end{enumerate}
+\end{theorem}
+
+\begin{example}
+    ３次以上のキュムラントがすべて$0$になる確率分布は，正規分布に限る．
+\end{example}
+
+\begin{proposition}[極限定理・モーメント法への応用]
+    累積分布関数の列$(F_n)$は，任意の$k\ge1$位の積率$\al_k^n<\infty$が存在するとする．
+    任意の$k\in\N$について，極限$\al_k^n\xrightarrow{n\to\infty}\al_k<\infty$が存在するならば，
+    ある部分列$(F_{n_j})_{j\in\N}$が存在して，$(\al_k)$を積率の列としてもつ分布$F$に弱収束する．
+    列$(\al_k)$を積率とする分布がただ一つならば，$n_j=j$と取れる．
+\end{proposition}
+
+\section{離散分布の確率母関数}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    $g(z):=E[z^X]$は，$\varphi(u)=g(e^{iu})$，$M(t)=g(e^t)$の関係を持つ．
+\end{tcolorbox}
+
+\subsection{離散分布の特性関数と確率母関数}
+
+\begin{definition}[characteristic function, probability generating function]
+    $\mu$を離散分布，$(p_x)_{x\in\Z}$をその質量関数とする．
+    \begin{enumerate}
+        \item 次で定まる関数$\varphi:\R\to\C$を，確率関数$\mu$の\textbf{特性関数}または\textbf{Fourier変換}という：
+        \[\varphi(u):=E[e^{iuX}]=\sum_{x\in\Z}e^{iux}p_x\]
+        \item $0\in\C$の近傍上の関数$g(z):=\sum_{x\in\N}p_xz^x$を\textbf{確率母関数}という．これは$g(1)=0$を満たす．
+    \end{enumerate}
+\end{definition}
+\begin{remark}[積率母関数の存在]
+    確率母関数を考えるような$\X=\N$という場合，$X\ge0$であるから，積率母関数は$\Brace{x\in\R\mid x\le0}$上で存在する．
+    確率母関数の収束半径は$R=\paren{\limsup_{n\to\infty}\abs{p_n}^{1/n}}^{-1}$で与えられる．
+    これが1よりも真に大きいとき，すなわち$\limsup_{n\to\infty}\abs{p_n}^{1/n}<1$のとき，$g(z)$は$\pm1$でも収束するから，積率母関数$M(t)=g(e^t)$は$0$の近傍で存在する．
+\end{remark}
+\begin{remarks}[確率母関数の名前の由来]
+    名前の由来は，各$p(x)$が$z^x$の係数として格納されているために，$p(x)=\frac{g^{(x)}(0)}{x!}$として確率質量関数を復元出来ることからいう．
+\end{remarks}
+
+\subsection{確率母関数の微分係数}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    確率母関数の微分からは階乗モーメントを得る．
+\end{tcolorbox}
+
+\begin{lemma}[fractional moment：分散公式・積率は特性関数の微分・平均と分散は確率母関数の微分]\label{lemma-variance-formula}\mbox{}
+    \begin{enumerate}
+        \item 分散公式：$\sigma^2=\alpha_2-\mu^2=\sum_{x\in\X}x^2p_x-\paren{\sum_{x\in\X}xp_x}^2$．
+        \item 特性関数の積率の関係：$\beta_r<\infty$のとき，$\alpha_r=i^{-r}\varphi^{(r)}(0)$．積率母関数が原点の近傍で存在するならば，$\al_r=M^{(r)}(0)$．
+        \item $g$の収束半径が1より大きい時，項別微分が可能で，
+        \[g^{(r)}(1)=\sum_{x=r}^\infty x(x-1)\cdots(x-r+1)p_x.\]
+        特に，$g''(1)=\al_2-\al_1$で，$g'''(1)=\al_3-3\al_2+2\al$で，
+        \begin{enumerate}
+            \item $\al_1=g'(1)$．
+            \item $\al_2=g''(1)+g'(1)$．
+            \item $\al_3=g'''(1)+3g''(1)+g'(1)$．
+        \end{enumerate}
+        \item 特に平均と分散について
+        \begin{enumerate}
+            \item $\al_1=g'(1)$．
+            \item $\mu_2=g''(1)+g'(1)-(g'(1))^2=\al_2-(\al_1)^2$．
+        \end{enumerate}
+        が成り立つ．
+    \end{enumerate}
+\end{lemma}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item \begin{align*}
+            \sigma^2&=\sum_{x\in\X}(x-\mu)^2p_x\\
+            &=\sum_{x\in\X}x^2p_x-2\mu\underbrace{\sum_{x\in\X}xp_x}_{=\mu}+\mu^2\underbrace{\sum_{x\in\X}p_x}_{=1}\\
+            &=\alpha_2-\mu^2.
+        \end{align*}
+        \item $\beta_r<\infty$ならば，$\varphi^{(r)}(u)=\sum_{x\in\X}(ix)^re^{iux}p_x$は収束し（すなわち項別微分可能で），関数$\varphi^{(r)}:\R\to\R$を定める．$u=0$として，$\varphi^{(r)}(0)=i^r\sum_{x\in\X}x^rp_x=i^r\alpha_r$．
+        \item 一般に，項別微分可能ならば$g^{(r)}(z)=\sum^\infty_{x=0}x(x-1)\cdots(x-r+1)p_xz^{x-r}$であるが，いま$\X=\Z$としているから，$z=1$のとき，$g^{(r)}(1)=\sum^\infty_{x=r}x(x-1)\cdots(x-r+1)p_x$である．
+        \item また，特に$g'(1)=\mu$，$g''(1)=\sum_{x\in\X}x(x-1)p_x$であるから，(1)より，$\sigma^2=\underbrace{g''(1)+g'(1)}_{=\sum(x(x-1)+x)p_x}-(g'(1))^2$
+    \end{enumerate}
+\end{Proof}
+
+\section{特性関数}
+
+\subsection{特性関数の定義}
+
+\begin{definition}[characteristic function]
+    $(\R,\B_1)$上の確率測度$\nu$に対して，
+    \[\varphi(u):=\int e^{iux}\nu(dx)\]
+    により定まる関数$\varphi:\R\to\C$を\textbf{特性関数}という．
+\end{definition}
+
+\begin{proposition}[確率変数の演算との対応]
+    $X$の特性関数を$\varphi$とする．
+    \begin{enumerate}
+        \item $\frac{X-\mu}{\sigma^2}$の特性関数は，$\varphi\paren{\frac{u}{\sigma^2}}e^{-i\mu u/\sigma^2}$．
+        \item $P^X$が対称であることと，$\varphi$も対称な実数値関数となることとは同値．
+    \end{enumerate}
+\end{proposition}
+
+\subsection{特性関数と分布の収束の対応}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    特性関数と分布関数の間の対応は，次の意味で各点収束位相-弱収束位相について「連続」である．
+\end{tcolorbox}
+
+\begin{theorem}[Glivenkoの連続定理]
+    確率測度$\nu_n$の特性関数を$\varphi_n$とする．(1)$\Rightarrow$(2)である．各点収束極限$\varphi$が原点で連続であるとき（したがってある分布の特性関数であるとき），(2)$\Rightarrow$(1)でもある(Glivenko)．
+    \begin{enumerate}
+        \item ある確率測度$\nu$について，$\nu_n\Rightarrow\nu$である．
+        \item $\varphi_n$が関数$\varphi$に各点収束する．
+    \end{enumerate}
+    なお，このとき(2)の収束はコンパクト一様に起こる．
+\end{theorem}
+\begin{Proof}\mbox{}
+    \begin{description}
+        \item[(1)$\Rightarrow$(2)] 各点収束は明らかだから，広義一様収束を示す．このとき，$\{\mu_n\}\cup\{\mu\}$は一様に緊密であるから，任意の$\ep>0$に対して，$R>0$が存在して，
+        \[\mu(B_R(0)^\comp)\le\ep,\quad\mu_n(B_R(0)^\comp)\le\ep,\qquad n\in\N.\]
+        そこで，$B_{R+1}(0)$上に台を持ち，$B_R(0)$上で$1$な連続関数を$\varphi\in C_c(\R^d;[0,1])$とし，
+        \[\varphi(z)=\int_{\R^d}e^{i(x|z)}\varphi(x)d\mu_n(x)+\int_{\R^d}e^{i(x|z)}(1-\varphi(x))d\mu_n(x)=:\varphi^1_n(z)+\varphi^2_n(z).\]
+        と分解する．すると，
+        \[\abs{\varphi^1_n(z)-\varphi^1_n(y)}=\Abs{\int_{\R^d}(e^{i(x|z)}-e^{i(x|y)})\varphi(x)d\mu_n(x)}le C_R\abs{z-y}.\]
+        と評価でき，これは$n\in\N$に依らない評価であり，$\varphi^1_n,\varphi^1$は同程度連続であることを意味する．
+        さらに，$\varphi^1_n$は$\varphi^1$に各点収束し，特に各点有界であるから，Ascoli-Arzelaの定理より$\varphi^1_n\to\varphi^1$は広義一様．
+        一方で，任意の$z\in\R^d$について，$\abs{\mu^2_n(z)}\le\ep$かつ$\abs{\mu^2(z)}\le\ep$．
+        \item[(2)$\Rightarrow$(1)] $\varphi_n\to\varphi$は各点収束するため，任意の$f\in\S(\R^d)$に対して，
+        \[\lim_{n\to\infty}\int_{\R^d}\wh{f}(z)\varphi_n(z)dz=\int_{\R^d}\wh{f}(z)\varphi(z)dz=\int_{\R^d}f(x)d\mu(x).\]
+        よって，
+        \[\lim_{n\to\infty}\int_{\R^d}fd\mu_n=\int_{\R^d}fd\mu,\qquad f\in\S(\R^d).\]
+        これは任意の$f\in C_c(\R^d)$についても成立する．
+    \end{description}
+\end{Proof}
+
+\begin{theorem}[Levyの収束定理]
+    $\varphi_n:=\F\mu_n$が各点で$\varphi$に収束し，かつ，ある$a>0$が存在して，$\abs{x}<a$上一様ならば，極限関数$\varphi$はある分布$\mu$の特性関数である．
+\end{theorem}
+
+\begin{lemma}
+    $\mu\in P(\R)$の特性関数を$\varphi$とする．
+    \[\forall_{h>0}\quad h\paren{\Square{-\frac{2}{h},\frac{2}{h}}}\ge\mu(\R)+\frac{1}{h}\int^h_{-h}(\varphi(t)-\varphi(0))dt.\]
+\end{lemma}
+
+\begin{example}
+    \[\nu_n(A):=\sum^n_{j=1}\frac{1}{n}\delta_{\frac{j}{n}}(A)\quad(A\in\B(\R))\]
+    は一様分布$U(0,1)$に弱収束する．
+    実際，積分の定義より，
+    \[\int_\R g(x)\nu_n(dx)=\sum^n_{j=1}\frac{1}{n}g\paren{\frac{j}{n}}\xrightarrow{n\to\infty}\int^1_0g(x)dx.\]
+\end{example}
+
+\subsection{特性関数の滑らかさと積率の存在}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    絶対積率が$n$位まで存在するならば，
+    特性関数は$C^n$-級である．
+    逆も部分的に成り立つ．
+\end{tcolorbox}
+
+\begin{theorem}[確率変数が$L^p$ならば特性関数は$C^p$]
+    $X\in L^p(\R^d)$，すなわち$P^X$の$p$次の絶対積率が存在する$\beta_p<\infty$ならば，次の2条件が成り立つ：
+    \begin{enumerate}
+        \item $\varphi_X\in C^p(\R^d)$．
+        \item $\varphi_X^{(p)}$は一様連続．
+        \item $\forall_{m\in\N^d}\;\abs{m}=p\Rightarrow D^m\varphi_X(u)=i^pE[X^me^{iu\cdot X}]$．特に，$\varphi^{(p)}(0)=i^p\al_p$．
+    \end{enumerate}
+    $m$は多重指数であることに注意．
+\end{theorem}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item 積分と微分の交換が可能であることを示せば良い．いま，
+        \[\partial_{z_1}^{\al_1}\cdots\partial^{\al_d}_{z_d}e^{i(x|z)}=\paren{\prod^d_{k=1}(ix_k)^{\al_k}}e^{i(x|z)}.\]
+        であるが，
+        \[\abs{\partial_{z_1}^{\al_1}\cdots\partial^{\al_d}_{z_d}e^{i(x|z)}}\le\prod_{k=1}^d\abs{x_k}^{\al_k}.\]
+        より，$\beta_r<\infty$はこの右辺が可積分になるための条件を与えている．
+    \end{enumerate}
+\end{Proof}
+
+\begin{proposition}[特性関数の滑らかさが示唆する絶対積率の存在]
+    分布$\nu$の特性関数$\varphi$が$u=0$において$2r$階微分可能であるとする．
+    このとき，$\abs{\beta_{2r}}<\infty$．
+    特に，$\beta_k=\frac{\phi^{(k)}(0)}{i^k}\;(k\in[2n])$．
+\end{proposition}
+\begin{example}[奇数次のモーメントについては成り立たない\cite{盛田健彦}]
+    Borel測度
+    \[\mu=\sum^\infty_{k=2}\frac{1}{k^2\log k}(\delta_{-k}+\delta_k)\]
+    を考えると，1次のモーメントを持たないが，原点の近傍で$C^1$-級な特性関数
+    \[\varphi(t)=2\sum_{k=2}^\infty\frac{\cos kt}{k^2\log k}\]
+    をもつ．
+\end{example}
+
+\subsection{特性関数のMaclaurin展開}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    特性関数をTaylor展開することで，高次の積率$\al_n$も求めることが出来る．
+\end{tcolorbox}
+
+\begin{theorem}
+    $\nu\in P(\R^d)$は$\beta_r<\infty$を満たすとする．このとき，次が成り立つ：
+    \begin{enumerate}
+        \item $\abs{n}\le r$を満たす多重指数$n\in\N^d$について，
+        \[\partial^n\varphi(u)=\int_{\R^d}(ix)^ne^{iu\cdot x}\nu(dx).\]
+        \item 次の不等式が成り立つ，ただし$\beta_r(u)=\int_{\R^d}\abs{u\cdot x}^r\nu(dx)$とする．
+        \[\Abs{\varphi(u)-\sum_{\abs{n}<r}\frac{(iu)^n}{n!}\al_n}\le\frac{\abs{u}^r}{r!}\beta_r(u)\quad(u\in\R^d).\]
+    \end{enumerate}
+\end{theorem}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item Lebesgueの定理による．
+        \item 次の等式による：
+        \[e^{it}=\sum_{j=0}^{r-1}\frac{(it)^j}{j!}+\frac{(it)^r}{(r-1)!}\int^1_0(1-s)^{r-1}e^{ist}ds.\]
+    \end{enumerate}
+\end{Proof}
+
+\begin{corollary}[特性関数のTaylor展開係数からの積率の計算]
+    $\beta_r<\infty$とする．このとき，$\varphi$は$u=0$の周りで展開
+    \[\varphi(u)=\sum^r_{n=0}\al_n\frac{(iu)^n}{n!}+o(u^r)\quad(u\to0)\]
+    を持つ．すなわち，中心積率は特性関数を用いて次のように表せる：
+    \[\al_n=\left.\frac{1}{i^n}\dd{^n\varphi(u)}{u^n}\right|_{u=0}\]
+\end{corollary}
+
+\begin{corollary}[平均と分散の特性関数による特徴付け]\mbox{}\label{cor-mean-and-variance-in-terms-of-characteristic-function}
+    \begin{enumerate}
+        \item 平均(1次の積率)は$\al_1=\frac{1}{i}\varphi'(0)$．
+        \item 分散(2次の中心積率)は$\mu_2=-\varphi''(0)+(\varphi'(0))^2$．
+    \end{enumerate}
+\end{corollary}
+
+\subsection{特性関数の減衰速度と密度関数の可積分性との対応}
+
+\begin{corollary}[Levyの反転公式の系]
+    $\mu\in P(\R)$の特性関数$\varphi$が$L^1(\R)$ならば，$\mu$は絶対連続であり，密度関数が微分
+    \[\dd{\mu}{m}(x)=\frac{1}{2\pi}\int_\R e^{-itx}\varphi(t)dt\]
+    で得られる．
+\end{corollary}
+
+\begin{proposition}[特性関数の増加が$o(x^{-m})$ならば，確率密度関数は$C_0^m$]
+    $\nu\in P(\R^d)$の特性関数の増加速度
+    \[\int\abs{u}^m\abs{\varphi_F(u)}du<\infty\]
+    を満たすほど遅いとする．このとき，$\nu$の確率密度関数
+    \[f(x)=\frac{1}{(2\pi)^d}\int e^{-iu\cdot x}\varphi_F(u)du\]
+    は
+    \begin{enumerate}
+        \item $C^m$-級で，
+        \item $\forall_{k\le m}\;f^{(k)}\in C_0(\R^d)$を満たす．
+    \end{enumerate}
+\end{proposition}
+\begin{Proof}
+    Fourier変換の一般論による．
+\end{Proof}
+
+\begin{theorem}[Marcinkiewicz]
+    $Q(z)$を$m$次の多項式とする．$\varphi(z)=e^{Q(z)}$が特性関数ならば，$m\le 2$．
+\end{theorem}
+\begin{remarks}
+    特性関数が有限位数の零点を持たない整関数であるとき，整関数論とHadamardの因数分解定理から，多項式$Q(z)$を用いて$\varphi(z)=e^{Q(z)}$と表せることがわかる．
+\end{remarks}
+
+\subsection{反転公式と一意性定理}
+
+\begin{lemma}[Levy's inversion formula]\label{lemma-inversion-formula}
+    確率測度$\mu\in P(\R^d)$とその特性関数$\varphi$について，
+    \begin{enumerate}
+        \item $A:=\prod_{n=1}^d[a_n,b_n]$が$\mu$-連続集合であるならば，
+        \[\mu(A)=\lim_{R\to\infty}\frac{1}{(2\pi)^d}\int_{[-R,R]^d}\prod_{n=1}^d\frac{e^{-iz_na_n}-e^{-iz_nb_n}}{iz_n}\varphi(z)dz.\]
+        \item $d=1$のとき，任意の区間$[a,b]\subset\R$について，
+        \[\mu((a,b))+\frac{\mu(\{a\})+\mu(\{b\})}{2}=\lim_{R\to\infty}\frac{1}{2\pi}\int^R_{-R}\frac{e^{-iza}-e^{-izb}}{iz}\varphi(z)dz.\]
+        とすればよい．
+    \end{enumerate}
+\end{lemma}
+\begin{Proof}
+    (2)を示す．まず右辺は
+    \begin{align*}
+        \frac{1}{2\pi}\int^R_{-R}\frac{e^{-iza}-e^{-izb}}{iz}\varphi(z)dz&=\frac{1}{2\pi}\int^R_{-R}\frac{e^{-iza}-e^{-izb}}{iz}\paren{\int_\R e^{ixz}\mu(dx)}dz\\
+        &=\frac{1}{\pi}\int_\R\frac{1}{2}\int^R_{-R}\frac{e^{iz(x-a)}-e^{iz(x-b)}}{iz}dzd\mu(x)\\
+        &=\frac{1}{\pi}\int_\R\underbrace{\int^R_0\paren{\frac{\sin(x-a)z}{z}-\frac{\sin(x-b)z}{z}}dz}_{=:I_{a,b,R}}d\mu(x).
+    \end{align*}
+    と表せるが，$I_{a,b,R}$は任意の$R>0$について可積分で
+    \[\lim_{R\to\infty}I_{a,b,R}(x)=\begin{cases}
+        \pi&x\in(a,b),\\
+        \pi/2&x\in\partial[a,b],\\
+        0&x\notin[a,b].
+    \end{cases}\]
+    より，Lebesgueの優収束定理から結論を得る．
+\end{Proof}
+
+\begin{corollary}
+    $\varphi_\mu\in L^1(\R^d)$ならば，$\mu$はLebesgue測度に関して絶対連続である．
+\end{corollary}
+\begin{Proof}
+    \[A:=\prod_{i=1}^d[a_i,b_i]\]
+    を任意にとる．これが$\mu$-連続集合であるとき，$R>0$を十分大きくとれば
+    Levyの反転公式より，
+    \[\mu(A)=\int_A\underbrace{\int_{\R^d}\frac{e^{-i(z|x)}}{(2\pi)^d}\varphi(z)dz}_{=:f(x)}dx\]
+    であり，$f\ge0\;\ae$
+    一般の$A$についても，これに収束する$\mu$-連続集合の列が存在するから，Lebesgueの優収束定理から同様の式が示せる．
+    ここで，任意の$R>0$について
+    \[\I:=\Brace{\prod^d_{i=1}\ocinterval{a_i,b_i}\subset\R^d\;\middle|\;a_i\le b_i\subset[-R,R]}\]
+    は乗法族で$\sigma[\I]=\B(\ocinterval{-R,R}^d)$を満たす．$R\to\infty$の極限について考えて結論を得る．
+\end{Proof}
+
+\begin{theorem}[一意性定理]
+    特性関数の全体と確率測度の全体とに標準的な全単射が存在する．すなわち，任意の$\mu_1,\mu_2\in P(\R^d)$について，次は同値．
+    \begin{enumerate}
+        \item $\mu_1=\mu_2$．
+        \item $\varphi_{\mu_1}=\varphi_{\mu_2}$．
+    \end{enumerate}
+\end{theorem}
+\begin{Proof}
+    $d=1$の場合について，2通りの方法で示す．
+    \begin{description}
+        \item[反転公式による証明] 
+        $\varphi_\mu=\varphi_{\wt{\mu}}$とする．
+        反転公式\ref{lemma-inversion-formula}
+        により，任意の(端点が$F_\mu,F_{\wt{\mu}}$の連続点である)開区間の測度は$\varphi$が一意に定める：$F_\mu(b)-F_\mu(a)=F_{\wt{\mu}}(b)-F_{\wt{\mu}}(a)$．
+        $b\in\R$が$F_\mu,F_{\wt{\mu}}$両方の連続点であるとき，$F_\mu(b)=F_{\wt{\mu}}(b)$．
+        分布関数は右連続で，不連続点は高々可算個だから，これは$F_\mu=F_{\wt{\mu}}$を含意する．分布関数の一意性より，$\mu=\wt{\mu}$．
+        \item[緩増加分布上のFourier変換による証明]
+        $P(\R^d)\subset\S'(\R^d)$であることから直ちに従う．これは，任意の$\varphi\in\S$に対して，
+        \[\abs{(\mu|\varphi)}\le\int_{\R^d}\abs{\varphi(x)}d\mu(x)\le\norm{\varphi}_\infty=\norm{\varphi}_0.\]
+        よって，$P(\R^d)$の元は階数$0$の緩増加分布である．
+    \end{description}
+\end{Proof}
+\begin{remarks}
+    というのも，極めて一般的に，$\R$上の有限なBorel測度と原点で連続な$\R$上の正の定符号関数との間に全単射が存在する．
+    全射性はBochnerの定理からわかる．
+\end{remarks}
+
+\begin{corollary}
+    $L^2$-確率変数$X\in\L^2$がある$\al>0$について$\varphi_X(u)=\exp(-\abs{u}^\al)$ならば，$\al=2$で，$X\sim N(0,2)$である．
+\end{corollary}
+
+\subsection{特性関数の特徴付け}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    一様連続な正定値関数は，あるBorel測度のFourier逆変換である．
+    従って，後は$\varphi(0)=1$を課せば，ある確率分布の特性関数であることがわかる．
+\end{tcolorbox}
+
+\begin{lemma}
+    $\varphi$を$\mu$の特性関数とする．
+    \[\abs{\varphi(z+h)-\varphi(z)}\le\sqrt{2\abs{\varphi(0)-\varphi(h)}}.\]
+    この不等式評価は，一般の正の定符号関数$\varphi$について成り立つ．
+\end{lemma}
+\begin{Proof}
+    \begin{align*}
+        \abs{\varphi(z+h)-\varphi(z)}&=\Abs{\int_{\R^d}e^{i(z|x)}(e^{i(h|x)}-1)d\mu(x)}\\
+        &\le\int_{\R^d}\abs{e^{i(h|x)}-1}d\mu(x)\\
+        &\le\paren{\int_{\R^d}\abs{(1-\cos(h|x))^2+\sin^2(h|x)}d\mu(x)}^{1/2}\\
+        &=\paren{\int_{\R^d}2(1-\cos(h|x))d\mu(x)}^{1/2}.
+    \end{align*}
+    一方で，
+    \begin{align*}
+        \abs{\varphi(h)-\varphi(0)}&=\Abs{\int_{\R^d}e^{i(h|x)}d\mu(x)-1}\\
+        &=\Abs{\int_{\R^d}(1-\cos(h|x))d\mu(x)-i\int_{\R^d}\sin(h|x)d\mu(x)}\\
+        &\ge\int_{\R^d}(1-\cos(h|x))d\mu(x).
+    \end{align*}
+\end{Proof}
+
+\begin{proposition}
+    関数$\varphi:\R^d\to\C$が特性関数であるならば，次の３条件が成り立つ．
+    \begin{enumerate}
+        \item $\varphi(0)=1$．
+        \item 一様連続である．
+        \item 正定値である：任意の$n\in\N$個の$z_1,\cdots,z_n\in\R^d$と$\xi_1,\cdots,\xi_n\in\C$について，
+        \[\sum^n_{j,k=1}\varphi(z_j-z_k)\xi_j\o{\xi_k}\ge0.\]
+    \end{enumerate}
+\end{proposition}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item $\varphi(0)=E[e^{i0X}]=E[1]=1$．
+        \item 次の不等式評価が成り立つ．Lebesgueの優収束定理より，$h\to0$のとき$u\in\R$に依らず一様に$0$に収束する．
+        \[\abs{\varphi(u+h)-\varphi(u)}\le E[\abs{e^{iuX}}\abs{e^{ihX}-1}]=E[\abs{e^{ihX}-1}]\]
+        \item \begin{align*}
+            \sum^n_{j,k=1}\varphi(\xi_j-\xi_k)z_j\o{z}_k&=\sum_{j,k=1}^n\int_{\R^d}e^{i(z_j-z_k|x)}\xi_j\o{\xi_k}d\mu(x)\\
+            &=\int_{\R^d}\sum_{j,k=1}^ne^{i(z_j|x)}\xi_j\o{e^{i(z_k|x)}\xi_k}d\mu(x)\\
+            &=\int_{\R^d}\Abs{\sum_{k=1}^ne^{i(z_k|x)}\xi_k}^2d\mu(x)\ge0.
+        \end{align*}
+    \end{enumerate}
+\end{Proof}
+
+\begin{theorem}[Bochner]\label{thm-Bochner}
+    複素関数$\varphi:\R^d\to\C$が次の３条件を満たすならば，ある一次元分布$\mu\in\P(\R)$の特性関数である．特に，命題の３条件を満たすならば，特性関数である．
+    \begin{enumerate}
+        \item $\xi=0$で連続．
+        \item $\varphi(0)=1$．
+        \item 正定値である．
+    \end{enumerate}
+\end{theorem}
+\begin{remarks}
+    一般の正の定符号関数$\varphi$に関して成り立つものであり，次のように述べられる：
+    関数$\varphi:\R\to\C$が原点で連続な正の定符号関数ならば，ある有限Borel測度$\mu\in M(\R;\R_+)$が存在して，$\varphi=\varphi_\mu$を満たす．
+\end{remarks}
+
+\subsection{特性関数の構成}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    \cite{伊藤清確率論}による．
+\end{tcolorbox}
+
+\begin{definition}
+    確率空間$(A,\nu)$上の可積分関数族$\{F_a\}_{a\in A}\subset L^1(\Xi)$について，
+    \[F(\xi):=\int_AF_a(\xi)\nu(da)\]
+    を\textbf{積分的凸結合}という．
+\end{definition}
+
+\begin{theorem}
+    分布の積分的凸結合は分布であり，特性関数の積分的凸結合は特性関数である．
+\end{theorem}
+
+\begin{theorem}[Polya]
+    $\varphi:\R\to\R$が次を満たすならば，特性関数である．
+    \begin{enumerate}
+        \item 非負な偶関数である．
+        \item $z>0$上減少かつ凸である．
+        \item $\varphi(0)=1$かつ$0$は$\varphi$の連続点である．
+    \end{enumerate}
+\end{theorem}
+
+\section{第2キュムラント母関数}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    特性関数のTaylor展開係数には，積率$\al_r$が登場した．
+    キュムラント関数のTaylor展開係数を，キュムラントと言い，これが平均・分散の一般化となっている．
+    存在するならば積率母関数の$\log$を取れば，$i$倍が消えて純粋なキュムラントを扱うことが出来るが，第2キュムラント母関数には常に存在するという理論的な利点がある．
+\end{tcolorbox}
+
+\subsection{第2キュムラント母関数}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    キュムラントはキュムラント母関数＝積率母関数の対数の展開係数として得られるが，特性関数の対数からも，虚数単位$i$に関する修正を施して得られる．
+    その関係は，特性関数と積率の関係と並行である．この関数を，第2キュムラント母関数という．
+\end{tcolorbox}
+
+\begin{proposition}[キュムラント関数のMaclaurin展開]
+    $\beta_r<\infty$とする．
+    このとき，関数$\psi(u):=\log\varphi(u)$は$u=0$の近傍で定まり，次の形の展開を持つ：
+    \[\psi(u)=\sum^r_{j=1}\kappa_j\frac{(iu)^j}{j!}+o(u^r)\quad(\abs{u}\to0).\]
+\end{proposition}
+
+\begin{definition}[cuumulant]
+    関数$\psi(u):=\log\varphi(u)$を\textbf{第2キュムラント母関数}または\textbf{キュムラント関数}といい，この展開係数$\kappa_n=\frac{1}{i^n}\left.\pp{^n}{u^n}\psi(u)\right|_{u=0}$を，分布$\nu$の\textbf{$n$次のキュムラント}と呼ぶ．
+    この$n\in\N$は，多重指数$n\in\N^d$と読み替えれば，多次元の場合にも通用する．
+    分布の高次の形態を表す特性値である．
+\end{definition}
+
+\begin{example}[キュムラントの例]\mbox{}
+    \begin{enumerate}
+        \item 1次のキュムラント$(\kappa_n)_{\abs{n}=1}$とは，\textbf{平均ベクトル}である．
+        \item 2次のキュムラント$(\kappa_n)_{\abs{n}=2}$とは，\textbf{分散共分散行列}である．
+    \end{enumerate}
+    さらに高次のキュムラントはテンソルになる\ref{def-higher-cumulant}．
+    正規分布ではここは消える．これが平均と分散までが大事であることに繋がるが，これは人類の認知負荷の限界と関係があるのか？
+\end{example}
+
+\begin{corollary}[キュムラントの積率・中心積率による表現]
+    可積分性を仮定する．
+    \begin{enumerate}
+        \item $\kappa_1=\al_1$．
+        \item $\kappa_2=\al_2-\al_1^2=\mu_2$．
+        \item $\kappa_3=\al_3-3\al_1\al_2+2\al_1^3=\mu_3$．
+        \item $\kappa_4=\al_4-3\al_2^2-4\al_1\al_3+12\al_1^2\al_2-6\al_1^4=\mu_4-3\mu_2^2$．
+    \end{enumerate}
+\end{corollary}
+
+\begin{corollary}[積率・中心積率のキュムラントによる表現]
+    可積分性を仮定する．
+    \begin{enumerate}
+        \item $\al_2=\kappa_2+\kappa_1^2$，$\mu_2=\kappa_2$．
+        \item $\al_3=\kappa_3+3\kappa_1\kappa_2+\kappa^3_1$，$\mu_3=\kappa_3$．
+        \item $\al_4=\kappa_4+3\kappa_2^2+4\kappa_1\kappa_3+6\kappa_1^3\kappa_2+\kappa^4_1$，$\mu_4=\kappa_4+3\kappa_2^2$．
+    \end{enumerate}
+\end{corollary}
+
+\chapter{確率変数の従属性}
+
+\section{確率変数の独立性と期待値}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    有限個の確率変数$X_1,\cdots,X_n$の独立性とは，これが定める$(X_1,\cdots,X_n)$の結合分布が，
+    各$X_i$の分布$P^{X_i}$が定める直積速度$P^{X_1}\times\cdots\times P^{X_n}$に一致することをいう．
+    本質的に「直積」とみなせるものを独立性という．
+\end{tcolorbox}
+
+\subsection{積の期待値による独立性の特徴付け}
+
+\begin{notation}
+    $X_j:(\Om,\F,P)\to(\X_j,\B_j)$を確率変数とする．
+\end{notation}
+
+\begin{proposition}[独立確率変数の積は可積分]\label{prop-integrability-of-product-of-two-independent-rv}
+    $n\ge 2$を整数とする．可測関数$f_j:\X_j\to\o{\R}$について，$f_j(X_j)\in L^1(\Om,\F,P)$とする．
+    このとき，$X_1,\cdots,X_n$が独立ならば，
+    \begin{enumerate}
+        \item 積$\prod^n_{i=1}f_i(X_i)$も可積分である．
+        \item \[E\Square{\prod^n_{i=1}f_i(X_i)}=\prod^n_{i=1}E[f_i(X_i)]\]
+        を満たす．
+    \end{enumerate}
+    $f_j$が複素数値でも同様の結論が成り立つ．
+\end{proposition}
+\begin{Proof}
+    $X:=f_1(X_1),Y:=f_2(X_2)\ge0$の場合に証明する．$X,Y$に下から収束する単関数の列$X_n=\sum_{i\in\N}b_i1_{B_i},Y_n=\sum_{i\in\N}c_i1_{C_i}$が取れる．
+    $B_i,C_i$が独立であることに注意すると，
+    \begin{align*}
+        E[X_nY_n]&=E\Square{\sum_{i,j\in\N}b_ic_j1_{B_i\cap C_j}}=\sum_{i,j\in\N}b_ic_jP[B_i]P[C_j]=E[X_n]E[Y_n].
+    \end{align*}
+    $n\to\infty$の極限を考えると，$E[XY]=E[X]E[Y]$．
+\end{Proof}
+
+\begin{corollary}[独立ならば無相関]
+    $X,Y\in L^1(\Om)$を独立とする．このとき，$\Cov[X,Y]=0$．
+\end{corollary}
+\begin{Proof}
+    命題より，$XY\in L^1(\Om)$．よって，$\Cov[X,Y]<\infty$．これより，計算
+    \[\Cov[X,Y]=E[(X-E[X])(Y-E[Y])]=E[X-E[X]]E[Y-E[Y]]=0\]
+    が正当化される．
+\end{Proof}
+
+\begin{corollary}[独立性の十分条件]
+    任意の有界可測関数$f_i$について
+    \[E\Square{\prod^n_{i=1}f_i(X_i)}=\prod^n_{i=1}E[f_i(X_i)]\]
+    が成り立つならば，$X_1,\cdots,X_n$は独立である．
+\end{corollary}
+
+\subsection{確率変数の独立性と特性関数}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    平均作用素$E$の積に対する振る舞いによって，独立性の十分条件を与えることが出来た．
+    特性関数によっても特徴付けることが出来る．
+\end{tcolorbox}
+
+\begin{theorem}[Kac]\label{thm-Kac}
+    確率変数列$X_1,\cdots,X_n\in L(\Om)$について，次の２条件は同値．
+    \begin{enumerate}
+        \item $X_1,\cdots,X_n$は独立である．
+        \item $\varphi_X=\varphi_{X_1}\otimes\cdots\otimes\varphi_{X_n}:=\prod_{j=1}^n\varphi_{X_j}(u_j)$である．
+    \end{enumerate}
+\end{theorem}
+\begin{Proof}\mbox{}
+    \begin{description}
+        \item[(1)$\Rightarrow$(2)] $X_1,(X_2,\cdots,X_n)$の独立性と命題\ref{prop-integrability-of-product-of-two-independent-rv}より帰納的に成り立つ．
+        \item[(2)$\Rightarrow$(1)] $\varphi_X$はある独立な確率変数列$\wt{X}_1,\cdots,\wt{X}_n$であって，$\varphi_{X_i}=\varphi_{\wt{X}_i}$を満たすものの特性関数に等しい．特性関数の一意性より，$X,\wt{X}$は同分布である．特に$X_1,\cdots,X_n$は独立．
+    \end{description}
+\end{Proof}
+
+\begin{corollary}
+    $d$次元確率変数の列$X_1,\cdots,X_n$が独立ならば，
+    \[\varphi_{\sum_{j=1}^nX_j}(u)=\prod^n_{j=1}\varphi_{X_j}(u)\;(u\in\R^d)\]
+\end{corollary}
+
+\subsection{密度関数と独立性}
+
+\begin{proposition}
+    $X:=(X_1,\cdots,X_n)$は密度関数$p$を持つとする．このとき，次は同値：
+    \begin{enumerate}
+        \item $X_1,\cdots,X_n$は独立．
+        \item $p=\otimes_{i\in[n]}p_i\;\ae$
+    \end{enumerate}
+\end{proposition}
+\begin{Proof}\mbox{}
+    \begin{description}
+        \item[(2)$\Rightarrow$(1)] 
+        任意の$B_i\in\B(\R)$に対して，
+        \begin{align*}
+            P[X_1\in B_1,\cdots,X_n\in B_n]&=P^X\Square{\prod_{i\in[n]}B_i}\\
+            &=\int_{\prod B_i}pdx_1\cdots dx_n=\int_{\prod B_i}p_1\cdots p_ndx_1\cdots dx_n\\
+            &=\prod_{i\in[n]}P^{X_i}[B_i]=\prod_{i\in[n]}P[X_i\in B_i].
+        \end{align*}
+        が成り立つから，これは独立性を意味する．
+        \item[(1)$\Rightarrow$(2)] 上述の等式が任意の閉矩形$B=\prod_{i\in[n]}B_i$上で成り立つ．これは乗法族をなすから，この上で$\prod_{i\in[n]}p_i=p$であることは，$p=\otimes_{i\in[n]}p_i\;\as$を意味する．
+    \end{description}
+\end{Proof}
+
+\section{多次元分布の従属性の扱い}
+
+\subsection{同時・周辺密度関数}
+
+\begin{definition}
+    $X\in L(\Om;\R^d)$について，
+    \begin{enumerate}
+        \item $F(x):=P[X_1\le x_1,\cdots,X_d\le x_d]$を\textbf{同時分布関数}という．
+        \item $S\subset[d]$について，$F_S(x):=\lim_{x_i\to\infty\;(i\notin S)}F(x)$を\textbf{周辺分布関数}という．
+        \item 同時分布関数の適切な参照測度に関するRadon-Nikodym微分$f$を\textbf{同時密度関数}という．
+    \end{enumerate}
+\end{definition}
+
+\begin{lemma}
+    $f$の連続点$x\in\R^d$について，
+    \[f(x)=\pp{^dF(x)}{x_1\partial x_2\cdots\partial x_d}.\]
+\end{lemma}
+
+\begin{example}
+    $X\in L(\Om;\R^d)$の密度を
+    \[f_{X,Y}(x,y):=\frac{1}{\pi^2}+\frac{1}{10}\cos x\cos y1_{[0,\pi]^2}(x,y)\]
+    で与えると，周辺分布はいずれも$\rU([0,\pi])$である．
+\end{example}
+
+\subsection{条件付き密度関数}
+
+\begin{definition}
+    $(X,Y)$の同時密度関数を$f$とする．
+    \begin{enumerate}
+        \item \textbf{条件付き密度関数}を
+        \[f_1(x|y):=\frac{f(x,y)}{f_2(y)}=\frac{f(x,y)}{\int^\infty_{-\infty}f(x,y)dx}\]
+        で定義する．$X\indep Y$のとき，$\forall_{y\in\R}\;f_1(x|y)=f_1(x)$である．
+        \item 条件付き期待値・分散を
+        \[E[X|Y=y]:=\int_\R xf_1(x|y)dx,\quad\Var[X|Y=y]:=\int_\R(x-E[X|Y=y])^2f_1(x|y)dx\]
+        で定める．
+    \end{enumerate}
+\end{definition}
+
+\section{多次元分布の特性値}
+
+\subsection{積率の定義}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=]
+    積率の次元もベクトル値$n\in\N^d$で指定できる．
+\end{tcolorbox}
+
+\begin{notation}
+    $x=(x_1,\cdots,x_d)\in\R^d$に対して，$\partial_i:=\pp{}{x_i}$とし，$n:=(n_1,\cdots,n_d)\in\Z^d_+$に対して，
+    \begin{align*}
+        \abs{n}&:=n_1+\cdots+n_d,&n!&:=n_1!\cdots n_d!,\\
+        x^n&:=x_1^{n_1}\cdots x_d^{n_d},&\partial^n:=\partial_1^{n_1}\cdots\partial_d^{n_d}.
+    \end{align*}
+    ただし，$x^0_j=1,\partial^0=1$とよむ．
+\end{notation}
+
+\begin{definition}[moment, central moment]
+    $d$次元確率変数$X=(X_1,\cdots,X_d)$に対して，可積分性の仮定の下で，
+    \begin{enumerate}
+        \item $\al_n:=E[X^n]$を\textbf{$n$次積率}という．
+        \item $\mu_n:=E[(X-E[X])^n]$を\textbf{$n$次中心積率}という．
+    \end{enumerate}
+\end{definition}
+
+\begin{definition}
+    $(\R^d,\B_d)$上の確率測度$\nu$に対して，可積分性の仮定の下で，
+    \begin{enumerate}
+        \item $\mu:=\paren{\int_{\R^d}x_i\nu(dx)}\in\R^d$を\textbf{平均（ベクトル）}という．
+        \item $\al_n:=\int_{\R^d}x^n\nu(dx)$を\textbf{$n$次の積率}という．
+        \item $\nu_n:=\int_{\R^d}(x-\mu)^n\nu(dx)$を\textbf{$n$次の中心積率}という．
+        \item 特に$(\mu_n)_{\abs{n}=2}$を$\nu$の\textbf{分散共分散行列}という．
+    \end{enumerate}
+\end{definition}
+
+\subsection{相関係数}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=]
+    相関係数の言う「相関」とは，線型関係との近さであって，必ずしも一般的な意味での相関性(association)を示すものではない．
+    ここは自然言語的な誤解を極めて招きやすい．
+\end{tcolorbox}
+
+\begin{definition}
+    $X,Y$の基準化
+    \[Z_1:=\frac{X-E[X]}{\Var[X]^{1/2}},\quad Z_2:=\frac{Y-E[Y]}{\Var[Y]^{1/2}}\]
+    の共分散
+    \[\rho(X,Y):=\Cov[Z_1,Z_2]=\frac{\Cov[X,Y]}{(\Var[X]\Var[Y])^{1/2}}\]
+    を\textbf{相関係数}という．
+\end{definition}
+\begin{history}
+    この流儀をPearsonの相関係数，または積率相関係数ともいう．
+\end{history}
+
+\begin{proposition}[相関係数の値域]
+    $\mu_X=E[X],\mu_Y=E[Y],\sigma_X=\sqrt{\Var[X]},\sigma_Y=\sqrt{\Var[Y]}$とする．
+    \[\abs{\rho(X,Y)}\le 1\]
+    等号成立条件は，$Y=\pm\frac{\sigma_Y}{\sigma_X}(X-\mu_X)+\mu_Y\;\as$．
+\end{proposition}
+\begin{Proof}
+    $\sigma_X\sigma_Y\ne 0$のとき，
+    \[0\le E[(\sigma_X^{-1}(X-\mu_X)\pm\sigma_Y^{-1}(Y-\mu_Y))^2]=2(1\pm\rho(X,Y))\]
+    より．
+\end{Proof}
+
+\subsection{キュムラントの定義}
+
+\begin{definition}\label{def-higher-cumulant}
+    第2キュムラント母関数によるキュムラントの定義
+    \[\psi(u)=\sum^r_{j=1}\kappa_j\frac{(iu)^j}{j!}+o(u^r)\quad(\abs{u}\to0).\]
+    は，$n$を多重指数$\mathbf{n}$に読み替えることで，$\kappa_{\bn}:=i^{-\abs{\bn}}\partial^{\bn}\psi(0)$そのまま拡張される．
+\end{definition}
+
+\begin{notation}
+    $(\partial_{u_i})_0$を，$u:=(u_i)=0$における$u_i$-偏微分係数を表す．
+\end{notation}
+
+\begin{discussion}[キュムラントのテンソル表現]
+    $d$次元確率分布$\nu$について，
+    $\al_1,\cdots,\al_r\in[d]$に対して
+    \[\lambda^{\al_1\cdots\al_r}:=(-i)^r(\partial_{u_{\al_1}})_0\cdots(\partial_{u_{\al_r}})_0\log\varphi(u)\]
+    と定める．これも$\nu$の$r$次のキュムラントといい，行列$(\lambda^{\al_1\cdots\al_r})_{\al_1,\cdots,\al_r\in[d]}$は対称テンソルを定める．
+\end{discussion}
+\begin{remarks}
+    $\b{r}:=(r_1,\cdots,r_d)\in\Z^d_+$が$r_k:=\Abs{\Brace{j\in[r]\mid\al_j=k}}$を満たすとする．このとき，
+    \[\lambda^{\al_1\cdots\al_r}=\kappa_{\br}\]
+\end{remarks}
+
+\section{コピュラ}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    相関係数は，２つの確率変数に対して，実数$[-1,1]$を対応させるが，もっと表現力豊かに，
+    変量間の従属性を，多次元分布によって直接的に表現することを考える．\footnote{この単語は元々音楽や言語学で使われていたが、統計学の用語として用いたのは、1959 年にスクラー (Abe Sklar) がパリ大学統計学会誌 (the Statistical Institute of the University of Paris) で発表したのが最初である。}
+
+    これはなんだか，周辺分布の張り合わせとして多次元分布を表現するホモトピー論のようである．
+    逆に，コピュラなく，直積によって周辺分布を張り合わせた場合が，独立性である．
+\end{tcolorbox}
+
+\begin{notation}
+    $I:=[0,1]$とする．
+\end{notation}
+
+\subsection{定義と例}
+
+\begin{definition}[copula]
+    次の条件を満たす関数$C:I^2\to I$を\textbf{接合関数}という：
+    \begin{enumerate}
+        \item $C(-,0)=C(0,-)=0$．
+        \item $C(-,1)=C(1,-)=\id_I$．
+        \item $\forall_{u_1,u_2,v_1,v_2\in I}\;u_1\le v_1,u_2\le v_2\Rightarrow C(v_1,v_2)-C(u_1,v_2)-C(v_1,u_2)+C(u_1,u_2)\ge0$．
+    \end{enumerate}
+\end{definition}
+
+\begin{example}[凸関数とproduct copula]
+    $C^2$級関数$C$が$\partial_{u_1}\partial_{u_2}C(u_1,u_2)\ge0$をみたすとき，コピュラである．
+    特に，$C^\Pi(u_1,u_2):=u_1u_2$を\textbf{積コピュラ}という．
+\end{example}
+
+\begin{example}[二次元の分布関数が定めるコピュラ]
+    \begin{enumerate}\mbox{}
+        \item 区間$(0,1)$上の一様分布に従う２つの確率変数$X_1,X_2\sim U((0,1))$の分布関数$F$はコピュラである．
+        \item 
+    \end{enumerate}
+\end{example}
+
+\subsection{Sklarの定理}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    多次元分布は，周辺分布関数とコピュラによって定まる．
+\end{tcolorbox}
+
+\begin{theorem}[2次元の場合 (Sklar 1959)]
+    $(X_1,X_2)$の結合分布関数を$F$，それぞれの周辺分布関数を$F_1,F_2$とする．
+    このとき，コピュラ$C$が存在して，
+    \[\forall_{x_1,x_2\in\R}\quad F(x_1,x_2)=C(F_1(x_1),F_2(x_2))\]
+    と表せる．
+    $F_1,F_2$が連続のとき，$C$は一意である．
+\end{theorem}
+\begin{remarks}
+    逆関数$F_1^{-1},F_2^{-1}$が存在するときは，これを用いて$C(u_1,u_2)=F(F_1^{-1}(u_1),F_2^{-1}(u_2))$とコピュラを構成できる．
+\end{remarks}
+
+\subsection{Archimedesコピュラ}
+
+\chapter{分布の変換}
+
+\section{確率密度関数の変換}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    確率密度関数とは一般化された1-形式にほかならないから，
+    $p^*(x)dx=p(y)dy$という変換則を持つ．$y=T(x)$のとき，$dy=\abs{J_T(x)}dx$より，
+    Jacobianがかかる変換則$p^*(x)dx=p(T(x))\abs{J(x)}dx$を持つ．
+\end{tcolorbox}
+
+\subsection{一般の変換則}
+
+\begin{proposition}[変数変換による密度関数の変換則]
+    $A,B\osub\R^d$上の可微分同相$T:A\to B$はJacobianが$A$上で消えないとする．
+    $Y=T(X)$が成り立つとき，$Y$の密度関数$p$を用いて，$X$の密度関数$p^*$は
+    \[p^*(x)=p(T(x))\abs{J_T(x)}\qquad(x\in A)\]
+    と表せる．
+\end{proposition}
+\begin{Proof}
+    任意の有界な可測集合$A_0\subset A$に対して，その上での積分は
+    \begin{align*}
+        P^X[A_0]&=P[X\in A_0]=\int_{A_0}p^*(x)dx\\
+        &=P[Y\in T(A_0)]=\int_{A_0}p(y)dy=\int_{A_0}p(T(x))\abs{J_T(x)}dx.
+    \end{align*}
+\end{Proof}
+\begin{remarks}[変換の方向]
+    \[\xymatrix{
+        x\in A\ar[r]^-T&B\ni y\\
+        \Om\ar@{-->}[u]_-{p^*}\ar[ur]_-p
+    }\]
+    この状況において，$p$を$T$によって引き戻す際に$p^*=T^*p=p\circ T\cdot \abs{J_T}$が生じるのである．
+\end{remarks}
+
+\begin{proposition}\label{prop-transformation-of-density-through-change-of-variable}
+    可微分同相の組$(T_i:A_i\to B_i)_{i\in[k]}$と$\R^d$-値確率変数$X,Y$について，次を仮定する：
+    \begin{enumerate}[({A}1)]
+        \item $\{B_i\}_{i\in[k]}\subset\O(\R^d)$は互いに素である．
+        \item $T_i$は各$A_i$上Jacobianが消えない．
+        \item $A:=\cup_{i\in[k]}A_i,B:=\cup_{i\in[k]}B_i$について，$P[X\in A]=P[Y\in B]=1$．
+        \item $X=\sum_{i\in[k]}T_i(Y)1_{B_i}(Y)\;\as$
+        \item $Y$は絶対連続である．密度を$p$とする．
+    \end{enumerate}
+    このとき，$X$も絶対連続で，その密度は
+    \[p^*(x)=\sum_{i\in[k]}p(T_i(x))\abs{J_T(x)}1_{A_i}(x)\qquad(x\in\R^d).\]
+\end{proposition}
+\begin{example}
+    変換$X=Y^3-3Y$などの際も，$B_1:=(-\infty,-1),B_2:=(-1,1),B_3:=(1,\infty)$として対応できる．
+\end{example}
+
+\subsection{一様分布への変換}
+
+\begin{proposition}
+    $X$は分布関数$F$を持つ絶対連続分布に従うとする．
+    このとき，$F(X)\sim U([0,1])$．
+\end{proposition}
+\begin{Proof}
+    $F$は連続で狭義単調増加，すなわち可逆とする．この場合は，
+    \[P[F(X)\le a]=P[X\le F^{-1}(a)]=F(F^{-1}(a))=a.\]
+    より判る．$F$が高々可算個の不連続点を持つ場合も同様．
+\end{Proof}
+
+\subsection{一様分布の正規分布への変換}
+
+\begin{proposition}[Box-Müller transform]
+    $Y_1,Y_2\sim\rU(0,1)$を独立とする．
+    \[\begin{cases}
+        X_1=\sqrt{-2\log Y_1}\cos(2\pi Y_2)\\
+        X_2=\sqrt{-2\log Y_2}\sin(2\pi Y_2)
+    \end{cases}\]
+    と定める．
+    \begin{enumerate}
+        \item 逆に解くと，次の関係を得る：
+        \[\begin{cases}
+            y_1=e^{-\frac{1}{2}(x_1^2+x_2^2)}\\
+            y_2=\frac{1}{2\pi}\tan^{-1}\paren{\frac{x_2}{x_1}}
+        \end{cases}\]
+        \item $(X_1,X_2)\sim\rN(0,I_2)$．
+        すなわち，$X_1,X_2$は独立な標準正規確率変数となる．
+    \end{enumerate}
+\end{proposition}
+\begin{Proof}\mbox{}
+    \begin{description}
+        \item[逆に解く] \begin{align*}
+            &\begin{cases}
+                x_1=\sqrt{-2\log y_1}\cos(2\pi y_2)\\
+                x_2=\sqrt{-2\log y_2}\sin(2\pi y_2)
+            \end{cases}\\
+            \Leftrightarrow&\begin{cases}
+                x_1^2+x_2^2=-2\log y_1\\
+                \frac{x_2}{x_1}=\tan(2\pi y_2)
+            \end{cases}\\
+            \Leftrightarrow&\begin{cases}
+                y_1=e^{-\frac{1}{2}(x_1^2+x_2^2)}\\
+                y_2=\frac{1}{2\pi}\tan^{-1}\paren{\frac{x_2}{x_1}}
+            \end{cases}
+        \end{align*}
+        \item[密度の変換] こうして得た変換$T:A\to B$を$y=T(x)$とおくと，
+        \[A:=\R^2\setminus\R_+\times\{0\},\quad B:=(0,1)^2\]
+        について$T(A)=B$を満たす可微分同相で，$y=\tan^{-1}x$の微分は
+        \[\dd{x}{y}=\frac{1}{\cos y}=1+\tan^2y=1+x^2\]
+        であることに注意すれば，
+        その勾配行列は
+        \[DT\vctr{x_1}{x_2}=\begin{pmatrix}-x_1e^{-\frac{1}{2}(x^2_1+x^2_2)}&-x_2e^{-\frac{1}{2}(x^2_1+x^2_2)}\\
+        \frac{1}{2\pi}\frac{1}{1+\paren{\frac{x_2}{x_1}}^2}\paren{-\frac{x_2}{x_1}}&\frac{1}{2\pi}\frac{1}{1+\paren{\frac{x_2}{x_1}}^2}\frac{1}{x_1}\end{pmatrix}\]
+        であるから，Jacobianは
+        \[J_T=e^{-\frac{1}{2}(x_1^2+x_2^2)}\frac{1}{2\pi}\frac{1}{1+\paren{\frac{x_2}{x_1}}^2}\paren{-1-\frac{x_2^2}{x_1^2}}=-\frac{1}{2\pi}e^{-\frac{1}{2}(x_1^2+x_2^2)}.\]
+        よって，$(X_1,X_2)$の結合密度関数は，
+        \[f(x)=\frac{1}{2\pi}e^{-\frac{1}{2}(x_1^2+x_2^2)}1_A(x_1,x_2).\]
+    \end{description}
+\end{Proof}
+
+\subsection{一様分布の指数分布への変換}
+
+\begin{proposition}
+    $T(x):=-\log x$によって$T:(0,1)\to(0,\infty)$を定めると，
+    $X\sim\rU(0,1)$に対して，$T(X)\sim\Exp(1)$．
+\end{proposition}
+\begin{remark}
+    これは指数分布の，その分布関数による一様分布への変換の，逆変換である．
+\end{remark}
+
+\section{商による変換}
+
+\subsection{Gamma分布のBeta分布への変換}
+
+\begin{proposition}
+    $Y_i\sim\GAMMA(\al,\nu_i)\;(i=1,2)$は独立とする．確率変数
+    \[X_1:=\frac{Y_1}{Y_1+Y_2}\]
+    の密度関数は
+    \[p^*(x_1)=\frac{1}{B(\nu_1,\nu_2)}x_1^{\nu_1-1}(1-x_1)^{\nu_2-1},\qquad(x_1\in(0,1)).\]
+    である．特に$X_1\sim\Beta(\nu_1,\nu_2)$である．
+\end{proposition}
+\begin{Proof}\mbox{}
+    \begin{description}
+        \item[逆に解く] \[\begin{cases}
+            X_1=\frac{Y_1}{Y_1+Y_2}\\
+            X_2=Y_2
+        \end{cases}\]
+        を逆に解くことで，
+        \[\vctr{Y_1}{Y_2}=\vctr{\frac{X_1X_2}{1-X_1}}{X_2}=T\vctr{X_1}{X_2}\]
+        を得る．確かに，$A:=(0,1)\times(0,\infty),B:=(0,\infty)^2$とすれば，$T:A\to B$は可微分同相で，Jacobianは
+        \[DT=\mtrx{\frac{X_2}{(1-X_1)^2}}{\frac{X_1}{1-X_1}}{0}{1},\quad J_T=\frac{X_2}{(1-X_1)^2}\]
+        は消えない．
+        \item[密度の変換] 結合密度関数は
+        \begin{align*}
+            p^*(x_1,x_2)dx_1dx_2&=p(T(x_1,x_2))J_T(x_1,x_2)dx_1dx_2\\
+            &=\frac{\al^{\nu_1}}{\Gamma(\al_1)}y_1^{\nu_1}e^{-\al y_1}\frac{\al^{\nu_2}}{\Gamma(\nu_2)}y_2^{\nu_2-1}e^{-\al y_2}\frac{x_2}{(1-x_1)^2}dx_1dx_2\\
+            &=\frac{\al^{\nu_1+\nu_2}}{\Gamma(\nu_1)\Gamma(\nu_2)}\paren{\frac{x_1x_2}{1-x_1}}^{\nu_1-1}e^{-\al\paren{\frac{x_1x_2}{1-x_1}}}x_2^{\nu_2-1}e^{-\al x_2}\frac{x_2}{(1-x_1)^2}dx_1dx_2\\
+            &=\frac{\al^{\nu_1+\nu_2}}{\Gamma(\nu_1)\Gamma(\nu_2)}\frac{x_1^{\nu_1-1}x_2^{\nu_1+\nu_2-1}}{(1-x_1)^{\nu_1+1}}e^{-\al\frac{x_2}{1-x_1}}dx_1dx_2.
+        \end{align*}
+        よって，$x_1$の周辺密度関数は，積分により，
+        \begin{align*}
+            p^*(x_1)&=\frac{\al^{\nu_1+\nu_2}}{\Gamma(\nu_1)\Gamma(\nu_2)}\frac{x_1^{\nu_1-1}}{(1-x_1)^{\nu_1+1}}\int^\infty_0x_2^{\nu_1+\nu_2-1}e^{-\al\frac{x_2}{1-x_1}}dx_2\\
+            &=\frac{\al^{\nu_1+\nu_2}}{\Gamma(\nu_1)\Gamma(\nu_2)}\frac{x_1^{\nu_1-1}}{(1-x_1)^{\nu_1+1}}\paren{\frac{1-x_1}{\al}}^{\nu_1+\nu_2}\int^\infty_0\paren{\frac{\al}{1-x_1}}^{\nu_1+\nu_2}x_2^{\nu_1+\nu_2-1}e^{-\frac{\al}{1-x_1}x_2}dx_2\\
+            &=\frac{\Gamma(\nu_1+\nu_2)}{\Gamma(\nu_1)\Gamma(\nu_2)}x_1^{\nu_1-1}(1-x_1)^{\nu_2-1}=\frac{1}{B(\nu_1,\nu_2)}x_1^{\nu_1-1}(1-x_1)^{\nu_2-1}.
+        \end{align*}
+    \end{description}
+\end{Proof}
+
+\subsection{正規分布のCauchy分布への変換}
+
+\begin{proposition}
+    $Y_1,Y_2\sim\rN(0,1)$を独立とする．確率変数
+    \[X_1:=\frac{Y_1}{Y_2}\]
+    は$\Cauchy(0,1)$に従う．
+\end{proposition}
+\begin{Proof}\mbox{}
+    \begin{description}
+        \item[変換の決定] 変換
+        \[\vctr{Y_1}{Y_2}=\vctr{X_1X_2}{X_2}=T\vctr{X_1}{X_2}\]
+        を考えると，
+        \[DT(x_1,x_2)=\mtrx{x_2}{x_1}{0}{1},\quad J_T(x_1,x_2)=x_2\]
+        より，
+        $\R\times\times\R\setminus\{0\}\to\R\times\R\setminus\{0\}$のJacobianの消えない可微分同相を与える．
+        \item[密度の計算] よって，
+        結合密度関数は
+        \begin{align*}
+            p^*(x_1,x_2)&=p(T(x_1,x_2))\abs{J_T(x_1,x_2)}\\
+            &=\frac{1}{2\pi}e^{-\frac{x_1^2x_2^2}{2}}e^{-\frac{x_2^2}{2}}\abs{x_2}.
+        \end{align*}
+        よって$x_1$の周辺密度関数は
+        \begin{align*}
+            p^*(x_1)&=\frac{1}{2\pi}\int_\R e^{-\frac{x_2^2}{2}(1+x_1^2)}\abs{x_2}dx_2\\
+            &=\frac{1}{\pi}\int^\infty_0e^{-\frac{x_2^2}{2}(1+x_1^2)}x_2dx_2\\
+            &=\frac{1}{\pi}\frac{1}{1+x_1^2}\SQuare{e^{-\frac{x_2^2}{2}(1+x_1^2)}}^0_{\infty}=\frac{1}{\pi}\frac{1}{1+x_1^2}.
+        \end{align*}
+    \end{description}
+\end{Proof}
+
+\begin{corollary}
+    正定値対称行列$\Sigma=(\sigma_{ij})\in M_2(\R)$について，$(Y_1,Y_2)\sim\rN(0,\Sigma)$とする．
+    このとき，
+    \[X_1:=\frac{Y_1}{Y_2}\sim\Cauchy\paren{\frac{\sigma_{12}}{\sigma_{22}},\frac{\sqrt{\det\Sigma}}{\sigma_{22}}}.\]
+\end{corollary}
+
+\section{自乗による変換}
+
+\subsection{一般論}
+
+\begin{corollary}
+    $Y\in L(\Om)$が密度$p$を持ち，$X:=Y^2$とする．
+    \begin{enumerate}
+        \item $T_1:\R^+\to\R^-,T_2:\R^+\to\R^+$を$T_1(x):=-\sqrt{x},T_2(x):=\sqrt{x}$で定めると，命題\ref{prop-transformation-of-density-through-change-of-variable}の条件を満たす．
+        \item $X$の密度は次で表される：
+        \[p^*(x)=\frac{1}{2\sqrt{x}}\Paren{p(\sqrt{x})+p(-\sqrt{x})}1_{\R^+}(x),\qquad(x\in\R).\]
+        \item 特に$Y$が対称であるとき，$X$の密度は次で表される：
+        \[f_X(x)=\frac{p(\sqrt{x})}{\sqrt{x}}1_{\R^+}(x).\]
+    \end{enumerate}
+\end{corollary}
+
+\subsection{正規分布の二乗はｶｲ二乗分布}
+
+\begin{proposition}
+    $Z\sim\rN(0,1)$のとき，$Z^2\sim\chi^2(1)$．
+\end{proposition}
+\begin{Proof}
+    系より，
+    \[f_X(x)=\frac{\phi(\sqrt{x})}{\sqrt{x}}1_{\R^+}(x)=\frac{\frac{1}{\sqrt{2\pi}}e^{-\frac{x}{2}}}{\sqrt{x}}=\frac{1}{\sqrt{2\pi x}}e^{-\frac{x}{2}}.\]
+\end{Proof}
+
+\section{和による変換}
+
+\subsection{一般論}
+
+\begin{theorem}
+    $X_1,X_2\in L(\Om;\R^d)$は独立で，密度関数$f_1,f_2$を持つとする．このとき，$X_1+X_2$について，
+    \begin{enumerate}
+        \item 絶対連続である．
+        \item 密度関数は
+        \[p(x)=\int_{\R^d}f_1(x-y)f_2(y)dy.\]
+    \end{enumerate}
+\end{theorem}
+
+\subsection{二項分布はBernoulli分布の畳み込み}
+
+\begin{proposition}\mbox{}
+    \begin{enumerate}
+        \item $\Bin(n_1,p)*\Bin(n_2,p)=\Bin(n_1+n_2,p)$．
+        \item 二項分布$\Bin(n,p)$は$\Ber(p)$の$n$重の畳み込みである．
+    \end{enumerate}
+\end{proposition}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item $\Bin(n,p)$の確率母関数は
+        \begin{align*}
+            g(z)&=\sum_{k=0}^\infty p_kz^k\\
+            &=\sum_{k=0}^n\comb{n}{k}(pz)^k(1-p)^k=(pz+q)^n.
+        \end{align*}
+        よって，$\Bin(n_1,p)*\Bin(n_2*p)=\Bin(n_1+n_2,p)$．
+        \item $\Ber(p)=\Bin(1,p)$であるから，特別な場合である．
+    \end{enumerate}
+\end{Proof}
+
+\subsection{Poisson分布の再生性}
+
+\begin{proposition}\mbox{}
+    \begin{enumerate}
+        \item $\Pois(\lambda_1)*\Pois(\lambda_2)=\Pois(\lambda_1+\lambda_2)$．
+        \item $\Hermite(\al_1,\beta_1)*\Hermite(\al_2,\beta_2)=\Hermite(\al_1+\al_2,\beta_1+\beta_2)$．
+        \item $\Skellam(\al_1,\beta_1)*\Skellam(\al_2,\beta_2)=\Skellam(\al_1+\al_2,\beta_1+\beta_2)$．
+    \end{enumerate}
+\end{proposition}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item Poisson分布の確率母関数は
+        \begin{align*}
+            g(z)&=\sum_{n=0}^\infty\frac{\lambda^n}{n!}e^{-\lambda}z^n=e^{-\lambda}e^{\lambda z}=e^{\lambda(z-1)}.
+        \end{align*}
+        であるから，
+        $\Pois(\lambda_1)*\Pois(\lambda_2)$の確率母関数は$e^{(\lambda_1+\lambda_2)(z-1)}$．
+    \end{enumerate}
+\end{Proof}
+
+\subsection{指数分布の独立和}
+
+\begin{proposition}\mbox{}
+    \begin{enumerate}
+        \item $X_1,\cdots,X_n\sim\Exp(\lambda)=G(\lambda,1)$が独立同分布ならば，$X_1+\cdots+X_n\sim G(\lambda,n)$．
+        \item $X_i-X_j\sim\mathrm{Lap}(0,\lambda^{-1})$．
+    \end{enumerate}
+\end{proposition}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item 指数分布$\Exp(\lambda)=G(\lambda,1)$の特性関数$\frac{1}{1-\frac{iu}{\lambda}}$の$n$乗は$G(\lambda,n)$の特性関数であるから，
+    \end{enumerate}
+\end{Proof}
+
+\begin{proposition}
+    $N\sim\Pois(\lambda)$として，$\Exp(\mu)\;(\mu>0)$の独立同分布列の$N$項和
+    \[Y:=X_1+\cdots+X_N\]
+    について，
+    \begin{enumerate}
+        \item 特性関数は$\varphi_Y(u)=\exp\paren{\frac{iu\lambda}{\mu-iu}}$．
+        \item 平均は$\al_1=\frac{\lambda}{\mu}$．
+        \item 分散は$\mu_2=\frac{2\lambda }{\mu^2}$．
+    \end{enumerate}
+\end{proposition}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item 繰り返し期待値の法則より，
+        \begin{align*}
+            E[e^{iuY}]&=E[E[e^{iu(X_1+\cdots+X_N)}|N=n]]=E\Square{\paren{\frac{\mu}{\mu-iu}}^N}\\
+            &=\sum_{n=0}^N\paren{\frac{\mu}{\mu-iu}}^n\frac{\lambda^n}{n!}e^{-\lambda}=e^{\frac{\mu\lambda}{\mu-iu}}e^{-\lambda}.
+        \end{align*}
+        \item 積率母関数は$M(t)=e^{\frac{\lambda t}{\mu-t}}$となる．この微分は
+        \[\dd{M}{t}=\paren{\frac{\lambda}{\mu-t}+\frac{\lambda t}{(\mu-t)^2}}e^{\frac{\lambda t}{\mu-t}},\]
+        \[\dd{^2M}{t^2}=\paren{\frac{2\lambda}{(\mu-t)^2}+\frac{2\lambda t}{(\mu-t)^3}}e^{\frac{\lambda t}{\mu-t}}+\paren{\frac{\lambda}{\mu-t}+\frac{\lambda t}{(\mu-t)^2}}^2e^{\frac{\lambda t}{\mu-t}}.\]
+        よって，$\al_1=M'(0)=\frac{\lambda}{\mu}$．
+        \item $\al_2=M''(0)=\frac{2\lambda}{\mu^2}-\paren{\frac{\lambda}{\mu}}^2$．
+        $\mu_2=\al_2-\al_1^2=\frac{2\lambda }{\mu^2}$．
+    \end{enumerate}
+\end{Proof}
+
+\subsection{Gamma分布の再生性}
+
+\begin{proposition}
+    $\GAMMA(\al,\nu_1)*\GAMMA(\al,\nu_2)=\GAMMA(\al,\nu_1+\nu_2)$．
+\end{proposition}
+
+\subsection{総和核の再生性}
+
+\begin{proposition}\mbox{}
+    \begin{enumerate}
+        \item $\Cauchy(\mu_1,\sigma_1)*\Cauchy(\mu_2,\sigma_2)=\Cauchy(\mu_1+\mu_2,\sigma_1+\sigma_2)$．
+        \item $\rN(\mu_1,\sigma_1^2)*\rN(\mu_2,\sigma_2^2)=\rN(\mu_1+\mu_2,\sigma_1^2+\sigma_2^2)$．
+        \item $\IG(\delta_1,\gamma)*\IG(\delta_2,\gamma)=\IG(\delta_1+\delta_2,\gamma)$．
+    \end{enumerate}
+\end{proposition}
+
+\section{順序統計量}
+
+\subsection{順序統計量の密度関数}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    順序統計量の考え方は，
+    「ボールと区切り」の議論の一般形である．
+\end{tcolorbox}
+
+\begin{theorem}\label{thm-cdf-of-order-statistic}
+    $X_1,\cdots,X_n$を独立同分布列，その分布関数を$F$とすると，$r$番目の順序統計量$X_{n:r}$の分布関数$F_r$は次のように表せる：
+    \[F_r(x)=\sum_{i=r}^n \comb{n}{i}F(x)^i(1-F(x))^{n-i}.\]
+\end{theorem}
+\begin{Proof}
+    $X_{n:n+1}=\infty$と定めると，事象$\Brace{X_{n:r}\le x}=\Brace{x\in\cointerval{X_{n:r},\infty}}$を，どの区間$[X_{n:i},X_{n:i+1}]\;(i=r,\cdots,n)$に入るかで場合分けして考えることより，
+    \[F_r(x)=P[X_{n:r}\le x]=\sum_{i=r}^nP[X_{n:i}\le x<X_{n:i+1}]\]
+    であるが，
+    \[\Brace{X_{n:i}\le x<X_{n:i+1}}=\Brace{x\text{以下の観測が}i\text{個}}\]
+    に注意すれば，右辺は$Y:=1_{\Brace{X\le x}}\sim B(n,p)$に関する事象と見て，その確率を計算出来る：
+    \[P[X_{n:i}\le x<X_{n:i+1}]=\comb{n}{i}F(x)^i(1-F(x))^{n-1}.\]
+\end{Proof}
+
+\begin{corollary}
+    $X_1$の分布は絶対連続とする．このとき，$X_{n:r}$も絶対連続で，
+    \[f_r(x)=r\comb{n}{r}F(x)^{r-1}(1-F(x))^{n-r}f(x).\]
+    特に，
+    $\max_{i\in[n]}X_i=X_{n:n},\min_{i\in[n]}X_i=X_{n:1}$の密度関数は，それぞれ
+    \[f_n(x)=nF(x)^{n-1}f(x),\quad f_1(x)=n(1-F(x))^{n-1}f(x).\]
+\end{corollary}
+\begin{Proof}
+    $F_r$の微分による．
+\end{Proof}
+\begin{remarks}
+    より本質的な議論は次のようになる．$\R$を$(-\infty,x),(x,x+dx),(x+dx,\infty)$に分割し，$X$がどこに入るかについて3項分布$\Mult_3(F(x),f(x)dx,1-F(x+dx))$に従う．
+    これに対して$n$が$(r-1,1,n-r)$にわかれれば良いので，その確率密度関数は
+    \[f_r(x)dx=\comb{n}{r-1\;1\;n-r}F(x)^{r-1}f(x)dx(1-F(x))^{n-r}.\]
+\end{remarks}
+
+\subsection{結合密度関数}
+
+\begin{proposition}
+    $X_1,X_2,\cdots,X_n$を独立同分布，その密度を$f(x)$とする．
+    \begin{enumerate}
+        \item $(X_{n:1},\cdots,X_{n:n})$の結合密度関数は，
+        \[f(x_1,\cdots,x_n)=\begin{cases}
+            n!P[X_1=x_1]\cdots P[X_n=x_n]&x_1\le x_2\le\cdots\le x_n,\\
+            0&\otherwise
+        \end{cases}=n!f(x_1)\cdots f(x_n)1_{\Brace{x_1\le x_2\le\cdots\le x_n}}.\]
+        \item $i<j$について，$(X_{n:i},X_{n:j})$の結合密度関数は，
+        \[f_{i,j}(u,v)=\frac{n!}{(i-1)!(j-i-1)!(n-j)!}F(u)^{i-1}(F(v)-F(u))^{j-i-1}(1-F(v))^{n-j}f(u)f(v)1_{\Brace{u<v}}.\]
+    \end{enumerate}
+\end{proposition}
+
+\subsection{一様分布の順序統計量はBeta分布に従う}
+
+\begin{corollary}[一様分布の順序統計量の密度]
+    $X_1,\cdots,X_n\sim U([0,1])$を独立同分布とする．$r$番目の順序統計量$X_{n:r}$について，$X_{n:r}\sim\Beta(r,n-r+1)$．
+\end{corollary}
+\begin{Proof}
+    定理\ref{thm-cdf-of-order-statistic}より，
+    \[f_r(x)=r\comb{n}{r}x^{r-1}(1-x)^{n-r}1=\frac{n!}{(r-1)!(n-r)!}x^{r-1}(1-x)^{n-r}.\]
+    特に階乗部分を$\frac{\Gamma(n+1)}{\Gamma(r)\Gamma(n-r+1)}$とみれば，これは$\Beta(r,n-r+1)$の確率密度関数である．
+\end{Proof}
+
+\begin{example}[一様分布族の完備十分統計量]
+    このことから，一様分布の族$(\rU(0,\theta)^{\otimes n})_{\theta>0}$について，最大値を表す順序統計量$X_{n:n}$が完備十分統計量を与えることが判る．
+\end{example}
+\begin{Proof}\mbox{}
+    \begin{description}
+        \item[十分性] $\wt{1}_A:=\sum_{\sigma\in S_n}\frac{1_A(\sigma(x))}{n!}\;(A\in\B(\R^n))$について，
+        \[q(A|t):=\int_{\R^{n-1}}\wt{1}_A(x_1,\cdots,x_{n-1},t)\frac{1}{t^{n-1}}\sum_{j=1}^{n-1}1_{(0,t)}(x_j)dx_1\cdots dx_{n-1},\qquad(A\in\B(\R^n))\]
+        と定めると，これが$T$を与えた下での$x$の条件付き確率分布を与えることを示せば良い．$U(0,\theta)^{\otimes n}$の密度は
+        \[P_\theta(dx)=\frac{1}{\theta^n}\prod_{j\in[n]}1_{(0,\theta)}(x_j)dx,\qquad(x\in\R^n)\]
+        であるから，任意の$A\in\B(\R^n),B\in\B(\R)$に対して，
+        \begin{align*}
+            P_\theta[A\cap T^{-1}(B)]&=\int_{\R^n}\wt{1}_A(x)1_B(T(x))\frac{1}{\theta^n}\prod_{j\in[n]}1_{(0,\theta)}(x_j)dx\\
+            &=n\int_{\R^n}\wt{1}_A(x)1_B(x_n)\frac{1}{\theta^n}\prod_{j=1}^{n-1}1_{(0,x_n)}(x_j)1_{(0,\theta)}(x_n)dx\\
+            &=\int_Bq(A|x_n)P^T_\theta(dx_n).
+        \end{align*}
+        \item[完備性] 任意の可測関数$h:\R_+\to\R$について，$E^T_\theta[h]=0\Leftrightarrow E_\theta[h(T)]=0$とする．
+        一様分布$U(0,1)$からの標本の順序統計量$T$は$\Beta(n,1)$に従うから，今回の$T$の密度は
+        \[p_\theta(t)=\frac{1}{\theta^n}nt^{n-1}1_{(0,\theta)}(t)\]
+        であることに注意すれば，
+        \[\int^\theta_0h^+(t)t^{n-1}dt=\int^\theta_0h^-(t)t^{n-1}dt\quad(\theta>0)\]
+        が必要なことが判る．これは$(0,\infty)$上殆ど至る所$h^+=h^-$であることを要請しており，$\R_+$上殆ど至る所$h=0$であることが解った．
+    \end{description}
+\end{Proof}
+
+\subsection{指数分布の場合}
+
+\begin{proposition}
+    $X_1,\cdots,X_n$をそれぞれ母数$\lambda_1,\cdots,\lambda_n$を持つ指数分布に従う独立確率変数とする．
+    \begin{enumerate}
+        \item $X_{(1)}=\min\Brace{X_1,\cdots,X_n}\sim\Exp(\lambda_1+\cdots+\lambda_n)$．
+        \item 簡単のため同分布の仮定$\lambda=\lambda_1=\cdots=\lambda_n$をおく．このとき，
+        \[X_{(n)}\overset{d}{=}\max_{i\in[n]}X_i=X_1+\frac{1}{2}X_2+\cdots+\frac{1}{n}X_n.\]
+        特に，もはや指数分布には従わない．
+    \end{enumerate}
+\end{proposition}
+
+\begin{remark}[パラメータ変換$T$は本当に可微分同相に取れて居るか？]
+    次の議論の問題点を指摘できるか？
+\end{remark}
+\begin{Proof}[［誤った議論］]
+    積分を通じて，$(E_{(1)},E_{(2)})$の周辺密度関数は，結合密度関数$f(x,y,z)=6e^{-(x+y+z)}1_{\Brace{x\le y\le z}}$を積分することより，
+    \begin{align*}
+        f_{1,2}(x,y)&=\int^{z=\infty}_{z=y}6e^{-(x+y+z)}1_{\Brace{x\le y}}dz
+        =\SQuare{-6e^{-(x+y+z)}1_{\Brace{x\le y}}}^{z=\infty}_{z=y}=6e^{-(x+2y)}1_{\Brace{x\le y}}.
+    \end{align*}
+    $2(E_{(2)}-E_{(1)})$の密度は，$Y_1:=2(E_{(2)}-E_{(1)}),Y_2:=E_{(2)}$と定めると，逆に解くことで
+    \[\begin{cases}
+        E_{(1)}=Y_2-\frac{Y_1}{2}\\
+        E_{(2)}=Y_2
+    \end{cases}\]
+    であるから，この線型変換のJacobianは$-\frac{1}{2}$で，結合密度は
+    \[p(y_1,y_2)=6e^{-(3y_2-y_1/2)}\frac{1}{2}.\]
+    $y_2$について積分することで，$2(E_{(2)}-E_{(1)})$の密度は，
+    \begin{align*}
+        \int^\infty_0p(y_1,y_2)dy_2=\int^\infty_03e^{-3y_2+\frac{y_1}{2}}dy_2=\SQuare{-e^{-3y_2+\frac{y_1}{2}}}^\infty_0=e^{y_1/2}.
+    \end{align*}
+\end{Proof}
+
+\begin{proposition}
+    $X_1,\cdots,X_n\sim\Exp(\lambda)$を独立とする．$X_{n:0}:=0$とし，
+    \[Y_j:=(n-j+1)(X_{n:j}-X_{n:j-1}),\qquad j\in[n]\]
+    とすると，$Y_1,\cdots,Y_n$は再び独立に指数分布に従う．
+\end{proposition}
+\begin{remarks}[Alfred Renyi (53)]
+    $X_1,\cdots,X_n\sim\Exp(\lambda)$を独立同分布とする．
+    このとき，独立同分布$Z_1,Z_2,\cdots\sim\Exp(1)$について，
+    \[X_{(i)}\overset{d}{=}\frac{1}{\lambda}\sum_{j=1}^i\frac{Z_j}{n-j+1}.\]
+\end{remarks}
+
+\subsection{順序統計量の関数である統計量}
+
+\begin{definition}
+    \begin{enumerate}
+        \item \textbf{中央値}とは，
+        \[X_{\mathrm{med}}:=\begin{cases}
+            X_{n:(n+1)/2}&n\text{が奇数のとき},\\
+            \frac{1}{2}(X_{n:n/2}+X_{n:(n/2+1)})&n\text{が偶数のとき}.
+        \end{cases}\]
+        \item \textbf{範囲の中央}とは，
+        \[T:=\frac{X_{n:1}+X_{n:n}}{2}.\]
+        \item \textbf{標本範囲}とは，
+        \[R:=X_{n:n}-X_{n:1}.\]
+    \end{enumerate}
+\end{definition}
+
+\begin{proposition}
+    $R,T$の結合密度は
+    \[f_{R,T}(r,t)=n(n-1)\paren{F\paren{t+\frac{r}{2}}-F\paren{t-\frac{r}{2}}}^{n-2}f\paren{t-\frac{r}{2}}f\paren{t+\frac{r}{2}}1_{R^+\times\R}(r,t).\]
+\end{proposition}
+
+\section{線型変換と正規標本統計量}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    Gauss系の線型変換はGauss系である．
+    Gauss確率変数が直交することは独立性に同値である．
+\end{tcolorbox}
+
+\subsection{標本平均と標本分散と不偏分散}
+
+\begin{definition}
+    $X_1,\cdots,X_n\sim(\mu,\sigma^2)$を独立同分布とする．
+    \begin{enumerate}
+        \item 次の統計量を\textbf{標本平均}という：
+        \[\o{X}:=\frac{1}{n}\sum_{i\in[n]}X_i=\bP_n[X].\]
+        \item 平均母数$\mu=\mu_0$が所与のとき，
+        \[S^2(\mu_0):=\frac{1}{n}\sum_{i=1}^n(X_i-\mu_0)^2\]
+        を\textbf{$\mu_0$周りの標本分散}という．
+        \item 次の統計量を\textbf{標本分散}という：
+        \[S^2:=\frac{1}{n}\sum_{i=1}^n(X_i-\o{X})^2.\]
+        標本分散は標本平均の合成関数$S^2=S^2(\o{X})$である点に注意．
+        \item 次の統計量を\textbf{不偏分散}という：
+        \[U^2:=\frac{1}{n-1}\sum_{i=1}^n(X_i-\o{X})^2.\]
+    \end{enumerate}
+\end{definition}
+
+\begin{proposition}\mbox{}
+    \begin{enumerate}
+        \item $\o{X}\sim(\mu,\sigma^2/n)$．
+        \item 母平均が$\mu_0$に等しいとき，$S^2(\mu_0)\sim\paren{\sigma^2,\frac{\mu_4-\sigma^4}{n}}$．ただし，$\mu_4$は$4$次の中心積率とした．
+        \item $S^2\sim\paren{\paren{1-\frac{1}{n}}\sigma^2,\paren{1-\frac{1}{n}}^2\Var[U^2]}$．
+        \item $U^2\sim\paren{\sigma^2,\frac{1}{n}\paren{\mu_4-\frac{n-3}{n-1}\sigma^4}}$．
+    \end{enumerate}
+\end{proposition}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item \[E[\o{X}]=\frac{1}{n}\sum_{i\in[n]}E[X_i]=\frac{n\mu}{n}=\mu.\]
+        \begin{align*}
+            \Var[\o{X}]&=E[(\o{X}-\mu)^2]=E\Square{\paren{\frac{1}{n}\sum_{i\in[n]}X_i-\mu}^2}\\
+            &=E\Square{\frac{1}{n^2}\paren{\sum_{i\in[n]}(X_i-\mu)}^2}\\
+            &=\frac{1}{n^2}E\Square{\sum_{i\in[n]}(X_i-\mu)^2}+\frac{1}{n}\sum_{i\ne j}E[(X_i-\mu)(X_j-\mu)]\\
+            &=\frac{n\sigma^2}{n^2}=\frac{\sigma^2}{n}.
+        \end{align*}
+        \item \[E[S^2(\mu_0)]=E\Square{\frac{1}{n}\sum_{i=1}^n(X_i-\mu_0)^2}=\sigma^2\]
+        \begin{align*}
+            \Var[S^2(\mu_0)]&=E\Square{\paren{\frac{1}{n}\sum_{i=1}^n(X_i-\mu_0)^2-\sigma^2}^2}\\
+            &=\frac{1}{n^2}E\Square{\paren{\sum_{i\in[n]}(X_i-\mu_0)^2-\sigma^2}^2}\\
+            &=\frac{1}{n^2}E\Square{\sum_{i\in[n]}(X_i-\mu_0)^4}-\frac{2\sigma^2}{n^2}E\Square{\sum_{i\in[n]}(X_i-\mu_0)^2}+\frac{\sigma^4}{n}\\
+            &=\frac{\mu_4}{n}-\frac{\sigma^4}{n}.
+        \end{align*}
+        \item \begin{align*}
+            \sum_{i\in[n]}(X_i-\o{X})^2&=\sum_{i\in[n]}(X_i-\mu+\mu-\o{X})^2\\
+            &=\sum_{i\in[n]}(X_i-\mu)^2+n(\o{X}-\mu)^2+2(\mu-\o{X})\sum_{i\in[n]}(X_i-\mu)\\
+            &=\sum_{i\in[n]}(X_i-\mu)^2+n(\o{X}-\mu)^2+2(\mu-\o{X})n(\o{X}-\mu)\\
+            &=\sum_{i\in[n]}(X_i-\mu)^2-n(\o{X}-\mu)^2.
+        \end{align*}
+        これを両辺$n$で割ると，
+        \[S^2=S^2(\mu)-(\o{X}-\mu)^2\]
+        であるから，(1)と(2)より，
+        \[E[S^2]=E[S^2(\mu)]-\Var[\o{X}]=\sigma^2-\frac{\sigma^2}{n}.\]
+        分散は，関係$S^2=\frac{n-1}{n}U^2$による．
+        \item (3)と同様の計算により，
+        \[E[U^2]=\frac{n}{n-1}E[S^2(\mu)]-\frac{n}{n-1}\Var[\o{X}]=\frac{n}{n-1}\sigma^2-\frac{n}{n-1}\frac{\sigma^2}{n}=\sigma^2.\]
+        分散は，$\mu=0$と仮定すると少し楽になるが，ものすごい計算量になる．
+    \end{enumerate}
+\end{Proof}
+\begin{remarks}
+    $U^2$は母平均の不偏推定量であるが，$S^2$の方が分散が小さいことに注目．
+\end{remarks}
+
+\subsection{正規標本の場合}
+
+\begin{proposition}
+    $X_1,\cdots,X_n\sim\rN(\mu,\sigma^2)$を独立とする．
+    \begin{enumerate}
+        \item $\frac{nS^2(\mu)}{\sigma^2}\sim\chi^2(n)$．
+        \item この確率変数は，
+        \[\frac{nS^2(\mu)}{\sigma^2}=\frac{n-1}{\sigma^2}U^2+\frac{n(\o{X}-\mu)^2}{\sigma^2}\]
+        と独立な2つの確率変数の和に分解され，右辺第1項は$\chi^2(n-1)$，第2項は$\chi^2(1)$に従う．
+    \end{enumerate}
+\end{proposition}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item \[\frac{nS^2(\mu)}{\sigma^2}=\frac{\sum_{i=1}^n(X_i-\mu)^2}{\sigma^2}\]
+        は，$\frac{X_i-\mu}{\sigma}\sim\rN(0,1)$の二乗の独立和であるため．
+        \item \begin{align*}
+            \sum_{i\in[n]}(X_i-\mu)^2&=\sum_{i\in[n]}(X_i-\o{X}+\o{X}-\mu)^2\\
+            &=\sum_{i\in[n]}(X_i-\o{X})^2+2(\o{X}-\mu)\underbrace{\sum_{i\in[n]}(X_i-\o{X})}_{=0}+n(\o{X}-\mu)^2\\
+            &=\sum_{i\in[n]}(X_i-\o{X})^2+n(\o{X}-\mu)^2.
+        \end{align*}
+        この両辺を$\sigma^2$で割ると表式を得る．
+        独立性$S^2\indep\o{X}$は次から従う．
+    \end{enumerate}
+\end{Proof}
+
+\begin{proposition}
+    $X_1,\cdots,X_n\sim\rN(\mu,\sigma^2)$を独立同分布列，
+    $x:=(X_1,\cdots,X_n)^\top$とする．
+    \begin{enumerate}
+        \item $B\in M_{mn}(\R),A\in M_n(\R)$を対称行列とする．$BA=O$のとき，2つの確率変数$Bx$と$x^\top Ax$とは独立になることを示せ．
+        \item 標本平均$\o{X}=\frac{1}{n}\sum_{i=1}^nX_i$と標本分散$S^2=\frac{1}{n-1}\sum_{i=1}^n(X_i-X)^2$が独立であることを示せ．
+    \end{enumerate}
+\end{proposition}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item $A$は対称行列だから，ある直交行列$U\in \r{O}_n(\R),U^\top U=I_n$を用いて，$U^\top DU=A$と対角化出来る．
+        よって，$y:=Ux\in\R^n$と定めると，これは再び独立な正規確率変数のベクトル$y\sim\rN(\mu U1_n,\sigma^2I_n)$で，
+        \[x^\top Ax=(Ux)^\top D(Ux)=a_1y_1^2+\cdots+a_ry_r^2,\qquad r:=\rank A,D=:\diag(a_1,\cdots,a_r)\]
+        と表せる．次に，$BA=0$より，$\Im A\subset\Ker B$すなわち$\Im B\subset\Ker A$であるから，
+        $Bx$は$y_{r+1},\cdots,y_{n}$のみによって表せる確率変数のベクトルである(使わないものもあるかもしれないが)．
+        よって，$Bx$と$x^\top Ax$は独立．
+        \item $m=1,B:=\frac{1}{n}1_n^\top$と
+        \[A:=\frac{1}{n-1}\begin{pmatrix}1-\frac{1}{n}&-\frac{1}{n}&\cdots&-\frac{1}{n}\\-\frac{1}{n}&1-\frac{1}{n}&\cdots&-\frac{1}{n}\\\vdots&\ddots&\ddots&\vdots\\-\frac{1}{n}&-\frac{1}{n}&\cdots&1-\frac{1}{n}\end{pmatrix}^2=:\frac{1}{n-1}\Lambda^2\]
+        と定めると，$B\Lambda=O$より，$BA=O$であり，同時に$\o{X}=Bx$かつ$S^2=x^\top Ax$である．
+    \end{enumerate}
+\end{Proof}
+\begin{remarks}
+    (1)の事実は
+    $B:=\frac{bb^\top}{\norm{b}^2}$を射影行列とし，
+    \[X^\top AX\indep b^\top X\Leftrightarrow X^\top AX\indep X^\top BX\]
+    に注意すれば，
+    Fisher-Cochranの定理\ref{cor-Fisher-Cochran}からすぐに従う．
+    また，Basuの定理からも従う\ref{cor-Basu}．
+    (2)の独立な標本の標本平均と標本分散が独立であるという事実は，標本が正規分布に従っているという事実を特徴付ける\cite{Kawata-Sakamoto49}．
+\end{remarks}
+
+\subsection{線形変換と独立性}
+
+\begin{theorem}[Levy (57)]
+    $X,Y\in L(\Om)$は，ある$U\indep X,V\indep Y$を満たす$U,V\in L(\Om)$について，
+    独立確率変数の線型和
+    \[\begin{cases}
+        Y=aX+U,\\
+        X+bY+V
+    \end{cases}\]
+    と表されているとする．このとき，次の3つのいずれかが成り立つ：
+    \begin{enumerate}
+        \item $\{X,Y\}$はGauss系である．
+        \item $X\indep Y$．
+        \item $X,Y$間に線型関係がある．
+    \end{enumerate}
+\end{theorem}
+
+\subsection{線形変換と収束}
+
+\begin{theorem}[Cramer-Wold]
+    $X_n,X\in L(\Om;\R^d)$について，次は同値：
+    \begin{enumerate}
+        \item $X_n\dto X$．
+        \item 任意の$a\in\R^d$について，$a^\top X_n\dto a^\top X$．
+    \end{enumerate}
+\end{theorem}
+
+\section{混合分布}
+
+\chapter{確率分布の例}
+
+\begin{quotation}
+    純不連続分布を離散分布ともいう．
+    離散分布というクラスは，極限構成について閉じていないという意味で，理論的な実用性がない．
+    極限について議論するには，絶対連続分布と実数というところに行き着く．
+\end{quotation}
+
+\section{一次元純不連続分布の例}
+
+\subsection{離散一様分布}
+
+\begin{definition}[discrete uniform distribution]
+    有限集合$[n]\;(n\in\N^+)$上の
+    定値関数$p=\frac{1}{n}$を確率関数として定まる分布$\r{U}:\N^+\to P(\N)$を\textbf{離散一様分布}という．
+\end{definition}
+
+\begin{proposition}[離散一様分布の特性値]\mbox{}
+    \begin{enumerate}
+        \item 平均：$\al_1(\rU(n))=\frac{n+1}{2}$．
+        \item 分散：$\mu_2(\rU(n))=\frac{n^2-1}{12}$．
+        \item 歪度と尖度：$\gamma_1=0,\gamma_2=\frac{3(3n^2-7)}{5(n^2-1)}$．
+        \item 確率母関数：$g(z)=\frac{z(1-z^n)}{n(1-z)}$．
+    \end{enumerate}
+\end{proposition}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item \[E[X]=\sum_{x=1}^nx\frac{1}{n}=\frac{1}{n}\times\frac{1}{2}n(n+1)=\frac{n+1}{2}.\]
+        \item \[E[X^2]=\sum_{x=1}^nx^2\frac{1}{n}=\frac{1}{6}(n+1)(2n+1).\]
+        より，
+        \[\Var[X]=E[X^2]-E[X]^2=\frac{2n^2+3n+1}{6}-\frac{n^2+2n+1}{4}=\frac{n^2-1}{12}.\]
+        \item 引き続き，和の公式より4次の積率までは求まる．
+        \item 等比級数の和の公式より，
+        \begin{align*}
+            g(z)&=E[z^X]=\frac{1}{n}(t+t^2+\cdots+t^n)\\
+            &=\frac{1}{n}\frac{z(1-z^n)}{1-z}.
+        \end{align*}
+    \end{enumerate}
+\end{Proof}
+
+\subsection{二項分布}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    $\r{B}(n,p)$とは成功確率$p$の試行を独立に$n$回繰り返した際の成功回数の分布である．
+    二項定理より，確率母関数は$g(z)=(pz+(1-p))^n$となる．
+\end{tcolorbox}
+
+\begin{definition}[binomial distribution]
+    可測空間$(n+1,P(n+1))$において，
+    \begin{enumerate}
+        \item \textbf{二項分布}$\r{B}(n,p):\N\times[0,1]\to P(\N)$は，次の確率質量関数で定義される確率分布である：
+        \[b(x;n,p)=\begin{pmatrix}n\\x\end{pmatrix}p^xq^{n-x}\quad x\in n+1.\]
+        成功確率が$p$で一定な試行（Bernoulli試行という）を独立に$n$回続けた際の成功回数が従う確率分布である．
+        \item $\Bernoulli(p):=\rB(1,p)$は$\{0,1\}$上の確率分布であり，\textbf{Bernoulli分布}という．
+    \end{enumerate}
+\end{definition}
+
+\begin{proposition}[二項分布の平均と分散]\mbox{}
+    \begin{enumerate}
+        \item 平均：$\al_1(b(n,p))=np$．
+        \item 確率母関数：$g(z)=(pz+q)^n$．
+        \item 分散：$\mu_2(b(n,p))=npq$．
+    \end{enumerate}
+\end{proposition}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item \begin{align*}
+            \mu&=\sum^n_{x=0}x\begin{pmatrix}n\\x\end{pmatrix}p^xq^{n-x}\\
+            &=\sum^n_{x=0}x\frac{n!}{x!(n-x)!}p^xq^{n-x}\\
+            &=np\sum^n_{x=1}\frac{(n-1)!}{(x-1)!(n-x)!}p^{x-1}q^{n-x}\\
+            &=np\sum^{n-1}_{y=0}\frac{(n-1)!}{y!(n-1-y)}p^yq^{n-1-y}&y:=x-1\\
+            &=np\sum^{n-1}_{y=0}b(n-1,p)=np.
+        \end{align*}
+        \item 確率関数$(b(x;n,p))_{x\in n+1}$が定める母関数$g:\R\to\R$は
+        \begin{align*}
+            g(z)&=\sum^n_{x=0}b(x;n,p)z^x\\
+            &=\sum^n_{x=0}\begin{pmatrix}n\\x\end{pmatrix}p^xq^{1-x}z^x
+            =(pz+q)^n
+        \end{align*}
+        と表せる．
+        \item $g'(z)=np(pz+q)^{n-1},g''(z)=n(n-1)p^2(pz+q)^{n-2}$より，分散公式\ref{lemma-variance-formula}から，
+        \[\sigma^2=g''(1)+g'(1)-g'(1)^2=n(n-1)p^2+np-n^2p^2=npq.\]
+    \end{enumerate}
+\end{Proof}
+\begin{remarks}
+    確率母関数が，二項展開の式に一致することから，ここに予想だにしなかった抜け道がある．
+\end{remarks}
+
+\subsection{Poisson分布}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    指数関数$e^{z}$のMaclaurin展開
+    \[e^{z}=1+z+\frac{z^2}{2!}+\cdots+\frac{z^x}{x!}+\cdots\]
+    の速さで減少する稀現象の模型であり，その時の$z=\lambda$を強度という．
+    確率母関数$g(z)=e^{\lambda(z-1)}$を持ち，平均も分散も$\lambda$に一致する．
+    二項分布$B(n,p)$を，$np=\lambda>0$を一定にしながら稀現象・大量観測になるような極限分布は，1次元統計多様体をなす．
+\end{tcolorbox}
+
+\begin{definition}[Poisson distribution (1838)]
+    可測空間$(\N,P(\N))$上の\textbf{Poisson分布}$\Pois(\lambda):(0,\infty)\to P(\N)$とは，質量関数
+    \[p(x;\lambda)=\frac{\lambda^x}{x!}e^{-\lambda}\quad x\in\N\]
+    が定める確率分布である．
+    母数$\lambda$は，単位時間当たりの事象の平均発生回数などの割合と見なされる場合は，\textbf{到着率}と呼ばれる．
+\end{definition}
+
+\begin{proposition}[分布の特性値]\mbox{}
+    \begin{enumerate}
+        \item well-definedness：$\sum_{x\in\N}p(x;\lambda)=1$．
+        \item 平均も分散も$\lambda$である．
+        \item 確率母関数：$g(z)=e^{\lambda(z-1)}$．
+        \item したがって積率母関数は$M(t)=e^{\lambda(e^t-1)}$で，その導関数は
+        \begin{enumerate}
+            \item $M'(t)=\lambda e^tM(t)$．
+            \item $M''(t)=(\lambda^2e^{2t}+\lambda e^t)M(t)$．
+            \item $M'''(t)=(\lambda^3e^{3t}+3\lambda^2e^{2t}+\lambda e^t)M(t)$．
+        \end{enumerate}
+        \item よって積率は順に
+        \begin{enumerate}
+            \item $\al_1=\lambda$．
+            \item $\al_2=\lambda^2+\lambda$．
+            \item $\al_3=\lambda^3+3\lambda^2+\lambda$．
+        \end{enumerate}
+    \end{enumerate}
+\end{proposition}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item $e^\lambda$のTaylor展開を考えることより，$\sum_{n\in\N}\frac{\lambda^n}{n!}=e^\lambda$．
+        \item 平均は
+        \[\sum_{n=1}^\infty\frac{\lambda^n}{n!}e^{-\lambda}n=\lambda e^{-\lambda}\sum_{n=1}^\infty\frac{\lambda^{n-1}}{(n-1)!}=\lambda.\]
+        分散は，確率母関数$g$について$g''(1)+\al_1-(\al_1)^2=\lambda^2+\lambda-\lambda^2=\lambda$．
+        \item 確率変数列$(p(x;\lambda))_{x\in\N}=\paren{\frac{\lambda^x}{x!}e^{-\lambda}}_{x\in\N}$が定める母関数は，
+        \begin{align*}
+            g(z)&=\sum_{x=0}^\infty \paren{\frac{\lambda^x}{x!}e^{-\lambda}}z^x\\
+            &=e^{-\lambda}\sum_{x=0}^\infty\frac{(\lambda z)^x}{x!}=e^{-\lambda}e^{\lambda z}=e^{\lambda(z-1)}.
+        \end{align*}
+    \end{enumerate}
+\end{Proof}
+
+\begin{history}[Poisson分布を総事故数で条件付けると二項分布を得る (Poisson 1873)]
+    $X_1,X_2\sim\Pois(\lambda)$を独立とする．
+    \begin{enumerate}
+        \item Poisson分布の再生性：$T:=X_1+X_2\sim\Pois(2\lambda)$．
+        \item $X_1|T\sim\rB(t,1/2)$．
+    \end{enumerate}
+    すなわち，総事故数$T$は分布族$\{\Pois(\lambda)^{\otimes 2}\}_{\lambda\in\R^+}$の十分統計量である．
+\end{history}
+\begin{Proof}
+    母数を$\theta\in\R^+$で表す．Poisson分布の再生性$\Pois(\theta)*\Pois(\theta)=\Pois(2\theta)$に注意すれば，$T\sim\Pois(2\theta)$であり，
+    $P_\theta[\Brace{T=t}]$は$e^{-2\theta}\frac{(2\theta)^t}{t!}$と計算出来る．よって，条件付き確率は素朴に
+    \begin{align*}
+        P_\theta[\Brace{(x_1,x_2)}|T=t]&=\frac{P_\theta[\Brace{(x_1,x_2)}\cap\Brace{T=t}]}{P_\theta[\Brace{T=t}]}\\
+        &=\frac{e^{-\theta}\frac{\theta^{x_1}}{x_1!}e^{-\theta}\frac{\theta^{t-x_1}}{(t-x_1)!}}{e^{-2\theta}\frac{(2\theta)^t}{t!}}\\
+        &=\frac{\frac{1}{x_1!(t-x_1)!}}{2^t\frac{1}{t!}}=\frac{1}{2^t}\frac{t!}{x_1!(t-x_1)!}=\frac{1}{2^t}\comb{t}{x_1}.
+    \end{align*}
+    これは$\theta$に依らない．
+    特に，$X_1|T\sim\rB(t,1/2)$を得た．
+\end{Proof}
+\begin{history}
+    De Moivre (1711)からすでに利用されていた．Khinchin (1933)は，Poisson分布の，離散ジャンプ過程の最も初等的な形としてその歴史的な役割を果たしてきたことを指摘している．\cite{Last-Penrose-PoissonProcess}
+\end{history}
+
+\subsection{Poisson分布の出現}
+
+\begin{proposition}[二項分布の稀現象極限分布]
+    減衰する確率$p(n):=\frac{\lambda}{n}$についての二項分布$\rB(n,p(n))$を考える．
+    \begin{enumerate}
+        \item $\lim_{n\to\infty}b(x;n,p(n))=\frac{\lambda^x}{x!}e^{-\lambda}\;(\forall_{x\in\N})$を満たす．
+        \item $\rB\paren{n,\frac{\lambda}{n}}\Rightarrow\Pois(\lambda)$．
+    \end{enumerate}
+\end{proposition}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item \begin{align*}
+            b\paren{x;n,\frac{\lambda}{n}}&=\begin{pmatrix}n\\x\end{pmatrix}\paren{\frac{\lambda}{n}}^x\paren{1-\frac{\lambda}{n}}^{n-x}\\
+            &=\frac{n(n-1)\cdots (n-x+1)}{x!}\paren{\frac{\lambda}{n}}^x\paren{1-\frac{\lambda}{n}}^{n-x}\\
+            &=\frac{\lambda^x}{x!}\paren{1-\frac{1}{n}}\cdots\paren{1-\frac{x-1}{n}}\paren{1+\frac{-\lambda}{n}}^{n/(-\lambda)\cdot(-\lambda)}\paren{1-\frac{\lambda}{n}}^{-x}\\
+            &\xrightarrow{n\to\infty}\frac{\lambda^x}{x!}e^{-\lambda}
+        \end{align*}
+        この収束は一様収束である．
+    \end{enumerate}
+    \item (1)から，任意の$\rB(n,p(n))$の独立同分布列$\{X_n\}$について，
+    \[E[f(S_n)]=\sum_{k=0}^nf(k)b(x;n,p(n)),\qquad f\in C_b(\N).\]
+    は$E[f(X)]\;(X\sim\Pois(\lambda))$に収束することがわかる．
+\end{Proof}
+
+\begin{definition}[Poisson process]
+    $\lambda>0$を定数として，次の３条件を満たす確率過程$(N_t)_{t\in\R_+}$を\textbf{Poisson過程}または\textbf{Poisson配置}という：
+    \begin{enumerate}
+        \item 強度：$\forall_{t\in\R_+}\;\forall_{h>0}\;P[N_{t+h}-N_t=1]=\lambda(t) h+o(h)\;(h\searrow 0)$
+        \item 秩序性：$\forall_{t\in\R_+}\;\forall_{h>0}\;P[N_{t+h}-N_t\ge2]=o(h)\;(h\searrow 0)$．
+        \item $N_0=0\;\as$な独立増分過程である．
+    \end{enumerate}
+    $\lambda:\R_+\to\R^+$を強度といい，定数関数であるとき\textbf{定常過程}であるという．
+\end{definition}
+\begin{example}
+    空の星，ケーキの中の干しぶどう，材料のヒビ，野原に散らかった紙くずはPoisson配置に従う．
+    なお，Poisson過程の共分散関数は$K_\ep(t,s)=\lambda(t\land s)\;(t,s\in\R_+)$となる．
+\end{example}
+
+\begin{proposition}[Poisson過程の計数的性質]
+    Poisson過程$(N_t)$が定める，時刻$t$までの起こる回数
+    $(P_k(t):=P[N_t=k])_{k\in\N}$は$\N$上のPoisson分布$\Pois(\lambda t)$である．
+\end{proposition}
+\begin{Proof}\mbox{}
+    \begin{description}
+        \item[関係式の導出] 区間$\ocinterval{t,t+\Delta t}$で点事象が１回起こる確率が$\lambda\Delta(t)+o(\Delta t)$，２回以上起こる確率が$o(\Delta t)$より，０回起こる確率が$1-\lambda\Delta t-o(\Delta t)$だから，
+        \[P_k(t+\Delta t)=P_k(t)(1-\lambda\Delta t-o(\Delta t))+P_{k-1}(t)(\lambda\Delta t-o(\Delta t))+o(\Delta t)\]
+        となる．ただし，$k\in\N,P_{-1}(t)=0$とした．
+        $\Delta t\searrow 0$を考えることで，微分方程式
+        \[P'_k(t)=\lambda(P_{k-1}(t)-P_k(t)),\quad P_{-1}(t)=0\]
+        を得る．
+        \item[分布の導出]
+        まず$k=0$とすると，
+        \[P'_0(t)=-\lambda P_0(t),\quad P_0(0)=1\]
+        より，$P_0(t)=e^{-\lambda t}$．
+        次に$k=1$とすると，
+        \[P'_1(t)=\lambda(e^{-\lambda t})-P_1(t),\quad P_1(0)=0\]
+        より，$P_1(0)=\lambda te^{-\lambda t}$．
+        $k=2$とすると，
+        \[P'_2(t)=\lambda(\lambda te^{-\lambda t}-P_2(t)),\quad P_2(0)=0\]
+        より，$P_2(t)=\frac{(\lambda t)^2}{2}e^{-\lambda t}$．以下帰納的に，$P_k(t)=\frac{(\lambda t)^k}{k!}e^{-\lambda t}$を得る．
+    \end{description}
+\end{Proof}
+\begin{Proof}[\textbf{［別証明］}]
+    過程$(P_k(t))_{k\in\N}$の定める確率母関数$g(z,t)=\sum^\infty_{k=0}P_k(t)z^k$が，Poisson分布$\Pois(\lambda t)$の確率母関数$e^{\lambda t(z-1)}$に一致することを示しても良い．
+\end{Proof}
+
+\subsection{負の二項分布・幾何分布}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    独立なBernoulli試行が成功するまでの「待ち時間」を表す確率変数は，幾何分布に従う．
+    \cite{森岡-今西16-確率思考の戦略論}では消費者の特定ブランドの購買回数を負の二項分布でモデリングしている．
+\end{tcolorbox}
+
+\begin{definition}[negative binomial distribution / Pascal distribution, geometric distribution]\mbox{}
+    \begin{enumerate}
+        \item \textbf{負の二項分布}または\textbf{Pascal分布}$\NB(k,p):\N^+\times[0,1]\to P(\N)$を，Bernoulli試行$\Bernoulli(p)$が$k$回成功するために必要な失敗数$x\in\N$が従う確率分布とする．
+        \item 確率関数は，合計$k+x$回の試行で最後の一回は必ず成功である必要があるから，
+        \[p(x;k,p)=\begin{pmatrix}x+k-1\\x\end{pmatrix}p^kq^x\qquad(x\in\N^+,q:=1-p)\]と表せる．
+        \item 特に$k=1$の場合を\textbf{幾何分布}$\rG(p):=\NB(1,p)$といい，確率関数は$p(x;1,p)=pq^x\;(x\in\Z_+)$と表せる．
+        $(p(n))_{n\in\N}$が初項$p$で公比$q$の等比級数を定めるためである．
+        \item 確率母関数を見れば判る通り，負の二項分布$\NB(k,p)$は$k\in\R^+$上に延長できる．
+    \end{enumerate}
+\end{definition}
+
+\begin{lemma}[well-definedness]\mbox{}
+    \begin{enumerate}
+        \item 次の等式が$z\in\Delta,\al\in\R$上で成り立つ：
+        \[(1+z)^\al=1+\sum_{n=1}^\infty\frac{\al!}{n!(\al-n)!}z^n.\]
+        \item $\NB\in P(\N)$である．すなわち，
+        \[\sum_{k=m}^\infty \begin{pmatrix}k-1\\m-1\end{pmatrix}p^m(1-p)^{k-m}.\]
+    \end{enumerate}
+\end{lemma}
+
+\begin{proposition}[負の二項分布の確率母関数・平均・分散]\mbox{}
+    \begin{enumerate}
+        \item 負の二項分布$\NB(k,p)$の確率母関数は$g(z)=p^k(1-qz)^{-k}=\paren{\frac{p}{1-qz}}^k$で表せる．
+        \item 負の二項分布$\NB(k,p)$の平均は$\al_1=\frac{kq}{p}$，分散は$\mu_2=\frac{kq}{p^2}$である．
+    \end{enumerate}
+\end{proposition}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item $\abs{zq}<1$すなわち$\abs{z}<\frac{1}{q}$のとき，$(1-qz)^{-k}$の$z=0$におけるTaylor展開を考えると
+        \begin{align*}
+            (1-qz)^{-k}&=1+k(qz)+\frac{k(k+1)}{2!}(qz)^2+\cdots=\sum^\infty_{x=0}\frac{(-k)(-k-1)\cdots(-k-x+1)}{x!}(-qz)^x\\
+            &=\sum^\infty_{x=0}\frac{(x+k-1)(x+k-2)\cdots(k+1)k}{x!}(qz)^x\\
+            &=\sum^\infty_{x=0}\begin{pmatrix}x+k-1\\x\end{pmatrix}(qz)^x.
+        \end{align*}
+        $\left.\frac{(-k)(-k-1)\cdots(-k-x+1)}{x!}\right|_{x=0}=1$としたことに注意．
+        よって，$\NB(k,p)$の確率母関数は$g(z)=p^k(1-qz)^{-k}$．
+        \item 確率母関数と平均・分散の関係\ref{lemma-variance-formula}(3)より，
+        \begin{align*}
+            g'(z)&=kp^kq(1-qz)^{-k-1},&\mu&=g'(1)=\frac{kp^kq}{p^{k+1}}=\frac{kq}{p},\\
+            g''(z)&=k(k+1)p^kq^2(1-qz)^{-k-2},&\sigma^2&=g''(1)+g'(1)-(g'(1))^2\\
+            &&&=\frac{k(k+1)q^2}{p^2}+\frac{kq}{p}-\frac{k^2q^2}{p^2}\\
+            &&&=\frac{kq(p+q)}{p^2}=\frac{kq}{p^2}.
+        \end{align*}
+    \end{enumerate}
+\end{Proof}
+
+\begin{proposition}[Poisson近似]
+    平均$\lambda:=\frac{kq}{p}\in(0,\infty)$を一定にして，成功数を表す母数を$k\to\infty$とすると（このとき失敗率$q$は極めて小さくなる），Poisson分布$\Pois(\lambda)$に収束する：$\NB(k,p)\to\Pois(\lambda)\;(k\to\infty)$．
+\end{proposition}
+\begin{Proof}
+    確率関数が$\wt{p}(x)=\frac{\lambda^x}{x!}e^{-\lambda}$に収束することを見れば良い．
+    \begin{align*}
+        p(x;k,p)&=\begin{pmatrix}x+k-1\\x\end{pmatrix}p^kq^x\\
+        &=\frac{(x+k-1)\cdots(k+1)k}{x!}p^kq^x\\
+        &=\frac{(x+k-1)\cdots(k+1)k}{k^x}x!\paren{\frac{kq}{p}}^xp^{k+x}\\
+        &\xrightarrow[\lambda=\const]{k\to\infty}1\cdot\frac{\lambda^x}{x!}e^{-\lambda}.
+    \end{align*}
+    実際，
+    \[p^{k+x}=\paren{\frac{p}{p+q}}^{k+x}=\paren{1+\frac{\lambda}{k}}^{-(k+x)}\xrightarrow{k\to\infty}e^{-\lambda}.\]
+\end{Proof}
+
+\begin{remark}[幾何分布の無記憶性]
+    $X\sim G(\theta)$とするとき，
+    \[P(X\ge m+n|X\ge m)=P(X\ge n)\quad(m,n\in\N)\]
+    が成り立つ．これは，時刻$m$までに成功していないことはその後の成功までの待ち時間の分布に影響しないことを意味しているとみなせる．
+\end{remark}
+
+\subsection{Katz族}
+
+\begin{definition}[Katz family]
+    $\N$上の離散分布の族であって，$a,b\in\R$を用いた漸化式
+    \[p_0>0,\quad p_x=\paren{a+\frac{b}{x}}p_{x-1},\quad x\in\N\]
+    を満たす族を\textbf{Katz族}という．
+    この漸化式を満たすことを，\textbf{$(a,b,0)$-クラスの分布}であるという．
+\end{definition}
+\begin{example}\mbox{}
+    \begin{enumerate}
+        \item $\delta_0:a+b=0,p_0=1$のとき．
+        \item $\rB(n,\theta):a=-\frac{\theta}{1-\theta},\quad b=\frac{(n+1)\theta}{1-\theta},\quad p_0=(1-\theta)^n$．
+        \item $\Pois(\lambda):a=0,b=\lambda,p_0=e^{-\lambda}$．
+        \item $\NB(k,\theta):a=1-\theta,b=(k-1)(1-\theta),p_0=\theta^k$．
+    \end{enumerate}
+\end{example}
+
+\begin{proposition}[実際の母数はかなり狭い]
+    $\N$上の確率分布$p=(p_x)_{x\in\N}$がKatz族であるとする．このとき，$p$は上の例の４つの場合に限られる．
+    \begin{enumerate}
+        \item $a+b=0$ならば，$p=\delta_0$．
+        \item $a=0,b>0$ならば，$p=\Pois(b)$．
+        \item $a+b>0,a\in(0,1)$ならば，$p=NB((a+b)/a,1-a)$．
+        \item $a+b>0,a\in(-\infty,0)$ならば，$\exists_{n\in\N}\;a(n+1)+b=0,p=B(n,-a/(1-a))$．
+    \end{enumerate}
+    特に，$p$がデルタ測度$\delta_0$でなければ，$a+b>0$かつ$a<1$であり，確率母関数は
+    \[g(z)=\begin{cases}
+        \paren{\frac{1-az}{1-a}}^{-\frac{a+b}{a}},&a\ne 0,\\
+        \exp(b(z-1)),&a=0.
+    \end{cases}\]
+    と表せる．
+\end{proposition}
+
+\subsection{超幾何分布}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    母集団$N$のうちの$n$個体が，
+    サイズ$r$の標本調査を行った際に$x$個見つかる確率は超幾何分布に従う．
+    これは確率母関数がGaussの超幾何関数を用いて表せるためである．
+    $N\to\infty$の極限では，確率$n/N=:p$のBernoulli試行を$r$回繰り返した場合に等しい．
+    幾何分布には無記憶性があり，二項分布はBernoulli試行の独立反復であるが，初めての従属試行列を考えているとみなせる．
+\end{tcolorbox}
+
+\begin{definition}[hypergeometric distribution]
+    成功$n$個，失敗$N-n$個が入った多重集合から$r$個玉を取り出したときにそのうち成功が$x$個である確率
+    \[p(x;N,n,r)=\frac{\begin{pmatrix}n\\x\end{pmatrix}\begin{pmatrix}N-n\\r-x\end{pmatrix}}{\begin{pmatrix}N\\r\end{pmatrix}}\]
+    が，
+    $\Om:=\Brace{x\in\N\mid\max\{0,r-N+n\}\le x\le\min\{r,n\}}$上に
+    定める確率分布$\HG(N,n,r)$を\textbf{超幾何分布}という．
+\end{definition}
+
+\begin{proposition}\mbox{}
+    \begin{enumerate}
+        \item 平均は$\al_1=r\frac{n}{N}$．
+        \item 分散は$\mu_2=r\paren{\frac{N-r}{N-1}}\paren{\frac{n}{N}}\paren{1-\frac{n}{N}}$．
+        \item 確率母関数は$F(\al,\beta,\gamma;z)$を超幾何関数として，
+        \[g(z)=\frac{\begin{pmatrix}N-n\\r\end{pmatrix}F(-r,-n,N-n-r+1;z)}{\begin{pmatrix}N\\r\end{pmatrix}}.\]
+    \end{enumerate}
+\end{proposition}
+
+\subsection{超幾何分布の二項近似}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    超幾何分布は漸近論の導入により二項分布として扱える．
+\end{tcolorbox}
+
+\begin{example}[mark and recapture methodにおけるLincoln-Peterson推定量]
+    個体数$N$を推定するために，$n$匹を捕まえて，標識をつけて再放流する．十分な時間経過後にsamplingし，標識がついているものが$r$匹だった場合，$\wt{N}:=\frac{nr}{x}$によって$N$が推定できる．
+    これは，確率$p(x;N.n,r)$が最大になるような$N$の選び方で，最尤法の考え方である．
+\end{example}
+
+\begin{example}[Fisherの正確検定(exact test 1922)]
+    2つの2値変数の間に有意な関連があるかどうかの検定においては，超幾何分布が使える．これはFisherが発見した．
+    しかし，標本が大きいなどの場合は計算困難になるが(式が階乗を含むため)，その場合は$\chi^2$-検定が可能である．
+\end{example}
+
+\begin{proposition}[二項近似]
+    $\HG(N,n,r)$は，$N\to\infty$のとき，$\lim_{N\to\infty}\frac{n}{N}=:p$とすれば，$\rB(n,p)$で近似される．
+\end{proposition}
+
+\subsection{超幾何関数}
+
+\begin{problem}[hypergeometric differential equation]
+    \[\text{(GE)}\quad t(1-t)x''+(\gamma-(\al+\beta+1)z)x'-\al\beta x=0,\qquad\al,\beta,\gamma\in\C.\]
+    を\textbf{Gaussの超幾何微分方程式}という．
+    特異点は$\{0,1,\infty\}\subset\wh{\C}$に持つ．
+    \begin{enumerate}
+        \item $U\osub\wh{\C}\setminus\{0,1,\infty\}$を領域，$\F(U)$を$U$上の正則解全体とする．
+        \item $(\al)_n:=\al(\al+1)\cdots(\al+n-1)=\frac{\Gamma(\al+n)}{\gamma(\al)}$とする．これをPochhammer記号という．
+        \item 次の冪級数が収束するならば，これが定める$\Delta$上の関数を\textbf{Gaussの超幾何関数}という：
+        \[F(\al,\beta,\gamma;x):=\sum_{n\in\N}\frac{(\al)_n(\beta)_n}{(\gamma)_nn!}x^n,\quad\abs{x}<1,\al,\beta,\gamma\in\C.\]
+        例えば，$\gamma$が負整数のとき，定義されない．
+    \end{enumerate}
+    存在するならば，これは方程式(GE)の解になっていることが分かる．
+    Gaussの超幾何関数は解析接続によって大域的な性質がよく分かる稀有な関数である．
+\end{problem}
+
+\begin{proposition}[Gaussの積分表示]\mbox{}
+    \begin{enumerate}
+        \item $0<\Re\beta<\Re\gamma,0<\arg(x-1)<2\pi$において，次の積分表示を持つ：
+        \[F(\al,\beta,\gamma;x)=\frac{\Gamma(\gamma)}{\Gamma(\beta)\Gamma(\gamma-\beta)}\int^1_0t^{\beta-1}(1-t)^{\gamma-\beta-1}(1-tx)^{-\al}dt.\]
+        \item 特に，$\Re(\gamma-\beta-\al)>0$のとき，$x=1$とすれば，右辺の積分はBeta関数となり，このとき
+        \[F(\al,\beta,\gamma;1)=\frac{\Gamma(\gamma)}{\Gamma(\beta)\Gamma(\gamma-\beta)}\frac{\Gamma(\beta)\Gamma(\gamma-\al-\beta)}{\Gamma(\gamma-\al)}\]
+        よって，
+        \[C_{\al,\beta,\gamma}:=F(\al,\beta,\gamma;1)=\frac{\Gamma(\gamma)\Gamma(\gamma-\al-\beta)}{\Gamma(\gamma-\al)\Gamma(\gamma-\beta)}.\]
+        さらに，$\Re\al+\Re\beta<\Re\gamma$ならば，左辺の級数は絶対収束する．
+    \end{enumerate}
+\end{proposition}
+\begin{remark}
+    (1)の積分表示も，
+    \[(1-tx)^{-\al}=\sum_{n\in\N}\frac{(\al)_n}{n!}t^nx^n\]
+    として，$x^n$の係数を見ると，各項の積分がBeta関数になり，
+    \[\frac{\Gamma(\gamma)}{\Gamma(\beta)\Gamma(\gamma-\beta)}\frac{(\al)_n}{n!}\frac{\Gamma(\beta+n)\Gamma(\gamma-\beta)}{\Gamma(\gamma+n)}=\frac{(\al)_n(\beta)_n}{(\gamma)_nn!}\]
+    を得るため，等式の成立がわかる．
+\end{remark}
+
+\begin{proposition}[Riemann]
+    $F(\al,\beta,\gamma;x)$はGaussの超幾何微分方程式の解であり，原点で正則でかつ$1$の値を取る解はこれに限る．
+\end{proposition}
+
+\subsection{負の超幾何分布}
+
+\subsection{対数分布}
+
+\begin{definition}
+    $\N$上の分布・\textbf{対数分布}$\Log(\theta):=(p_x)_{x\in\N}\;(\theta\in(0,1))$とは，確率関数
+    \[p_x=\frac{-1}{\log(1-\theta)}\frac{\theta^x}{x}1_{\N^+}.s\]
+    で定まる分布をいう．
+\end{definition}
+
+\begin{proposition}
+    $\Log(\theta)$の確率母関数は$g(z)=\frac{\log(1-\theta z)}{\log(1-\theta)}$である．
+\end{proposition}
+
+\subsection{Ord族}
+
+\begin{definition}[Ord family]
+    $\Z$上の分布であって，確率関数が差分方程式
+    \[p_x-p_{x-1}=\frac{(a-x)p_x}{(a+b_0)+(b_1-1)x+b_2x(x-1)}\]
+    を満たすもの全体を\textbf{Ord族}という．
+\end{definition}
+\begin{example}
+    Katz族と，超幾何分布，負の超幾何分布はOrd族である．
+\end{example}
+
+\section{多次元純不連続分布の例}
+
+\subsection{多項分布}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    二項分布は多項分布の周辺分布である．
+    確率母関数が
+    \[g_I(z_I;p)=(p_1z_1+\cdots+p_kz_k)^n\]
+    と表せることは多項定理の主張に外ならず，ここから特性量が得られる．
+\end{tcolorbox}
+
+\begin{definition}[multinomial distribution]
+    $n\in\N^+$の$k$成分への分解($n$回の試行のそれぞれがどの結果$E_i$で終わるかの割り当て)の全体
+    \[T_I:=\Brace{x_I=(x_j)_{j\in I}\in\N^k\;\middle|\;\sum^k_{j=1}x_j=n}\]
+    と$1$の$k$成分への分解(それぞれの事象$E_i$の生起確率)$p_1,\cdots,p_k,\sum_{j=1}^kp_j=1$について，
+    次の質量関数
+    \[f_I(x_I;p)=\frac{n!}{x_1!\cdots x_k!}\prod_{j=1}^kp_j^{x_j}\quad(x_I=(x_j)_{j\in I}\in T_I)\]
+    で定まる分布を$k$-項分布，一般に\textbf{多項分布}といい，$\Mult_n(p_1,\cdots,p_k)$で表す．
+\end{definition}
+\begin{remarks}
+    これは，各事象$E_1,\cdots,E_k$の生起確率が$P[E_i]=p_i$で，それぞれの起きた回数が$x_1,\cdots,x_k$回であるという確率変数が従う分布となる．
+    それぞれの変数$X_i$の周辺分布は$X_i\sim\rB(n,p_i)$である．
+\end{remarks}
+
+\begin{theorem}
+    $X=(X_1,\cdots,X_k)\sim\Mult(n;p_1,\cdots,p_k)$とする．
+    \begin{enumerate}
+        \item $g_I(z_I;p)=(p_1z_1+\cdots+p_kz_k)^n$が確率母関数である．
+        特に，積率母関数は，
+        \[M(t)=(p_1e^{t_1}+\cdots+p_ke^{t_k})^n.\]
+        \item $E[X_i]=np_i$．
+        \item $\Var[X_i]=np_i(1-p_i)$．
+        \item $\Cov[X_{i_1},X_{i_2}]=-np_{i_1}p_{i_2}\;(i_1\ne i_2\in[k])$．
+        \item $g_I(z_I;p)=(p_1z_1+\cdots+p_kz_k)^n$が確率母関数である．
+    \end{enumerate}
+\end{theorem}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item 多項定理より，\begin{align*}
+            g(z)&=\sum_{x_I\in T_I}f_I(x_I;p)z_1^{x_1}\cdot z_k^{x_k}\\
+            &=(p_1z_1+\cdots+p_kz_k)^n.
+        \end{align*}
+        特に，$z_i=e^{u_i}$として，積率母関数を得る．
+        \item 両辺の$(u_1,\cdots,u_k)=(0,\cdots,0)$における$u_i$偏微分係数より，$np_i=\sum_{x_1,\cdots,x_k}{}^*x_iP^X[\Brace{(x_1,\cdots,x_k)}]=E[X_i]$．
+        \item 同様に$u_i$の２階微分を考えて，$E[X_i^2]=n(n-1)p_i^2+np_i$を得る．よって，$\Var[X_i]=E[X_i^2]-(E[X_i])^2=np_i(1-p_i)$．
+        \item $i_1\ne i_2$に関して，順に$u_{i_1},u_{i_2}$での偏微分を考えることにより，$E[X_{i_1}X_{i_2}]=n(n-1)p_{i_1}p_{i_2}$．
+        よって，共分散公式\ref{prop-covariance-formula}より，
+        \[\Cov[X_{i_1},X_{i_2}]=E[X_{i_1}X_{i_2}]-E[X_{i_1}]E[X_{i_2}]=-np_{i_1}p_{i_2}.\]
+    \end{enumerate}
+\end{Proof}
+\begin{remarks}
+    初等的な証明が技巧的すぎる，多項定理に指数関数を代入する．
+\end{remarks}
+
+\begin{proposition}[順序統計量]
+    $r$番目の順序統計量$X_{n:r}$の分布関数$F_r$は多項分布に従う．
+\end{proposition}
+
+\subsection{２変量Poisson分布}
+
+\begin{definition}[bivariate Poisson distribution]
+    確率変数$U_1,U_2,U_3$が独立で$U_i\sim\Pois(\lambda_i)$を満たすとする．
+    このとき，$X_1=U_1+U_3,X_2=U_2+U_3$で定まる確率変数$(X_1,X_2):\Om\to\N^2$が定める分布を\textbf{2変量Poisson分布}といい，$\BPois(\lambda_1,\lambda_2,\lambda_3)$で表す．周辺分布は$X_1\sim\Pois(\lambda_1+\lambda_3),X_2\sim\Pois(\lambda_2+\lambda_3)$である．
+\end{definition}
+
+\begin{proposition}[分散や混合積率は確率母関数の項別微分で求める]\mbox{}
+    \begin{enumerate}
+        \item 確率母関数は$g(z_1,z_2)=\exp\paren{\lambda_1(z_1-1)+\lambda_2(z_2-1)+\lambda_3(z_1z_2-1)}$．
+        \item $\Cov[X_1,X_2]=\lambda_3$．
+    \end{enumerate}
+\end{proposition}
+
+\subsection{負の多項分布}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    負の二項分布$NB(k,p)$の確率母関数は，$\hat{q}:=1/p,\hat{p}:=q/p=(1-p)/p$とすると，
+    \[g(z)=p^k(1-qz)^{-k}=(\hat{q}-\hat{p}z)^{-k}\]
+    と表わせ，この形での一般化を考える．
+\end{tcolorbox}
+
+\begin{definition}
+    $k>0,P_i>0$をパラメータとする\textbf{負の多項分布}$NM(k,(P_1,\cdots,P_d))$とは，$Q:=1+\sum^d_{i=1}P_i$とするとき，確率母関数
+    \[g(z_1,\cdots,z_d)=\paren{Q-\sum^d_{i=1}P_iz_i}^{-k}\]
+    が定める$\N^d$上の分布を言う．
+\end{definition}
+
+\begin{proposition}[確率母関数の微分からわかること]\mbox{}
+    \begin{enumerate}
+        \item $\Cov[X_i,X_j]=\begin{cases}
+            kP_i(1+P_i)&i=j\\
+            kP_iP_j&i\ne j
+        \end{cases}$
+    \end{enumerate}
+\end{proposition}
+
+\section{正規分布}
+
+\subsection{定義と特性値}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=]
+    特性関数$\varphi(u)=\exp\paren{i\mu\cdot u-\frac{u^\top\Sigma u}{2}}$で定まる分布である．
+\end{tcolorbox}
+
+\begin{definition}[normal distribution]
+    $(\R,\B_1)$上の\textbf{正規分布}$\rN(\mu,\sigma^2)\;(\mu\in\R,\sigma>0)$とは，
+    確率密度関数
+    \[\phi(x;\mu,\sigma^2):=\frac{1}{\sqrt{2\pi\sigma^2}}\exp\paren{-\frac{(x-\mu)^2}{2\sigma^2}}\]
+    が定める分布をいう．
+\end{definition}
+
+\begin{lemma}[Gamma関数の性質]\mbox{}
+    \begin{enumerate}
+        \item $\int_\R\exp\paren{-x^2}dx=\sqrt{\pi}=\Gamma(1/2)$．
+        \item $\forall_{\mu,\sigma\in\C}\;\int_\R\exp\paren{-\frac{(x-\mu)^2}{2\sigma^2}}dx=\sqrt{2\pi\sigma^2}$．
+    \end{enumerate}
+\end{lemma}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item この積分を$I$とおき，$I^2$をFubiniの定理と極座標変換を用いて計算すれば良い．
+        あるいは，$u=x^2$と変換するとGamma関数の定義式を得る．
+        \item 変数変換により$\mu,\sigma\in\R$の場合で求めてから，$\mu,\sigma\in\C$の場合について解析接続する．
+    \end{enumerate}
+\end{Proof}
+
+\begin{proposition}[分布の母関数]
+    $\rN(\mu,\sigma^2)$について，
+    \begin{enumerate}
+        \item well-definedness：$\int_\R\phi(x;\mu,\sigma^2)dx=1$．
+        \item 特性関数：$\varphi(u)=\exp\paren{i\mu u-\frac{1}{2}\sigma^2u^2}$．
+        \item 平均と分散：$\al_1=\mu,\mu_2=\sigma^2$．
+        \item 積率母関数：$\fM(t)=\exp\paren{\mu t+\frac{\sigma^2t^2}{2}}$．
+        \item キュムラントは$\kappa_1=\mu,\kappa_2=\sigma^2,\kappa_r=0\;(r\ge 3)$．\footnote{この３次以上のキュムラントが消えることが正規分布の特徴で，積率による中心極限定理の証明に利用される．}
+    \end{enumerate}
+\end{proposition}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item $u=\frac{x-\mu}{\sqrt{2}\sigma}$と変数変換すると，$dz=\frac{dx}{\sqrt{2}\sigma}$より，
+        \[\int_\R\phi(x;\mu,\sigma^2)dx=\frac{1}{\sqrt{\pi}}\int_\R e^{-u^2}du=1.\]
+        \item $X\sim N(\mu,\sigma^2)$について，次のように計算できる：
+        \begin{align*}
+            \varphi(u)&=E[e^{iuX}]=\frac{1}{\sqrt{2\pi\sigma^2}}\int^\infty_{-\infty}e^{iux}e^{-\frac{(x-\mu)^2}{2\sigma^2}}dx\\
+            &=\frac{1}{\sqrt{2\pi\sigma^2}}\int^\infty_{-\infty}\exp\paren{-\frac{1}{2\sigma^2}\Brace{(x-(\mu+iu\sigma^2))^2-2\mu iu\sigma^2+u^2\sigma^4}}dx\\
+            &=\exp\paren{iu\mu-\frac{u^2\sigma^2}{2}}\frac{1}{\sqrt{2\pi\sigma^2}}\int^\infty_{-\infty}\exp\paren{-\frac{1}{2\sigma^2}\paren{(x-(\mu+iu\sigma^2))^2}}dx=\exp\paren{iu\mu-\frac{u^2\sigma^2}{2}}.
+        \end{align*}
+        \item 特性関数より\ref{cor-mean-and-variance-in-terms-of-characteristic-function}，
+        \begin{align*}
+            \al_1&=\frac{1}{i}\varphi'(0)=\frac{1}{i}(i\mu)=\mu,\\
+            \mu_2&=-\varphi''(0)+(\varphi'(0))^2=\sigma^2-(i\mu)^2+(i\mu)^2=\sigma^2.
+        \end{align*}
+        \item $\varphi(u)$は明らかに整関数だから，変数変換$u=it$による．
+        \item キュムラント母関数は$\fC(t)=\mu t+\frac{\sigma^2t^2}{2}$であることがわかった．よって，$\kappa_1=\fC'(0)=\mu,\kappa_2=\fC'(0)=\sigma^2$で，あとは消える．
+    \end{enumerate}
+\end{Proof}
+
+\begin{proposition}[正規分布の積率]
+    $\rN(\mu,\sigma^2)$について，
+    \begin{enumerate}
+        \item 積率：$n$が奇数のときは$\al_n=0$，$n$が偶数のときは
+        \[\al_n=\sum_{m=0}^n\comb{n}{m}\sigma^m\mu^{n-m}I_m,\qquad I_m=(m-1)!!.\]
+        \item 中心積率：
+        \[\mu_{2r+1}=0,\quad\mu_{2r}=\frac{(2r)!}{2^rr!}\sigma^{2r}=(2r-1)!!(\sigma^2)^r.\]
+        \item 歪度と尖度：$\gamma_1=\frac{\mu_3}{\mu_2^{3/2}}=0,\gamma_2=\frac{\mu_4}{\mu_2^2}=3$．
+    \end{enumerate}
+\end{proposition}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item 部分積分を繰り返す．
+        \item 部分積分を繰り返して計算するのみである．$X-\mu$を$X$とおき直すことで，$X\sim N(0,\sigma^2)$について，
+        \begin{align*}
+            \mu_3&=\int_\R x^3e^{-\frac{x^2}{2\sigma^2}}dx\\
+            &=-\sigma^2\int_\R x^2\paren{e^{-\frac{x^2}{2\sigma^2}}}'dx\\
+            &=-\sigma^2\Square{x^2e^{-\frac{x^2}{2\sigma^2}}}^\infty_{-\infty}+2\sigma^2\int_\R xe^{-\frac{x^2}{2\sigma^2}}dx\\
+            &=-\sigma^2\cdot 0+2\sigma^2\cdot E[X]=0.
+        \end{align*}
+        同様にして，
+        \begin{align*}
+            \mu_4&=\int_\R x^4e^{-\frac{x^2}{2\sigma^2}}dx\\
+            &=-\sigma^2\int_\R x^3\paren{e^{-\frac{x^2}{2\sigma^2}}}'dx\\
+            &=-\sigma^2\Square{x^3e^{-\frac{x^2}{2\sigma^2}}}^\infty_{-\infty}+3\sigma^2\int_\R x^2e^{-\frac{x^2}{2\sigma^2}}dx=3\sigma^4.
+        \end{align*}
+        あとは帰納的にわかる．
+        \item $\gamma_1=0/\sigma^{3}=0$．$\gamma_2=3\sigma^4/\sigma^4=3$．
+    \end{enumerate}
+\end{Proof}
+
+\subsection{多変量正規分布の定義}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=]
+    特性関数の収束を用いて，一般の半正定値行列についても(退化した)多変量正規分布を定義できる．
+\end{tcolorbox}
+
+\begin{definition}[multivariate normal distribution]
+    $\mu\in\R^d$，$\Sigma\in\GL_d(\R)$を正定値実対称行列として，$(\R^d,\B(\R^d))$上の測度
+    \[\mu_{\mu,\Sigma}(dx)=\phi(x;\mu,\Sigma)=\frac{1}{(2\pi)^{d/2}(\det\Sigma)^{1/2}}\exp\paren{-\frac{1}{2}(x-m)^\top\cdot\Sigma^{-1}(x-m)}dx\]
+    を，平均値$\mu$，共分散行列$\Sigma$に関する\textbf{$d$次元正規分布}といい，$N_d(0,\Sigma)$で表す．
+\end{definition}
+\begin{example}
+    $\rN(\mu,\sigma^2)^{\otimes n}=\rN_n(\mu\b{1}_n,\sigma^2I_n)$のとき，
+    $\det\Sigma=\sigma^{2n}$，$\Sigma^{-1}=\frac{1}{\sigma^2}I_n$から，
+    \[-\frac{1}{2}(x-\b{1}_n\mu)^\top\frac{1}{\sigma^2}I_n(x-\b{1}_n\mu)=-\frac{1}{2\sigma^2}\sum_{i\in[n]}(x_i-\mu)^2.\]
+    より，密度関数は
+    \begin{align*}
+        \phi(x;\mu\b{1}_n,\sigma^2I_n)&=\frac{1}{(2\pi\sigma^2)^{n/2}}e^{-\frac{1}{2\sigma^2}\sum_{i\in[n]}(x_i-\mu)^2}.
+    \end{align*}
+    係数部分が$e^{-\psi(\theta)}$に当たり，
+\end{example}
+
+\begin{proposition}[多変量正規分布の母関数]
+    $d$次元正規分布$N_d(0,\Sigma)$について，
+    \begin{enumerate}
+        \item 特性関数は\[\varphi(u)=\exp\paren{i\mu\cdot u-\frac{1}{2}u^\top\Sigma u}\]
+        \item キュムラント母関数は$\psi(u)=\log\varphi(u)=i\mu\cdot u-\frac{1}{2}u^\top\Sigma u$である．
+        \item 特に，平均ベクトルは$\mu$，分散共分散行列が$\Sigma$で，３次以上のキュムラントはすべて消えている．
+    \end{enumerate}
+\end{proposition}
+
+\begin{definition}[半正定値対称行列が定める多変量正規分布]
+    $\Sigma\in M_d(\R)$を半正定値対称行列とする（特に，非退化の可能性がある）．
+    列$(\Sigma_n)$を$\Sigma_n:=\Sigma+n^{-1}I_n$で定めるとこれは正定値行列の列で，$\Sigma_n\xrightarrow{n\to\infty}\Sigma$．
+    対応する正規分布$\nu_n:=N_d(\mu,\Sigma_n)$の特性関数の列は
+    \[\varphi_{\nu_n}(u)=\exp\paren{iu^\top\mu-\frac{1}{2}u^\top\Sigma_nu}\xrightarrow{n\to\infty}\varphi(u)=\exp\paren{iu^\top\mu-\frac{1}{2}u^\top\Sigma u}\]
+    と各点収束し，原点で連続である．
+    よって，Bochnerの定理\ref{thm-Bochner}より，これはある確率分布$\nu$の特性関数である．この分布を，$d$変量正規分布$N_d(\mu,\Sigma)$と呼ぶ．
+\end{definition}
+
+\subsection{条件付き分布}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    正規確率変数の間の条件付き確率分布は再び正規である．
+    また，正規確率変数のaffine変換像は再び正規である．
+    正規確率変数が直交することと独立であることは同値であるから，
+    ユニタリ変換は成分間の独立性を変えない．
+\end{tcolorbox}
+
+\begin{theorem}[正規確率変数同士の条件付き分布]
+    $X=(X_1,X_2)\sim N_n(\mu,\Sigma),X_1\in\R^p,X_2\in\R^q$で，共分散行列は正則$\Sigma\in\GL_n(\R)$とする．
+    \begin{enumerate}
+        \item $X_1,X_2$の分布は，対応する$\mu,\Sigma$の分割について，$N_p(\mu_1,\Sigma_{11}),N_q(\mu_2,\Sigma_{22})$に従う．
+        \item $X_2|X_1$の条件付き分布は再び$q$次元正規分布で，
+        \begin{enumerate}
+            \item 平均ベクトルは$E[X_2|X_1]=\mu_2+\Sigma_{21}\Sigma_{11}^{-1}(X_1-\mu_1)$．
+            \item 共分散行列は$\Var[X_2|X_1]=\Sigma_{22}-\Sigma_{21}\Sigma_{11}^{-1}\Sigma_{12}$．
+        \end{enumerate}
+    \end{enumerate}
+\end{theorem}
+
+\begin{proposition}[多次元正規確率変数の成分間の独立性]
+    $Y_1:=(X_1,\cdots,X_{k_1})^\top,\cdots,Y_l=(X_{k_{l-1}},\cdots,X_d)^\top\;(l\ge 2)$のように，$X$を$l$個の確率変数$Y_1,\cdots,Y_l$に分ける．
+    この分割に対して，$\Sigma$のブロック$\Sigma_{a,b}:=\Cov[Y_a,Y_b]\;(a,b\in[l])$を考える．
+    \begin{enumerate}
+        \item $Y_1,\cdots,Y_l$は独立．
+        \item $\forall_{a,b\in[l]}\;a\ne b\Rightarrow\Sigma_{a,b}=O$．
+    \end{enumerate}
+\end{proposition}
+
+\begin{corollary}[ユニタリ変換は成分間の独立性を変えない]
+    $X\sim N_d(\mu,\sigma^2I_d),U\in M_d(\R)$を直交行列とする．このとき，$UX\sim N_d(U\mu,\sigma^2I_d)$である．
+    特に，$UX$の成分は再び独立である．
+\end{corollary}
+
+\subsection{線型汎函数による特徴付け}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    線型汎函数像が正規になることは，多変量正規分布を特徴付ける．
+    また，一般の確率変数について，任意の線型変換像が分布収束することは，結合分布が分布収束することを特徴付ける．
+\end{tcolorbox}
+
+\begin{theorem}[Gauss測度の特徴付け]
+    $X\in L(\Om,\R^n)$について，次の2条件は同値：
+    \begin{enumerate}
+        \item $X\sim N_n(\mu,\Sigma)$．
+        \item $\forall_{t\in\R^n}\;{}^t\!tX\sim N({}^t\!t\mu,{}^t\!t\Sigma t)$．
+    \end{enumerate}
+\end{theorem}
+\begin{Proof}
+    $X$の特性関数
+    \[\varphi(u)=E[e^{iu^\top X}]=\exp\paren{iu^\top\mu-\frac{1}{2}u^\top\Sigma u}\]
+    について，$u=st\;(s\in\R)$への制限
+    \[\varphi|_{\R t}(s)=E[e^{ist^\top X}]=\exp\paren{is(t\top\mu)-\frac{1}{2}s^2(t^\top\Sigma t)}\]
+    は，$t^\top X$の特性関数でもあり，その形は$N(t^\top\mu,t^\top\Sigma t)$のものである．
+    逆も同様に辿れる．
+\end{Proof}
+\begin{remarks}
+    一般の次元(または無限次元)において(2)の定義を用いるのは，$X$が退化している場合でも通用する定義であるためである．
+\end{remarks}
+
+\begin{corollary}[多変量正規分布の線型変換の分布]
+    $X\sim N_d(\mu,\Sigma),A\in M_{dn}(\R)$について，$A^\top X\sim N_n(A^\top\mu,A^\top\Sigma A)$．
+\end{corollary}
+\begin{Proof}
+    任意の$t\in\R^n$について，$t^\top(A^\top X)=(At)^\top X$は正規分布$N_d(t^\top A^\top\mu,t^\top (A^\top\Sigma A)t)$に従う．
+\end{Proof}
+
+\begin{proposition}[Cramer-Wald]
+    確率変数$X_n=(X_{n1},\cdots,X_{nk}),Y=(Y_1,\cdots,Y_k)$について，次は同値：
+    \begin{enumerate}
+        \item $X_n\Rightarrow Y$．
+        \item $\forall_{t\in\R^k}\;t^\top X_{n}\Rightarrow t^\top Y$．
+    \end{enumerate}
+\end{proposition}
+\begin{Proof}
+    連続写像定理と，特性関数の議論による．
+\end{Proof}
+
+\subsection{3次以上のキュムラントが消える}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    3次以上のキュムラントが(存在しならがにして)消えることは正規確率変数を特徴付ける．
+\end{tcolorbox}
+
+\begin{theorem}
+    $\mu\in P(\R)$について，次は同値．
+    \begin{enumerate}
+        \item $\mu$は正規分布である．
+        \item $\mu$の任意次数のキュムラントが存在し，3次以上は消えている．
+    \end{enumerate}
+\end{theorem}
+
+\subsection{正規確率変数の独立和への分解}
+
+\begin{theorem}[Cramer (36)]
+    $X_1,X_2\in L(\Om)$を独立とする．次の2条件は同値．
+    \begin{enumerate}
+        \item 和$X_1+X_2$が正規確率変数である．
+        \item $X_1,X_2$はいずれも正規確率変数である．
+    \end{enumerate}
+\end{theorem}
+
+\begin{theorem}[Skitovich-Darmois]
+    $X:=(X_1,\cdots,X_n)$を独立，これらの2つの異なる一次結合を$L_1=a^\top X,L_2=b^{\top}X\;(a,b\in\R^n)$とする．(1)$\Rightarrow$(2)が成り立つ．
+    \begin{enumerate}
+        \item $L_1\indep L_2$．
+        \item $a_jb_j\ne0$を満たす$j\in[n]$について，$X_j$は正規．
+    \end{enumerate}
+\end{theorem}
+\begin{corollary}
+    例えば，独立確率変数$X_1,X_2$について，$X_1+X_2\indep X_1-X_2$ならば，$X_1,X_2$は正規に限る．
+\end{corollary}
+
+\begin{theorem}[Kac (40)]
+    $X_1,X_2\in L(\Om)$を独立とする．
+    \[\begin{cases}
+        Y_1=X_1\cos\theta+X_2\sin\theta,\\
+        Y_2=X_1\sin\theta-X_2\cos\theta.
+    \end{cases}\]
+    について，次は同値．
+    \begin{enumerate}
+        \item 任意の$\theta\in[0,2\pi]$について，$Y_1\indep Y_2$．
+        \item ある$\sigma^2>0$が存在して，$X_1,X_2\sim N(0,\sigma^2)$．
+    \end{enumerate}
+\end{theorem}
+
+\subsection{統計量の分布}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    一般の(2次の積率をもつ)分布について，標本平均$\o{X}$と不偏分散$U^2$は，いずれも不偏推定量である．
+\end{tcolorbox}
+
+\begin{definition}
+    $X_1,\cdots,X_n\sim N(\mu,\sigma^2)$を独立標本とする．
+    \begin{enumerate}
+        \item 次の統計量を\textbf{標本平均}という：
+        \[\o{X}:=\frac{1}{n}\sum_{i\in[n]}X_i.\]
+        \item 次の統計量を\textbf{標本分散}という：
+        \[S^2:=\frac{1}{n}\sum_{i\in[n]}(X_i-\o{X})^2.\]
+        \item 次の統計量を\textbf{不偏分散}という：
+        \[U^2:=\frac{1}{n-1}\sum_{i\in[n]}(X_i-\o{X})^2=\frac{1}{n(n-1)}\sum_{i<j\in[n]}(X_i-X_j)^2.\]
+        \item 次の統計量を，\textbf{母平均を用いた標本分散}という：
+        \[\S^2(\mu_0):=\frac{1}{n}\sum_{i\in[n]}(X_i-\mu_0)^2.\]
+    \end{enumerate}
+    $\o{X},U^2$は$U$-統計量である．
+\end{definition}
+
+\begin{theorem}
+    $X_1,\cdots,X_n\sim N(\mu,\sigma^2)$を独立標本とする．
+    標本平均$\o{X}$と標本の2次の中心積率$S^2$について，次が成り立つ：
+    \begin{enumerate}
+        \item $\o{X}\indep U^2$で，$\o{X}\sim N(\mu,\sigma^2/n)$かつ$U^2/\sigma^2\sim\chi^2(n-1)$．
+        \item $(\o{X},S^2)$は最小十分統計量である．
+        \item $\o{X},S^2:=\sum_{i=1}^n(X_i-\o{X})^2,W:=\paren{\frac{X_1-\o{X}}{S},\cdots,\frac{X_n-\o{X}}{S}}$は独立であり，$W$は$n-2$次元単位球面上の一様分布に従う：$W\sim U(S^{n-2})$．これは補助統計量の例である．
+        \item 統計量$(\o{X},S^2)$は完備である：$\forall_{g\in L(\R)}\;\forall_{(\mu,\sigma^2)\in\R\times\R^+}\;E_{N(\mu,\sigma^2)}[g(\o{X},S^2)]=0\Rightarrow \forall_{(\mu,\sigma^2)\in\R\times\R^+}\;P_{N(\mu,\sigma^2)}[g(\o{X},S^2)=0]=1$．
+    \end{enumerate}
+\end{theorem}
+
+\begin{theorem}
+    $X_1,\cdots,X_n\;(n\ge2)$をある分布$P\in P(\R)$の独立標本とする．
+    \begin{enumerate}
+        \item 標本平均による特徴付け：$\o{X}\sim N(\mu,\sigma^2/n)$ならば，$P=N(\mu,\sigma^2)$．
+        \item 標本分散による特徴付け：$P$は正の有限な分散を持つ対称な分布とする．$S^2/\sigma^2\sim\chi^2(n-1)$ならば，$P=N(\mu,\sigma^2)$．
+        \item 非心の場合：任意の実数$a_1,\cdots,a_n\in\R$について，$\sum_{i\in[n]}(X_i+a_i)^2$の分布が$\sum_{i\in[n]}a_i^2$の値だけに依存するならば，$\exists_{\sigma^2>0}\;P=N(0,\sigma^2)$．
+        \item 標本平均と標本分散の独立性(Kawata-Sakamoto)：$\o{X}\indep S^2$ならば，$P$は正規分布である．
+        \item 制約を強めた一般化(Laha 1956)：$P$は2次の積率を持つとし，$A=(a_{ij})$は$\Tr(A)\ne0,\sum_{i,j=1}^na_{ij}=0$を満たすとする．このとき，次は同値．
+        \begin{enumerate}
+            \item $\o{X}\indep Q:=X^\top AX$．
+            \item $P$は正規で，$\forall_{j\in[n]}\;\sum_{i=1}^na_{ij}=0$．
+        \end{enumerate}
+        \item $P$を非退化とする．一般に，$\forall_{\{a_i\}_{i\in[n]}\subset\R\setminus\{0\}}\;L_1=\sum_{i\in[n]}a_iX_i\sim P$ならば$\sum_{i=1}^na_i^2\le1$である．ただし，等号に強めたものも成立する場合は$P$は正規である．
+    \end{enumerate}
+\end{theorem}
+
+\subsection{二次形式の分布}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    (非心率$0$の)自由度$k$の$\chi^2$-分布$\chi^2(k)$の特性関数は$\varphi(u)=(1-2iu)^{-k/2}$と表せる．
+\end{tcolorbox}
+
+\begin{theorem}[正規確率変数の二次形式]
+    $A\in M_n(\R)$が対称行列，$X\sim N(0,\Sigma)$のとき，$Y:=X^\top AX$の積率母関数と特性関数は
+    \[\M_Y(u)=\det{I-2\theta A\Sigma}^{-1/2}=\prod_{\lambda\in\Sp(A\Sigma)}(1-2\theta\lambda)^{-1/2},\quad\varphi_Y(u)=\exp\paren{\M_Y(iu)}.\]
+    と表せる．
+\end{theorem}
+\begin{remarks}
+    これが$\chi^2$-分布の積率母関数と一致するためには，$\lambda\in2$が必要十分であり，$1$の数だけ$\chi^2$-分布の自由度が増える．
+\end{remarks}
+
+\begin{corollary}[$\chi^2$-分布の特徴付け]
+    対称行列$A\in M_n(\R)$，$X\sim N(0,\Sigma)$と$Y:=X^\top AX$について，次は同値：
+    \begin{enumerate}
+        \item $Y\sim \chi^2(k)$．
+        \item $\rank A=k$かつ$(\Sigma_{1/2})^\top A\Sigma_{1/2}$は冪等である．
+    \end{enumerate}
+    ただし，$\Sigma_{1/2}$とは三角平方根，すなわち，Cholesky分解$\Sigma_{1/2}=\Sigma_{1/2}\Sigma_{1/2}^\top$を与える正実数を対角成分にもつ下三角行列である．
+\end{corollary}
+
+\begin{proposition}[非心$\chi^2$-分布の特徴付け]
+    対称行列$A\in M_n(\R)$，$X\sim N(\mu,\Sigma)$と$Y:=X^\top AX$について，次は同値：
+    \begin{enumerate}
+        \item $Y\sim\chi^2(k,\mu^\top A\mu)$．
+        \item $\rank A=k$かつ$(\Sigma_{1/2})^\top A\Sigma_{1/2}$は冪等である．
+    \end{enumerate}
+\end{proposition}
+
+\subsection{微分方程式}
+
+
+\begin{lemma}[Steinの補題]
+    $X\in L^1(\Om)$について，次は同値：
+    \begin{enumerate}
+        \item $X\sim\rN(0,1)$．
+        \item 任意の$f\in C^1_b(\R)$について，$E[f'(X)-f(X)X]=0$．
+    \end{enumerate}
+\end{lemma}
+\begin{Proof}\mbox{}
+    \begin{description}
+        \item[(1)$\Rightarrow$(2)] $f,f'$はいずれも有界としたから，$E[f'(X)],E[f(X)]<\infty$に注意．
+        部分積分により，
+        \begin{align*}
+            E[f'(X)]&=-\int_\R f(x)\phi'(x)dx\\
+            &=\int_\R f(x)x\phi(x)dx=E[f(X)X].
+        \end{align*}
+        \item[(2)$\Rightarrow$(1)] $X$は可積分としたから，特性関数$\varphi(uy):=E[e^{iuX}]$の微分は
+        \[\varphi'(u)=iE[Xe^{iuX}]=E[-ue^{iuX}]=-u\varphi(u).\]
+        と計算できる．ただし，$f(X):=ie^{iuX}$とみて$f'(X)=-ue^{iuX}$であることを用いた．
+        すると，この微分方程式を規格化条件$\varphi(0)=1$の下で解くと，$\varphi(u)=e^{-\frac{u^2}{2}}$．
+    \end{description}
+\end{Proof}
+
+\subsection{混合正規分布}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    正規な密度関数の凸結合で得る密度関数が定める分布を混合正規分布という．
+\end{tcolorbox}
+
+\begin{definition}
+    密度関数
+    \[p(x,\theta):=(1-t)\phi(x;\mu_1,\sigma_1^2)+t\phi(x;\mu_2,\sigma_2^2)\qquad\theta:=(t,\mu_1,\mu_2,\sigma_1^2,\sigma_2^2),t\in(0,1)\]
+    で定まる分布を\textbf{混合正規分布}という．
+\end{definition}
+
+\section{一次元絶対連続分布の例}
+
+\subsection{一様分布}
+
+\begin{definition}[uniform distribution]
+    $(\R,\B(\R))$上の\textbf{一様分布}$\rU((a,b))\;(a<b\in\R)$とは，確率密度関数$f$
+    \begin{align*}
+        f(x)&:=\frac{1}{b-a}1_{(a,b)}
+    \end{align*}
+    が定める確率分布をいう．
+\end{definition}
+
+\begin{proposition}\mbox{}
+    \begin{enumerate}
+        \item 特性関数は
+        \[\varphi(u)=\frac{e^{ibu}-e^{iau}}{(b-a)iu}.\]
+        連続延長によれば，確かに$\varphi(0)=1$である．
+        \item $\al_1=\frac{a+b}{2}$．
+        \item $\mu_2=\frac{(b-a)^2}{12}$．
+        \item $\gamma_1=0,\gamma_2=\frac{9}{5}$．
+    \end{enumerate}
+\end{proposition}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item $E[e^{iux}]=\int^b_ae^{iux}\frac{1}{b-a}dx$なので．
+        \item \[\al_1=\int_a^bx\frac{b-a}{dx}=\frac{1}{b-a}\SQuare{\frac{x^2}{2}}^b_a=\frac{a+b}{2}.\]
+        \item \[\al_2=\int_a^bx^2\frac{b-a}{dx}=\frac{1}{b-a}\SQuare{\frac{x^3}{3}}^b_a=\frac{a^2+ab+b^2}{3}.\]
+        より，
+        \[\mu_2=\al_2-\al_1^2=\frac{(a-b)^2}{12}.\]
+        \item 同様にしてさらに高階の積率を計算することができる．
+    \end{enumerate}
+\end{Proof}
+
+\subsection{Gamma関数の性質}
+
+\begin{definition}
+    右平面$R:=\Brace{z\in\C\mid\Im z>0}$上の関数$\Gamma:R\to\C$を
+    \[\Gamma(\nu)=\int^\infty_0t^{\nu-1}e^{-t}dt.\]
+    と定める．
+\end{definition}
+
+\begin{theorem}[有理型関数への延長と反転公式]\mbox{}
+    \begin{enumerate}
+        \item 上の定義で，右半平面$R$上で一様収束し，正則関数を定める．項別微分を考えると$R$上で関数等式$\Gamma(z+1)=z\Gamma(z)$が成り立つ．特に$\Gamma(n)=(n-1)!$．
+        \item $\C$上に有理型関数として延長し，極は$\Gamma^{-1}(\infty)=\{0,-1,-2,\cdots\}$でそれぞれ1位．
+        \item (反転公式) $\C$上の有理型関数としての等式
+        \[\Gamma(z)\Gamma(1-z)=\frac{\pi}{\sin\pi z}\]
+        が成り立つ．特に，逆$\frac{1}{\Gamma(z)}=\pi\Gamma(1-z)\sin\pi z$は整関数である．
+        また，ここからGauss積分$\Gamma(1/2)^2=\pi$と$\Gamma(n/2)=\frac{(n-1)!}{2^{n-1}}\sqrt{\pi}$を得る．
+    \end{enumerate}
+\end{theorem}
+
+\begin{theorem}[Stirling's formula]\mbox{}
+    \begin{enumerate}
+        \item 部分積分を繰り返すことにより，帰納的に
+        \[\int_0^\infty x^ne^{-x}dx=n!.\]
+        \item Laplaceの原理から，
+        \[\int^\infty_0e^{n\log ny-ny}\sim\sqrt{\frac{2\pi}{n}}e^{-n}.\]
+        \item (Stirling)
+        \[\frac{\sqrt{2\pi n}\paren{\frac{n}{e}}^n}{n!}\xrightarrow{n\to\infty}1.\]
+    \end{enumerate}
+\end{theorem}
+\begin{Proof}n-Cat lab\footnote{\url{https://golem.ph.utexas.edu/category/2021/10/stirlings_formula.html}}\mbox{}
+    \begin{enumerate}
+        \item 部分積分による．
+        \item $f(y)=y-\log y$に関するLaplaceの大偏差原理\ref{thm-Laplace-method}から，
+        \[\int^\infty_0e^{n\log y-ny}dy=\int^\infty_0 e^{-n(y-\log y)}dy\sim\sqrt{\frac{2\pi}{n}}e^{-n}.\]
+        \item 次の計算による：
+        \begin{align*}
+            n!&=\int_0^\infty x^ne^{-x}dx=\int^\infty_0e^{n\log x-x}\\
+            &=n\int^\infty_0\exp\paren{n\log(ny)-ny}dy\\
+            &=ne^{n\log n}\int^\infty_0e^{n\log y-ny}dy\sim ne^{n\log n}\sqrt{\frac{2\pi}{n}}e^{-n}=\sqrt{2\pi n}\paren{\frac{n}{e}}^n.
+        \end{align*}
+    \end{enumerate}
+\end{Proof}
+
+\begin{theorem}[Gamma関数の実関数としての特徴付け (Bohr-Mollerup)]\label{thm-characterization-of-Gamma-function}
+    $f:\R^+\to\R^+$が次の3条件を満たすならば，Gamma関数である：
+    \begin{enumerate}
+        \item 階乗性：$f(x+1)=xf(x)$．
+        \item 正規化：$f(1)=1$．
+        \item 凸性：$\log f$は凸関数である．
+    \end{enumerate}
+\end{theorem}
+\begin{Proof}
+    \cite{Rudin-Principles} Th'm 8.19．
+\end{Proof}
+
+\subsection{Gamma分布}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    パラメータの取り方はさまざまな流儀があるが，Gamma関数の被積分関数$g(x;1,z)=x^{z-1}e^{-x}$とその相似拡大$g(x;\al,z):=\al g(\al x;1,z)$をGamma分布という．
+    %この構成から解るように，再生性を持つ分布族をなす．
+    簡単な変数変換により特性関数
+    \[\varphi(u)=\paren{\frac{\al}{\al-iu}}^{\nu}\]
+    を得て，$\nu$に関する再生性が判る．
+    これは，指数分布と$\chi^2$-分布を統合的に扱う枠組みになる．
+\end{tcolorbox}
+
+\begin{definition}[gamma distribution]
+    $(\R,\B(\R))$上の\textbf{Gamma分布}$\GAMMA(\al,\nu)\;(\al,\nu>0)$とは，
+    確率密度関数
+    \[f(x)=g(x;\al,\nu):=\frac{1}{\Gamma(\nu)}\al^\nu x^{\nu-1}e^{-\al x}1_{\Brace{x>0}}\]
+    が定める分布をいう．実際，$t=\al x$と変数変換すると，
+    \[\int_0^\infty \al^\nu x^{\nu-1}e^{-\al x}dx=\al^\nu\int^\infty_0\paren{\frac{t}{\al}}^{\nu-1}e^{-t}\frac{dt}{\al}=\int^\infty_0t^{\nu-1}e^{-t}dt=\Gamma(\nu).\]
+\end{definition}
+
+\begin{proposition}[Gamma分布の特性値]\mbox{}
+    \begin{enumerate}
+        \item 特性関数：$\varphi(u)=\frac{1}{(1-\frac{iu}{\al})^\nu}$．
+        \item 積率母関数：$M(t)=\frac{1}{(1-\frac{t}{\al})^\nu}$で，定義域は$t\in(-\infty,\al)$．
+        \item 平均：$\al_1=\frac{\nu}{\al}$．
+        \item 分散：$\mu_2=\frac{\nu}{\al^2}$．
+        \item 尖度と歪度：$\gamma_1=\frac{2}{\sqrt{\nu}},\gamma_2=3+\frac{6}{\nu}$．
+    \end{enumerate}
+\end{proposition}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item 被積分関数をGamma関数の被積分関数に直すために，変数変換$z:=x(\al-iu)$を考えると，$dz=(\al-iu)dx$で，
+        $\gamma$を半直線$\R_+\to\C;t\mapsto t(\al-iu)$とすると，
+        \begin{align*}
+            \varphi(u)&=\int^\infty_0e^{iux}\frac{1}{\Gamma(\nu)}\al^\nu x^{\nu-1}e^{-\al x}dx\\
+            &=\int^\infty_0\frac{1}{\Gamma(\nu)}\al^\nu x^{\nu-1}e^{-\al\paren{1-\frac{iu}{\al}}x}dx\\
+            &=\frac{\al^\nu}{\Gamma(\nu)}\int_{\gamma}\paren{\frac{z}{\al-iu}}^{\nu-1}e^{-z}\frac{dz}{\al-iu}\\
+            &=\paren{\frac{\al}{\al-iu}}^\nu\frac{1}{\Gamma(\nu)}\int_\gamma z^{\nu-1}e^{-z}dz.
+        \end{align*}
+        $\gamma$と正の実軸$\R_+$と半径$R$の円周とが囲む扇型領域の境界上の周回積分を，特異点$0\in\C$を迂回するように修正し，$R\to\infty,\ep\to0$の極限を考えると，扇型の弧上での積分は$e^{-z}$の急減少性により$0$に収束する．
+        よって，$\gamma$上での積分は$\R_+$上での積分と値が等しく，結論を得る．
+        \item \[\varphi'(u)=-\nu\paren{1-\frac{iu}{\al}}^{-\nu-1}\paren{-\frac{i}{\al}}\]
+        より，$\al_1=\varphi'(u)/i=\frac{\nu}{\al}$である．
+        \item \[\varphi''(u)=-\nu(-\nu-1)\paren{1-\frac{iu}{\al}}^{-\nu-2}\paren{-\frac{1}{\al^2}}\]
+        より，$\al_2=-\varphi'(u)=\frac{\nu(\nu+1)}{\al^2}$．よって，
+        \[\mu_2=\al_2-\al_1^2=\frac{\nu(\nu+1)-\nu^2}{\al^2}=\frac{\nu}{\al^2}.\]
+        \item 同様にして，高次の積率も計算できる．
+    \end{enumerate}
+\end{Proof}
+
+\begin{proposition}[Gamma分布の再生性]
+    Gamma分布は，スケール変数$\al$を揃えた際に，$\nu>0$について再生性を持つ．
+\end{proposition}
+\begin{Proof}
+    $\GAMMA(\al,\nu_1)*\GAMMA(\al,\nu_2)$の特性関数は
+    \[\paren{\frac{\al}{\al-iu}}^{\nu_1}\paren{\frac{\al}{\al-iu}}^{\nu_2}=\paren{\frac{\al}{\al-iu}}^{\nu_1+\nu_2}\]
+    であるため．
+\end{Proof}
+
+\subsection{指数分布}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    指数分布は，指数関数的減衰を確率分布用に規格化したもの$g(x;\gamma)=\gamma e^{-\gamma x}$である．
+    無記憶性を持つ唯一の連続分布である．
+\end{tcolorbox}
+
+\begin{definition}[exponential distribution]\mbox{}\label{def-exponential-distribution}
+    $\Exp(\gamma):=\GAMMA(\gamma,1)\;(\gamma\in\R^+)$を母数$\gamma$の\textbf{指数分布}という．
+\end{definition}
+
+\begin{proposition}[特性値]
+    指数分布$X\sim\Exp(\gamma)$の，
+    \begin{enumerate}
+        \item 確率密度関数は，
+        \[g(x;\gamma,1)=\frac{1}{\Gamma(1)}\gamma^1x^0e^{-\gamma x}1_{\Brace{x>0}}=\frac{\gamma}{e^{\gamma x}}1_{\Brace{x>0}}.\]
+        \item 特性関数は，$\varphi(u)=\frac{\gamma}{\gamma-iu}$．
+        \item 積率母関数は$M(t)=\paren{1-\frac{t}{\gamma}}^{-1}$で，定義域は$\Dom(M)=(-\infty,\gamma)$．
+        \item $E[X]=1/\gamma,\Var[X]=1/\gamma^2$．
+        \item $\gamma_1=2,\gamma_2=9$．
+    \end{enumerate}
+\end{proposition}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item 定義から明らか．
+        \item 次のように計算できる：
+        \[\varphi(u)=\int^\infty_0e^{iux}\lambda e^{-\lambda x}dx=\mu\int^\infty_0e^{(iu-\lambda)}dx=\mu\Square{\frac{e^{(iu-\lambda)x}}{iu-\lambda}}^\infty_0=\frac{\lambda}{\lambda-iu}.\]
+
+    \end{enumerate}
+\end{Proof}
+
+\begin{proposition}[指数分布の生存関数]
+    $\Exp(\gamma)$の確率密度関数を$g(x)$，分布関数を$F(x)$とすると，次の関係がある：
+    \[F(x)=\int^x_0\gamma e^{-\gamma t}dt=-e^{-\gamma x}+1=1-\frac{g(x)}{\gamma}.\]
+    生存関数を$S(x):=\frac{g(x)}{\gamma}=e^{-\gamma x}$とおくと，$\gamma=1$の標準指数分布のとき$F=S$が成り立つ．
+    よって，指数分布の故障率は$\gamma$で一定である．
+\end{proposition}
+
+\begin{definition}[survival function, hazard function / failure rate function]
+    一般に，$T:\Om\to\R_+$を寿命を表す絶対連続確率変数，$g$をその確率密度関数とする．
+    \begin{enumerate}
+        \item $T$の分布を\textbf{寿命分布}といい，
+        その分布関数を$F$とするとき，$S(x):=1-F(x)=P[X\ge x]$を\textbf{生存割合関数}という．
+        \item $h(t):=\frac{g(t)}{S(t)}=-\dd{}{t}\log S(t)$を\textbf{故障率関数}という．このとき，
+        \[\forall_{s,t\in\R^+}\;P[T>s+t|T>s]=\exp\paren{-\int^{s+t}_sh(u)du}.\]
+    \end{enumerate}
+    故障率は局所的に指数分布と見做したときのその母数に一致する．
+\end{definition}
+\begin{Proof}
+    故障率関数の定義式である微分方程式を$S(0)=1$に注意して解くと，
+    \[\log S(s)=-\int^s_0h(t)dt.\]
+    よって，
+    \[P[T>s+t|T>s]=\frac{S(s+t)}{S(s)}=\frac{\exp\paren{-\int^{s+t}_0h(u)du}}{\exp\paren{-\int^s_0h(u)du}}=\exp\paren{-\int^{s+t}_sh(u)du}.\]
+\end{Proof}
+
+\begin{proposition}[指数分布の無記憶性による特徴付け]\mbox{}
+    \begin{enumerate}
+        \item 指数分布は無記憶性を持つ：$\forall_{s,t\in\R_+}\;P[T>s+t|T>s]=P[T>t]$．
+        \item 無記憶性$\forall_{s,t\in\R}\;S(s+t)=S(s)S(t)$を持つ連続分布は指数分布に限る．すなわち，指数分布は，故障率が一定の連続分布として特徴付けられる．
+    \end{enumerate}
+\end{proposition}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item 任意の連続分布は，故障率関数と生存関数についての上の関係式を満たすから，後は
+        \[P[T>t]=\exp\paren{-\int^{s+t}_s\gamma du}=e^{-\gamma t}\]
+        を示せば良いが，これは指数分布の性質$P[T>t]=S(t)=e^{-\gamma t}$である．
+        \item $S(s+t)=S(s)S(t)$の両辺の$t=0$での微分係数を考えると，
+        \[S'(s)=g(0)S(s).\]
+        これを解いて，$\int_{\R_+}g(t)dt=1$の条件と併せると，$S(s)=e^{-g(0) s}$となる．これは母数$g(0)$の指数分布の生存関数である．
+    \end{enumerate}
+\end{Proof}
+
+\subsection{ｶｲ2乗分布}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    自由度$k$のカイ2乗分布は特性関数
+    \[\varphi(u)=\frac{1}{(\sqrt{1-2iu})^k}\]
+    によって定まる．$k=1/2$の場合が$X\sim\rN(0,1)$の自乗$X^2$が従う分布であることに注意すれば，
+    これは$k$個の標準正規確率変数の独立和が従う分布である．
+\end{tcolorbox}
+
+\begin{definition}[chi-square distribution]\mbox{}
+    \begin{enumerate}
+        \item スケールを$1/2$に固定し，位置母数を半整数としたGamma分布$\chi^2(k):=\GAMMA\paren{\frac{1}{2},\frac{k}{2}}$を(非心率$0$で)自由度$k$の\textbf{カイ２乗分布}という．
+        \item 確率密度関数は，
+        \[\chi^2(x;k):=g(x;1/2,k/2)=\frac{1}{\Gamma\paren{\frac{k}{2}}2^{k/2}}x^{\frac{k}{2}-1}e^{-\frac{x}{2}}1_{\Brace{x>0}}.\]
+        \item 特性関数は
+        \[\varphi(u)=\paren{\frac{1}{1-2iu}}^{k/2}=\frac{1}{(\sqrt{1-2iu})^k}.\]
+        \item 非心率$\delta\in\R_+$の\textbf{非心$\chi^2(k,\delta)$-分布}とは，確率密度関数
+        \[\chi^2(x;k,\delta)=\exp\paren{-\frac{\delta}{2}}\sum_{r=0}^\infty\frac{1}{r!}\paren{\frac{\delta}{2}}^rg\paren{x;\frac{1}{2},r+\frac{k}{2}}\]
+        で定まる分布をいう．
+        分散は等しいが平均がバラバラで，和が$\delta=\sum_{i}\mu_i$となるような正規確率変数の自乗和はこれに従う．
+    \end{enumerate}
+\end{definition}
+\begin{remarks}
+    $\delta=0,k=2$のとき，確率密度関数は
+    \[p_{\chi_2^2}(x)=\frac{1}{2}e^{-\frac{x}{2}}1_{\Brace{x>0}}\]
+    で表され，これは指数分布$p(x)=\lambda e^{-\lambda x}1_{\Brace{x>0}}\;(\lambda>0)$の$\Exp(1/2)=\GAMMA(1/2,1)$に等しい．
+\end{remarks}
+
+\begin{proposition}[特性値]
+    自由度$k$，非心率$\delta$の
+    $\chi^2$-分布$\chi^2(k,\delta)$について，
+    \begin{enumerate}
+        \item 特性関数：
+        \[\varphi(u)=(1-2iu)^{-\frac{k}{2}}\exp\paren{\frac{\delta iu}{1-2iu}}.\]
+        非心率が$0$の$\chi^2$-分布では，後ろの指数部分$\exp\paren{\frac{\sigma iu}{1-2iu}}$が1になり消える．
+        \item $\delta=0$のとき，平均と分散は：$\al_1=n,\mu_2=2n$．
+    \end{enumerate}
+\end{proposition}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item $\delta=0$のときは，Gamma分布の特別な場合である．
+        \item \begin{description}
+            \item[直接計算] \begin{align*}
+                \al_1&=\frac{1}{2^{\frac{n}{2}}\Gamma\paren{\frac{n}{2}}}\int^\infty_0xx^{\frac{n}{2}-1}e^{-\frac{x}{2}}dx\\
+                &=\frac{2}{\Gamma\paren{\frac{n}{2}}}\int^\infty_0\frac{1}{2^{\frac{n}{2}+1}}x^{\frac{n}{2}}e^{-\frac{x}{2}}dx\\
+                &=\frac{2\Gamma\paren{\frac{n}{2}+1}}{\Gamma\paren{\frac{n}{2}}}=2\frac{n}{2}=n.
+            \end{align*}
+            同様にして，
+            \begin{align*}
+                \al_2&=\frac{1}{2^{\frac{n}{2}}\Gamma\paren{\frac{n}{2}}}\int^\infty_0x^2x^{\frac{n}{2}-1}e^{-\frac{x}{2}}dx\\
+                &=\frac{2^2}{\Gamma\paren{\frac{n}{2}}}\int^\infty_02^{-\frac{n}{2}-2}x^{\frac{n}{2}+1}e^{-\frac{x}{2}}dx\\
+                &=\frac{2^2\Gamma\paren{\frac{n}{2}+2}}{\Gamma\paren{\frac{n}{2}}}=4\frac{n}{2}\paren{\frac{n}{2}+1}=n(n+2).
+            \end{align*}
+            よって，
+            \[\mu_2=\al_2-\al_1^2=n(n+2)-n^2=2n.\]
+        \end{description}
+    \end{enumerate}
+\end{Proof}
+
+\begin{theorem}[$\chi^2$-分布は再生性を持つ]
+    $X_1\sim N(\mu,1),X_j\sim N(0,1)\;(j=2,3,\cdots,k)$は独立であるとする．このとき，
+    \[Y:=\sum_{j=1}^kX_j^2\sim\chi^2(k,\mu^2).\]
+\end{theorem}
+\begin{Proof}
+    まずは$\mu=0$のときを考える．
+    \begin{enumerate}
+        \item $n=1$のときは，$X_1^2$の分布関数は
+        \[F_{X_1^2}(x)=P[\abs{X_1}<\sqrt{x}]=\frac{2}{\sqrt{2\pi}}\int^{\sqrt{x}}_0e^{-\frac{u^2}{2}}du.\quad(x>0).\]
+        これを微分することで，
+        \[f(x)=\frac{2}{\sqrt{2\pi}}e^{-\frac{x}{2}}\frac{1}{2\sqrt{x}}=\frac{1}{\sqrt{2\pi x}}e^{-\frac{x}{2}}.\]
+        \item 一般の$n$のときは，畳み込みにより，特性関数は
+        \[\varphi_Y(t)=\frac{1}{(1-2it)^{n/2}}.\]
+    \end{enumerate}
+\end{Proof}
+
+\begin{corollary}[分散は均一だが平均がバラバラな正規確率変数のの二乗和は非心$\chi^2$-分布に従う]\mbox{}
+    \begin{enumerate}
+        \item $X_j\sim N(\mu_j,1)\;(j\in[k])$は独立とする．このとき，
+        $\delta:=\sum_{j\in[k]}\mu_j^2$として，
+        $\sum_{j\in[k]}X_j^2\sim\chi^2(k,\delta)$．
+        \item $X_j\sim\chi^2(k_j,\delta_j)\;(j\in[k])$は独立とする．このとき，
+        \[\sum_{j\in[k]}X_j\sim\chi^2\paren{\sum_{j\in[k]}k_j,\sum_{j\in[k]}\delta_j}.\]
+    \end{enumerate}
+\end{corollary}
+\begin{Proof}
+    次の定理の系である．
+\end{Proof}
+
+\begin{theorem}\label{thm-chi2-rv-from-normal-rv}
+    一般に，$X\sim\rN_d(\mu,I_d),P\in M_d(\R)$を階数$r\le d$の直交射影行列とすると，$X^\top PX\sim\chi^2(r;\mu^\top P\mu)$．
+\end{theorem}
+\begin{Proof}
+    $P$はある直交行列$Q$を用いて，$Q^\top PQ=\Lambda_r:=\diag(1,\cdots,1,0,\cdots,0)$と表せる．
+    よってこのとき，$\mu^\top P\mu=\sum_{i\in[r]}(Q\mu)^2_i$と表せている．
+    よって，$D:=QX\sim\rN_d(Q\mu,I_d)$とすれば，
+    \[X^\top PX\overset{d}{=}D^\top\Lambda_rD=\sum_{i\in[r]}D_i^2\sim\chi^2(r;\mu^\top P\mu).\]
+\end{Proof}
+
+\subsection{Fisher-Cochranの定理}
+
+\begin{theorem}[Fisher-Cochran]
+    $X\sim\rN_d(\mu,I_d)$とし，対称行列$P_1,\cdots,P_n\in M_d(\R)$は$I_d$の分解であるとする．
+    $Q_i:=X^\top P_iX,d_i:=\rank P_i\;(i\in[n])$について，次は同値：
+    \begin{enumerate}
+        \item $\exists_{\delta_i\in\R_+}\;Q_i\sim\chi^2(d_i,\delta_i)$かつ$Q_1,\cdots,Q_n$は独立．
+        \item $\sum_{i\in[n]}d_i=d$．
+        \item $P_i$は射影行列である：$\forall_{i\in[n]}\;P_i^2=P_i$．
+        \item $\forall_{i\ne j\in[n]}\;P_iP_j=O$．
+        \item $\R^d=\bigoplus_{i\in[n]}\Im P_i$．
+    \end{enumerate}
+    また，これらが成り立つとき，$\delta_i=\mu^\top P_i\mu$である．
+\end{theorem}
+\begin{Proof}
+    (2),(3),(4),(5)が同値であることは，ひとえに有限次元線型空間上の冪等自己準同型の性質による．
+    \begin{description}
+        \item[(2)$\Rightarrow$(1)] 
+        $d_i=0$のとき$P_i=O$より，$X^\top P_iX\sim\delta_0=\chi^2(0)$．
+        このときたしかに$\delta_i=\mu^\top P_i\mu=0$である．
+        よって，以降$d_i>0$と仮定する．
+        \begin{enumerate}[{Step}1]
+            \item $P_i$は冪等だから固有値は$0,1$のみで，さらに対称だからある直交行列$O_i$が存在して
+            \[O_iP_iO_i^\top=D_i:=\diag(\underbrace{1,\cdots,1}_{d_i},0,\cdots,0).\]
+            と対角化される．
+            \item $Y_i:=O_iP_iX$とおくとこれは再び多変量正規分布に従い，共分散が
+            \begin{align*}
+                \Cov[Y_i,Y_j]&=\Cov[O_iP_iX,O_jP_jX]=O_iP_i\Cov[X,X]P_j^\top O_j^\top\\
+                &=O_iP_iI_dP_j^\top O_j^\top=\Lambda_{d_i}\delta_{ij}.
+            \end{align*}
+            と表せることより，$Y_1,\cdots,Y_n$は独立である．よって，$Q_i=Y_i^\top\Lambda_{d_i}Y_i$も互いに独立．
+            \item また，$Y_i$の平均ベクトルは
+            \[E[Y_i]=O_iP_i\mu=\Lambda_{d_i}O_i\mu\]
+            より，$Y_i$は$\rN_d(\Lambda_{d_i}O_i\mu,I_d)$に従う．
+            $Y_i$の零でない成分は$d_i$個に限ることに注意すれば，定理\ref{thm-chi2-rv-from-normal-rv}より，$Q_i=Y_i^\top\Lambda_{d_i}Y_i\sim\chi^2(d_i,\delta_i)$で，
+            \[\delta_i=(O_i\mu)^\top \Lambda_{d_i}(O_i\mu)=\mu^\top P_i\mu.\]
+        \end{enumerate}
+        \item[(1)$\Rightarrow$(2)] 2通りで$X^\top X$の分布を記述し，それを比べる．
+        \begin{enumerate}[1{通り目}]
+            \item \[X^\top X=X^\top(P_1+\cdots+P_n)X=\sum_{i\in[n]}Q_i\]
+            より，$\chi^2$-分布の再生性から，$X^\top X\sim\chi^2\paren{\sum_{i\in[n]}d_i,\sum_{i\in[n]}\delta_i}$．
+            \item $X^\top X=\sum_{i\in[d]}X_i^2$より，$X^\top X\sim\chi^2(d,\mu^\top\mu)$\ref{thm-chi2-rv-from-normal-rv}．
+        \end{enumerate}
+        よって，$d=\sum_{i\in[n]}d_i$．
+    \end{description}
+\end{Proof}
+
+\begin{corollary}
+    $A_1,A_2\in M_d(\R)$を対称行列，$Q_i:=X^\top A_iX$を二次形式とする．
+    \begin{enumerate}
+        \item $Q_1$が非心$\chi^2$-分布に従うことと，$A_1$が冪等であることとは同値．このとき，$Q_1\sim\chi^2(\mu^\top A_1\mu,\rank A_1)$．
+        \item $Q_1,Q_2$が共に非心$\chi^2$-分布に従うとする．$Q_1\indep Q_2$と$Q_1Q_2=O$は同値．
+    \end{enumerate}
+\end{corollary}
+
+\subsection{Student分布}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    $F$分布に従う確率変数の平方根，または正規確率変数を$\chi^2$-確率変数の平方根で割ったものは，$t$-分布に従う．
+\end{tcolorbox}
+
+\begin{definition}[$t$-distribution (Goset 1908)]
+    $Y\sim\chi^2(n),Z\sim\rN(\delta,1)$は独立とし，確率変数$X:=\frac{Z}{\sqrt{Y/n}}$を考える．
+    \begin{enumerate}
+        \item $\delta=0$のとき，$X$の従う分布を\textbf{Studentの$t$-分布}といい，$\rt(n)$で表す．
+        \item $\delta>0$のとき，$X$の従う分布を\textbf{非心$t$-分布}といい，$\rt(n,\delta)$で表す．
+    \end{enumerate}
+\end{definition}
+
+
+\begin{proposition}[密度関数と特性関数]\mbox{}
+    \begin{enumerate}
+        \item 密度関数は，$\delta=0$のとき，
+        \[p_{n,0}(x)=\frac{\Gamma\paren{\frac{n+1}{2}}}{\sqrt{\pi n}\Gamma\paren{\frac{n}{2}}}\paren{1+\frac{x^2}{n}}^{-\frac{n+1}{2}}=\frac{1}{\sqrt{n}B\paren{\frac{1}{2},\frac{n}{2}}}\paren{1+\frac{x^2}{n}}^{-\frac{n+1}{2}}.\]
+        一般の$\delta>0$について，
+        \[p_{n,\delta}(x)=\frac{1}{\sqrt{\pi n}}e^{-\frac{\delta^2}{2}}\sum_{r\in\N}\frac{2^{r/2}}{r!}\frac{\Gamma\paren{\frac{n+r+1}{2}}}{\Gamma\paren{\frac{n}{2}}}\paren{\frac{\delta x}{\sqrt{n}}}^r\paren{1+\frac{x^2}{n}}^{-\frac{n+r+1}{2}}.\]
+        \item 特性関数は，第2種修正Bessel関数$K_\nu$について，
+        \[\varphi(x)=\frac{n^{\frac{n-2}{4}}}{2^{\frac{n}{2}-1}\Gamma\paren{\frac{n}{2}}}t^{\frac{n}{2}}K_{\frac{n}{2}}(\sqrt{nt}).\]
+    \end{enumerate}
+\end{proposition}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item 変換
+        \[\begin{cases}
+            X_1=\frac{Z}{\sqrt{Y/n}}\\
+            X_2=Z
+        \end{cases}\Leftrightarrow\vctr{Y}{Z}=\vctr{\frac{X_2^2}{X_1^2}n}{X_2}=T\vctr{X_1}{X_2}\]
+        を考えると，$A:=\R^+\times\R,B:=\R^+\times\R$について，$T:A\to B$は可微分同相で，
+        \[DT(x_1,x_2)=\mtrx{-2n\frac{x_2^2}{x_1^3}}{2n\frac{x_2}{x_1^2}}{0}{1},\quad J_T(x_1,x_2)=-2n\frac{x_2^2}{x_1^3}\]
+        より，$A$上でJacobianは消えない．よって，結合密度関数は
+        \begin{align*}
+            p^*(x_1,x_2)&=p_Y(y)p_Z(z)\abs{J_T(x_1,x_2)}\\
+            &=\paren{\frac{1}{\Gamma\paren{\frac{n}{2}}2^{\frac{n}{2}}}y^{\frac{n}{2}-1}e^{-\frac{y}{2}}}\paren{\frac{1}{\sqrt{2\pi}}e^{-\frac{z^2}{2}}}2n\frac{x_2^2}{x_1^3}\\
+            &=\frac{1}{\Gamma\paren{\frac{n}{2}}2^{\frac{n}{2}}\sqrt{2\pi}}2nn^{\frac{n}{2}-1}\paren{\frac{x_2}{x_1}}^{n-2}e^{-\frac{n}{2}\frac{x_2^2}{x_1^2}}e^{-\frac{x_2^2}{2}}\frac{x_2^2}{x_1^3}.
+        \end{align*}
+        より，$x_1$の周辺密度関数は，積分と変数変換$y=x_2^2$により，$dy=2x_2dx_2$に注意して，
+        \begin{align*}
+            p^*(x_1)&=\frac{1}{\Gamma\paren{\frac{n}{2}}2^{\frac{n}{2}}\sqrt{2\pi}}n^{\frac{n}{2}}\frac{1}{x_1^{n+1}}2\int_\R \underbrace{x_2^n}_{=x_2^{n-1}x_2}e^{-\frac{x_2^2}{2}\paren{1+\frac{n}{x_1^2}}}dx_2\\
+            &=\frac{1}{\Gamma\paren{\frac{n}{2}}2^{\frac{n}{2}}\sqrt{2\pi}\sqrt{n}}\paren{\frac{n}{x_1^2}}^{\frac{n+1}{2}}\int^\infty_0y^{\frac{n-1}{2}}e^{-\frac{y}{2}\paren{1+\frac{n}{x_1^2}}}dy\\
+            &=\frac{1}{\Gamma\paren{\frac{n}{2}}2^{\frac{n}{2}}\sqrt{2\pi}\sqrt{n}}\paren{\frac{n}{x_1^2}}^{\frac{n+1}{2}}2^{\frac{n+1}{2}}\paren{1+\frac{n}{x_1^2}}^{-\frac{n+1}{2}}\Gamma\paren{\frac{n+1}{2}}\\
+            &=\frac{\Gamma\paren{\frac{n+1}{2}}}{\Gamma\paren{\frac{n}{2}}\sqrt{\pi}\sqrt{n}}\paren{1+\frac{x_1^2}{n}}^{-\frac{n+1}{2}}.
+        \end{align*}
+    \end{enumerate}
+\end{Proof}
+\begin{remark}
+    \[f_{\rt(1)}(x)=\frac{1}{\sqrt{\pi}\sqrt{\pi}}(1+x^2)^{-1}\]
+    より，$\rt(1)=\Cauchy(0,1)$である．
+\end{remark}
+
+\begin{proposition}[逆Gamma分布の正規混合の構造]
+    $Y\sim\chi^2(n)=\GAMMA\paren{\frac{1}{2},\frac{n}{2}},Z\sim\rN(0,1)$とする．
+    \begin{enumerate}
+        \item $\frac{Y}{n}\sim\GAMMA\paren{\frac{n}{2},\frac{n}{2}}$．
+        \item $\wt{Y}:=\paren{\frac{Y}{n}}^{-1}\sim\GAMMA^{-1}\paren{\frac{n}{2},\frac{n}{2}}$で，密度関数は
+        \[f(x)=\frac{\paren{\frac{n}{2}}^{\frac{n}{2}}}{\Gamma\paren{\frac{n}{2}}}x^{-\frac{n}{2}-1}e^{-\frac{n}{2x}}\qquad(x>0).\]
+        \item $X=\sqrt{\wt{Y}}Z$の密度関数は
+        \[p(t)=\frac{\paren{\frac{n}{2}}^{\frac{n}{2}}}{\Gamma\paren{\frac{n}{2}}}x^{-\frac{n}{2}-1}e^{-\frac{n}{2x}}\]
+        と表せる．
+    \end{enumerate}
+\end{proposition}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item 変数変換$y=x/n$により，係数部分が$\al\mapsto\al/n$と変わる．
+        \item 命題\ref{prop-density-of-inverse-Gamma-distribution}で議論した．
+        \item $\sqrt{\wt{Y}}\indep Z$より，$X|\wt{Y}=y\sim\rN(0,y)$から，
+        \begin{align*}
+            p(t)&=\int_0^\infty f_{X|Y}(t|y)f_Y(y)dy\\
+            &=\int^\infty_0\frac{1}{\sqrt{2\pi y}}e^{-\frac{t^2}{2y}}f(y)dy.
+        \end{align*}
+    \end{enumerate}
+\end{Proof}
+
+\begin{corollary}[t-分布の漸近的性質]
+    \[\rt(n)\Rightarrow\rN(0,1)\qquad(n\to\infty).\]
+\end{corollary}
+\begin{Proof}
+    $\rt$分布の密度関数
+    \[p_{n,0}(x)=\frac{1}{\sqrt{n}B\paren{\frac{1}{2},\frac{n}{2}}}\paren{1+\frac{x^2}{n}}^{-\frac{n+1}{2}}.\]
+    に注目する．
+    \begin{enumerate}
+        \item Beta関数の漸近的性質\ref{thm-property-of-Beta-function}(4)より，
+        \[\frac{1}{\sqrt{n}B\paren{\frac{1}{2},\frac{n}{2}}}\xrightarrow{n\to\infty}\sqrt{2}\]
+        \item また，
+        \[\paren{1+\frac{x^2}{n}}^{-\frac{n+1}{2}}=\paren{1-\frac{-x^2/2}{n_2}}^{-\frac{n}{2}+\frac{1}{2}}\xrightarrow{n\to\infty}e^{-\frac{x^2}{2}}.\]
+    \end{enumerate}
+    より，密度関数は$\rN(0,1)$のものに各点収束する．
+\end{Proof}
+
+\begin{proposition}[積率の存在]
+    $X\sim\rt(\nu)\;(\nu>0)$について，
+    \begin{enumerate}
+        \item $p\in(-1,\nu)$ならば，$E[\abs{X}^p]<\infty$．
+        \item $E[\abs{X}^p]=\nu^{p/2}\frac{\Gamma\paren{\frac{\nu-q}{2}}\Gamma\paren{\frac{q+1}{2}}}{\sqrt{\pi}\Gamma\paren{\frac{\nu}{2}}}$．
+    \end{enumerate}
+\end{proposition}
+
+\begin{application}
+    正規母集団$\rN(\mu,\sigma^2)$からの標本$X_1,\cdots,X_n$を通じて，母平均$\mu$の推定を考えたいとする．
+    標本平均$\o{X}$と不偏分散$U^2$について，
+    \[t(X_1,\cdots,X_n|\mu):=\frac{\o{X}-\mu}{S/\sqrt{n}}\]
+    と定めると，これは$\rt(n-1)$に従う．
+    特に，$\sigma^2$に一切依っていないことに注意．
+
+\end{application}
+
+\subsection{合流型超幾何関数}
+
+\begin{definition}[Bessel function of first kind]\mbox{}
+    \begin{enumerate}
+        \item $\al\in\R$に対して，$t^2x''+tx'+(t^2-\al^2)x=0$と表される$t=0$に確定特異点を持つ方程式の解
+        \[J_{\pm\al}(t)=\sum_{k\in\N}\frac{(-1)^k}{k!\Gamma(\pm\al+k+1)}\paren{\frac{t}{2}}^{\pm\al+2k}\]
+        を\textbf{第1種Bessel関数}という．
+        $\al\notin\N$ならば$J_{\pm\al}$は線形独立で，この線形結合が一般解を与える．
+        \item \[Y_\nu(t):=\frac{J_\nu(t)\cos\nu\pi-J_{-\nu}(t)}{\sin\nu\pi}\]
+        を\textbf{Weber関数}または\textbf{第2種Bessel関数}という．$\nu\in\C$について定まり，Bessel方程式の解であり，$J_{\pm m}$と線形独立になる．
+        \item 次の2つを\textbf{修正Bessel関数}，後者を特に\textbf{Macdonald関数}ともいう：
+        \[I_\al(x)=i^{-\al}J_\al(ix),\quad K_\al(x)=\frac{\pi}{2}\frac{I_{-\al}(x)-I_\al(x)}{\sin\al\pi}.\]
+        これらは，修正されたBessel方程式$t^2x''+tx'-(t^2+\al^2)x=0$の2つの線型独立な解である．
+    \end{enumerate}
+\end{definition}
+
+\begin{definition}[generalized hypergeometric function, confluent hypergeometric function]\mbox{}
+    \begin{enumerate}
+        \item 関数${}_rF_s(\al_1,\cdots,\al_r;\beta_1,\cdots,\beta_s;z)=\sum_{k\in\N}\frac{(\al_1)_k\cdots(\al_s)_k}{(\beta_1)_k\cdots(\beta_r)_k}\frac{z^k}{k!}$を\textbf{一般化超幾何関数}という．
+        \item 関数$M(\al,\beta;z):={}_1F_1(\al,\beta;z)=\sum_{k\in\N}\frac{(\al)_kz^k}{(\beta)_kk!}$を\textbf{Kummerの合流型超幾何関数}という．
+    \end{enumerate}
+\end{definition}
+
+\begin{proposition}\mbox{}
+    \begin{enumerate}
+        \item Kummerの合流型超幾何関数は，
+        \begin{enumerate}[(a)]
+            \item Kummerの微分方程式$tx''+(\beta-t)x'-\al x=0$の解の1つである．
+            \item 極限$M(\al,\gamma;z)=\lim_{\beta\to\infty}F(\al,\beta,\gamma;z/\beta)$である．
+            \item 積分表示$M(\al,\beta;z)=\frac{\Gamma(\beta)}{\Gamma(\al)\Gamma(\beta-\al)}\int^1_0e^{zu}u^{\al-1}(1-u)^{\beta-\al-1}du$を持つ．
+            特に，$M(\al,\al+\beta;it)$はBeta分布の特性関数である．
+            \item $\al$が負の整数のとき，Laguerreの陪多項式の定数倍$L^{(\al)}_n(x)=\begin{pmatrix}n+\al\\n\end{pmatrix}M(-n,\al+1;x)$となる．
+        \end{enumerate}
+        \item 次もKummerの微分方程式の線型独立な基本解で，\textbf{第二種Kummer関数}またはTricomiの合流型超幾何関数という：
+        \[U(\al,\beta;z)=\frac{\Gamma(1-\beta)}{\Gamma(\al+1-\beta)}M(\al,\beta;z)+\frac{\Gamma(\beta-1)}{\Gamma(\al)}z^{1-\beta}M(\al+1-\beta,2-\beta;z).\]
+        \item 一般化超幾何関数は，${}_1F_1$のときKummerの合流型超幾何関数であるが，
+        \begin{enumerate}[(a)]
+            \item ${}_0F_0(z)=e^z$は指数関数になる．
+            \item ${}_1F_0(\al;z)=(1-z)^{-\al}$は代数関数になる．
+            \item ${}_0F_1(\beta;z)$は本質的にBessel関数になる．第1種Bessel関数に対して，
+            \[J_\al(x)=\frac{(x/2)^\beta}{\Gamma(\beta+1)}{}_0F_1(\beta+1;-x^2/4).\]
+            ${}_0F_1(1/2;-z^2/4)=\cos z$になる．
+        \end{enumerate}
+    \end{enumerate}
+\end{proposition}
+
+\subsection{Fisher-Snedecor分布}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    $t$-確率変数の自乗，そして独立な$\chi^2$-確率変数の商は，$F$-確率変数である．
+\end{tcolorbox}
+
+\begin{definition}[Fisher-Snedecor distribution / $F$-distribution]
+    $Y_1\sim\chi^2(m,\delta),Y_2\sim\chi^2(n)$は独立とする．
+    このとき，
+    \[X:=\frac{Y_1/m}{Y_2/n}\]
+    の分布を，
+    \begin{enumerate}
+        \item $\delta=0$のとき，\textbf{Fisher-Snedecor分布}といい，$F(m,n):=\Beta\paren{\frac{m}{2},\frac{n}{2}}$で表す．
+        \item $\delta>0$のとき，\textbf{非心$F$-分布}といい，$F(m,n,\delta)$で表す．
+    \end{enumerate}
+\end{definition}
+
+\begin{proposition}[F-分布の特性値]\mbox{}
+    \begin{enumerate}
+        \item 確率密度関数は，$\delta=0$のとき，
+        \[p_{m,n,0}(x)=\frac{1}{B\paren{\frac{m}{2},\frac{n}{2}}}\paren{\frac{\frac{m}{n}x}{1+\frac{m}{n}x}}^{\frac{m}{2}}\paren{\frac{1}{1+\frac{m}{n}x}}^{\frac{n}{2}}\frac{1}{x}1_{\R^+}=\frac{1}{B\paren{\frac{m}{2},\frac{n}{2}}}\paren{\frac{mx}{n+mx}}^{\frac{m}{2}}\paren{1-\frac{mx}{n+mx}}^{\frac{n}{2}}\frac{1}{x}1_{\R^+}\]
+        一般の$\delta>0$については，
+        \[p_{m,n,\delta}(x)=\sum_{r=0}^\infty e^{-\frac{1}{2}\delta}\paren{\frac{\delta}{2}}^r\frac{(m/n)^{m/2+r}}{r!B(m/2+r,n/2)}\frac{x^{m/2+r-1}}{(1+mx/n)^{(m+n)/2+r}}1_{\R^+}.\]
+        \item 中心的な場合と非心の場合の確率密度関数の間には，
+        \[M(\al,\gamma;z)=\frac{\Gamma(\gamma)}{\Gamma(\al)}\sum_{n\in\N}\frac{\Gamma(\al+n)}{\Gamma(\gamma+n)}\frac{z^n}{n!}\]
+        をKummerの合流型超幾何関数として，
+        \[p_{m,n,\delta}(x)=e^{-\frac{1}{2}\delta}M\paren{\frac{m+n}{2},\frac{m}{2};\frac{\delta}{2}\frac{mx/n}{1+mx/n}}p_{m,n,0}(x)\]
+        という関係がある．
+        \item 特性関数は，第二種Kummer合流超幾何関数
+        \[U(a,c;z):=\frac{1}{\Gamma(a)}\int^\infty_0e^{-zs}s^{a-1}(1+s)^{c-a-1}ds\]
+        を用いて，
+        \[\varphi_{m,n}(u)=\frac{\Gamma\paren{\frac{n+m}{2}}}{\Gamma\paren{\frac{n}{2}}}U\paren{\frac{m}{2},1-\frac{n}{2};-\frac{n}{m}is}.\]
+    \end{enumerate}
+\end{proposition}
+
+\begin{proposition}[F-分布に関連する分布]\mbox{}
+    \begin{enumerate}
+        \item $X\sim F(n,m)$のとき，$X^{-1}\sim F(m,n)$．
+        \item $X\sim t(n)$のとき，$X^2\sim F(1,n)$．
+        \item $X\sim\Beta(m/2,n/2)$のとき，$\frac{nX}{m(1-X)}\sim F(m,n)$．
+        \item $X_1\sim\Gamma(\al_1,\beta_1),X_2\sim\Gamma(\al_2,\beta_2)$を独立とする．このとき，$\frac{\beta_1/\al_1\cdot X_1}{\beta_2/\al_2\cdot X_2}\sim F(2\al_1,2\al_2)$．
+    \end{enumerate}
+\end{proposition}
+\begin{history}
+    $X\sim F(m,n)$のとき，$\frac{\log X}{2}$をFisherの$z$-分布と呼ぶ．
+\end{history}
+
+\begin{proposition}[Hotelling $T^2$-統計量]
+    $X_1,\cdots,X_n\sim\rN_d(\mu_0,\Sigma)$とし，$U_n:=\frac{1}{n-1}\sum_{i\in[n]}(X_i-\o{X}_n)(X_i-\o{X}_n)^\top$を不偏共分散行列とする．
+    このとき，
+    \[T_n^2(\mu):=n(\o{X}_n-\mu)^\top U^{-1}_n(\o{X}_n-\mu)\]
+    について，
+    \begin{enumerate}
+        \item $\delta_n:=n(\mu_0-\mu)^\top\Sigma^{-1}(\mu_0-\mu)$を非心率として，
+        \[\frac{n-d}{d(n-1)}T^2_n(\mu)\sim F_{d,n-d}(\delta_n).\]
+        \item $T_n^2(\mu_0)\Rightarrow\chi^2(d)$．
+    \end{enumerate}
+\end{proposition}
+
+\subsection{Beta関数}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    Beta関数には
+    \[B(x+1,y)=B(y,x+1)=\frac{x}{x+y}B(x,y)\]
+    の関係があり，Gamma関数との関係
+    \[B(x,y)=\frac{\Gamma(x)\Gamma(y)}{\Gamma(x+y)}\]
+    によって理解される．$x$について単調減少であることを思えば，上下を間違えないだろう．
+\end{tcolorbox}
+
+\begin{definition}[Beta function]
+    $B:\R^+\times\R^+\to\R$を
+    \[B(x,y):=\int^1_0t^{x-1}(1-t)^{y-1}dt,\qquad(x,y>0)\]
+    で定める．これは$\Im x,\Im y>0$を満たす半平面上に解析接続される．
+\end{definition}
+
+\begin{theorem}[Beta関数の性質]\label{thm-property-of-Beta-function}
+    次が成り立つ：
+    \begin{enumerate}
+        \item 対称性：$B(x,y)=B(y,x)$．
+        \item Gamma関数との関係：
+        \[B(x,y)=\int^1_0t^{x-1}(1-t)^{y-1}dt=\frac{\Gamma(x)\Gamma(y)}{\Gamma(x+y)}.\]
+        \item 積分表示：
+        \[B(x,y)=2\int^{\pi/2}_0(\sin\theta)^{2x-1}(\cos\theta)^{2y-1}d\theta=\int^\infty_0\frac{u^{x-1}}{(1+u)^{x+y}}du.\]
+        \item Gamma関数との漸近的関係：固定された$y$について，$B(x,y)\sim\Gamma(y)x^{-y}\;(x\to\infty)$．
+    \end{enumerate}
+    なお，いずれの等式も$\Im x,\Im y>0$にて成り立つ．
+\end{theorem}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item 変数変換$s:=1-t$による：
+        \[B(y,x)=\int^1_0t^{y-1}(1-t)^{x-1}dt=-\int^0_1(1-s)^{y-1}s^{x-1}ds=B(x,y).\]
+        \item \begin{enumerate}[{Step}1]
+            \item $B(1,y)=\frac{1}{y}$である．実際，
+            \[B(1,y)=\int^1_0t^{y-1}dt=\SQuare{\frac{t^y}{t}}^1_0=\frac{1}{y}.\]
+            \item $x\mapsto\log B(x,y)$は凸関数である．実際，任意の$p\in(1,\infty)$とその共役指数$q$について，凸結合$\frac{1}{p}+\frac{1}{q}=1$を考えると，
+            Holderの不等式より，
+            \begin{align*}
+                B\paren{\frac{x}{p}+\frac{y}{q},z}&=\int^1_0t^{\frac{x}{p}+\frac{y}{q}-1}(1-t)^{z-1}dt=\int^1_0t^{\frac{x-1}{p}+\frac{y-1}{q}}(1-t)^{(z-1)\paren{\frac{1}{p}+\frac{1}{q}}}dt\\
+                &\le\paren{\int^1_0\paren{t^{\frac{x-1}{p}}(1-t)^{\frac{z-1}{p}}}^pdt}^{p/1}\paren{\int^1_0\paren{t^{\frac{x-1}{q}}(1-t)^{\frac{z-1}{q}}}^qdt}^{1/q}=B(x,z)^{1/p}B(y,z)^{1/q}.
+            \end{align*}
+            両辺の対数を取ると，
+            \[\log B\paren{\frac{x}{p}+\frac{y}{q},z}\le\frac{\log B(x,z)}{p}+\frac{\log B(y,z)}{q}.\]
+            を得る．
+            \item 次の等式が成り立つ：
+            \[B(x+1,y)=\frac{x}{x+y}B(x,y).\]
+            実際，
+            部分積分より，
+            \begin{align*}
+                B(x+1,y)&=\int^1_0t^x(1-t)^{y-1}dt\\
+                &=\int^1_0\paren{\frac{t}{1-t}}^x(1-t)^{x+y-1}dt=-\frac{1}{x+y}\int^1_0\paren{\frac{t}{1-t}}^x\Paren{(1-t)^{x+y}}'dt\\
+                &=-\frac{1}{x+y}\SQuare{\paren{\frac{t}{1-t}}^x(1-t)^{x+y}}^1_0+\frac{1}{x+y}\int^1_0x\paren{\frac{t}{1-t}}^{x-1}\frac{(1-t)+t}{(1-t)^2}(1-t)^{x+y}dt\\
+                &=-\frac{1}{x+y}\SQuare{t^x(1-t)^y}^1_0+\frac{x}{x+y}\int^1_0t^{x-1}(1-t)^{y-1}dt=\frac{x}{x+y}B(x,y).
+            \end{align*}
+            \item 任意の$y>0$について，
+            \[f(x):=\frac{\Gamma(x+y)}{\Gamma(y)}B(x,y)\]
+            は$\log f$は凸であり，$f(1)=1$を満たし，さらに\[f(x+1)=\frac{\Gamma(x+y+1)}{\Gamma(y)}B(x+1,y)=xf(x)\]が成り立つ．
+            よって，Gamma関数の特徴付け\ref{thm-characterization-of-Gamma-function}より，$f(x)=\Gamma(x)$である．
+        \end{enumerate}
+        \item $t=:\sin\theta$の変数変換による．
+    \end{enumerate}
+\end{Proof}
+
+\subsection{Beta分布}
+
+\begin{definition}[beta distribution]
+    $((0,1),\B((0,1)))$上の\textbf{（第１種）ベータ分布}$\Beta(\al,\beta)\;(\al,\beta\in\R_{>0})$とは，
+    確率密度関数
+    \[f(x;\al,\beta):=\frac{1}{B(\al,\beta)}x^{\al-1}(1-x)^{\beta-1}1_{(0,1)}(x)\]
+    が定める確率分布をいう．ただし，$B(\al,\beta)=\int^1_0x^{\al-1}(1-x)^{\beta-1}dx$．
+\end{definition}
+
+\begin{proposition}[Beta分布の特性値]
+    $\Beta(\al,\beta)$について，
+    \begin{enumerate}
+        \item $\al_1=\frac{\al}{\al+\beta}$．
+        \item $\mu_2=\frac{\al\beta}{(\al+\beta)^2(\al+\beta+1)}$．
+        \item $\gamma_1=\frac{2(\beta-\al)\sqrt{\al+\beta+1}}{(\al+\beta+2)\sqrt{\al\beta}}$．
+        \item $\gamma_2=\frac{3(\al+\beta+1)(\al^2\beta+\al\beta^2+2\al^2-2\al\beta+2\beta^2)}{\al\beta(\al+\beta+2)(\al+\beta+3)}$．
+        \item 特性関数は，$M(\al,\beta;z)={}_1F_1(\al,\beta;z)=\sum_{k\in\N}\frac{(\al)_kz^k}{(\beta)_kk!}$をKummerの合流型超幾何関数として，
+        \[\varphi(u)=M(\al,\al+\beta;iu).\]
+    \end{enumerate}
+\end{proposition}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item \begin{align*}
+            \al_1&=\int^1_0x\frac{1}{B(\al,\beta)}x^{\al-1}(1-x)^{\beta-1}dx\\
+            &=\frac{B(\al+1,\beta)}{B(\al,\beta)}\underbrace{\int^1_0\frac{1}{B(\al+1,\beta)}x^\al(1-x)^{\beta-1}dx}_{=1}\\
+            &=\frac{\Gamma(\al+1)\Gamma(\beta)}{\Gamma(\al+1+\beta)}\frac{\Gamma(\al+\beta)}{\Gamma(\al)\Gamma(\beta)}=\frac{\al}{\al+\beta}.
+        \end{align*}
+    \end{enumerate}
+\end{Proof}
+
+\begin{proposition}[積率]
+    $\Beta(\al,\beta)$について，
+    \begin{enumerate}
+        \item 中心積率：
+        \[\mu_r=\frac{B(\al+r,\beta)}{B(\al,\beta)}=\frac{\Gamma(\al+r)\Gamma(\beta+r)}{\Gamma(\al)\Gamma(\al+\beta+r)}.\]
+        この等式は任意の実数$r>-\al$について成り立つ．
+        \item $\al>1$のとき，$E[X^{-1}]=\frac{\al+\beta-1}{\al-1}$．
+    \end{enumerate}
+\end{proposition}
+
+\subsection{第2種Beta分布}
+
+\begin{definition}
+    次の確率密度関数で定まる分布$\Beta_2:\R^+\times\R^+\to P(\R)$を\textbf{第2種Beta分布}という：
+    \[f(x;\al,\beta):=\frac{1}{B(\al,\beta)}\frac{x^{\al-1}}{(1+x)^{\al+\beta}}\]
+\end{definition}
+
+\begin{proposition}
+    $X\sim\Beta(\al,\beta)$のとき，$\frac{X}{1-X}\sim\Beta_2(\al,\beta)$．
+\end{proposition}
+
+\subsection{Cauchy分布}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    特性関数$\varphi(u)=\exp\paren{i\mu u-\sigma\abs{\mu}}$で定まる分布である．
+    $u=0$で微分可能でないので，1次の積率（平均）さえも存在しない．
+\end{tcolorbox}
+
+\begin{definition}[Cauuchy distribution]
+    $(\X,\B_1)$上の\textbf{Cauchy分布}$\rC(\mu,\sigma)\;(\mu\in\R,\sigma\in\R_{>0})$とは，
+    確率密度関数
+    \[f(x)=\frac{1}{\pi\sigma}\frac{1}{1+\paren{\frac{x-\mu}{\sigma}}^2}\]
+    が定める分布をいう．
+    $\mu$は位置母数，$\sigma$は尺度母数と解釈される．
+    $C(0,1)$の場合の確率密度は$\R$上のPoisson核に一致する．
+    そして$\sigma$は総和核の添字$P_\sigma(x):=\frac{1}{\sigma}P\paren{\frac{x}{\sigma}}=\frac{1}{\pi\sigma}\frac{1}{1+\paren{\frac{x}{\sigma}}^2}$である．
+\end{definition}
+
+\begin{proposition}\mbox{}
+    \begin{enumerate}
+        \item 裾が重く($1/x^2$のオーダー)，平均と分散は存在しない．
+        \item $\varphi(u)=\exp(i\mu u-\sigma\abs{u})$．明らかに$u=0$で微分可能でない．
+        \item 分布関数は$F(x)=\frac{1}{2}+\frac{1}{\pi}\arctan(x)$．
+    \end{enumerate}
+\end{proposition}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item $X\sim\rC(0,1)$のとき，
+        \[E[\abs{X}]=\frac{1}{\pi}\int_\R\frac{1}{1+x^2}xdx=\infty.\]
+        \item $\mu=\rC(0,1)$のとき$\wc{\mu}(u)=e^{-\abs{u}}$であることを2通りで示す．
+        \begin{description}
+            \item[天下り的方法] 
+            \begin{align*}
+                \F[e^{-\abs{u}}](x)&=\int_\R e^{-\abs{u}}e^{-iux}du\\
+                &=\int^\infty_0e^{-u(1+ix)}du+\int^0_{-\infty}e^{u(1-ux)}du\\
+                &=\Square{-\frac{e^{-u(1+ix)}}{1+ix}}^\infty_0+\Square{\frac{e^{u(1-ix)}}{1-ix}}^0_{-\infty}\\
+                &=\frac{1}{1+ix}+\frac{1}{1-ix}=\frac{2}{1+x^2}.
+            \end{align*}
+            より，反転公式から，
+            \[2\pi e^{-\abs{u}}=\F\Square{\frac{2}{1+x^2}}(u).\]
+            \item[複素積分を直接計算] 
+            \[\varphi(u)=\frac{1}{\pi}\int^\infty_{-\infty}\frac{e^{ixu}}{1+x^2}dx=\frac{1}{2\pi i}\int_\R\paren{\frac{e^{ixu}}{x-i}-\frac{e^{ixu}}{x+i}}dx.\]
+            の計算であるが，$u>0$のとき，上半円$B_R(0)\cap\R_+$の境界上での積分を考えると，これは$u=i$での留数に等しいことから，
+            \[\varphi(u)=\frac{1}{2\pi i}\int_{\partial B_\ep(i)}\frac{e^{ixu}}{x-i}dx=e^{iiu}=e^{-u}.\]
+        \end{description}
+    \end{enumerate}
+\end{Proof}
+
+\begin{history}
+    Cauchy(1853)によると考えられていたが，Poissonが1824年にすでに注目していた．
+\end{history}
+
+\subsection{Weibull分布}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    Weibull分布は寿命分布として用いられ，また極値分布としても現れる．
+\end{tcolorbox}
+
+\begin{definition}[Weibull distribution]
+    $(\X,\B_1)$上の\textbf{Weibull分布}$W(\nu,\al)\;(\nu,\al\in\R_{>0})$とは，
+    確率密度関数
+    \[f(x)=\frac{\nu}{\al}\paren{\frac{x}{\al}}^{\nu-1}\exp\paren{-\paren{\frac{x}{\al}}^\nu}1_{x>0}=\int^x_{-\infty}f(y)dy\]
+    が定める分布である．
+    $\al$が尺度母数，$\nu$が形状母数と解釈される．
+\end{definition}
+
+\begin{proposition}\mbox{}
+    \begin{enumerate}
+        \item 分布関数は$F(x)=\Brace{1-\exp\paren{-\paren{\frac{x}{\al}}^\nu}}1_{x>0}$．
+        \item $\al_1=\al\Gamma\paren{\frac{\nu+1}{\nu}}$．
+        \item $\mu_2=\al^2\Brace{\Gamma\paren{\frac{\nu+2}{\nu}}-\Gamma\paren{\frac{\nu+1}{\nu}}^2}$．
+    \end{enumerate}
+\end{proposition}
+
+\begin{proposition}
+    故障率関数を
+    \[h(t)=\paren{\frac{\al}{\beta}}\paren{\frac{t}{\beta}}^{\al-1}1_{\Brace{t>0}}\]
+    としたとき，故障時刻$T$はWeibull分布$W(\al,\beta)$にしたがう．
+\end{proposition}
+
+\begin{proposition}
+    $X\sim\Exp\paren{\frac{1}{\al^\nu}}$ならば，$X^{\frac{1}{\nu}}\sim W(\nu,\al)$．
+\end{proposition}
+
+\subsection{対数正規分布}
+
+\begin{definition}[log-normal distribution]
+    $(\X,\B_1)$上の\textbf{対数正規分布}$L_N(\nu,\sigma)\;(\nu\in\R,\sigma\in\R_{>0})$とは，
+    確率密度関数
+    \[f(x)=\frac{1}{\sqrt{2\pi\sigma^2}}\frac{1}{x}\exp\Brace{-\frac{(\log x-\mu)^2}{2\sigma^2}}1_{x>0}\]
+    が定める分布である．
+\end{definition}
+
+\begin{proposition}
+    \[\log X\sim N(\mu,\sigma^2)\Lrarrow X\sim L_N(\mu,\sigma)\]
+\end{proposition}
+
+\begin{proposition}\mbox{}
+    \begin{enumerate}
+        \item $\al_1=\exp\paren{\mu+\frac{\sigma^2}{2}}$．
+        \item $\mu_2=\paren{e^{\sigma^2}-1}\exp(2\mu+\sigma^2)$．
+        \item $\gamma_1=(\om+2)\sqrt{\om-1}$．ただし，$\om:=\exp(\sigma^2)$とした．
+        \item $\gamma_2=\om^4+2\om^3+3\om^2-3$．
+    \end{enumerate}
+\end{proposition}
+
+\subsection{Zeta関数}
+
+\begin{proposition}[Zeta関数の定義]
+    \[\zeta(z):=\sum^\infty_{n=1}n^{-z}\quad(z\in R+1)\]
+    とする．$R+1=\Brace{\Re z>1}$上で一様収束し，正則関数を定める．
+\end{proposition}
+
+\begin{theorem}[Euler積表示]
+    素数を$2=p_1<p_2<\cdots$とする．このとき，
+    \[\zeta(z)\prod^\infty_{n=1}\paren{1-\frac{1}{p_n^z}}=1\;\on\;R+1.\]
+    特に，$\zeta$は$R+1$上に零点を持たない．また，$\sum_{n\in\N}p^{-1}_n=\infty$で，素数は無限個ある．
+\end{theorem}
+\begin{remarks}
+    このことは，$p_n\sim n^a\;(a>1)$の分布に従わないことを示唆する（さもなくば収束する）．
+    実際には，$p_n\sim n\log n$であることが，$\zeta$の$\partial(R+1)$での挙動から知られている．
+\end{remarks}
+
+\begin{lemma}
+    命題(1)の
+    右辺の積分に関連して，次の等式が成り立つ：
+    \[\frac{\zeta(z)}{\Gamma(1-z)}=\frac{1}{2\pi i}\int_C\frac{w^{-z-1}}{e^{w}-1}dw=2(2\pi)^{z-1}\sin(z\pi/2)\sum_{m=1}^\infty m^{z-1}=2(2\pi)^{z-1}\sin(z\pi/2)\zeta(1-z)\;\on\; z\in\C\]
+    ただし，$C:=\partial\Brace{w\in\C\mid\dist(w,\R_+)<\ep}$とした．
+    特に，左半平面$-R$には，$\zeta(0)=1/2,\zeta(-2m)=0$以外の零点はない．
+\end{lemma}
+
+\begin{proposition}[解析接続による有理型関数への延長]\mbox{}
+    \begin{enumerate}
+        \item Gamma関数とZeta関数について，次の等式が成り立つ：
+        \[\zeta(z)\Gamma(z)=\int^\infty_0\sum^\infty_{n=1}e^{-ny}y^{z-1}dy=\int^\infty_0\frac{y^{z-1}}{e^y-1}dy=:I(z)\;\on\;R+1.\]
+        \item 
+        命題(1)の
+        右辺の積分に関連して，次の等式が成り立つ：
+        \[\frac{\zeta(z)}{\Gamma(1-z)}=\frac{1}{2\pi i}\int_C\frac{w^{-z-1}}{e^{w}-1}dw=2(2\pi)^{z-1}\sin(z\pi/2)\sum_{m=1}^\infty m^{z-1}=2(2\pi)^{z-1}\sin(z\pi/2)\zeta(1-z)\;\on\; z\in\C\]
+        ただし，$C:=\partial\Brace{w\in\C\mid\dist(w,\R_+)<\ep}$とした．
+        \item 特に，$\C$の全域で有理型，$\C\setminus\{1\}$上で正則な関数
+        \[\zeta(z)=2(2\pi)^{z-1}\sin(\pi z/2)\Gamma(1-z)\zeta(1-z)\]
+        に延長され，また
+        左半平面$-R$には，$\zeta(0)=1/2,\zeta(-2m)=0$以外の零点はない．
+    \end{enumerate}
+\end{proposition}
+\begin{remarks}
+    こうして，$-R$と$R+1$における零点には協力な研究道具がある．
+    しかし，帯領域$0\le \Re z\le 1$における零点の研究は困難を極める．
+    WienerによるTauber型の定理と$\Re s=1$上で零点が存在しないことは同値である．
+\end{remarks}
+
+\begin{corollary}
+    $n$以下の素数の個数を$\pi(n)$とすると，
+    \[\lim_{n\to\infty}\frac{\pi(n)}{n/\log n}=\lim_{n\to\infty}\frac{p_n}{n\log n}=1.\]
+\end{corollary}
+
+\subsection{logistic分布}
+
+\begin{definition}[logistic distribution]
+    $(\X,\B_1)$上の\textbf{ロジスティック分布}$\Log(\mu,\sigma)\;(\mu\in\R,\sigma\in\R_{>0})$とは，
+    分布関数
+    \[F(x)=\frac{1}{1+\exp\paren{-\frac{x-\mu}{\sigma}}}\]
+    で，確率密度関数
+    \[f(x)=\frac{1}{\sigma}\frac{\exp\paren{-\frac{x-\mu}{\sigma}}}{\Brace{1+\exp\paren{-\frac{x-\mu}{\sigma}}}^2}\]
+    が与える分布をいう．よって，分布は$x=\mu$に関して対称である．
+\end{definition}
+
+\begin{lemma}
+    \[I(r):=\int^\infty_0x^r\frac{e^{-x}}{(1+e^{-x})^2}dx=(1-2^{-(r-1)})\Gamma(r+1)\zeta(r)\quad(r>1)\]
+\end{lemma}
+\begin{Proof}
+    \begin{align*}
+        I(r)&=\int^\infty_0x^r\frac{e^{-x}}{(1+e^{-x})^2}dx=\int^\infty_0\frac{rx^{r-1}}{1+e^x}dx\\
+        &=\int^\infty_0rx^{r-1}e^{-x}\sum^\infty_{j=0}(-1)^je^{-jx}dx\\
+        &=\Gamma(r+1)\sum^\infty_{n=1}(-1)^{n-1}\frac{1}{n^r}\quad(r>0)
+    \end{align*}
+    ここで，$\zeta(r)=\sum^\infty_{n=1}\frac{1}{n^r}\;(r>1)$について
+    \[(1-2^{-(r-1)})\zeta(r)=\sum^\infty_{n=1}(-1)^{n-1}n^{-r}\]
+    が成り立つから，最後の変形を得る．
+\end{Proof}
+
+\begin{proposition}\mbox{}
+    \begin{enumerate}
+        \item 中心積率は，奇数について$\mu_r=0$，２以上の偶数について
+        \[\mu_r=2\sigma^r\Gamma(r+1)\sum^\infty_{n=1}(-1)^{n-1}\frac{1}{n^r}=2\sigma^r(1-2^{-(r-1)})\Gamma(r+1)\zeta(r).\]
+        \item $\al_1=\mu,\m_2=\frac{\pi^2\sigma^2}{3},\mu_4=\frac{7\pi^4\sigma^4}{15}$．
+        \item $\gamma_1=0,\gamma_2=4.2$．
+        \item $\varphi(u)=e^{i\mu u}\frac{\pi\sigma u}{\sinh(\pi\sigma u)}$．
+    \end{enumerate}
+\end{proposition}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item 奇数の時は対称性より．
+        \item $\zeta(2)=\frac{\pi^2}{6},\zeta(4)=\frac{\pi^4}{90}$より．
+        \item $-R,R,-R+2\pi i,R+2\pi i$を頂点にもつ長方形についての留数計算より．
+    \end{enumerate}
+\end{Proof}
+
+\subsection{Pareto分布}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    パレート分布は所得の分布に当てはまるという．
+\end{tcolorbox}
+
+\begin{definition}
+    $(\X,\B_1)$上の\textbf{パレート分布}$P_A(b,a)\;(a,b\in\R_{>0})$とは，
+    分布関数を
+    \[F(x)=1-\paren{\frac{b}{x}}^a1_{x\ge b}\]
+    確率密度関数を
+    \[f(x):=ab^ax^{-(a+1)}1_{x\ge b}\]
+    とする分布をいう．
+\end{definition}
+
+\begin{proposition}\mbox{}
+    \begin{enumerate}
+        \item $\al_1=ab(a-1)^{-1}\;(a>1)$．
+        \item $\mu_2=ab^2(a-1)^{-2}(a-2)^{-1}\;(a>2)$．
+        \item $\gamma_1=2\frac{a+1}{a-3}\sqrt{\frac{a-2}{a}}\;(a>3)$．
+        \item $\gamma_2=\frac{3(a-2)(3a^2+a+2)}{a(a-3)(a-4)}\;(a>4)$．
+    \end{enumerate}
+\end{proposition}
+
+\subsection{逆正規分布}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    ドリフト付きのBrown運動の到達時間の分布として現れる．
+    キュムラント母関数$\log M$が，正規分布のキュムラント母関数の逆数になっていることから．
+\end{tcolorbox}
+
+\begin{definition}[inverse Gaussian distribution / Wald distribution]
+    確率密度関数
+    \[f(x;\delta,\gamma)=1_{(0,\infty)}(x)\frac{\delta e^{\gamma\delta}}{\sqrt{2\pi}}x^{-3/2}\exp\paren{-\frac{1}{2}\paren{\gamma^2x+\frac{\delta^2}{x}}}\]
+    で定まる確率分布$\IG(\delta,\gamma):\R_{>0}\times\R_{\ge0}\to P(\R)$を\textbf{逆正規分布}または\textbf{Wald分布}という．
+\end{definition}
+
+\begin{lemma}\mbox{}
+    \begin{enumerate}
+        \item $\gamma>0$のとき，確率密度関数は
+        \[f(x)=1_{(0,\infty)}(x)\paren{\frac{\delta^2}{2\pi}}^{1/2}x^{-3/2}\exp\paren{-\frac{\delta^2(x-\delta\gamma^{-1})^2}{2(\delta\gamma^{-1})^2x}}\]
+        とも表せる．
+        \item $\gamma=0$のとき，確率密度関数は，$c:=\delta^2$と定めて，
+        \[f(x;c)=1_{(0,\infty)}(x)\sqrt{\frac{c}{2\pi}}x^{-3/2}\exp\paren{-\frac{c}{2x}}\]
+        と表せる．これが定める分布を\textbf{Levy分布}といい，$\Levy(c):=\IG(c^{1/2},0)$と表す．
+        \item $\IG(\delta,\gamma)$の積率母関数は，
+        \begin{align*}
+            M(s)&=\int^\infty_0e^{sx}f(x)dx\\
+            &=\exp\paren{\delta\paren{\gamma-\sqrt{\gamma^2-2s}}}&s\le\frac{\gamma^2}{2},\gamma\ge0\\
+            &=\exp\paren{\gamma\delta\paren{1-\sqrt{1-\frac{2s}{\gamma^2}}}}&s\le\frac{\gamma^2}{2},\gamma>0.
+        \end{align*}
+        \item $\IG(\delta,\gamma)$の特性関数は$\varphi(u)=\exp\paren{\gamma\delta\paren{1-\sqrt{1-\frac{2iu}{\gamma^2}}}}$となる．
+        \item キュムラント母関数は$\log\varphi(u)=\frac{\delta}{\gamma}iu+\sum^\infty_{r=2}(2r-3)(2r-5)\cdots 1\cdot\frac{\delta}{\gamma^{2r-1}}\cdot\frac{(iu)^r}{r!}$で，キュムラントは
+        \begin{align*}
+            \kappa_1&=\al_1=\frac{\delta}{\gamma},&\kappa_r=(2r-3)(2r-5)\cdots 1\cdot\frac{\delta}{\gamma^{2r-1}}
+        \end{align*}
+        \item Levy分布$\Levy(c)$のLaplace変換は
+        \[\int^\infty_0e^{-\lambda x}f(x)dx=e^{-\sqrt{c\lambda}}\quad(\lambda\in\R_+)\]
+        である．
+    \end{enumerate}
+\end{lemma}
+
+\subsection{逆Gamma分布}
+
+\begin{definition}
+    $X\sim\GAMMA(\al,\nu)$とし，逆数$X^{-1}$が従う分布を$\GAMMA^{-1}(\al,\nu)$とする．
+\end{definition}
+
+\begin{proposition}[逆Gamma分布の密度関数]\label{prop-density-of-inverse-Gamma-distribution}
+    $X\sim\GAMMA(n/2,n/2)\;(n\in\N)$とし，
+    確率変数$Y:=1/X$の確率密度関数は
+    \[f(x)=\frac{\paren{\frac{n}{2}}^{\frac{n}{2}}}{\Gamma\paren{\frac{n}{2}}}x^{-\frac{n}{2}-1}e^{-\frac{n}{2x}}\qquad(x>0).\]
+    と表せる．
+\end{proposition}
+\begin{Proof}
+    $y>0$のとき$P[Y\le y]=P[X\ge 1/y]$であるから，Gamma分布の分布関数を$G$とすれば，$F(x)=P[X\ge 1/x]=1-G\paren{\frac{1}{x}}$より，
+    \begin{align*}
+        f(x)&=F'(x)=G'\paren{\frac{1}{x}}\frac{1}{x^2}\\
+        &=\frac{\paren{\frac{n}{2}}^{\frac{n}{2}}}{\Gamma\paren{\frac{n}{2}}}x^{-\frac{n}{2}+1}e^{-\frac{n}{2}\frac{1}{x}}\frac{1}{x^2}\\
+        &=\frac{\paren{\frac{n}{2}}^{\frac{n}{2}}}{\Gamma\paren{\frac{n}{2}}}x^{-\frac{n}{2}-1}e^{-\frac{n}{2x}}.
+    \end{align*}
+\end{Proof}
+
+\subsection{Laplace分布}
+
+\begin{definition}
+    密度関数
+    \[f(x)=\frac{1}{2}e^{-\abs{x}}\]
+    が定める分布を\textbf{標準Laplace分布（両側指数分布）}という．
+\end{definition}
+
+\begin{proposition}\mbox{}
+    \begin{enumerate}
+        \item 特性関数は$\varphi(u)=(1+u^2)^{-1}$．
+        \item $X,Y,X',Y'$が独立に標準正規分布$N(0,1)$に従うとする．このとき，$V:=XY+X'Y'$は密度$f$を持つLaplace分布に従う．
+    \end{enumerate}
+\end{proposition}
+
+\subsection{Marcenko-Pastur分布}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    $\MP(\lambda,1)$分布はWishart行列の固有値の標本スペクトル分布の漸近分布として導出された．
+\end{tcolorbox}
+
+\begin{definition}
+    パラメータ$(\lambda,\sigma^2)\in\R^2_{>0}$が定める定数$a:=\sigma^2(1-\sqrt{\lambda})^2,b:=\sigma^2(1+\sqrt{\lambda})^2$について，
+    確率密度関数
+    \[f(x;\lambda,\sigma^2):=\frac{1}{2\pi\sigma^2}\frac{\sqrt{(b-x)(x-a)}}{\lambda x}1_{[a,b]}(x)+1_{\cointerval{1,\infty}}(\lambda)\paren{1-\frac{1}{\lambda}}\delta_0(x)\]
+    が定める分布$\MP(\lambda,\sigma^2):\R_{>0}^2\to P(\R)$を\textbf{Marcenko-Pastur分布}という．
+\end{definition}
+
+\begin{lemma}
+    $X\sim\MP(\lambda,\sigma^2)$ならば，$\sigma^{-2}X\sim\MP(\lambda):=\MP(\lambda,1)$．
+\end{lemma}
+
+\begin{proposition}
+    $X_{ij}\sim\iid N(0,1)\;(i\in[d],j\in[n])$を成分とする$d\times n$ランダム行列$X$に対し，$n^{-1}XX^\perp$の固有値を$0\le\lambda_1\le\cdots\le\lambda_d$とする．
+    \begin{enumerate}
+        \item 標本スペクトル分布は$\mu_{d,n}(dx):=\frac{1}{d}\sum^d_{i=1}\delta_{\lambda_i}(dx)$で与えられる．
+        \item $d=d_n$が$\frac{d_n}{n}\to\lambda\in(0,\infty)$を満たすとき，$\mu_{d_n,n}\xrightarrow{d}\MP(\lambda)$を満たす．
+    \end{enumerate}
+\end{proposition}
+
+\subsection{Pearson系}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    Pearsonが現象の起こり方の背後に確率分布を想定した初めの人であり，これの列挙としてPearson系を提案した．
+    これが今日の確率密度関数の原形となった．
+    この枠組を基に，Fisherが方法論を体系化した．
+\end{tcolorbox}
+
+\begin{definition}
+    $\R$上の確率密度関数$p$であって，微分方程式
+    \[\dd{}{x}\log p(x)=\frac{(x-\lambda)-a}{b_2(x-\lambda)^2+b_1(x-\lambda)+b_0}\]
+    を満たす
+    \[p(x)=C\exp\paren{\int\frac{(x-\lambda)-a}{b_0+b_1(x-\lambda)+b_2(x-\lambda)^2}dx}\]
+    の形をした分布を\textbf{Pearson系}という．
+    以降，$\lambda=0$とする．
+    \begin{enumerate}
+        \item I型分布とは，$p(x)=C\paren{1-\frac{x}{a_1}}^{m_1}\paren{1-\frac{x}{a_2}}^{m_2}\;(x\in(a_1,a_2))$の形のものをいう．ただし，$a_1<0<a_2,m_1,m_2>-1$．
+    \end{enumerate}
+\end{definition}
+\begin{example}\mbox{}
+    \begin{enumerate}
+        \item Beta分布はI型Pearson分布である．
+        \item 
+    \end{enumerate}
+\end{example}
+
+\section{多次元絶対連続分布の例}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    1次元の絶対連続分布の概念を容易に$d$次元に拡張できる．
+\end{tcolorbox}
+
+\subsection{Wishart分布}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    $\chi^2$-分布の多次元化である．
+\end{tcolorbox}
+
+\begin{definition}[Wishart distribution]
+    $X_1,\cdots,X_n\sim\rN_d(\mu_j,\Sigma)$を独立同分布とし，$d$次対称行列値確率変数
+    \[Y:=\sum_{i\in[n]}X_iX_i^\top\]
+    を考える．
+    \begin{enumerate}
+        \item $Y$の分布を，非心行列$\Delta:=\sum_{i\in[n]}\mu_j\mu_j^\top$の\textbf{非心Wishart分布}といい，$\rW_d(n,\Sigma;\Delta)$で表す．
+        \item $\Delta=0$の場合は単に\textbf{Wishart分布}といい，$\rW_d(n,\Sigma)$で表す．
+    \end{enumerate}
+\end{definition}
+
+\begin{proposition}
+    密度関数は
+    \[f(M)=C_{n,d}^{-1}\abs{\Sigma}^{-\frac{d}{2}}\abs{M}^{\frac{n-d-1}{2}}e^{-\frac{1}{2}\Tr(\Sigma^{-1}M)},\qquad C_{n,d}:=2^{\frac{nd}{2}}\pi^{\frac{d(d-1)}{4}}\prod^d_{k=1}\Gamma\paren{\frac{n-k+1}{2}},M\in M_d(\R)^+.\]
+\end{proposition}
+
+\subsection{Dirichlet分布}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    ベータ分布の高次元化であり，多変量ベータ分布ともいう．
+    多項分布の共役事前分布になるため，3以上のカテゴリへのカウント
+\end{tcolorbox}
+
+\begin{definition}
+    $\Delta_p:=\Brace{(x_1,\cdots,x_p)\in\R_{>0}^p\mid\sum^p_{i=1}x_i<1}\;(p\in\N)$について，
+    \[f(x_1,\cdots,x_p)=\frac{\Gamma(\nu)}{\prod^{p+1}_{i=1}\Gamma(\nu_i)}\paren{\prod^d_{i=1}x_i^{\nu_i-1}}\paren{1-\sum^p_{i=1}x_i}^{\nu_{p+1}-1}1_{\Delta_p}(x_1,\cdots,x_p)\qquad\nu_i>0,\nu:=\sum^{p+1}_{i=1}\nu_i\]
+    が定める分布を\textbf{Dirichlet分布}$\Dirichlet(\nu_1,\cdots,\nu_{p+1}):\R_{>0}^{p+1}\to P(\R^p)$という．
+\end{definition}
+
+\begin{proposition}[周辺分布はBeta分布である]
+    $(X_1,\cdots,X_p)\sim\Dirichlet(\nu_1,\cdots,\nu_{p+1})$とする．
+    \[\forall_{j\in[p]}\;X_j\sim\Beta\paren{\nu_j,\sum_{i\ne j}\nu_i}\]
+\end{proposition}
+
+\section{Poisson過程に付随する分布}
+
+\subsection{Poisson確率変数の和と差}
+
+\begin{definition}\label{def-Hermite-and-Skellam}
+    独立な$Y\sim\Pois(\al),Z\sim\Pois(\beta)$に対して，
+    \begin{enumerate}
+        \item $X=Y+2Z$の分布を，パラメータ$(\al,\beta)\in\R_{>0}^2$の\textbf{Hermite分布}とよび，$\Hermite(\al,\beta)$で表す．
+        \item $X=Y-Z$の分布を，パラメータ$(\al,\beta)\in\R_{>0}^2$の\textbf{Skellam分布}とよび，$\Skellam(\al,\beta)$で表す．
+    \end{enumerate}
+\end{definition}
+
+\begin{lemma}\mbox{}
+    \begin{enumerate}
+        \item Hermite分布の特性関数は，$\varphi(u)=\exp\paren{\al(e^{iu}-1)+\beta(e^{2iu}-1)}$．
+        \item Hermite分布の確率母関数は$g(z)=\exp\paren{\al(z-1)+\beta(z^2-1)}$．
+        \item Skellam関数の特性関数は$\varphi(u)=\exp\paren{\al(e^{iu}-1)+\beta(e^{-iu}-1)}$．
+    \end{enumerate}
+\end{lemma}
+
+\subsection{Poisson過程に付随する分布}
+
+\begin{proposition}[Poisson分布の区間的性質]
+    $(N_t)$を強度$\lambda$の定常Poisson過程とし，$T(x):=\inf\Brace{t\in\R_+\mid N_t\ge x+1}$とする．このとき，$T(x)\sim G(\lambda,x+1)$．
+\end{proposition}
+
+\begin{proposition}[Poisson過程の区間的性質]
+    $(N_t)$を強度$\lambda$の定常Poisson過程とする．
+    \begin{enumerate}
+        \item $T(x):=\inf\Brace{t\in\R_+\mid N_t\ge x+1}$とする．このとき，$T(x)\sim\GAMMA(\lambda,x+1)$．
+        \item $T:=\min\Brace{t\in\R_+\mid N_t\ge1}$とすると，$T\sim\Exp(\lambda)$．
+    \end{enumerate}
+\end{proposition}
+
+\section{分布の変換による関係}
+
+\begin{proposition}
+    $X\sim\Exp(1)$ならば，$e^{-X}\sim U([0,1])$である．
+\end{proposition}
+\begin{Proof}
+    \[P[e^{-X}\le a]=P[X\ge-\log a]=S(\log a)=e^{\log a}=a.\]
+\end{Proof}
+
+\chapter{古典数理統計学}
+
+\section{指数型分布族}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    小標本理論では，統計量理論を用いるために，完備十分統計量の存在が肝要になる．
+    これが組織的に議論出来る枠組みが指数型分布族である．
+\end{tcolorbox}
+
+\begin{remarks}[連続エントロピーを最大にする分布族としての特徴付け]
+    一般化線型モデルでは，残差に平均と分散以外の仮定を置かないから，観測$Y$は$\varphi:\R^p\to\R^n$を通じた条件$E[\varphi(X)]=0$のみ与えられている．
+    このとき，エントロピーを最大にするような絶対連続分布は$Ae^{-\varphi(x)}$という形の密度を持つものであり，$A$の部分にパラメータが入る余地がある．
+    なおこのとき，連続エントロピーは$h(X)=-\log A+E[\varphi(X)]$．
+\end{remarks}
+
+\subsection{定義と例}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    指数型分布族は，有限個の$x$の関数$T_i\in\Meas(\X,\R)$の1次式の指数関数の$\Meas(\X,\R)$-倍で表せるRadon-Nikodym微分を持つクラスである．
+    このクラスに対しては，
+\end{tcolorbox}
+
+\begin{definition}[exponential family]
+    分布族
+    $\P=\{P_\theta\}_{\theta\in\Theta}\subset P(\X)$が$\sigma$-有限測度$\mu$に支配されており，そのRadon-Nikodym微分が
+    \[\dd{P_\theta}{\mu}(x)=g(x)\exp\paren{\sum^m_{i=1}a_i(\theta)T_i(x)-\psi(\theta)}\quad(T_i,g\in L(\X),\;a_i,\psi:\Theta\to\R)\]
+    と表せるとき，$\P$を\textbf{$m$-径数指数型分布族}という．
+\end{definition}
+\begin{remarks}
+    $g$は測度$\mu$に吸収させることが出来るので，本質的には「$T_i\;(i\in[m])$を通してのみ$x$に依存する密度関数の族」をいう．
+\end{remarks}
+
+\begin{example}\mbox{}\label{exp-complete-sufficient-statistic-of-normal-family}
+    \begin{enumerate}
+        \item 正規分布の畳み込みが与える族$\{\rN(\theta_1,\theta_2)^{\otimes n}\}_{\theta\in\R\times\R^+}$は
+        \begin{align*}
+            \dd{P_\theta}{x}(x)&=\prod_{j=1}^n\exp\paren{\frac{\theta_1}{\theta_2}x-\frac{1}{2\theta_2}x^2-\frac{1}{2}\paren{\frac{\theta_1^2}{\theta_2^2}+\log(2\pi\theta_2)}}\\
+            &=\exp\paren{\frac{\theta_1}{\theta_2}\sum_{j\in[n]}x_j-\frac{1}{2\theta_2}\sum_{j\in[n]}x_j^2-\frac{n}{2}\paren{\frac{\theta_1^2}{\theta_2^2}+\log(2\pi\theta_2)}}.
+        \end{align*}
+        であるから，1次と2次の標本積率$T_1(x):=\sum_{j\in[n]}x_j,T_2(x):=\sum_{j\in[n]}x_j^2$について
+        指数型である．
+        特に，$T:=(T_1,T_2)$は完備十分統計量である．
+        \item 分散$\theta_2\in\R^+$を既知として，平均のみを母数と捉えても，$g(x):=e^{-\frac{1}{2\theta}\sum_{j\in[n]}x^2_j}$とすることで，$T(x):=\sum_{j\in[n]}x_j$を完備十分統計量として指数型である．
+        \item 二項分布族$\{B(n,\theta)\}_{\theta\in(0,1)}$は，計数測度$\mu$に関して
+        \[\dd{B(n,\theta)}{\mu}(x)=\begin{pmatrix}n\\ x\end{pmatrix}\exp\paren{x\log\frac{\theta}{1-\theta}+n\log(1-\theta)}\]
+        と表せるから指数型である．
+        \item Poisson分布族，Gamma分布族，Beta分布族，負の二項分布族，逆正規分布族も指数型である．
+        \item 独立列$\ep_t\sim N(0,\sigma^2)\;(t\in[n],\sigma^2>0)$と$\phi\in\R$が定める確率差分方程式
+        \[X_t=\phi X_{t-1}+\ep_t,\quad X_0=x\]
+        が定める確率過程$X=(X_t)_{t\in n+1}\in\R^{n+1}$が押し出す分布族$\{P_\theta\}_{\theta\in\R\times\R^+}$は指数型である．
+        \item 標準Brown運動$(w_t)_{t\in[0,T]}$が定める確率微分方程式
+        \[dX_t=\theta X_tdt+dw_t,\quad X_0=x\quad(\theta\in\R)\]
+        の一意な解$X=(X_t)_{t\in[0,T]}$が$C([0,T])$上に押し出す分布$(P_\theta)_{\theta\in\R}$は指数型である：
+        \[\dd{P_\theta}{dP_0}(X)=\exp\paren{\theta\int^T_0X_tdX_t-\frac{\theta^2}{2}\int^T_0X^2_tdt}.\]
+    \end{enumerate}
+\end{example}
+
+\subsection{指数型分布族の性質}
+
+\begin{proposition}\mbox{}
+    \begin{enumerate}
+        \item $\P$が指数型分布ならば，任意の2つの元は互いに絶対連続である．
+        \item 指数型分布族が定める統計的実験の列$(\X^{(i)},\A^{(i)},\P^{(i)})\;(i\in[k])$について，直積$\P:=\Brace{\prod_{i\in[k]}P^{(i)}_\theta}_{\theta\in\Theta}\subset P\paren{\otimes_{i\in[k]}\X^{(i)}}$も指数型である．
+        \item 可測関数$T:=(T_1,\cdots,T_m):\X\to\R^m$は$\P$に関して十分である．
+    \end{enumerate}
+\end{proposition}
+
+\begin{proposition}
+    指数型分布族$\P$の$T:=(T_1,\cdots,T_m):\X\to\R^m$による押し出し$(P^T_\theta)_{\theta\in\Theta}$は再び指数型である：
+    ある$\sigma$-有限測度$\lambda$について$\P^T\ll\lambda$で，
+    \[\dd{P_\theta^T}{\lambda}(t)=\exp\paren{\sum_{i\in[m]}a_i(\theta)t_i-\psi(\theta)}\quad(t\in\R^m).\]
+\end{proposition}
+
+\subsection{密度関数が生成する標準指数型分布族}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    参照測度$\mu$と可測関数
+    $g,T\in L(\X)$から指数型分布族が構成出来る．
+\end{tcolorbox}
+
+\begin{definition}[natural parameter, natural exponential famlity]
+    可測空間$(\X,\A)$上の$\sigma$-有限測度$\mu$と２つの可測関数$g\in L(\X)_+,T\in L(\X;\R^m)$を用いて，
+    指数型分布族を定める．
+    \begin{enumerate}
+        \item 母数の空間$A\subset\R^m$を
+        \[A:=\Brace{a\in\R^m\;\middle|\;\int_\X e^{a^\top T(x)}g(x)\mu(dx)\in\R^+}\]
+        と定める．これを\textbf{自然母数空間}という．$A=\Theta_0(g)$とも書く．
+        \item $A\ne\emptyset$とする．$g$のキュムラント母関数
+        \[\Psi(a):=\log\paren{\int_\X e^{a\cdot T(x)}g(x)\mu(dx)}\]
+        について，分布$P_a\in P(\X)$を
+        \[\dd{P_a}{\mu}(x):=g(x)\exp\paren{a^\top T(x)-\Psi(a)}\]
+        と定めると，$\{P_a\}_{a\in A}$は指数型分布族である．これを\textbf{$gd\mu$が生成する$m$次の自然指数型分布族}という．
+    \end{enumerate}
+\end{definition}
+
+\begin{proposition}
+    自然母数空間$A\subset\R^m$は凸集合である．
+\end{proposition}
+
+\begin{lemma}[キュムラント母関数の導関数]
+    $T:\X\to\R^m,\varphi:\X\to\R$を測度空間$(\X,\A,\mu)$上の可測関数とし，任意の$a\in V\osub\R^m$上で$\varphi$のキュムラント母関数
+    \[f(a):=\int_\X e^{a^\top T(x)}\varphi(x)\mu(dx)\]
+    が存在するとする．このとき，
+    \begin{enumerate}
+        \item $f$は$D:=\Brace{z\in\C^m\mid \Re z\in V^m}$上に解析接続される．
+        \item $\forall_{n\in\N^m}\;\forall_{z\in D}\;\pp{^nf}{z^n}(z)=\int_\X e^{z^\top T(x)}\varphi(x)T(x)^n\mu(dx)$．
+    \end{enumerate}
+\end{lemma}
+
+\begin{proposition}
+    $gd\mu$に関する$m$次の自然指数型分布族$\{P_a\}_{a\in A}\subset P(\X)$について，
+    \begin{enumerate}
+        \item $g$のキュムラント母関数$\Psi:\R^m\osup A\to\R$は$C^\infty$-級である．
+        \item $P_a$に関する$T:\X\to\R^m$の特性関数は
+        \[\varphi(u)=\exp\paren{\Psi(a+iu)-\Psi(u)}\quad(u\in\R^m)\]
+        で表される．
+        \item $P_a$に関する$T:\X\to\R^m$のキュムラントは$\kappa_n=\partial^n_a\Psi(a)\;(n\in\N^m)$で表される．
+        \item この分布族のFisher情報行列は，$\paren{\pp{^2\Psi(a)}{a_i\partial a_j}}$である．
+    \end{enumerate}
+\end{proposition}
+
+\subsection{指数型分布族の完備十分統計量}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    $(\Im a)^\circ\subset\R^m$が空でないならば$T$は十分である上に完備でもある．
+\end{tcolorbox}
+
+\begin{theorem}[指数型分布族が完備であるための十分条件]
+    指数型分布族$\P$について，$a:\Theta\to\R^m$の像は疎でないならば，$T:\X\to\R^m$は完備統計量である．
+\end{theorem}
+
+\begin{lemma}
+    $\R^m=\R^{m_1}\times\R^{m_2}$に対応して，
+    $T=(T_1,T_2),a=(a_1,a_2)$と分解して考える．
+    これらが定める自然な指数型分布族$\{P_a\}_{a\in A}\subset P(\X)$について，次を満たすような$\R^{m_1}$上の$\sigma$-有限測度$\nu_{t_2}(dt_1)\;(t_2\in\R^{m_2})$が存在する：
+    \begin{enumerate}
+        \item 任意の$a\in A$に対して次は$P^{T_2}_a$-零集合：
+        \[N_{a_1}=\Brace{t_2\in\R^{m_2}\;\middle|\;\int_{\R^{m_1}}e^{a_1^\top t_1}\nu_{t_2}(dt_1)\in\{0,\infty\}}.\]
+        \item 次の確率分布$P_a(-|t_2)\in P(\R^{m_1})$は，$T_2=t_2$の下での$P_a$に関する$T_1$の正則条件付き確率である：
+        \[P_a(dt_1|t_2)=\begin{cases}
+            \frac{e^{a_1^\top t_1}}{\int_{\R^{m_1}}e^{a_1^\top \tau_1}\nu_{t_2}(d\tau_1)}\nu_{t_2}(dt_1)&t_2\in N_{a_1}^\comp\\
+            \nu_0&\otherwise
+        \end{cases}\]
+        ただし，$\nu_0\in P(\R^{m_1})$は任意．
+    \end{enumerate}
+\end{lemma}
+
+\subsection{共役事前分布}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    Howard RaiffaとRobert Schlaiferによるベイジアン決定理論で作られた概念である．
+    共役というのは，事後分布が，事前分布の代数的な閉式で表せることを指している（したがって，数値積分が必要なく，解析的に計算可能）．
+\end{tcolorbox}
+
+\begin{theorem}[Bayesの定理（密度版）]
+    確率変数$(\theta,X)$は，参照測度$\mu(dx)\nu(d\theta)$に関する同時密度関数$f(x,\theta)\mu(dx)\nu(d\theta)$をもつとし，
+    $f_X(x),\pi(\theta),f(x|\theta)$をそれぞれ，$X,\theta$の周辺密度と，$\theta$を与えた下での$x$の条件付き密度とする．このとき，
+    $x$を与えた下での$\theta$の条件付き密度は，
+    \[\forall_{x\in\X}\;f_X(x)>0\Rightarrow f(\theta|x)=\frac{\pi(\theta)f(x|\theta)}{\int_\Theta\pi(\theta)f(x|\theta)\nu(d\theta)}\quad\nu\text{-}\ae\]
+    と表せる．このことを，$f(\theta|x)\propto\pi(\theta)f(x|\theta)$と表す．
+\end{theorem}
+
+\begin{definition}[conjugate prior]
+    事後分布$g(-|x)$が事前分布$\pi(-)$と同じ分布型であるとき，$\pi$を$\theta$の\textbf{共役事前分布}といい，$f(x|\theta)$をその尤度関数という．
+\end{definition}
+
+\section{指数分散モデル}
+
+\subsection{構成}
+
+\begin{notation}
+    一次元確率分布$\mu(dx)$が生成する1次元自然指数型分布族
+    \[\exp\paren{x\theta-\psi(\theta)}\mu(dx),\quad\theta\in\Theta_0\]
+    を考える．ただし，$\psi$は$\mu$の(第2)キュムラント母関数とした．
+    \[\Theta_0:=\Brace{\theta\in\R\mid\int e^{\theta x}\nu(dx)<\infty}\]
+    は$\Theta_0^\circ\ne\emptyset$を満たすとする．$\mu$の積率母関数$\fM$が存在するとし，集合
+    \[\Lambda:=\Brace{\lambda>0\mid\fM(\theta)^\lambda\text{はある確率分布}\mu_\lambda\text{の積率母関数}}\]
+    を考える．
+\end{notation}
+
+\begin{lemma}[exponential dispersion model]\mbox{}
+    \begin{enumerate}
+        \item 任意の$\lambda\in\Lambda$について，$\lambda\psi(\theta)$はある分布$\mu_\lambda$のキュムラント母関数であり，$\exp(x\theta-\lambda\psi(\theta))\mu_\lambda(dx)\;(\theta\in\Theta_0)$は分布を定める．
+        \item (1)の分布に従う確率変数$X$について，$Y:=\lambda^{-1}X$の分布は$\wt{\mu}_\lambda:=(\lambda^{-1})_*\mu_\lambda$について次を満たす：
+        \[\forall_{B\in\B^1}\quad P^Y(B)=\int_B\exp(\lambda(y\theta-\psi(\theta)))\wt{\mu}_\lambda(dy),\quad\theta\in\Theta_0,\lambda\in\Lambda.\]
+    \end{enumerate}
+    (2)が定める分布$(P^Y)_{\lambda\in\Lambda}$を$\mu$または$\psi$が定める\textbf{指数分散モデル}といい，$\EDM(\theta,\lambda)$で表す．
+\end{lemma}
+
+\begin{remark}
+    定義から$\N\subset\Lambda$である．
+\end{remark}
+
+\begin{lemma}
+    $Y\sim\EDM(\theta,\lambda)$とする．
+    \begin{enumerate}
+        \item $Y$のキュムラント母関数は$\kappa_Y(u)=\lambda\paren{\psi\paren{\theta+\frac{u}{\lambda}}-\psi(\theta)}$である．特に，$E[Y]=\psi'(\theta)$，$\Var[Y]=\lambda^{-1}\psi''(\theta)$．
+        \item 平均値関数を$\tau(\theta):=\psi'(\theta):\Theta^\circ\to\R$で，その値域を$D:=\tau(\Theta^\circ)$で表す．このとき，$\tau$は単射である．
+        \item $V(\mu):=\tau'(\tau^{-1}(\mu)):D\to\R_+$について，$\Var[Y]=\lambda^{-1}V(\mu)$と表せる．
+    \end{enumerate}
+    この$V(\mu)$を\textbf{単位分散関数}という．
+\end{lemma}
+\begin{remark}
+    $\lambda=1$でない限り，$V(\mu)$そのものは分散ではない．これより，$\EDM(\theta,\lambda)$を$\EDM(\mu,\lambda)$で表す．
+\end{remark}
+
+\begin{lemma}
+    定数$w_i\ge0,w:=\sum^n_{i=1}w_i>0$と，独立確率変数列$Y_i\sim\EDM(\mu,\lambda w_i)$について，
+    \[\frac{1}{w}\sum^n_{i=1}w_iY_i\sim\EDM(\mu,\lambda w)\]
+\end{lemma}
+
+\subsection{Tweedie分布族}
+
+\begin{definition}
+    $\EDM(\mu,\lambda)$のうち，単位分散関数が$V(\mu)=\mu^p\;(p\in\R\setminus(0,1))$と表せる分布族を，\textbf{Tweedie分布族}といい，記号$\Tw_p(\mu,\lambda)$で表す．
+\end{definition}
+\begin{example}
+    $p=0$ならば正規分布族，$p=1$ならばPoisson分布，$p=2$ならばGamma分布，$p=3$ならば逆正規分布となる．
+\end{example}
+
+\begin{proposition}
+    $\EDM(\mu,\lambda)$について，$1\in D,V(1)=1$とし，さらにある関数$s:(0,\infty)\times\Lambda^{-1}\to\Lambda^{-1}$で以下を満たすものが存在すると仮定する：$Y\sim\EDM(\mu,\lambda)\Rightarrow[\forall_{c>0}\;cY\sim\EDM(c\mu,1/s(c,\lambda))]$．
+    このとき，以下が成り立つ．
+    \begin{enumerate}
+        \item $\exists_{p\in\R}\;Y\sim\Tw_p(\mu,\lambda)$．
+        \item $s(c,\lambda)=c^{2-p}/\lambda$．すなわち，$c\Tw_p(\mu,\lambda)=\Tw_p(c\mu,\lambda/c^{2-p})$．
+        \item $p=0$ならば$D=\R$．また，$p\ne0$ならば$D=(0,\infty)$．特に，$\L(Y)$は無限分解可能である．
+    \end{enumerate}
+\end{proposition}
+
+\section{漸近関係}
+
+
+
+\chapter{参考文献}
+
+\bibliography{../StatisticalSciences.bib,../SocialSciences.bib,../mathematics.bib,../statistics.bib}
+\begin{thebibliography}{99}
+    \item{Billingsley76}
+    Patrick Billingsley. (1976). \textit{Probability and Measures}.
+    \item{Billingsley68}
+    Patrick Billingsley. (1968). \textit{Convergence of Probability Measures}.
+    \item{Billingsley71}
+    Patrick Billingsley. (1971). \textit{Weak Convergence of Measures}.
+    \item{Bogachev}
+    Bogachev, V. I. (2018) \textit{Weak Convergence of Measures}.
+    \item{Rudin}
+    Rudin, W. \textit{Functional Analysis}.
+    \item{Dunford-Schwartz}
+    Dunford and Schwartz. Linear Operators.
+    \item{HarmonicAnalysisOnSemigroups}
+    Berg, and Christensen, and Ressel. \textit{Harmonic Analysis on Semigroups: Theory of Positive Definite and Related Functions}.
+
+    \item{伊藤清}
+    伊藤清．『確率論』
+    \item{柴田義貞}
+    柴田義貞 (1981) 『正規分布』（UP応用数学選書，東京大学出版会）．
+    \item{ハンドブック}
+    『確率論ハンドブック』
+    \item{西尾}
+    西尾真喜子．『確率論』
+    \item{高信}
+    高信敏『確率論』（共立出版，数学の魅力４）．
+    \item{Landkov}
+    Landkov, N. S. 『確率論入門』（森北出版）．
+    Markov過程に詳しく，ここに多くの読み残しあり．
+    \item{Alexandorff}
+    Alexandorff, A. D. (1943). Additive set-functions in abstract spaces.
+    \item{清水良一}
+    清水良一．(1976)．中心極限定理．
+    \item{盛田}
+    盛田健彦 (2004) 『実解析と測度論の基礎』（数学レクチャーノート，培風館）．
+    \item{Yoshida}
+    Yoshida, Kousaku. \textit{Functional Analysis}.
+    \item{Butzer}
+    Butzer, P. L., and Oberdorster, W. (1975). Linear Functionals Defined on Various Spaces of Continuous Functions on $\R$. \textit{Journal of Approximation Theory}. 13: 451-469.
+    \item{Folland}
+    Folland, Gerald. \textit{Real Analysis: Modern Techniques and Their Applications}.
+
+    \item{Voevodsky}
+    Vladimir Voevodsky "Notes on categorical probability"
+
+
+
+    \item{Kolmogorov31}
+    Kolmogorov, A. N. (1933). Analytical methods in probability theory. 「私はKolmogorovのこの論文（「解析的方法」）の序文にあるアイデアからヒントを得て，マルコフ過程の軌道を表す確率微分方程式を導入したが，これが私のその後の研究の方向を決めることになった．」
+    \item{Kolmogorov33}
+    Kolmogorov, A. N. (1933). Grundbeegriffle der Wahrscheinlichkeitsrechnung. (確率論の基礎概念)．
+    \item{Levy37}
+    Lévy, P. (1937). Théorie de l'addition des variables aléatories. (独立確率変数の和の理論).
+    \item{Doob37}
+    Doob, J. L. (1937). Stochastic Processes Depending on a Continuous Parameter. \textit{Transactions of the American Mathematical Society}. 42. 「正則化」の概念の初出．
+    \item{ItoPhDthesis}
+    Ito, K. (1942). Diﬀerentiation of Stochastic Processes (Infinitely Divisible Laws of Probability). \textit{Japanese Journal of Mathematics}. 18: 261-301. Levy-Itoの定理が示されている．
+    \item{Ito42}
+    Ito, K. (1942). Differential Equations Determining Markov Processes. \textit{全国紙上数学談話会誌} (1077): 1352–1400.
+    \item{Ito51}
+    Ito, K. (1951). On Stochastic Differential Equations. \textit{Memoir of American Mathematical Society}. 4: 1-51. 戦後間もなかったため，Doobの計らいでメモワールシリーズの1つとして米国で発行された．
+    Levyによる確率過程の見方と，KolmogorovによるMarkov過程への接近方法とを統一することにより，確率微分方程式とそれに関連する確率解析の理論を創出した．
+    「Levy過程をMarkov過程の接線として捉える」
+    \item{Ito53}
+    Ito, K. (1953). Stationary Random Distributions. \textit{Memoirs of the College of Science, Kyoto Imperial University, Series. A.} 28: 209-223.
+    \item{BeurlingDeny}
+    Beurling, A., and Deny, J. (1959). Dirichlet spaces. \textit{Proceedings of the National Academy of Sciences of the United States of America}. 45 (2): 208–215. Dirichlet形式が初めて定義された．
+    \item{KunitaWatanabe}
+    Kunita, H., and Watanabe, S. (1967). On Square Integrable Martingales. \textit{Nagoya Mathematics Journal}. 30: 209-245.
+    \item{Meyer}
+    Meyer, P. A. (1967). Intégrales Stochastiques. \textit{Séminaire de Probabilités I}. Lecture Notes in Math., 39: 72-162. 劣martingaleのDoob-Meyer分解を用いて，確率積分が一般の半マルチンゲールについて定義された．
+    こうして確率解析の復権が起こった．
+    \item{Ito70}
+    Ito, K. (1970). Poisson Point Processes Attached to Markov Processes. \textit{Berkeley Symposium on Mathematical Statistics and Probability}. 3: 225-239.
+    \item{Ito-Selected}
+    \textit{Kiyosi Ito Selected Papers}, edited by Stroock, D. W., and Varadhan S. R. S. (1986). Springer-Verlag.
+    \item{Strook03}
+    Stroock, D. (2003). \textit{Markov Processes from K. Ito's Perspective}. Princeton University Press.
+    
+    \item{Adams}
+    Adams, W. J. (1974). \textit{The Life and Times of the  Central Limit Theorem}.
+    \item{Kolmogorov}
+    Gnedenko, B. V., and Kolmogorov A. N. (1954). \textit{Limit Distribution for Sums of Independent Random Variables}
+    \item{Encyclopaedia3}
+    Hazewinkel, M. (1995). Encyclopaedia of Mathematics Volume 3. Springer U.S.
+    \item{Feller}
+    William Feller (1950). \textit{An Introduction to Probability Theory and its Applications, Volume I}.
+    \item{Andersen}
+    Erik Sparre Andersen. (1953). On the fluctuations of sums of random variables. \textit{Mathematica Scandinavica}. 1:263-285, 2:195-223.
+    \item{Frechet}
+    Maurice Fréchet. (1940). Les probabilités associées à un systéme d'événements compatibles et dépendants. \textit{Actualités scientifiques et industrielles}.
+\end{thebibliography}
+
+\end{document}

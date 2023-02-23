@@ -1,0 +1,81 @@
+\documentclass[uplatex,dvipdfmx]{jsarticle}
+\title{Fourier解析・演習問題}
+\author{}
+\pagestyle{headings} \setcounter{secnumdepth}{4}
+\input{/Users/Hirofumi Shiba/NatureOfStatistics/preamble_no_fonts.tex}
+%\input{/Users/hirofumi.shiba48/NatureOfStatistics/preamble_no_fonts.tex}
+\usepackage[math]{anttor}
+\begin{document}
+
+\begin{example}
+    $a,b\in\R^d$に対して，
+    $\delta_a*\delta_b=\delta_{a+b}$．
+\end{example}
+\begin{Proof}
+    コンパクト台を持つ超関数との畳み込みの定義から，
+    \[(\delta_a*\delta_b|\varphi)=(\delta_a|\wt{\delta_b}*\varphi).\]
+    ここで，$\wt{\delta_b}*\varphi$を簡単にすることを考えると，
+    \begin{align*}
+        \wt{\delta_b}*\varphi(x)&=(\wt{\delta_b}|\tau_x\wt{\varphi})\\
+        &=(\delta_b|\wt{\tau_x\wt{\varphi}})\\
+        &=(\delta_b|\varphi(x+\bullet))=\varphi(x+b),\qquad(x\in\R^d).
+    \end{align*}
+    よって，
+    \[(\delta_a*\delta_b|\varphi)=(\delta_a|\varphi(\bullet+b))=\varphi(a+b)=(\delta_{a+b}|\varphi)\qquad(\varphi\in\D(\R^d)).\]
+\end{Proof}
+
+\begin{proposition}\mbox{}
+    \begin{enumerate}
+        \item $T\in\D'(\R)$は$T'=T$を満たすとする．このとき，$T\in L^1_\loc(\R)$で，$\exists_{C\in\R}\;T(x)=Ce^x$．
+        \item $g(x)=e^x$，$S\in\D'_c(\R)$とする．$g*S$は$e^x$の定数倍である．
+    \end{enumerate}
+\end{proposition}
+\begin{Proof}
+    $\varphi\in C^\infty(\R)$に対して，$(\varphi T|\psi):=(T|\varphi\psi)\;(\psi\in\D(\R))$と定める．
+    \begin{enumerate}
+        \item $e^{-x}T$が定数関数であることを示せば良い．
+        実際，$(e^{-x}\varphi)'=-e^{-x}\varphi+e^{-x}\varphi'\;(\varphi\in\D(\R))$であるから，
+        任意の$\varphi\in \D(\R)$に対して，
+        \begin{align*}
+            ((e^{-x}T)'|\varphi)&=(e^{-x}T|\varphi')=(T|e^{-x}\varphi')\\
+            &=(T|(e^{-x}\varphi)'+e^{-x}\varphi)\\
+            &=-(T'|e^{-x}\varphi)+(T|e^{-x}\varphi)=(T-T'|e^{-x}\varphi)=0.
+        \end{align*}
+        これより，$e^{-x}T\in L^1_\loc(\R)$かつ定数である．
+        \item $e^{-x}(g*S)$が$L^1_\loc(\R)$の元でありかつ定数であることを示せば良い．
+        実際，任意の$\varphi\in\D(\R)$について，
+        \begin{align*}
+            ((e^{-x}(g*S))'|\varphi)&=(e^{-x}(g*S)|\varphi')\\
+            &=(g*S|e^{-x}\varphi')=(g*S|(e^{-x}\varphi)')+(g*S|e^{-x}\varphi)\\
+            &=-((g*S)'|e^{-x}\varphi)+(g*S|e^{-x}\varphi)=0.
+        \end{align*}
+        ただし，$(g*S)'=g'*S=g*S$を用いた．
+    \end{enumerate}
+\end{Proof}
+
+\begin{example}
+    $\PV\paren{\frac{1}{x}}$の$\S$上での階数を与えよ．
+\end{example}
+\begin{Proof}
+    任意の$\varphi\in\S(\R)$に対して，
+    Taylorの定理を念頭に，
+    \[\varphi(x)=\varphi(0)+x\varphi_1(x),\qquad\varphi_1(x):=\frac{\varphi(x)-\varphi(0)}{x}.\]
+    と変形すると，中間値の定理より，
+    \[\sup_{\abs{x}\le R}\abs{\varphi_1(x)}=\sup_{\abs{x}\le R}\Abs{\frac{\varphi(x)-\varphi(0)}{x}}\le\sup_{\abs{x}\le R}\abs{\varphi'(x)}.\]
+    これを踏まえて，
+    \begin{align*}
+        \paren{\PV\frac{1}{x}\middle|\varphi}&=\lim_{\ep\to0}\int_{\abs{x}\ge\ep}\frac{\varphi(x)}{x}dx\\
+        &=\lim_{\ep\to0}\int_{\ep\le\abs{x}\le1}\paren{\frac{\varphi(0)}{x}+\varphi_1(x)}dx+\int_{\abs{x}\ge1}\frac{\varphi(x)}{x}dx\\
+        &=\lim_{\ep\to0}\int_{\ep\le\abs{x}\le1}\varphi_1(x)dx+\int_{\abs{x}\ge1}\frac{x\varphi(x)}{x^2}dx\\
+        &\le2\sup_{\abs{x}\le 1}\abs{\varphi'(x)}+\sup_{x\in\R}\abs{x\varphi(x)}\int_{\abs{x}\ge1}\frac{dx}{x^2}\\
+        &\le2\sup_{x\in\R}\abs{\varphi'(x)}+2\sup_{x\in\R}\abs{x\varphi(x)}\le2\norm{\varphi}_1.
+    \end{align*}
+    第二項の評価は\href{https://math.stackexchange.com/questions/2708497/principal-value-of-1-x}{stackexchange}，第一項の評価は\cite{Grubb09-Distributions}による．
+
+    全く同様の評価が行えて(第二項の評価は必要なくなるが)，$\D$上でも階数$1$である．
+\end{Proof}
+\begin{remark}
+    こうやって評価するのか．特異点($0$での発散と無限大での発散)は分解して一つ一つ和として処理するために，$\D,\S$のノルムの定義が一様ノルムと和で2つの流儀で与えていたのかもしれない．
+\end{remark}
+
+\end{document}

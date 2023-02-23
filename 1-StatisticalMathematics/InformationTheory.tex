@@ -1,0 +1,1625 @@
+\documentclass[uplatex,dvipdfmx]{jsreport}
+\title{情報理論}
+\author{}
+\pagestyle{headings} \setcounter{secnumdepth}{4}
+\input{/Users/Hirofumi Shiba/NatureOfStatistics/preamble_no_fonts.tex}
+%\input{/Users/hirofumi.shiba48/NatureOfStatistics/preamble_no_fonts.tex}
+\usepackage[math]{anttor}
+\begin{document}
+\tableofcontents
+
+\chapter{情報の数量的認識}
+
+\begin{quotation}
+    情報とは，「確率分布の変化」として形式化する．
+    そこで，確率分布の変化の大きさをKL-変分などで測り，この値を「情報量」として再定義する．
+    確率的な現象が確定的な現象となるとき，確定に必要な分だけの情報の流入が起こった，とする．
+    また，「複製可能なものが情報である」という議論もあり得る(Feller,\cite{野口悠紀雄74-情報の経済理論})．
+\end{quotation}
+
+\section{エントロピー}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    測度空間$(\Om,\F)$上の不変量を考える．
+    \begin{enumerate}
+        \item 各$P\in P(\Om)$に対して\textbf{情報量}なる測度$I_P:\F\to[0,\infty]$が定まる：$I_-:P(\Om)\to M(\Om;[0,\infty])$．
+        \item $P$の$\zeta$が誘導する情報量$I_P(\om|\zeta)$の平均を\textbf{分割$\zeta$のエントロピー}という：$H_P(\zeta):\Delta\times P(\Om)\to[0,\infty]$．
+        \item $\Delta$は有向集合であるから，その極限を取ると\textbf{確率分布のエントロピー}$H_\nu:P(\Om)\to[0,\infty]$が定まる．
+        \item 情報量$I_Q(\om|\zeta)$の別の確率分布$P$についての平均を\textbf{交差エントロピー}$H_{P,Q}$という．
+        \item 情報量の差$I_Q(\om|\zeta)-I_P(\om|\zeta)$の$P$についての平均を\textbf{相対エントロピー}$D(P|Q)=H_{P,Q}-H_P$という．
+    \end{enumerate}
+    こうしてエントロピーの概念を得たら，情報量から離陸する．
+    \begin{enumerate}
+        \item エントロピー$H_P(\xi\cap\pi_\zeta(\om))$の$P$-平均$H_P(\xi|\zeta):\Delta^2\to[0,\infty]$を\textbf{条件付きエントロピー}という．
+        \item ある確率変数$Y$で$X$を条件付けた際のエントロピーの変化分$I_{(X,Y)}=H(X)-H(X|Y)$を2つの観測$X,Y$の\textbf{相互情報量}という．
+    \end{enumerate}
+\end{tcolorbox}
+
+\begin{notation}
+    双対的な対象を意識して，エントロピー$H$，情報量$I$については引数として分割・確率変数を取り，右下添字として分布を取る．
+    逆に変分は引数として分布を取る．
+    このように，エントロピーは分割と分布の2つの双対的な対象の組に対して定まるペアリングのようなものであることを意識しないと大局を見失う．
+\end{notation}
+
+\subsection{分割のエントロピー}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    事象の積の情報量は和になってほしいならば，情報量の定義には対数が必要である．
+    底は，情報理論では2が，統計力学では特定の物理定数である．
+    基本的にエントロピーは，Lebesgue測度からみたKL-変分$H_\mu=H_m-D(\mu|m)$であるが，
+    台集合が離散でない場合$H_m$が発散するので，この項を取り除いたものを連続エントロピーという．
+    ただの平行移動なので，性質そのものは本質的には同じである．
+\end{tcolorbox}
+
+\begin{definition}[(self) information, entropy]
+    $(\Om,\F,P)$を確率空間とする．
+    \begin{enumerate}
+        \item $I(p):=-\log p$で定まる関数$I:[0,1]\to[0,\infty]$について，合成によって定まる事象上の関数\[I_P:=I\circ P:\F\to[0,1]\to[0,\infty]\]を\textbf{事象の(自己)情報量}という．
+        \item \textbf{分割$\zeta$の情報量}$I_P(-;\zeta):\Om\to[0,\infty]$とは，
+        合成$I_P\circ\pi_\zeta:\Om\to \Om/\zeta\to[0,\infty]$をいう：
+        \[I_P(\om;\zeta)=E_P[I_P|\zeta]=-\sum_{A\in\zeta}1_A\log P[A].\]
+        \item \textbf{分割$\zeta$のエントロピー}または\textbf{平均情報量}とは，$\zeta$の情報量$I_P(-|\zeta):\Om\to[0,\infty]$の平均
+        \[H_P(\zeta):= E[I_P\circ\pi_\zeta]=\int_\Om I_P(\om;\zeta) P(d\om)=-\int_X\log_2 P(\pi_\zeta(\om))P(d\om).\]
+        をいう．
+    \end{enumerate}
+\end{definition}
+\begin{remarks}
+    「情報量」なる概念が分割$\zeta\in\Delta$を通じてしか$X$上に定まらないことが見通しが悪い原因である．
+    すなわち，$I_P(-|\zeta)=E[I_P|\zeta](-)$というように，可測分割$\zeta$を通じてしか$\Om$上の関数として得られない：
+    \[\xymatrix{
+        \Om\ar@{.>}[r]^-{I_P(-|\zeta)}\ar[d]_-{\pi_\zeta}&{[0,\infty]}\\
+        \Om/\zeta\ar[ur]_-{I_P}
+    }\]
+    ただし，次の命題の(5)から，可測分割としては有限なもののみを考えれば十分であることが分かる．
+    積分で書いたが，次が成り立っている：$(A_i)_{i\in\N}$を$\xi$の元で正の測度をもつもの，$A:=\cup_{i\in\N}A_i$をその合併とする．
+    \[H(\xi):=\begin{cases}
+        -\sum_{i\in\N}P[A_i]\log P[A_i]&P[A]=1,\\
+        +\infty&P[A]<1.
+    \end{cases}\]
+    すなわち，$P$が連続分布であるときは，エントロピーは発散する．
+    これは$H(\mu)=H(U([n]))-D(\mu|U([n]))$であるが，
+    KL-変分が絶対連続な分布にしか定まらないことにつながる\ref{thm-integral-expression-of-KL-divergence}．
+    そこで，このような場合は連続エントロピーで測るが，これはLebesgue測度$m$について$h(\mu)=-D(\mu|m)$としたものである．
+\end{remarks}
+
+\begin{proposition}[対数関数の特徴付け]
+    次の条件を満たす関数$I:[0,1]\to\R_+$は定数倍を除いて$I=-\log$に限る：
+    \[\forall_{p,q\in[0,1]}\;f(pq)=f(p)+f(q).\]
+\end{proposition}
+\begin{remarks}
+    独立な事象$A,B\in\F$に対して，$I(P[A\cap B])=I(P[A])+I(P[B])$が成り立つ関数は対数に限り，あとは底の問題になる．
+\end{remarks}
+
+\begin{definition}[continuous entropy]
+    $\mu,\nu\in P(\R)$は絶対連続で，それぞれ密度$p,q$を持つとする．
+    \begin{enumerate}
+        \item 次で定まる$h:P(\R)\to\o{\R}$を\textbf{絶対連続分布のエントロピー}という．\footnote{これをShannonはdifferential entropyと呼んだ．$H$の記法はBoltzmannによる．}
+        \[h_\mu:=-\int_\R p(x)\log p(x)dx.\]
+        \item 次で定まる$h:P(\R)\times P(\R)\to\o{\R}$を\textbf{絶対連続分布の交差エントロピー}という．
+        \[h_{\mu,\nu}:=-\int_\R p(x)\log q(x)dx.\]
+    \end{enumerate}
+\end{definition}
+\begin{proposition}
+    $X,Y\in P(\R)$を絶対連続とする．
+    \begin{enumerate}
+        \item $X_n,Y_n$を$X,Y$に収束する単関数とする．このとき，
+        \[\lim_{n\to\infty}(H(X_n)-H(Y_n))=h(X)-h(Y).\]
+        \item $h:P(\R)\to\o{\R}$は極限も含めれば全射である．
+        \item 交差エントロピーはエントロピーを最小値とする：$h_{\mu,\nu}\ge h_{\mu}$
+        \[h_\mu=-\int_\R p(x)\log p(x)dx\le-\int_\R p(x)\log q(x)dx=h_{\mu,\nu}\]
+        等号成立条件は$p=q\;\ae$
+    \end{enumerate}
+\end{proposition}
+\begin{Proof}\mbox{}
+    \begin{description}
+        \item[(2)] $U([0,n])$の連続エントロピーは$\log n$となり，これは$\o{\R}$への全射である．
+    \end{description}
+\end{Proof}
+\begin{example}
+    $X$は$S\subset\R^d$上の$d$次元，分布族としては$0$次の指数型分布
+    \[p(x)=Ae^{-\varphi(x)}1_{S}\]
+    に従うとする．このエントロピーは$h(X)=-\log A+E[\varphi(X)]$となるが，
+    これはある$\varphi\in L(\R)$を通じて得られる条件
+    \[\Brace{X\in L(\Om)\mid E[\varphi(X)]=m}\]
+    のうち，エントロピーが最大のものである．
+\end{example}
+
+\subsection{エントロピーの性質}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    $H:\Delta\to\R_+$は正な線型汎函数に非常に近い．
+    $\Delta$の束の構造を保つ「連続」写像であること，ネットの極限として特徴づけられること，
+    これらを含めてみても，明らかに積分の変種としての性質を持つ．
+\end{tcolorbox}
+
+\begin{notation}
+    $\Delta$を$\Om$の可測分割の全体とする，
+    \[\Delta_{<\infty}:=\bigcup_{n\in\N}\L(\Om;n).\]
+    を有限なものの全体のなす有向集合とする．
+\end{notation}
+
+\begin{proposition}[エントロピーの性質]
+    $H(\Delta)$は再び束の良い構造を持ち，「連続」である：
+    \begin{enumerate}
+        \item 正：$H(\xi)\ge0$．等号成立は$\xi$が自明な分割であるとき．
+        \item $\xi\le\eta\Rightarrow H(\xi)\le H(\eta)$．なお，$\xi\le\eta\Rightarrow H(\xi)=H(\eta)<\infty$ならば$\xi=\eta$．
+        \item $\xi_n\nearrow\xi\Rightarrow H(\xi_n)\nearrow H(\xi)$．
+        \item $\xi_n\searrow\xi\land H(\xi_1)<\infty\Rightarrow H(\xi_n)\searrow H(\xi)$．
+        \item ネットの極限としての特徴付け：$H(\xi)=\sup\Brace{H(\eta)\in\R_+\mid\xi\ge\eta\in\Delta_{<\infty}}$．
+        \item $\xi=\Brace{A_i}_{i\in[n]}$のとき，$H(\xi)\le\log n$で，等号成立は離散一様分布に限る．
+    \end{enumerate}
+\end{proposition}
+\begin{Proof}\mbox{}
+    \begin{description}
+        \item[(5)] 任意の可測分割$\xi$に対して，これに下から収束する有限分割の列が取れるためである．
+    \end{description}
+\end{Proof}
+
+\begin{notation}
+    $\Gamma^n:=\partial B_+\subset\R^n$を$l^1$-ノルムに関する単位円周の非負部分とすると，
+    これは$[n]$上の確率分布の全体に等しい．
+\end{notation}
+
+\begin{theorem}[離散エントロピー関数の特徴付け\cite{有本卓80-確率・情報・エントロピー}]
+    関数$I:\Gamma^n\to\R$が次の6条件を満たすならば，$I_n=\sum_{i=1}^n-p_i\log_2p_i$である：
+    \begin{enumerate}
+        \item 正規性：$I_2(1/2,1/2)=1$．
+        \item 展開：$\forall_{n\ge2}\;\forall_{p\in\Gamma^n}\;I_n(p)=I_{n+1}(0,p)=\cdots=I_{n+1}(p_1,\cdots,p_k,0,p_{k+1},\cdots,p_n)=\cdots=I_{n+1}(p,0)$．
+        \item 決定性：$I_2(1,0)=I_2(0,1)=0$．
+        \item 強加法性：$\forall_{n,m\ge2}\;\forall_{p\in\Gamma^n,p_i\in\Gamma^m}$行列を$P:=(p_1\;\cdots\;p_n)\in M_{mn}(\R)$とする．$I_{nm}(p^\top P)=I_n(p)+p^\top(I_m(p_1),\cdots,I_m(p_n))^\top$．
+        \item 最大性：$\forall_{n\ge2}\;\forall_{p\in\Gamma^n}\;I_n(p)\le I_n(1/n,\cdots,1/n)$．
+        \item 連続性：$I_2(p,1-p)$は$p\in[0,1]$の連続関数．
+    \end{enumerate}
+\end{theorem}
+
+\begin{theorem}[エントロピーの関手としての特徴付け]
+    FinMeasを有限集合上の測度空間と保測写像のなす圏，$F:\Mor(\FinMeas)\to\R_+$は次を満たすとする：
+    \begin{enumerate}
+        \item 関手性：$F(f\circ g)=F(f)+F(g)$．
+        \item 加法性：$F(f\oplus g)=F(f)+F(g)$．
+        \item 正の斉次性：$\forall_{\lambda\in\R_+}\;F(\lambda f)=\lambda F(f)$．
+        \item $F$は連続．
+    \end{enumerate}
+    このとき，$\exists_{c\ge0}\;\forall_{f\in\Mor(\FinMeas)}\;F(f)=c(H_\mu-H_\nu)$．
+\end{theorem}
+\begin{remarks}
+    斉次性を$\lambda^\al F(f)\;(\al\in\R^+)$に拡張すると，これを位数$\al$の\textbf{Tsalliエントロピー}という．
+\end{remarks}
+
+\subsection{分布の交差エントロピー}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    エントロピー$H_P=H_{P,P}$は，交差エントロピーを最小化する．
+    Boltzman機械の学習算譜は交差エントロピーの最小化として特徴付けられている(1985\footnote{David H. Ackley, Geoffrey E. Hilton, Terrence J. Sejnowski. A learning algorithm for Boltzmann machines, Cognitive Science, 9 (1985), 147–169.})．
+\end{tcolorbox}
+
+\begin{definition}[cross entropy]
+    $\mu,\nu\in P(\Om)$とする．
+    \[H_{\mu,\nu}:=\sup_{\zeta\in\Delta_{<\infty}}E_\mu[I_\nu(-;\zeta)]\]
+    実はsupは$\Delta$全域で取っている．
+    よって，
+    \[H_\mu:=H_{\mu,\mu}=\sup_{\xi\in\Delta}H_\mu(\xi)\]
+    となっており，これを確率空間のエントロピーという．これは$H_\mu(\F)$に一致するためである．
+\end{definition}
+
+\begin{proposition}\mbox{}
+    \begin{enumerate}
+        \item $H_{\mu,\nu}\ge H_\mu$で，等号成立は$\nu=\mu$のときに限る．
+        \item $H_{\mu,\nu}\le 2H_\mu$？
+    \end{enumerate}
+\end{proposition}
+
+\subsection{条件付きエントロピー}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=]
+    エントロピーでは情報量$I_P:\Om/\zeta\to[0,\infty]$を平均したが，今回は$\xi$-エントロピーの平均$H(\xi\cap-):\Om/\zeta\to[0,\infty]$の平均を取る．
+    すると，エントロピーを取る手続きを，条件付き期待値のように一段階挟む「計算途中」のような量である．
+    このときの「縮退具合」によって相互情報量という概念が抽出出来る．
+\end{tcolorbox}
+
+\begin{definition}[conditional entropy]
+    $\xi,\zeta$を可測分割とする．
+    \begin{enumerate}
+        \item 殆ど至る所の$C\in\zeta$に対して，$\xi$は$C$上の可測分割$\xi_C:=\xi\cap C$を定める．それぞれの上でのエントロピーを対応させる写像$H(\xi_-):\Om/\zeta\to[0,\infty]$は可測である．
+        \item この写像の平均
+        \[H(\xi|\zeta):=\int_{\Om/\zeta}H(\xi_C)P^{\pi_\zeta}(dC)=\int_\Om H(\xi_{\pi(\om)})P(d\om).\]
+        を\textbf{条件付きエントロピー}という．
+    \end{enumerate}
+\end{definition}
+\begin{remarks}
+    同様の記法，$\om\in A(\om)\in\xi,\om\in C(\om)\in\zeta$について，$P[\om;\xi|\zeta]:=P_{C(\om)}[A(\om)]$と定めると，
+    \[H(\xi|\zeta)=-\int_\Om\log P[\om;\xi|\zeta]dP\]
+    と表せる．
+\end{remarks}
+
+\begin{proposition}
+    $\nu$を自明な分割とする．
+    \begin{enumerate}
+        \item $H(\xi|\nu)=H(\xi)$．
+        \item $\eta\le\xi\Rightarrow H(\xi\lor\eta|\zeta)=H(\xi|\zeta)$．
+        \item $H(\xi|\zeta)\ge0$．等号成立条件は$\xi\le\zeta$．
+        \item $\xi\le\eta\Rightarrow H(\xi|\zeta)\le H(\eta|\zeta)$．なお，$\xi\le\eta\land H(\xi|\zeta)=H(\eta|\zeta)<\infty$ならば，$\xi\lor\zeta=\eta\lor\zeta$．
+        \item 単調な収束列について連続である．
+        \item $H(\xi|\zeta)=\sup\Brace{H(\eta|\zeta)\in\R_+\mid\xi\ge\eta\in\Delta_{<\infty}}$．
+        \item $\eta\le\zeta\Rightarrow H(\xi|\eta)\ge H(\xi|\zeta)$．
+    \end{enumerate}
+\end{proposition}
+
+\subsection{条件付きエントロピーの性質}
+
+\begin{proposition}[連鎖律と三角不等式]
+    \[H(\xi\lor\eta|\zeta)=H(\xi|\zeta)+H(\eta|\zeta\lor\xi)\le H(\xi|\zeta)+H(\eta|\zeta).\]
+\end{proposition}
+\begin{corollary}[確率変数の場合]
+    $X,Y,Z\in L(\Om)$について，
+    \begin{enumerate}
+        \item $H((X,Y))=H(X)+H(Y|X)$．
+        \item $H((X,Y)|Z)=H(X|Z)+H(Y|(X,Z))$．
+    \end{enumerate}
+\end{corollary}
+\begin{remarks}
+    $H((X,Y))$は\textbf{結合エントロピー}という．
+
+\end{remarks}
+
+\begin{proposition}
+    $\zeta_n\nearrow\zeta$かつ$H(\xi|\zeta_1)<\infty$，または，$\zeta_n\searrow\zeta$ならば，
+    \[\lim_{n\to\infty}H(\xi|\zeta_n)=H(\xi|\zeta).\]
+\end{proposition}
+\begin{Proof}
+    条件付き期待値に関するDoobの定理より，
+    \[\forall_{A\in\F}\;\lim_{n\to\infty}P[A|\zeta_n;\om]=P[A|\zeta;\om]\;\ae\]
+\end{Proof}
+
+\begin{proposition}[独立性の特徴付け]\label{prop-independence-and-conditional-entropy}
+    $\xi,\eta\in\Delta$について，
+    \begin{enumerate}
+        \item $H(\xi)<\infty$ならば，$\xi\indep\eta\Leftrightarrow H(\xi|\eta)=H(\xi)$．
+        \item $H(\xi),H(\eta)<\infty$ならば，$\xi\indep\eta\Leftrightarrow H(\xi\lor\eta)=H(\xi)+H(\eta)$．
+    \end{enumerate}
+\end{proposition}
+
+\subsection{相対エントロピー}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    条件付きエントロピーの「有限分割のネットの極限」としての特徴付けから，「確率測度の間の相対エントロピー」定義する．
+    これは，統計的多様体上$P(\Om)$の計量と思える．
+\end{tcolorbox}
+
+\begin{definition}[relative entropy / KL-divergence]
+    $\mu,\nu\in P(\Om)$について，$\nu$に関する$\mu$の\textbf{相対エントロピー}または\textbf{KL-変分}$D:P(\Om)\times P(\Om)\to[0,\infty]$とは，
+    \[D(\mu|\nu):=\sup_{\xi\in\Delta_{<\infty}}E_\mu[I_\nu(-|\xi)-I_\mu(-|\xi)]=H_{(\mu,\nu)}-H_\mu.\]
+\end{definition}
+\begin{remarks}\mbox{}
+    \begin{enumerate}
+        \item パラメトリックなモデルの中で，観測の範囲でのKL-変分の最小化問題は，尤度の最大化問題に等しい．
+        \item $D(P|Q)$は，事前分布$Q$から事後分布$P$に変化した際に，流入した情報量の平均値と解釈出来る．この観点から，KL-変分は\textbf{情報利得}ともいう．
+    \end{enumerate}
+\end{remarks}
+
+\begin{proposition}[非退化性 (Gibbs)]\mbox{}
+    \begin{enumerate}
+        \item $\forall_{\mu,\nu\in M(\Om;\R_+)}\;D(\mu|\nu)\ge0$，かつ，等号成立条件は$\mu=\nu$．
+        \item 対称性，三角不等式はいずれもそのままの意味では満足しない．これはまず，変分が，距離の自乗に対応するためである．
+    \end{enumerate}
+\end{proposition}
+
+\begin{theorem}[積分表示]\label{thm-integral-expression-of-KL-divergence}
+    有限測度$\mu,\nu\in M(\Om;\R_+)$について，
+    \begin{enumerate}
+        \item $\mu$が$\nu$に対して絶対連続でないならば，$D(\mu|\nu)=\infty$．
+        \item $\mu\ll\nu$ならば，
+        \[D(\mu|\nu)=\int_\Om\log\paren{\dd{\mu}{\nu}(\om)}\mu(d\om)=E_\mu\Square{\log\dd{\mu}{\nu}}.\]
+    \end{enumerate}
+\end{theorem}
+
+\subsection{相対エントロピーが生成する位相}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    相対エントロピーは$\P\simeq\Theta$上にRiemann計量を，これについて統計多様体になる．
+\end{tcolorbox}
+
+\begin{proposition}
+    相対エントロピーに関する収束が生成する位相は，全変動ノルムが生成するノルムよりも強い．
+\end{proposition}
+
+\begin{theorem}[Fisher計量]
+    $C^3$-級のパラメトリック模型$\P=(P_\theta)_{\theta\in\Theta}\;(\Theta\subset\R^p)$について，
+    \begin{enumerate}
+        \item 1次の微小項が消える：$\forall_{j\in[p]}\;\left.\pp{}{\theta_j}\right|_{\theta=\theta_0}D(P_\theta|P_{\theta_0})=0$．
+        \item KL-変分の合成$\theta\mapsto D(P_\theta|P_{\theta_0})$のHesse行列を$G=\paren{g_{jk}(\theta_0):=\left.\pp{^2}{\theta_j\partial\theta_k}\right|_{\theta=\theta_0}D(P_\theta|P_{\theta_0})}$とする：
+        \[D(P_\theta|P_{\theta_0})=\frac{1}{2}\Delta\theta_j\Delta\theta_kg_{jk}(\theta_0)+o(\abs{\theta-\theta_0}^2)\qquad\Delta\theta_j:=(\theta-\theta_0)_j.\]
+        このとき，$G$は半正定値で，$\Theta$上にRiemann計量を定める．
+    \end{enumerate}
+\end{theorem}
+
+\subsection{条件付き相対エントロピー}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    KL-変分が最大になるのは2つの実験が独立なときで，
+    $H_{(P_2|P_1)}\le H[P_2]$で，等号成立は2つの実験が独立なときに限る．
+\end{tcolorbox}
+
+\begin{definition}[条件付き相対エントロピー]
+    
+\end{definition}
+
+\begin{proposition}
+    \[D(P|Q)\le H_P\]
+\end{proposition}
+
+\subsection{相互情報量}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    2つの確率変数が，独立であった場合と比べて条件付きエントロピーがどれほど小さくなっているかによって，情報量の概念が一般化出来る．
+    そのアイデアは$X\indep Y\Rightarrow H(X)=H{(X|Y)}$より\ref{prop-independence-and-conditional-entropy}，$I(X,Y):=H(X)-H_{(X|Y)}$と取ることが出来る．
+\end{tcolorbox}
+
+\begin{definition}[mutual information]
+    2つの分割$\xi,\zeta\in\Delta$の\textbf{相互情報量}$I_{(-,-)}:L(\Om)\times L(\Om)\to[0,\infty]$を
+    \[I_{(X,Y)}:=D(P^{(X,Y)}|P^X\times P^Y).\]
+\end{definition}
+\begin{remarks}
+    通信路については，\textbf{伝送容量}とも呼ぶ．
+    Gauss分布$X\sim N_k(a,A),Y\sim N_l(b,B),(X,Y)\sim N_{k+l}(c,C)$について，
+    \[I(X,Y)=\frac{1}{2}\log\frac{\det(AB)}{\det{(C)}}\]
+    特に$k=l=1$のとき，
+    \[I(X,Y)=-\frac{1}{2}\log(1-\Corr[X,Y]^2).\]
+\end{remarks}
+
+\begin{proposition}\mbox{}
+    \begin{enumerate}
+        \item $I_{(X,Y)}\ge0$．等号成立条件は$X\indep Y$．
+        \item $I_{(X,Y)}=I_{(Y,X)}$．
+        \item $\forall_{f\in L(\Om,\Om)}\;I(X,Y)\ge I(X,f(Y))$．等号成立条件は$f$が可測な逆を持つこと．
+    \end{enumerate}
+\end{proposition}
+
+\begin{theorem}[特徴付け]\mbox{}
+    \begin{enumerate}
+        \item 条件付きエントロピーによる特徴付け：
+        \[I_{(X,Y)}=H(X)-H(X|Y)=H(X)+H(Y)-H((X,Y)).\]
+        \item 積分表示：$X,Y$は密度$p,q$，$(X,Y)$は密度$r$を持つとする．このとき，
+        \[I(X,Y)=E_{(X,Y)}\Square{\log\frac{r}{pq}}.\]
+    \end{enumerate}
+\end{theorem}
+
+\begin{corollary}
+    相互情報量はエントロピー／平均情報量の一般化である：
+    \[I(X,X)=H(X)-H(X|X)=H(X).\]
+\end{corollary}
+
+\subsection{条件付き相互情報量}
+
+\begin{definition}[conditional mutual information]
+    条件付き確率の間の$KL$-変分の平均として，\textbf{条件付き相互情報量}を
+    \[I(X,Y|Z):=E_Z[D(P_{(X,Y)|Z}|P_{X|Z}\otimes P_{Y|Z})].\]
+    と定める．
+\end{definition}
+
+\begin{theorem}[条件付きエントロピーによる特徴付け]
+    \[I(X,Y|Z):=H(X|Z)-H(X|Y,Z).\]
+\end{theorem}
+
+\begin{proposition}[相互情報量による特徴付け]\mbox{}
+    \begin{enumerate}
+        \item $I(X,Y|Z)\ge0$で，等号成立条件は，$X\indep Y|Z$．すなわち，$X,Z,Y$はMarkov連鎖である．
+        \item $(X,Y)\indep Z\Rightarrow I(X,Y|Z)=I(X,Y)$．
+        \item 特徴付け：$I(X,Y|Z)=I(X,(Y,Z))-I(X,Z)$．
+    \end{enumerate}
+\end{proposition}
+
+\begin{corollary}[連鎖律]
+    \[I((X_1,\cdots,X_n),Y)=\sum_{i\in[n]}I(X_i,Y|X_{i-1},\cdots,X_1).\]
+\end{corollary}
+
+\subsection{情報変分}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    KL-変分に加えて，相互情報量から(こちらは真の)計量が作り出せる．
+    感覚的には，2つの分割の間の「共有された情報」の量を測っている．
+\end{tcolorbox}
+
+\begin{proposition}[variation of information]
+    \[d(X,Y)=H((X,Y))-I(X,Y)=H(X)+H(Y)-2I(X,Y)=H(X|Y)+H(Y|X)=2H((X,Y))-H(X)-H(Y)\]
+    は距離の公理を満たす．
+\end{proposition}
+\begin{remarks}
+    正規化
+    \[d_0(X,Y)=\frac{d(X,Y)}{H((X,Y))}=1-\frac{I(X,Y)}{H((X,Y))}\le1\]
+    も距離を定め，Rajski距離と呼ばれる．
+    分割についてのJaccard距離の考え方に等しい．
+    なお，
+    \[d_1(X,Y)=1-\frac{I(X,Y)}{\max(H(X),H(Y))}\]
+    も距離になる．
+\end{remarks}
+
+\section{Shannonの定理}
+
+\begin{notation}
+    $\Om:=[r]$上の確率分布を$(p_k)_{k\in[r]}$とし，$\om_k$の起こる回数を表す$\Om^n$上の確率変数$\nu_k:=\sum_{l\in[r]}1_{\Brace{\om_k}}(\om_l)$を考える．
+    \[\A_\ep^{(n)}:=\bigcap_{k\in[r]}\paren{\Abs{\frac{\nu_k}{n}-p_k}<\ep}.\]
+    Bernoulliの定理から，この集合は充満集合に収束する．
+\end{notation}
+
+\begin{theorem}[Shannon (1948)]
+    任意の$\ep>0$に対して，$\ep_1,n_0$が存在して，任意の$n>n_0$に対して，次の3条件が成り立つ：
+    \begin{enumerate}
+        \item $P[\A_{\ep_1}^{(n)}]>1-\ep$．
+        \item $e^{n(H(P)-\ep)}\le\abs{\A_{\ep_1}^{(n)}}\le e^{n(H(P)+\ep)}$．
+        \item $\forall_{\om\in\A_{\ep_1}^{(n)}}\;e^{-n(H(P)+\ep)}\le P[\om]\le e^{-n(H(P)-\ep)}$．
+    \end{enumerate}
+\end{theorem}
+
+\section{推定論への応用}
+
+\subsection{情報減少則}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    $f(Y)$から得られる情報は$Y$から減少はすれど増加することはない．
+\end{tcolorbox}
+
+\begin{lemma}\mbox{}
+    \begin{enumerate}
+        \item $X,Y,Z$がMarkov連鎖をなす$X\to Y\to Z$ことは，$X\indep Z|Y$に同値．
+        \item $X\to Y\to Z$ならば，$Z\to Y\to X$．
+        \item 任意の可測写像$f$について，$X\to Y\to f(Y)$．
+    \end{enumerate}
+\end{lemma}
+
+\begin{theorem}
+    $X\to Y\to Z$ならば，$I(X,Y)\ge I(X,Z)$．
+\end{theorem}
+\begin{corollary}\mbox{}
+    \begin{enumerate}
+        \item 任意の可測写像$f$について，$I(X,Y)\ge I(X,f(Y))$．
+        \item $X\to Y\to Z$ならば，$I(X,Y|Z)\le I(X,Y)$．
+    \end{enumerate}
+\end{corollary}
+
+\subsection{十分統計量}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    任意の統計量$T:\X\to\cT$について，$I(\theta,T(X))\le I(\theta,X)$であるが，これが減少しないとき，\textbf{十分統計量}であるという．
+\end{tcolorbox}
+
+\begin{proposition}
+    モデル$(f_\theta(x))$と統計量$T:\X\to\cT$について，
+    \begin{enumerate}
+        \item $\theta\to X\to T(X)$が成り立っている．
+        \item $I(\theta,T(X))\le I(\theta,X)$．
+    \end{enumerate}
+\end{proposition}
+
+\begin{definition}
+    $\theta\to T(X)\to X$がMarkov連鎖をなすとき，すなわち，$X\indep\theta|T(X)$が成り立つとき，$T$を\textbf{十分統計量}という．
+\end{definition}
+
+\chapter{最大エントロピー原理}
+
+\begin{quotation}
+    この原理はJaynes, E. T. (57)\footnote{Information Theory and Statistical Mechanics, Phys. Rev.}において，統計物理の分野で導入された．
+    \begin{enumerate}
+        \item 何の事前知識もない場合の先験的等確率の原理もこの原理によって正当化される．
+        \item 平衡状態における微視的状態の確率分布であるカノニカル分布は最大エントロピーの原理を用いても導かれる．
+        \item 一般化線型モデルでは，残差に平均と分散以外の仮定を置かないから，観測$Y$は$\varphi:\R^p\to\R^n$を通じた条件$E[\varphi(X)]=0$のみ与えられている．
+        このとき，エントロピーを最大にするような絶対連続分布は$Ae^{-\varphi(x)}$という形の密度を持つものであり，$A$の部分にパラメータが入る余地がある．
+        \item 定常過程の推定においても，最大エントロピー原理が極めて有効であることが認められつつある．
+    \end{enumerate}
+\end{quotation}
+
+\section{定常過程とエントロピー}
+
+\begin{definition}[entropy rate]
+    $X=(X_n)$を離散時間確率過程とする．
+    \[\o{H}(X)=\limsup_{n\to\infty}\frac{1}{n}H(X_1,\cdots,X_n),\quad\o{h}(X)=\limsup_{n\to\infty}\frac{1}{n}h(X_1,\cdots,X_n).\]
+    をそれぞれ\textbf{単位時間あたりのエントロピー}という．
+\end{definition}
+
+\begin{theorem}
+    $X=(X_n)_{n\in\Z}$を強定常過程とし，$X_0^-:=(X_0,X_{-1},X_{-2},\cdots)$とする．
+    \begin{enumerate}
+        \item $X_1$は離散的であるとする．
+        \[\o{H}(X)=\lim_{n\to\infty}\frac{1}{n}H(X_1,\cdots,X_n)=H(X_1|X_0^-).\]
+        \item $X_1$は連続的であるとする．
+        \[\o{h}(X)=\lim_{n\to\infty}\frac{1}{n}h(X_1,\cdots,X_n)=h(X_1|X_0^-).\]
+    \end{enumerate}
+\end{theorem}
+
+\section{平衡分布}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    一般の統計的推定において最大エントロピー原理は「仮定」であり，決定理論の枠組みで考えられるべきであるが，
+    統計力学においては，エントロピー増大の法則を認める限り，最大エントロピー原理は「原理」ではない．
+\end{tcolorbox}
+
+\subsection{ミクロカノニカル分布}
+
+\begin{model}
+    $N$個の同種の粒子からなる孤立系で，相互作用を無視できる系を扱う．
+    この粒子のエネルギー準位の取り合える値を$E=\{e_i\}_{i\in[L]}$とし，列$n:[N]\to[L]$を用いて状態点$(e_{n_i})_{i\in[N]}\in E^N$であって総エネルギー$e\in\R$を持つ状態空間を
+    \[W(e):=\Brace{(e_{n_1},\cdots,e_{n_N})\in E^N\mid e=\sum_{k\in[N]}e_{n_k}}\]
+    とおく．このとき，同様の系を複数用意したときの空間的出現割合の分布を知りたい．
+    \begin{enumerate}
+        \item これが時間的割合に等しいという仮定を\textbf{エルゴード仮説}という．
+        \item いずれの状態も他と区別する理由がないため，$W(e)$上に離散一様分布$U_{\abs{W(e)}}$を仮定するとき，これを\textbf{小正準集団}(microcanonical ensemble)という．
+    \end{enumerate}
+\end{model}
+
+\begin{definition}
+    $k$をBoltzmann定数とする．ミクロカノニカル集団のエントロピーを
+    \[S(e):=k\log W\]
+    で定める．
+\end{definition}
+
+\subsection{カノニカル分布}
+
+\begin{model}
+    2つの力学系$A,B$の粒子交換は伴わず，エネルギー交換のみを伴う結合$A+B$からなる孤立系で，結合によるエネルギーの消失は無視できるものとする．
+    $A+B$の平衡状態において，系$A$のエネルギーが$e_A$のとき，$A$は小正準分布に従うとみなせるから，
+    $A$の取り得るエネルギー準位は，空間$E$上の確率分布として
+    \[p(e):=\frac{1}{\Phi}e^{-\lambda e},\quad\Phi:=\sum_{e\in E} \abs{W(e)}e^{-\lambda e}\]
+    なる形の密度を持つと仮定できる．これを\textbf{正準分布}といい，$\Phi$を\textbf{分配関数}という．
+\end{model}
+
+\begin{remarks}
+    この分布は指数型で，エントロピー最大の原理から正当化出来る．
+\end{remarks}
+
+\begin{proposition}
+    理想気体からなる正準集団の分子の速度は次の正規分布$N(0,\Sigma)\;(\Sigma=\diag((\lambda m)^{-1}))$に従う：
+    \[f(v)=\paren{\frac{\lambda m}{2\pi}}^{3/2}\exp\paren{-\frac{\lambda m}{2}(v^2_x+v^2_y+v^2_z)}\]
+    これを\textbf{Maxwell分布}という．
+\end{proposition}
+\begin{remarks}
+    これは，系のエネルギーの平均値が与えられたときの，連続エントロピーを最大にする分布に他ならない．
+\end{remarks}
+
+\subsection{グランドカノニカル分布}
+
+\begin{model}
+    2つの力学系$A,B$の粒子交換を伴う結合$A+B$からなる孤立系で，結合によるエネルギーの消失は無視できるものとする．
+    このとき，2つの変数，系$A$のエネルギー$e_A\in E$と粒子の個数$N\in [\abs{W(e)}]$とからなる確率空間$E\times\abs{W(e)}$上の分布
+    \[\frac{1}{\Phi}\exp(-\lambda(E-\mu N)),\quad\Phi:=\sum_{e_A\in E,N\in[\abs{W(e)}]}\exp(-\lambda(E-\mu N)).\]
+    これを\textbf{大正準集団}という．
+\end{model}
+\begin{remark}
+    より一般に，$l$個の物理量$\al_1,\cdots,\al_l$を交換する結合系$A+B$について，大正準分布が考えられる．
+\end{remark}
+
+\section{赤池情報量規準}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    AIC（対数尤度を用いたモデル評価）を用いることは，次の指針に従って統計的推測を行うことと等価である\cite{赤池-AIC-数理科学}．
+    「予測分布」を作りたい．これを，観測データの関数として表すためのモデル$\{f_\theta\}$を適切に定義し，エントロピーを評価基準としてその最適化を図り，モデル$\{f_\theta\}$を選択し(AIC)，パラメータ$\theta$を選択する(MLE)．
+    なお，エントロピーとはKL-情報量$-I(g;f_\theta)$である．
+\end{tcolorbox}
+
+\begin{remarks}[Boltzmanのエントロピーの確率論的解釈]
+    エントロピーが増大するとは乱雑になるということであるが，これは確率論から翻訳することもできる．
+    エントロピー$B(g;f_\theta):=-I(g;f_\theta)$について，$f_\theta$が定める確率分布に従う確率変数を独立に$N$個観測した時に得られる標本分布として，$g$に近いものが得られる確率の対数が，漸近的に$N\cdot B(g;f_\theta)$に一致する\cite{Sanov61}．
+    従って，$B$が大きいほど，$f_\theta$は$g$をよく近似していると考えられる．
+\end{remarks}
+
+\chapter{信号空間の理論}
+
+\begin{quotation}
+    Shannonの理論では，本質的には，統計学的見地が最も卓越している．この点Wienerのcyberneticsもその趣を共通にしている．
+    確かに統計学的な見地は，今までの理論の発展の上でそうであったように，今後とも，特に生態のような，
+    情報論的意味でlarge systemを取り扱う上には，欠くことのできない見方であろう．
+    しかし，これだけでは，全部はおおいつくせまいと思う．\cite{甘利俊一68-情報科学講座}前文．
+\end{quotation}
+
+\section{信号とは何か}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    周波数上限を持つ信号$f:\R\to\R$は，有限個の標本点での値で指定出来るため，
+    信号全体の空間が有限次元多様体の構造を持つ．
+\end{tcolorbox}
+
+情報を担う形式を信号という．
+
+\begin{example}\mbox{}
+    \begin{enumerate}
+        \item 音声信号は時間の関数$f(t)$とモデル化出来る．
+        \item テレビの画面の信号は明るさのスカラー場$f(x,y)$とモデル化できる．
+    \end{enumerate}
+\end{example}
+
+実は，殆どの場合は信号全体の空間は，有限次元の$\R^n$の部分多様体と見做せる．
+これは次の標本化定理により，周波数帯域が$[0,W]$に制限されているとき（それ以外は人間に取って無意味であるため，自然な仮定である）
+$1/2W$刻みの時間点での関数の値によって一意に信号が指定できる．
+
+\begin{theorem}[Nyquist-Shannon sampling theorem \cite{Shannon48}]
+    ある関数$f(t)$の周波数は上限$W>0$を持つとする：$F(\om):=\wh{f}(\om)=\wh{f}(\om)1_{[-2\pi W,2\pi W]}(\om)$．
+    このとき，幅が$1/2B$の等分割点での値によって，$f$は一意に定まる．
+\end{theorem}
+\begin{Proof}\mbox{}
+    \begin{description}
+        \item[注意] \cite{Cover-Thomas06-ElementsOfInformationTheory} Th'm 9.3.1を参考にしたが，
+        ここでも$f\in L^1(\R)$とは限らない問題に対処していない．
+        ここでは適切な減衰$f\eta$をかけたとして，$f\in L^1(\R)$と仮定しよう．
+        なお，$f$は本質的にはコンパクト台を持つとして良く，これについて豊かな理論があるという\cite{Cover-Thomas06-ElementsOfInformationTheory} p.272．
+        \item[Fourier解析による議論] $F(\om):=\wh{f}(\om)$をFourier変換とすると，$F\in L^1(\R)$はコンパクト台を持つから明らかで，反転公式から
+        \[f(t)=\frac{1}{2\pi}\int^{2\pi W}_{-2\pi W}F(\om)e^{i\om t}d\om.\]
+        各標本化点での値は
+        \[f\paren{\frac{n}{2W}}=\frac{1}{2\pi}\int^{2\pi W}_{-2\pi W}F(\om)e^{i\om\frac{n}{2W}}d\om=\frac{1}{2\pi}\int^\pi_{-\pi}2WF(2W\eta)e^{in\eta}d\eta.\]
+        より，$F$を周期$[-2\pi W,2\pi W]$を持つ関数と見做した際の$\R/4\pi W$上の関数のFourier係数となっている．
+        するとこの値により$F$の値は一意に定まる．よって，Fourier変換の単射性より$f$も一意に定まっている．
+    \end{description}
+\end{Proof}
+\begin{remarks}
+    多項式補間の一般化と見做せる．$n$次多項式は$n+1$点を指定すると一意に定まるが，多項式の次数を上げれば他の解も存在する．
+\end{remarks}
+
+\begin{proposition}[信号の標本点での値による表示]
+    関数$f(t)$の周波数は上限$W>0$を持つとする．このとき，関数
+    \[\sinc(t):=\frac{\sin(2\pi Wt)}{2\pi Wt}.\]
+    を用いて定まる関数
+    \[g(t)=\sum_{n=-\infty}^\infty f\paren{\frac{n}{2W}}\sinc\paren{t-\frac{n}{2W}}.\]
+    は，$f=g\;\ae$を満たす．
+\end{proposition}
+\begin{Proof}
+    $\sinc$は一様分布$\rU([-W,W])$の特性関数であり，次の性質を持つ：
+    \begin{enumerate}
+        \item $\sinc(n/2W)=\delta_0(n)$となっている．
+        \item Fourier変換は$\wh{\sinc}=\frac{\pi}{W}1_{[-W,W]}$となっている．
+    \end{enumerate}
+    したがって，任意の$n\in\N$について
+    \[g\paren{\frac{n}{2W}}=f\paren{\frac{n}{2W}}.\]
+    が成り立つから，Fourier変換の単射性から結論が従う．
+\end{Proof}
+
+\chapter{情報源のモデル}
+
+\begin{quotation}
+    前章では確率変数の情報量を定義した．
+    （情報源アルファベット上の）確率変数の列(確率過程)とその上の制約の組$(X_i)_{i\in\N}$を\textbf{情報源}という．
+    したがって，情報源のエントロピーとは，定常離散確率過程のエントロピーになる．
+
+    続いて，情報源（の出力）系列を効率よく符号化する，データ圧縮の問題を扱う．
+    48のShannonの論文は，Weinerの確率論の方法を用いて，データ圧縮の方法を議論し，符号化の問題から情報理論を創始した．
+    ここではまず，容易で，曖昧さのない復号が存在する符号の構成を考える．
+\end{quotation}
+
+\section{情報源の定義}
+
+\begin{definition}[memoryless information source, Markov source]\mbox{}
+    \begin{enumerate}
+        \item 情報源$(X_i)_{i\in\N}$がMarkov連鎖であるとき，\textbf{記憶のない情報源}または\textbf{i.i.d.情報源}という．
+        \item Markov性が直前の有限個の記号に限定されていて，それ以前の記号列からは影響を受けない情報源を\textbf{（$m$-重）Markov情報源}という．特に$m=1$の場合は\textbf{単純}であるという．
+    \end{enumerate}
+\end{definition}
+
+\section{Markov情報源}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    記憶を持つ情報源のうち，ある種の有限性を持つのがMarkov情報源である．
+    主な問題は定常分布を知ることであるが，これは遷移確率行列の定める力学系の極限を求める問題である．
+    特に重要なatomとして，エルゴード情報源を考える．
+\end{tcolorbox}
+
+\begin{definition}[state transition diagram]
+    $m$重Markov情報源について，状態空間$A^m$上の遷移として捉えたものを，\textbf{状態遷移図}または\textbf{Shannon}線図という．
+\end{definition}
+\begin{remarks}
+    このような捉え方によって，$m=1$として一般性は失われない．
+\end{remarks}
+
+\section{情報源のエントロピー}
+
+\begin{definition}
+    情報源の出力１記号当たりの情報量の期待値を\textbf{情報源のエントロピー}といい，$H_r(\S)$で表す．
+\end{definition}
+\begin{example}\mbox{}
+    \begin{enumerate}
+        \item 記憶のない情報源のエントロピーは任意の$i$について$H(X_i)$である．
+        \item Markov情報源のエントロピーは，各状態の出力分布のエントロピーを，定常分布に関して積分したものを言う．
+    \end{enumerate}
+\end{example}
+
+\section{エントロピーと平均符号長}
+
+\begin{theorem}
+    情報源$\S$の一意復号可能な$r$-元符号$C$について，$L(C)\ge H_r(\S)$が成り立つ．
+\end{theorem}
+\begin{remarks}
+    $H_r(\S)$は，$\S$から発信されるシンボルの持つ自己情報量の期待値である．
+    $C$が一意復号可能ならば，この情報量が保存されているはずである．
+\end{remarks}
+
+\begin{corollary}
+    $\S$を生起確率$(p_i)$の情報源とする．
+    \begin{enumerate}
+        \item 一意復号可能な$r$元符号$\C$で，$L(C)=H_r(\S)$を満たすものが存在する．
+        \item $\exists_{e_i\in\Z_{\le0}}\;p_i=r^{e_i}$．
+    \end{enumerate}
+\end{corollary}
+
+\begin{definition}
+    情報源$\S$の$r$元符号$C$について，$\eta:=\frac{H_r(\S)}{L(C)}$を\textbf{効率}といい，$0\le\eta\le1$を満たす．
+    $\o{\eta}:=1-\eta$を\textbf{冗長性}という．
+\end{definition}
+
+\section{Shannon-Fano符号}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    Huffman符号は平均符号長の計算が複雑である．一方で，Shannon-Fano符号は最適に近いことが保証されている上に，平均符号長の評価も容易である．
+\end{tcolorbox}
+
+\begin{definition}
+    $l_i:=\floor{\log_r(1/p_i)}$はKraftの不等式を満たすので，これが定める瞬時符号が存在する．これを\textbf{Shannon-Fano符号}という．
+\end{definition}
+
+\begin{proposition}
+    $H_r(\S)\le L(C)\le 1+H_r(\S)$．
+\end{proposition}
+
+\section{拡大情報源と積のエントロピー}
+
+\begin{theorem}
+    $\S$を任意の情報源とする．$H_r(\S^n)=nH_r(\S)$が成り立つ．
+\end{theorem}
+
+\begin{theorem}
+    独立な情報源$\S,\T$について，$H_r(\S\times\T)=H_r(\S)+H_r(\T)$．
+\end{theorem}
+
+\section{Shannonの第一定理}
+
+\begin{theorem}[Noiseless Coding Theorem (Shannon 48)]
+    任意の$\ep>0$に対して，十分大きな$n\in\N$が存在して，$\S^n$を符号化することによって，情報源$\S$の一意復号可能な$r$元符号$C$であって，平均符号長がエントロピー$H_r(\S)$に対して，$L(C)-H_r(\S)<\ep$を満たす．
+\end{theorem}
+
+\section{情報源符号化}
+
+\begin{notation}\mbox{}
+    \begin{enumerate}
+        \item $T^*=\cup_{n\ge0}[T]^n,T^+:=\cup_{n>0}[T]^n$．
+        \item $C:=\Im C$と混用する．
+    \end{enumerate}
+\end{notation}
+
+\begin{definition}[coding, non-singular, decoding, uniquely decodable]\mbox{}
+    \begin{enumerate}
+        \item アルファベット$A,B$について，写像$f:A\to B^+$を\textbf{符号}，値$f(a)\in B^+$を\textbf{符号語}という．
+        始域アルファベットを\textbf{情報源アルファベット}，終域を生成するアルファベットを\textbf{符号アルファベット}という．
+        \item $f$が単射であるとき，\textbf{正則符号}という．以降正則符号のみを考える．
+        \item $f$の延長$f^*:A^*\to B^*$の逆写像を求めることを\textbf{復号}という．
+        逆写像が$B^*$の全域で定まるとき，すなわち，$f^*$が単射であるとき\textbf{一意復号可能}であるという．
+    \end{enumerate}
+\end{definition}
+\begin{remark}
+    符号アルファベットは主に通信路の技術に依るので，$A,B$は応用上も別物である．$\abs{B}$を基数(radix)といい，多くの例では$r=2$である．
+    モールス信号は空白を含めて$r=3$の例である．
+\end{remark}
+\begin{example}\mbox{}
+    \begin{enumerate}
+        \item ASCII (American Standard Code for Information Interchange)は二元符号で，$f(A)\subset B^7$を満たす7ビットの符号化である．
+        \item $A$に線形順序があり，隣接する符号語のHamming距離が$1$になるような二元符号を\textbf{Gray符号}という．
+        \item バーコードや受験番号，ISBNの最後の桁は誤り訂正符号となっている．
+        ISBNはハイフンを除いて長さ10の$\Z_{11}$上の符号語で，$a_10$は$a_1+2a_2+\cdots+10a_{10}\equiv 0\mod 11$を満たすように定まっている．
+        これは，単一誤りと，２つの記号の置換を検出できる，人為エラーに特化された符号である．
+    \end{enumerate}
+\end{example}
+
+\begin{definition}\mbox{}
+    \begin{enumerate}
+        \item $L:\Map(S,T^+)\to\R$を，関数$\abs{C^*(X_n)}:S\to\N$の期待値として定める．これを\textbf{平均符号長}という．
+    \end{enumerate}
+\end{definition}
+
+\section{一意復号可能性}
+
+\begin{theorem}
+    $C$は単射とする．$\Im C$に含まれる符号語の長さが全て同じならば，$C$は一意復号可能である．
+    このとき，$C$を長さ$l$の\textbf{ブロック符号}であるという．
+\end{theorem}
+
+\begin{definition}
+    $C_0:=\Im C,C_n:=\Brace{w\in T^+\mid\exists_{u\in\Im C,v\in C_{n-1}}\;uw=v\lor vw=u}$と帰納的に定める．$C_\infty:=\cup_{n=1}^\infty C_n$とする．
+\end{definition}
+\begin{remark}
+    $C_1=\Brace{w\in T^+\mid\exists_{u,v\in C}\;uw=v}$となる．
+\end{remark}
+
+\begin{theorem}[Sardinas, Patterson 53]
+    次の２条件は同値．
+    \begin{enumerate}
+        \item $C$は一意復号可能．
+        \item $C\cap C_\infty=\emptyset$．
+    \end{enumerate}
+\end{theorem}
+
+\begin{theorem}[McMillan 56]
+    次の２条件は同値．
+    \begin{enumerate}
+        \item 符号長が$l_1,\cdots,l_q$である一意復号可能な$r$元符号$C$が存在する．
+        \item $\sum^q_{i=1}\frac{1}{r^{l_i}}\le 1$．
+    \end{enumerate}
+\end{theorem}
+
+\section{瞬時符号}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    瞬時符号とは，語頭符号である．
+    これが存在するための条件は，Kraftの不等式によって特徴づけることができる．
+    組み合わせ論的な本質は，木構造である．
+\end{tcolorbox}
+
+\subsection{語頭符号}
+
+\begin{definition}[instantaneously decodable codee]\mbox{}
+    \begin{enumerate}
+        \item 符号$C$が\textbf{瞬時復号可能な符号}であるとは，任意の符号語列$t\in T^+$に対して，$t$で始まる全ての符号列が，その後の符号に依らず，一意に復号されることをいう．
+        \item 符号$C$が\textbf{語頭符号}であるとは，どの符号語も，他の符号語の語頭には来ないことをいう：$\forall_{w_i\in\Im C}\;\forall_{w\in T^*}\;\forall_{w_j\in\Im C}\;i\ne j\Rightarrow w_j\ne w_iw$．すなわち，$C_1=\emptyset$．
+    \end{enumerate}
+\end{definition}
+
+\begin{theorem}
+    次の２条件は同値．
+    \begin{enumerate}
+        \item 誤頭符号である．
+        \item 瞬時符号である．
+    \end{enumerate}
+\end{theorem}
+
+\subsection{木と構成法}
+
+
+\begin{discussion}
+    $T^*$は自然な包含関係に関して$r$元根付き木の構造を持ち，$\ep$を根とする．
+    この木の頂点集合$(\ep\notin)C$が，性質$\forall_{x,y\in C}\;x\ne y\Rightarrow x\land y=\ep$を満たすとき，$C$は瞬時符号である．
+\end{discussion}
+
+\subsection{Kraftの不等式}
+
+\begin{theorem}[Kraft 49]
+    次の２条件は同値．
+    \begin{enumerate}
+        \item 符号長が$l_1,\cdots,l_q$であるような$r$元瞬時符号$C$が存在する．
+        \item $\sum^q_{i=1}\frac{1}{r^{l_i}}\le 1$．
+    \end{enumerate}
+\end{theorem}
+\begin{remarks}
+    符号長が$l$であるとは，木構造の中の頂点としては高さ$l$に存在することを表す．
+    これは，高さ$h(>l)$の頂点$r^h$個のうち，$r^{h-l}$個を使用不可とする．
+    これを根に引き戻して考えると，$\frac{1}{r^l_i}$の和が$1$を超えると，どのようにうまく選ぼうと瞬時符号は構成できないことがわかる．
+\end{remarks}
+
+\begin{corollary}\mbox{}
+    次の２条件は同値．
+    \begin{enumerate}
+        \item 符号長が$l_1,\cdots,l_q$の$r$元瞬時符号が存在する．
+        \item 符号長が$l_1,\cdots,l_q$の$r$元一意復号可能な符号が存在する．
+    \end{enumerate}
+\end{corollary}
+
+\section{網羅性}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    一番効率よく符号を作るには，$\sum^q_{i=1}\frac{1}{r^{l_i}}= 1$を狙いたい．
+    これを捉える概念が存在する．
+\end{tcolorbox}
+
+\begin{definition}[exhaustive]
+    $\exists_{n\in\N}\;\forall_{w\in T^+}\;\abs{w}>n\Rightarrow[\exists_{w_0\in\Im C}\;\exists_{w_1\in T^*}\;w_0w_1=w]$を満たすとき，$C$を\textbf{網羅的}であるという．
+\end{definition}
+
+\begin{theorem}
+    次の２条件は同値．
+    \begin{enumerate}
+        \item 符号長が$l_1,\cdots,l_q$であるような$r$元網羅的符号$C$が存在する．
+        \item $\sum^q_{i=1}\frac{1}{r^{l_i}}\ge 1$．
+    \end{enumerate}
+\end{theorem}
+
+\chapter{情報通信路}
+
+\begin{quotation}
+    雑音の多い／信頼性の低い通信路を介してメッセージを届ける情報源．
+
+    エントロピーは情報量の平均であったが，これが「字数」に対応づくことは，ある種「情報量」の概念のwell-definednessをあらわす．
+    エントロピーはこちらを定義として採用することも出来る．
+\end{quotation}
+
+\section{記法と定義}
+
+\begin{definition}[channel]
+    情報源$\A,\B$について，それぞれのアルファベットを$\{a_1,\cdots,a_r\},\{b_1,\cdots,b_s\}$とする．
+    \begin{enumerate}
+        \item それぞれのアルファベットの間の写像$\Gamma$を\textbf{情報通信路}という．
+        \item 各成分を$P_{ij}:=P(b=b_j|a=a_i)$とする行列を，\textbf{通信路行列}という．
+    \end{enumerate}
+\end{definition}
+\begin{example}[binary symmetric channel, binary erasure channel]\mbox{}
+    \begin{enumerate}
+        \item $A=B=2$で，シンボルに依らず成功・失敗確率が一様であるとき，\textbf{二元対称通信路}という．
+        \item $A=2,B=2\cup\{?\}$であるとき，\textbf{二元消失通信路}という．
+    \end{enumerate}
+\end{example}
+
+\begin{definition}
+    $\Gamma,\Gamma'$を通信路とする．
+    \begin{enumerate}
+        \item 和$\Gamma+\Gamma'$とは，入力アルファベット$A\sqcup A'$と出力アルファベット$B\sqcup B'$について，通信路行列を直和$M\oplus M'$とする通信路である．
+        \item 積$\Gamma\times\Gamma$とは，入力アルファベット$A\times A'$と出力アルファベット$B\times B'$について，通信路行列をKronecker積$M\otimes M'$とする通信路である．
+        \item 積$\Gamma^n$を，\textbf{$n$次拡大}という．
+        \item 合成$\Gamma\circ\Gamma'$とは，入力アルファベット$A$と出力アルファベット$B'$について，通信路行列を積$MM'$とする通信路である．これを通信路の\textbf{カスケード}という．
+    \end{enumerate}
+\end{definition}
+
+\section{システムエントロピー}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    $H(\A),H(\B),H(\A|\B),H(\B|\A),H(\A,\B)$をシステムエントロピーという．
+\end{tcolorbox}
+
+\begin{discussion}[equivocation]
+    条件付きエントロピー$H(\A|b_i)$の積分$H(\A|\B)$を\textbf{あいまい度}という．
+\end{discussion}
+
+\section{通信路に関するシャノンの第一基本定理}
+
+\begin{theorem}
+    通信路の出力$\B$が既知ならば，任意の$\ep>0$に対して，十分大きな$n\in\N$が存在して，
+    $\A^n$を符号化することによって，入力$\A$の一意復号可能で，$L(C)-H(\A|\B)<\ep$を満たす符号化が存在する．
+\end{theorem}
+
+\section{相互情報量}
+
+\begin{discussion}
+    相互情報量$I(\A,\B):=H(\A)-H(\A|\B)$は次の３通りの解釈がある．
+    \begin{enumerate}
+        \item $\B$を知ることで解消する$\A$についての不確かさの総量．
+        \item $\B$によって伝送される$\A$についての情報量の総量．
+        \item $\A$に対する符号語に含まれるシンボルで，$\B$の符号語に出てくるものの平均個数．
+    \end{enumerate}
+\end{discussion}
+\begin{remarks}[数え上げ測度の例]
+    $\abs{A\cap B}=\abs{A}-\abs{A\setminus B}$における左辺が相互情報量と見れる．
+\end{remarks}
+
+\section{通信路容量}
+
+\begin{definition}[capacity]
+    通信路$\Gamma:A\to B$の\textbf{容量}を，$I(\A,\B)$の最大値と定める．
+\end{definition}
+
+\begin{theorem}\mbox{}
+    \begin{enumerate}
+        \item $\P:=\Brace{p\in\R^r\mid p_i\ge 0,\sum_ip_i=1}$はコンパクト．
+        \item $\I$は，入力確率分布$(p_i)\in\P$の連続関数である．
+        \item 任意の通信路について，容量が存在する．
+    \end{enumerate}
+\end{theorem}
+
+\section{連続Gauss型通信路}
+
+\begin{model}
+    Gauss過程$(Z_t)$について，
+    次の4条件を満たすモデル$Y_t=X_t+Z_t$を(遅延も雑音もない)\textbf{フィードバック$\xi$を持つ連続Gauss型通信路}という：
+    \begin{enumerate}
+        \item $Z\indep\xi$．
+        \item $X_t$は$(\xi_s)_{s\in[0,t-]}$と$(Y_s)_{s\in[0,t-]}$の関数である：
+        \[X_t(\om)=X(t,(\xi_s(\om))_{s\in[0,t-]},(Y_s(\om))_{s\in[0,t-]}).\]
+        \item $Y_t=X_t+Z_t$は$Y$について一意な解を持つ．
+    \end{enumerate}
+\end{model}
+
+\section{白色Gauss型通信路}
+
+\begin{definition}[white noise]
+    $(\nu_t)_{t\in\R}$はGauss過程で，$s\ne t\Rightarrow\nu_s\indep\nu_t$が成り立つとする．これを\textbf{白色雑音}という．
+\end{definition}
+
+\begin{model}
+    平均過程$\varphi(t)$と白色雑音$\nu_t$が定める連続Gauss型通信路
+    \[Y_t=\int^t_0\varphi(u)du+B_t\]
+    を\textbf{白色Gauss型通信路}という．
+\end{model}
+
+\section{信頼できない通信路の利用}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+BravoとVictorのように，互いに十分異なる符号語を使えば，符号語に含まれるシンボルのいくつかが不正確な場合でも，受信側が混乱する可能性は低いというアイデアがShannonの定理に含まれている．
+このように，情報理論は存在性を保証するが，実際の構成とアルゴリズムに対する考察は符号理論の範疇である．
+\end{tcolorbox}
+
+\subsection{決定則}
+
+\begin{definition}\mbox{}
+    \begin{enumerate}
+        \item 関数$\Delta:B\to A$を\textbf{決定則}という．$\Delta(b_j)=a_{j^*}$とあらわす．
+        \item 正しい決定則を用いて，送信元のアルファベットを求めることを\textbf{復号}という．
+        \item 正しく復号される確率$P_C=\sum_{j}q_jP(a=a_{j^*}|b=b_j)$を最大にする決定則を\textbf{理想的観測者規則}という．
+        \item 一方で，確率$P(a=a_{j^*}|b=b_j)$が不可知であることも多い．その場合は，前向き確率$P_{ij}$（通信路についての知識）のみが判断基準となり，$\forall_{i}\;P_{j^*j}\ge P_{ij}$を満たす決定則を\textbf{最尤法}という．
+    \end{enumerate}
+\end{definition}
+
+\subsection{信頼性を高める例}
+
+\begin{example}[binary repetition code, majority decoding]
+    同じ入力を$n$回繰り返すとする．そこで，届いた符号語のうち，一番多いシンボルを採用して復号する．
+    これを，$r$元\textbf{反復符号}$R_n$という．
+    この代償は，伝送速度が遅くなることである（$n$倍の時間がかかるはず）．
+    これを伝送レートという概念で測る．$\abs{R_n}=r$なので，伝送レートは$R=\frac{\log_r(r)}{n}=1/n$である．
+\end{example}
+
+\begin{definition}[transmission rate]
+    符号$C\subset [A]^n$の\textbf{伝送レート}とは，
+    \[R:=\frac{\log_r\abs{C}}{n}\]
+    である．
+\end{definition}
+
+\begin{lemma}
+    $0\le R\le 1$．
+\end{lemma}
+
+\section{Hamming距離}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    最尤法は，反復符号についてはHamming距離の言葉によって特徴づけられ，これを\textbf{最近傍復号}という．
+\end{tcolorbox}
+
+\section{Shannonの基本定理}
+
+\begin{theorem}
+    $\Gamma$を通信路容量$C>0$の通信路とする．
+    任意の$\delta,\ep>0$について，十分大きな$N\in\N$が存在して，任意の$n\ge N$について，$C-\ep\le R<C$を満たし，誤り確率が$P_E<\delta$となる決定則を持つような，長さ$n$で伝送レート$R$の符号$C$が存在する．
+\end{theorem}
+
+
+\begin{corollary}\mbox{}
+    \begin{enumerate}
+        \item $\Gamma$を$P>1/2$となる二元対称通信路とすると，$\Gamma$の容量は$C=1-H(P)>0$となる．
+        \item 任意の$\delta,\ep>0$について，十分大きな$n\in\N$が存在して，伝送レート$R$が$C-\ep\le R<C$を満たし，最近傍復号が誤り確率$P_E<\delta$を与えるような符号$C\subset2^n$が存在する．
+    \end{enumerate}
+\end{corollary}
+
+\section{Shannonの基本定理の逆}
+
+\begin{theorem}[Fano bound]
+    $\Gamma$を通信路，$r$元入力を$\A$，出力を$\B$とする．
+    $\Gamma$に対する任意の決定則$\Delta$の誤り確率$P_E$は，次を満たす：
+    \[H(\A|\B)\le H(P_E)+P_E[\log(r-1)].\]
+\end{theorem}
+
+\begin{corollary}
+    通信路容量$C$について，任意の$C'>C$について，Shannonの定理は成り立たない．
+    すなわち，$C$は任意の精度での伝送を可能にするためのレートの上限である．
+\end{corollary}
+
+\chapter{符号理論}
+
+\begin{quotation}
+    良い符号とは，ある程度は符号語が長くなければならないことを組み合わせ論的に観察し，２つの不等式の形で結果を得た．
+    そこで，その制約の中でも，平均符号長$L(C)$がなるべき短い符号の構成方法を考える．
+    \begin{description}
+        \item[最適符号] 
+        \item[誤り訂正符号] なるべく高い伝送レート$R$と，低い誤り率$P_E$を兼ね備えた符号$C$の構成法を考える．
+        以降は符号理論であり，構成論であるが，その時の主要な道具が代数であり，特に線形代数である．
+        \item[線型符号] 線型符号は最小距離の計算が簡単であることをみた．
+        また，最尤復号が最近傍復号となり，誤り訂正の計算の枠組みも最小距離の言葉で統一的である．
+        ここで，線型符号を統一的に扱う枠組みを鳥瞰する．
+    \end{description}
+\end{quotation}
+
+\section{最適符号の定義と存在}
+
+\begin{definition}[optimal code / compact code]
+    平均符号長$L:\Map(S,T^+)\to\R$を最小にする$r$元瞬時符号を\textbf{最適符号}または\textbf{コンパクト符号}という．
+\end{definition}
+
+\begin{lemma}[定義のwell-defined性]
+    情報源$\S$と整数$r$について，$\S$の一意復号可能な$r$元符号$C$の平均符号長$L(C)$の値域は，$\S$の$r$元瞬時符号$C$の平均符号長$L(C)$の値域に一致する．
+\end{lemma}
+
+\begin{theorem}
+    任意の情報源$\S$と整数$r\ge2$について，最適な$r$元符号が存在する．
+\end{theorem}
+
+\section{２元Huffman符号}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    符号アルファベットを$\{0,1\}$とする．Huffman 52の理論．
+    生起確率に基づいて，符号を定める．
+\end{tcolorbox}
+
+\begin{definition}[reduced source]\mbox{}
+    \begin{enumerate}
+        \item 情報源$\cS$の値域を$\{s_1,\cdots,s_q\}$とし，それぞれの生起確率を$p_1\ge\cdots\ge p_q$とする．新たなシンボル$s':=s_{q-1}\lor s_q$を定め，\textbf{縮退情報源}$\S'$を構成する．
+        \item ２つの情報源の間に，写像$\Phi:\{\cS'の符号\}\to\{\cS の符号\}$を構成する．$\S'$の符号$C$に対して，符号$C'$は，$\{s_1,\cdots,s_{q-2}\}$上では同じだが，$s_{q-1}$を$w'0$，$s_q$を$w'1$に対応させることとする．
+        \item 縮退情報源を取る操作を$q-1$回繰り返すと，値域が一点集合の情報源となる．
+この自明な符号$C^{(q-1)}$の値域を$\{\ep\}$とし（これは明らかに瞬時符号），
+$\Phi$の値を$q-1$回とることで，\textbf{Huffman符号}$C$を得る．
+    \end{enumerate}
+\end{definition}
+
+\begin{lemma}
+    $\Phi$は瞬時符号を保つ．すなわち，
+    $C'$が瞬時符号ならば，$C$も瞬時符号である．
+\end{lemma}
+\begin{proof}
+    瞬時符号は語頭符号であることから従う．
+\end{proof}
+\begin{remarks}
+    一意復元可能性は失われかねないが，瞬時符号ならうまくいく．絶妙．
+\end{remarks}
+
+\section{２元Huffman符号の最適性}
+
+\begin{definition}[sibling]
+    ２つの２元符号語$w_1,w_2$が，ある符号語$x\in T^*$が存在して$x0,x1$とあらわせるとき，$w_1,w_2$は\textbf{兄弟}であるという．
+\end{definition}
+
+\begin{lemma}
+    任意の情報源$\S$は，符号長が最も長い２つの符号語が兄弟であるような２元最適符号$D$を持つ．
+\end{lemma}
+
+\begin{theorem}
+    $C$が情報源$\S$の２元Huffman符号ならば，最適符号である．
+\end{theorem}
+
+\section{拡大情報源}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    よりマクロな構造に注目し，
+    情報源アルファベットをうまく取り直すことで，生起確率が高い特定の列を符号化すると，さらに平均符号長を小さくすることが出来る．
+\end{tcolorbox}
+
+
+\section{誤り訂正の枠組みと線型符号}
+
+\begin{notation}\mbox{}
+    \begin{enumerate}
+        \item 通信路はアルファベットを$\bF:=A=B$として一般性を失わない．
+        \item すべての符号語は等しい長さ$n$を持つとする（ブロック符号）．これはShannonの定理による帰結．
+        \item 任意の有限体は，$p$群であり，$\Z/p^n\Z$と表せる．
+    \end{enumerate}
+\end{notation}
+
+\begin{definition}\mbox{}
+    \begin{enumerate}
+        \item $C\subset\bF^n$が線型部分空間であるとき，$C$を\textbf{線型符号}または\textbf{群符号}という．
+        \item $k:=\dim C$のとき，これを線型$[n,k]$符号という．
+    \end{enumerate}
+\end{definition}
+
+\begin{lemma}
+    線型$[n,k]$符号の伝送レートは$R=k/n$と表せる．
+\end{lemma}
+\begin{remarks}
+    情報は$k$成分に乗せて，残りは誤り訂正に使われる，という比率である．
+\end{remarks}
+
+\section{符号の例}
+
+\begin{example}[repetition code]
+    $\bF$上の反復符号$R_n$は，$\bF^n$内の一次元の線型符号で，符号語$11\cdots 1$によって張られる空間となる．
+    誤り率が十分小さい時，最近傍復号によって誤りが訂正される．
+    しかし，伝送レートは悪く，$R=1/n$．
+\end{example}
+
+\begin{example}[parity-check code]
+    \textbf{パリティ検査符号}$P_n$とは，
+    \[P_n:=\Brace{(u_i)\in\bF_q^n\;\middle|\;\sum_{i=1}^nu_i=1}\]
+    によって定まる$n-1$次元の線型符号で，$u_n$を検査桁とする．
+    伝送レートは優秀だが，誤り訂正は不可能で，検出も穴がある．
+\end{example}
+
+\begin{example}[binary Hamming code (47)]
+    2元ハミング符号$H_7$は，長さ$n=7$の$\bF_2$上の$4$次元の線型符号である．
+    Bell研究所のHammingによって開発された．
+    長さ4の2元記号列$a_1a_2a_3a_4$を，7桁で符号化する．
+    $u_3,u_5,u_6,u_7$に写し，残りの$u_1,u_2,u_4$は誤り訂正桁である．
+    単一の誤りが修正可能．
+\end{example}
+
+\begin{example}[extended code]
+    長さ$n$の体$\bF$上の符号$C$に対して，\textbf{拡大符号}$\o{C}$とは，追加の桁を$\sum_{i=1}^{n+1}u_i=0$となるように選ぶことで，濃度の変わらない長さ$n+1$の符号のことである．
+    $C$が線型ならば，$\o{C}$も線型．
+\end{example}
+
+\begin{example}[punctured code]
+    長さ$n$の符号$C$に対して，\textbf{パンクチャド符号}$C^\circ$とは，定めた桁数$i\in[n]$に対して，シンボル$u_i$を各符号語$u_1\cdots u_n\in C$から取り除くことで定義される．
+\end{example}
+
+\section{最小距離}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=誤り訂正の精度を上げる技法]
+    最近傍復号を行うにあたって，符号の最小距離は大きければ大きいほど精度が高い．長さ$n$，符号語濃度$M$，最小距離$d$の符号を$(n,M,d)$-符号という．
+    $d$に対して，$t:=\Floor{\frac{d-1}{2}}$ビット以内の誤りを正確に訂正できる．
+\end{tcolorbox}
+
+\begin{lemma}
+    $C$が線型符号のとき，最小距離は$d=\min\Brace{d(v,0)\ge 0\mid v\in C,v\ne0}$．
+\end{lemma}
+\begin{remarks}
+    $w(v):=d(v,0)$を\textbf{(Hamming)重み}という．Hamming距離が定めるノルムである．
+\end{remarks}
+
+\begin{definition}
+    符号$C$が\textbf{$t$重誤り訂正}であるとは，最大$t$桁の誤りまでは（誤りが距離$t$以下であるときは），常に正しく訂正されることをいう．
+\end{definition}
+\begin{remark}
+    一方で，最小距離$d$の符号は，$d-1$個の誤りを検出する．
+\end{remark}
+
+\begin{definition}
+    ベクトル$e:=v-u$を\textbf{誤りパターン}という．
+\end{definition}
+
+\begin{theorem}
+    最小距離$d$の符号$C$について，
+    \begin{enumerate}
+        \item $t$個の誤りを訂正する．
+        \item $d\ge 2t+1$を満たす．
+    \end{enumerate}
+\end{theorem}
+
+\section{ハミングの球充填限界式}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    符号語$u$に復号される範囲は，球$S_t(u)$である．誤り訂正の精度は，この球の大きさに単調増加し，伝送レートは，球の総数に単調増加する．
+    $M:=\abs{C}$の上界を与える．
+\end{tcolorbox}
+
+\begin{theorem}[Hamming's sphere-packing bound]
+    $C$を$q$元$t$重誤り訂正符号で，長さが$n$の$M$個の符号語からなるとする．
+    このとき，
+    \[M\paren{1+\begin{pmatrix}n\\1\end{pmatrix}(q-1)+\begin{pmatrix}n\\2\end{pmatrix}(q-1)^2+\cdots+\begin{pmatrix}n\\t\end{pmatrix}(q-1)^t}\le q^n.\]
+\end{theorem}
+\begin{remarks}
+    この条件を満たす符号を\textbf{完全}符号という．
+    これは，交わらない球$S_t(u)$が$C$を埋め尽くす条件と同値である．
+\end{remarks}
+
+\section{Gilbert-Varshamov限界}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    長さ$n$，最小距離$d$に対して，符合語の数$M$の最大値を$A_q(n,d)$とすると，この下限を与える．
+\end{tcolorbox}
+
+\begin{theorem}[Gilbert-Varshamov bound]
+    $q\ge 2$かつ$n\ge d\ge 1$ならば，
+    \[A_q(n,d)\paren{1+\begin{pmatrix}n\\1\end{pmatrix}(q-1)+\begin{pmatrix}n\\2\end{pmatrix}(q-1)^2+\cdots+\begin{pmatrix}n\\d-1\end{pmatrix}(q-1)^{d-1}}\ge q^n\]
+\end{theorem}
+
+\begin{proposition}[singletonの限界式, MDS : maximum distance separable code]
+    $\bF_q$上の符号が長さ$n$，最小距離$d$，濃度$M$であるとする．
+    \[\log_qM\le n-d+1.\]
+    等号を成立させるときの符号を，\textbf{最大距離分離符号}という．
+\end{proposition}
+
+\section{Hadamard符号}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    符号の構成の中でも，Hadamard行列から構成できるクラスがある．
+\end{tcolorbox}
+
+\begin{theorem}[Hadamard]\mbox{}
+    \begin{enumerate}
+        \item $\abs{h_{ij}}\le 1$を満たす行列$H=(h_{ij})$の行列式について，$\abs{\det H}\le n^{n/2}$が成り立つ．
+        \item 等号成立条件は，$h_{ij}=\pm 1$かつ$H$の任意の２つの異なる行は直交するとき．これを満たす行列を\textbf{Hadamard行列}という．
+    \end{enumerate}
+\end{theorem}
+\begin{remark}
+    $h_{ij}=\pm 1$は，各行が長さ$\sqrt{n}$であることを含意する$r_i\cdot r_i=n$．$HH^T=nI_n$である．これより，$(\det H)^2=n^n$がすぐに従う．
+\end{remark}
+
+\begin{lemma}
+    Hadamard行列$H$に対し，$H':=\begin{pmatrix}H&H\\H&-H\end{pmatrix}$は$2n$次元のHadamard行列である．
+\end{lemma}
+
+\begin{corollary}[Sylvester matrix]
+    任意の$m\in\N$について，$2^m$次元のHadamard行列が存在する．
+\end{corollary}
+\begin{proof}
+    $H:=(1)$は$1$次のHadamard行列である．
+    これに対して補題を繰り返し適用すれば，帰納法より従う．
+    この算譜で構成されるHadamard行列をSylvester行列という．
+\end{proof}
+
+\begin{proposition}\mbox{}
+    \begin{enumerate}
+        \item Hadamard行列の次数$n>1$は偶数である．
+        \item Hadamard行列の次数$n>2$は4の倍数である．
+    \end{enumerate}
+\end{proposition}
+\begin{remark}
+    すべての4の倍数について，その次数のHadamard行列が存在するかは未解決．
+\end{remark}
+
+\begin{theorem}[Hadamard code]
+    $H$を$n$次元Hadamard行列とする．
+    最小距離$d=n/2$で，符号語濃度が$M=2n$であるような長さ$n$の2元符号を，各行ベクトルの$\pm$計$2n$個を，$-1$を$0$とみなして定める．
+\end{theorem}
+\begin{history}
+    $n=32$のものが，1969年の火星探査機マリナーからの写真伝送に使われた．
+\end{history}
+
+\begin{proposition}
+    長さ$n$のHadamard符号の伝送レートは，$R=\frac{\log_2(2n)}{n}=\frac{1+\log_2n}{n}\xrightarrow{n\to\infty}0$．
+\end{proposition}
+
+
+\section{線型符号の行列表現}
+
+\subsection{生成行列}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    線型符号化は，生成行列$G$を用いて$x=uG$と表せる．
+\end{tcolorbox}
+
+\begin{definition}
+    $k$行$n$列の行列$G$の各行が$C$の基底からなるとき，$k$次元線型符号$C$の\textbf{生成行列}という．
+\end{definition}
+\begin{remarks}
+    この行列$G$が定める線型同型$\bF^k\to\bF^n$が，情報源からの符号化を定めるとみなせる．
+\end{remarks}
+
+\begin{example}
+    反復符号$R_n$は$G=(1\;1\;\cdots\;1)$によって生成される．
+\end{example}
+
+\subsection{パリティ検査行列}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    $HG^T=O$を満たす行列をパリティ検査行列という．
+    行ベクトルが線型符号を生成する行列を生成行列としたが，行ベクトルが$C$の直交補空間を生成する行列をパリティ検査行列という．
+\end{tcolorbox}
+
+\begin{definition}
+    線型符号$C$が，$c$個の一次方程式$vH^T=0$で規定されるとき，これらを\textbf{パリティ検査方程式}といい，係数行列$H$を\textbf{パリティ検査行列}という．
+\end{definition}
+
+\begin{definition}
+    $H$を生成行列とみなして得る符号を，元の符号$C$の\textbf{双対符号}$D$という．
+\end{definition}
+
+\begin{lemma}
+    $D=C^\perp$．
+\end{lemma}
+
+\section{線型符号の同値性}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=線型符号の統一論]
+    線型符号の分類を行う．代表元は組織符号が選ばれる．
+    組織符号$G=(I_k|P)$の$I_k$を情報ビット，$P$をパリティ検査ビットという．
+    $H=(G^T|I_{n-k})$となる．
+\end{tcolorbox}
+
+\begin{definition}[equivalent, systematic code form]\mbox{}
+    \begin{enumerate}
+        \item 生成行列が相似な２つの線型符号を，\textbf{同値}であるという．
+        \item ある行列$P$について，$G=(I_k|P)$と表せるとき，$G$を\textbf{組織符号形式}であるという．
+    \end{enumerate}
+\end{definition}
+\begin{remarks}
+    定義上，行の置換は符号を変えない．列の置換は，部分空間を変えるかもしれないが，シンボルの順序が変わるだけで，基本的な特性量は変わらない．
+    その同値類の代表元は，各$a_1\cdots a_k\in[\bF]^k$をそのまま情報桁に写し取り，検査桁が$aP$で定義される符号である．
+\end{remarks}
+
+\begin{lemma}
+    組織符号形式$G=(I_k|P)$のパリティ検査符号は$H=(-P^T|I_{n-k})$である．
+\end{lemma}
+
+\section{線型符号の最小距離}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    線型符号の最小距離は，
+    \[d=\min\Brace{w(v)=d(v,0)\in\R_{\ge0}\mid v\in C,v\ne 0}\]
+    であったが，パリティ検査行列の言葉で特徴づけることが出来る．
+\end{tcolorbox}
+
+\begin{theorem}
+    $C$を最小距離$d$の線型符号とし，$H$を$C$のパリティ検査符号とする．このとき，$d$は$H$の一次従属な列の数の最小数となる．
+\end{theorem}
+\begin{remarks}
+    $Hx^T=0$は$\sum_ix_ih_i=0$だが，これは$x_i=1$なる$i$について，列ベクトル$h_i$を足したもの．すなわち，これらの$h_i$が一次従属であることを表す．
+    すなわち，一次従属な列ベクトル$h_i$の最小個数は，$1$の最小個数に一致する．
+\end{remarks}
+
+\section{Hamming符号}
+
+\begin{definition}
+    パリティ検査行列$H$の列ベクトルとして，零ベクトル以外のすべての列ベクトルを取って得られる組織符号を，\textbf{Hamming符号}という．
+\end{definition}
+\begin{example}
+    $n=6,k=3$とする．
+    \[H=\begin{pmatrix}1&0&1&1&1&0&0\\1&1&0&1&0&1&0\\0&1&1&1&0&0&1\end{pmatrix}\]
+    がパリティ検査行列となり，主座な$3\times 4$行列が$P^T$に当たる．
+    生成行列は
+    \[G=\begin{pmatrix}1&0&0&0&1&1&0\\0&1&0&0&0&1&1\\0&0&1&0&1&0&1\\0&0&0&1&1&1&1\end{pmatrix}\]
+    となる．
+    最小距離は3で，$t=\floor{(3-1)/2}=1$ビット誤り訂正符号となる．
+\end{example}
+
+\begin{definition}
+    Hamming符号に，さらにパリティビット$p:=x_1+\cdots+x_k\mod 2$を加えて得る$y=(x\;p)$からなる符号を，\textbf{拡大Hamming符号}という．
+    符号のHamming重みが偶数になるが，最小重みは小さくならない．
+    よって，$n=6,k=3$のとき，最小重みは4になる．
+    最近傍復号により，単一誤りの訂正と二重誤りの検出が可能になる．
+\end{definition}
+
+\section{Golay符号}
+
+\section{標準配列}
+
+\section{シンドローム復号}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    線型符号が定めるシンドローム$s^T=Hy^T$を求め，これからコセットリーダー$e$が求まれば，$y-e=x$である．
+\end{tcolorbox}
+
+\begin{discussion}[線型符号の最尤復号]
+    符号語$x\in C$に対して，誤りパターン$e=y-x$は$Hy^T=He^T$を満たす．よって，入力と出力の組$(x,y)$について次の３条件は同値．
+    \begin{enumerate}
+        \item $d(x,y)$が最小．
+        \item $w(e)$が$\Brace{e=y-x\mid x\in C}$で最小．
+        \item $w(e)$が$\Brace{e\in V\mid He^T=Hy^T}$で最小．
+    \end{enumerate}
+\end{discussion}
+
+\begin{definition}\mbox{}
+    \begin{enumerate}
+        \item $s^T:=Hy^T$を\textbf{シンドローム}という．
+        \item $\Brace{e\in V\mid He^T=Hy^T}$を\textbf{コセット}という．
+        \item $\argmin\Brace{w(e)\ge 0\mid He^T=Hy^T}$を\textbf{コセットリーダー}という．
+    \end{enumerate}
+\end{definition}
+
+\section{巡回符号}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    剰余環$\bF/(z^n-1)$のイデアルとみなせる線型符号を，巡回符号という．
+\end{tcolorbox}
+
+\subsection{定義}
+
+\begin{definition}\mbox{}
+    \begin{enumerate}
+        \item 線型符号$C$の任意の符号語$x=(x_1,\cdots,x_n)$の巡回シフト$(x_n,x_1,\cdots,x_{n-1})$も$C$の符号語であるとき，$C$を\textbf{巡回符号}という．
+        \item $C$の符号語を多項式$f(z)=\sum^n_{i=1}x_iz^{n-i}\in\Z_2[z]/(z^n-1)$と同一視すると，$z$倍準同型が巡回シフトに対応する．
+    \end{enumerate}
+\end{definition}
+
+\begin{proposition}\mbox{}
+    \begin{enumerate}
+        \item 巡回符号$C$に対応する符号多項式の集合は，剰余環$\Z_2[z]/(z^n-1)$のイデアルに対応する．
+        \item 環$Z_2[Z]/(z^n-1)$は単項イデアル整域である．
+    \end{enumerate}
+\end{proposition}
+
+\subsection{生成多項式}
+
+\begin{definition}
+    巡回符号$C$を生成する多項式$g\in\Z_2[z]/(z^n-1)$を\textbf{生成多項式}という．
+\end{definition}
+
+\begin{lemma}
+    $g$は，$C\setminus\{0\}$の中で次数が最小の多項式になる．
+\end{lemma}
+
+\begin{theorem}
+    生成多項式$g$は$z^n-1$を割り切る．
+\end{theorem}
+
+\begin{theorem}
+    巡回符号$C$のパリティ検査多項式$h$は，以下を満たす：$f\in C\Leftrightarrow h(z)f(z)\equiv 0\mod z^n-1$．
+\end{theorem}
+
+\chapter{暗号理論}
+
+\begin{quotation}
+    信頼できないのは通信路の性質だけでなく，通信路の傍受である可能性もある．
+\end{quotation}
+
+\section{RSA}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    Rivest-Shamir-Adleman暗号(78)は，「戻し方が簡単にはわからないCieser暗号」となる．
+    このように暗号化と復号化の鍵が異なる暗号を，\textbf{公開鍵暗号}という．
+    RSAは位数が秘密鍵を知らないと／$n=pq$の因数分解が出来ないと不明な群$(\Z/\varphi(n)\Z)^*$によってこれを実現している．
+\end{tcolorbox}
+
+\begin{theorem}[Euler]
+    任意の正整数$m$に対して，$\gcd(a,m)=1\Rightarrow a^{\varphi(m)}\equiv1\mod m$．
+\end{theorem}
+
+\begin{definition}\mbox{}
+    \begin{enumerate}
+        \item Aliceは素数$p,q$を選び，$n:=pq$と，$1<e<\phi(n)=(p-1)(q-1)$かつ$\gcd(e,\phi(n))=1$を満たす整数$e$とを公開鍵とし，$d:=e^{-1}\mod\phi(n)$を秘密鍵とする．
+        \item Bobは平文$m\in(\Z/n\Z)^*$を送るとき，暗号文$c:=m^e\mod n$を送信する．
+        \item Aliceは$m=c^d\mod n$を計算することで復号できる．
+    \end{enumerate}
+\end{definition}
+\begin{remarks}
+    平文・暗号文の空間$(\Z/n\Z)^*$と，その乗数の空間$(\Z/\varphi(n)\Z)^*$とがある．
+    十分大きな$n:=pq$について，$e<\abs{(\Z/n\Z)^*}=\varphi(n)$を用意すると，
+    $e\in(\Z/\phi(n)\Z)^*$の逆元はなかなか判らない．
+    $n$を$p,q$に因数分解できないと，Euler関数$d:=e^{-1}\mod\phi(n)$の計算の仕様もない（２つの素数を使うメカニズムはここにある）．
+    すると，「戻し方が判らないCieser暗号」のようになる．
+    戻る原理はEulerの定理$m=(m^e)^{d}=m^{k\varphi(n)+1}=m\mod n$による．
+\end{remarks}
+
+\begin{example}[discrete logarithm]
+    一般に，巡回群$G=\brac{\al}$について，$\forall_{\beta\in G}\;\exists_{n\in\N}\;\al^n=\beta$であるが，$n=\log_\al\beta$を求める問題を離散対数問題という．
+    これが計算困難であるから，離散群の指数をいじる方針が立つ．
+\end{example}
+
+\section{Diffie-Hellmanの鍵交換}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    RSAが（素因数分解をするか）離散対数問題を解かねばならないのと同様なメカニズムで，安全に暗号鍵を共有する方法(76)．
+    すべての公開鍵と秘密鍵の内１つを得ることで簡単に破られる．
+\end{tcolorbox}
+
+\begin{definition}\mbox{}
+    \begin{enumerate}
+        \item AliceとBobは素数$p$と原子根$g\in\bF_p$を定めて共有する．
+        \item 整数$a,b$を，AliceとBobがそれぞれ定め，秘密鍵とする．
+        \item Aliceが$g^a\mod p$をBobに送信し，Bobは$g^b\mod p$をAliceに送信する．すると，２人の間のみで$g^{ab}\mod p$の値が秘密裏に共有される．
+    \end{enumerate}
+\end{definition}
+
+\section{ElGamal暗号}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    実際にDiffie-Hellmanの鍵交換を用いた暗号化法(85)．
+\end{tcolorbox}
+
+\begin{definition}\mbox{}
+    \begin{enumerate}
+        \item Aliceが素数$p$と原子根$g\in\bF_p$を定め，整数$0<a<p-2$を用意し，$h:=g^a\mod p$と併せて，3-組$(h,g,p)$をBobに共有する．
+        \item Bobは同様に$0<b<p-2$を定め，共有された秘密鍵$s:=h^b\mod p$を定める．平文$m\in\bF^\times_p$の暗号化を$c:=ms$として行い，これを$g^b\mod p$と共に送信する．
+        \item Aliceも$(g^b)^a=s$を得るので，$s^{-1}\in\bF_p$をEuclidの互除法によって計算し，これを用いて復号する．
+    \end{enumerate}
+\end{definition}
+\begin{remarks}
+    今回は体の元なので，逆元の計算は簡単である代わりに，秘密鍵$a,b$の取得が困難になる．
+\end{remarks}
+
+\chapter{参考文献}
+
+\bibliography{../StatisticalSciences.bib,../SocialSciences.bib,../mathematics.bib,../statistics.bib}
+
+\end{document}

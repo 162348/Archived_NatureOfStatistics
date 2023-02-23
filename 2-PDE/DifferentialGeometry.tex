@@ -1,0 +1,3247 @@
+\documentclass[uplatex,dvipdfmx]{jsreport}
+\title{微分幾何学}
+\author{司馬博文}
+\date{\today}
+\pagestyle{headings} \setcounter{secnumdepth}{4}
+\input{/Users/Hirofumi Shiba/NatureOfStatistics/preamble_no_fonts.tex}
+%\input{/Users/hirofumi.shiba48/NatureOfStatistics/preamble_no_fonts.tex}
+%\input{/Users/hirof/NatureOfStatistics/preamble_no_fonts.tex}
+\usepackage[math]{anttor}
+\begin{document}
+\tableofcontents
+
+\chapter{ベクトル解析}
+
+\begin{quotation}
+    3次元ベクトル場を，成分に分解することなく扱う数学をベクトル解析といい，Heaviside (1893)とGibbs (1881,刊行は1901)によって整理された．
+    特にHeavisideは$\nabla$のみを用いて，ベクトル場の微積分学を建築し，Maxwellの電磁気理論の完結な定式化に成功した．
+    いまでは，微分作用素$\nabla:=\paren{\pp{}{x^1},\cdots,\pp{}{x^n}}:C^1(\Om)\to\X^0(\Om)$について，$\nabla f\in\X^0(\Om),\nabla\times X\in\X^0(\Om),\nabla\cdot X\in C(\Om)$という3種類の線型微分作用素についての結果の$n=3$の場合をベクトル解析という．
+\end{quotation}
+
+
+\begin{notation}
+    $U\osub\R^n,u\in C^2(U)$とする．関数の微分について，
+    \begin{enumerate}
+        \item 勾配$D:C^1(\Om)\to\X(\Om)\simeq C(\Om;\R^n)$を
+        \[Du=\nabla u=\paren{\pp{u}{x_1},\cdots,\pp{u}{x_n}}\]
+        で表す．特に値をベクトル場と見做す時，$\nabla,\grad$とも表す．
+        \item Laplacianを$\Laplace u:=\sum_{i\in[n]}\pp{u}{x_i^2}$とする．
+        \item Hesse行列を
+        \[D^2u(x)=\begin{pmatrix}\pp{^2u}{x_1^2}&\cdots&\pp{^2u}{x_1\partial x_n}\\\vdots&\ddots&\vdots\\\pp{^2u}{x_n\partial x_1}&\cdots&\pp{^2u}{x_n^2}\end{pmatrix}\]
+        で表す．また$H(u),(\nabla\otimes\nabla)(u)$とも表す．
+        \item d'Alembertianを$\Box u:= \pp{^2u}{t^2}-\Laplace u$で表す．ただし$\Lap$は$\R^{n-1}$のものとした．
+        \item 点$\b{a}\in U$での$\v\in\R^n$方向の微分を
+        \[D_{\v} u(\b{a}):=\left.\dd{u(\b{a}+t\v)}{t}\right|_{t=0}=\v\cdot Du(\b{a})=(\v\cdot\nabla) u(\b{a})\]
+        で表す．方向微分作用素は$\pp{u}{\v},\v\cdot\nabla$とも表す．
+        \item $\partial U$に沿った，外向き単位法線ベクトルを$\nu=(\nu^1,\cdots,\nu^n)$で表す．
+    \end{enumerate}
+    ベクトル場$X\in\X(U)$の微分について，
+    \begin{enumerate}
+        \item $DX$または$\pp{X}{x}$で\textbf{Jacobi行列}を表す．勾配行列ともいう．
+        \item $Jf:=\abs{\det Df}$でJacobianを表す．
+        \item ベクトル場$v\in\X(U)$からみた\textbf{Lagrange微分}または物質微分を
+        \[\frac{DX}{Dt}:=\pp{X}{t}+(\v\cdot\nabla)X\]
+        で表す．
+        \item 発散$\div:\X(U)\to C(U)$を
+        \[\div X=\pp{f^1}{x^1}+\cdots+\pp{f^n}{x^n}=\nabla\cdot X=\Tr(DX)\]
+        で表す．
+    \end{enumerate}
+    多重指数について，
+    \begin{enumerate}
+        \item $\al\in\N^n$を多重指数とし，$\abs{\al}:=\al_1+\cdots+\al_n$を次数とする．
+        \item 多重指数$\al\in\N^n$について，$D^\al u:=\pp{^{\abs{\al}}u}{x_1^{\al_1}\cdots\partial x^{\al_n}_n}$．
+        \item 自然数$k\in\N$について，$D^ku:=\paren{D^\al u}_{\abs{\al}=k}$を$k$階微分の族とする．例えば$D^2u\in M_n(\R)$はHesse行列である．
+        \item $(x_1+\cdots+x_n)^k=\sum_{\abs{\al}=k}\frac{\abs{\al}!}{\al_1!\cdots\al_n!}x_1^{\al_1}\cdots x_n^{\al_n}$を$\sum_{\abs{\al}=k}\frac{\abs{\al}!}{\al!}x^\al$と表すと，Taylor展開は次のように表せる：
+        \[u(x)=\sum_{k=0}^\infty\sum_{\abs{\al}=k}\frac{D^\al u(0)}{\al!}x^\al.\]
+        \item Leibniz則は次のように表せる：
+        \[D^\al(uv)=\sum_{\beta\le\al}\comb{\al}{\beta}D^\beta uD^{\al-\beta}v.\]
+        \item 多項定理は次のように表せる：
+        \[(x_1+\cdots+x_n)^k=\sum_{\abs{\al}=k}\comb{\abs{\al}}{\al}x^\al.\]
+    \end{enumerate}
+    積分について，
+    \begin{enumerate}
+        \item $\dx=\frac{dx}{2\pi}$を平均測度とする．
+        \item $\dint dx:=\int\dx$を平均積分とする．
+        \item 平均測度に関するLebesgue空間を$\dL^p(\bT):= L^p(\bT,\dx)$とする．
+    \end{enumerate}
+\end{notation}
+
+\section{3次元空間の定義}
+
+\subsection{affine空間の定義と構造}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    affine空間自体は体論・線型代数との直接の結びつきがある．
+    特に$K$を有限体に取れば有限な幾何学，非可換に取れば非可換な幾何学も含む．
+    その中で特に人間の直感に合うモデルの１つをEuclid空間という．これは射も違う．
+\end{tcolorbox}
+
+\begin{axiom}[affine space]
+    集合$A^3$が，次を満たす直線$L\subset P(A^3)$と平面$P\subset P(A^3)$という部分集合の族を持つとき，$(A^3,L,P)$を\textbf{3次元affine空間}という：
+    \begin{enumerate}[({I.}1)]
+        \item $\forall_{a,b\in A^3}\;\exists!_{l\in L}\;l=[a,b]$．
+        \item $\forall_{l\in L}\;\abs{l}\ge2$．
+        \item 任意の直線に含まれない3点について，これを含む平面$\al\in P$が唯一存在する．
+        \item 任意の平面は，同一直線に含まれない3点を含む．
+        \item ある直線$l$の相異なる二点が$\al\in P$に含まれるならば，$l\subset\al$．
+        \item 同一平面に含まれない4点が存在する．
+        \item $\forall_{\al,\beta\in P}\;\al\cap\beta\ne\emptyset\Rightarrow\exists_{l\in L}\;l=\al\cap\beta$．
+    \end{enumerate}
+    \begin{enumerate}[({II.}1)]
+        \item 任意の$l\in L,a\in A^3$について，$a$を通って$l$に平行な直線が唯一存在する．
+    \end{enumerate}
+\end{axiom}
+
+\begin{definition}[orientation, vector, scaler]
+    affine空間$(A^3, L, P)$において，
+    \begin{enumerate}
+        \item 直線$L$の「平行」という関係に関する同値類$L/\parallel$を\textbf{直線の方向}という．
+        \item 有向線分の平行変換に関する同値類$(A^3)^2/\parallel$を\textbf{ベクトル}という．この類を，Heavisideに倣って太字で表す．
+        \item ベクトルは，代表元として有向線分を任意に取ることで，加法と定数倍の演算が定まる．
+        \item 同じ方向のベクトルの中で，「比が等しい」という関係に関する同値類を\textbf{スカラー}という．スカラーの全体を$K$で表す．
+    \end{enumerate}
+\end{definition}
+\begin{remark}
+    $K$は殆ど$\R$であるが，斜体であることまでしか示せず（可換性は示せず），$K=\R$はaffine空間の公理のみからは示せない．$K=\R$はaffine空間がPascalの定理を満たすことと同値であるが，任意の体$F$に対して$F^3$はaffine空間となってしまい，$F$を非可換体に取ることも可能である．
+\end{remark}
+
+\begin{theorem}
+    任意のaffine空間$A^3$は，その係数体$K$が定める標準的affine空間$K^3$と，affine空間として同型である．
+\end{theorem}
+
+\begin{definition}[affine座標]
+    affine空間にはすでに座標が導入できる．
+    \begin{enumerate}
+        \item $A^3$をaffine空間とすると，同一平面上に存在しない4点O,E,F,Gが存在する．
+        $\b{e},\b{f},\b{g}$をそれぞれ$\Vec{OE},\Vec{OF},\Vec{OG}$が属する類とすると，
+        この3つが自由生成するベクトル空間$V^3$を\textbf{付随ベクトル空間}という．
+        \item 点Pの\textbf{位置ベクトル}とは，有向線分$\Vec{OP}$の合同変換に関する同値類$r\in V^3$をいう．
+        \item 点Pの\textbf{affine座標}とは，この位置ベクトル$r\in V^3$の$V^3$の基底$\b{i},\b{j},\b{k}$に関する成分表示をいう．
+    \end{enumerate}
+\end{definition}
+
+\subsection{Euclid空間の定義と構造}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=]
+    Euclid空間は内積構造が定義されているので，そこから直線には長さが定まっている．
+    そこから曲線の長さはネットの極限として定義できる．
+    面積と体積も同様だが，単体についてその定義を与える必要がある．
+    これは外積による．
+\end{tcolorbox}
+
+\begin{definition}[Euclidean space]
+    3次元Euclid空間$E^3$とは，係数体を実数とし，合同の公理も満たすaffine空間で，計量を持つものとする．
+\end{definition}
+
+\begin{definition}[曲線の長さ]
+    Euclid空間$E^3$と原点Oについて，
+    \begin{enumerate}
+        \item 連続写像$\b{r}:[0,1]\to E^3$を\textbf{曲線}という．
+        \item その長さとは，$[0,1]$の分割からのネットの極限として
+        \[L(\b{r}):=\sup_{\abs{\De}\to0}\sum_{t_j\in\De}\abs{\b{r}(t_j)-\b{r}(t_{j-1})}\]
+        と定める．
+        \item すると，合同変換について長さは保存量である．
+    \end{enumerate}
+\end{definition}
+
+\begin{theorem}
+    $\gamma:[0,1]\to\R^3$を$C^1$-曲線とする．このとき，次が成り立つ：
+    \[L(\gamma)=\int^1_0\sqrt{\paren{\dd{\gamma_1}{t}}^2+\paren{\dd{\gamma_2}{t}}^2+\paren{\dd{\gamma_3}{t}}^2}dt\]
+\end{theorem}
+
+\subsection{外積とそのwell-definedness}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    一度正規直交座標$\hen{O},\hen{I},\hen{J},\hen{K}\in E^3$を取れば，線型同型
+    $E^3\iso\R^3$を通じて，内積と外積が定義できる．
+    しかし外積はベクトルの演算としては定まっていない．
+    そこで，座標を右手系に限定することでwell-defined性を獲得させる．
+    あるいはベクトル積とは右手系か左手系かで符号が変わるようなベクトルを対応させる演算であると解する．
+    これを\textbf{擬ベクトル}という．
+\end{tcolorbox}
+
+\begin{definition}[Euclid空間の構造]
+    Euclid空間では，その計量から，付随ベクトル空間$V^3$に内積構造と外積構造が入る．
+    $V^3$の任意の正規直交基底を$\b{i},\b{j},\b{k}$とし，
+    位置ベクトル$\b{a}\in V^3$の成分を$\b{a}=a_1\b{i}+a_2\b{j}+a_3\b{k}$とする．
+    \begin{enumerate}
+        \item 内積を$\b{a}\cdot \b{b}:=a_1b_1+a_2b_2+a_3b_3$とする．
+        \item 外積を$\b{a}\times \b{b}:=\begin{vmatrix}
+            a_1&b_1&\bf{i}\\a_2&b_2&\bf{j}\\a_3&b_3&\bf{k}
+        \end{vmatrix}$とする．
+        \item 2つの演算の合成$(\b{a}\times \b{b})\cdot \b{c}:=\begin{vmatrix}
+            a_1&b_1&c_1\\a_2&b_2&c_2\\a_3&b_3&c_3
+        \end{vmatrix}$を\textbf{3重積}という．
+    \end{enumerate}
+\end{definition}
+
+\begin{remarks}[外積はベクトルの演算には持ち上げられない！]
+    外積とスカラー3重積とは次の変換則を満たす：
+    \[(U\b{a}\times U\b(b))=\det(U)U(\b{a}\times\b{b}),\]
+    \[(U\b{a}\times U\b(b))\cdot(U\b{c})=\det(U)(\b{a}\times\b{b})\cdot\b{c}.\]
+    ベクトルとスカラーは合同変換について不変であるから，これは計算結果がベクトル・スカラーとはみなせないことを意味する．
+    すなわち，任意の正規直交基底$\b{i},\b{j},\b{k}$の選択について不定性があり，well-definedではない．
+    \begin{enumerate}
+        \item 座標変換としては向きを変えないもの$\det U=1$のみを許すとする（右手系を固定する）．
+        すると，ベクトル積はたしかにベクトルの演算として定まっており，三重積で得る値はたしかにスカラーの演算として定まる．
+        \item このように，右手系を取るか左手系を取るかによって符号が変わる(したがって定義を変えなきゃいけない)スカラー・ベクトルを\textbf{擬スカラー}または\textbf{軸性ベクトル}といい，
+        有向線分の類としてのベクトルを\textbf{極性ベクトル}という．
+    \end{enumerate}
+\end{remarks}
+\begin{remark}
+    実は極性ベクトルが1-形式，軸性ベクトルが2-形式，擬スカラーが3-形式にあたる．
+    次の図式参照
+    \[\xymatrix{
+        C^\infty\ar[r]^-\grad\ar@{=}[d]&\X\ar[r]^-\rot\ar[d]_-{G_1}^-{\sim}&\X\ar[r]^-\div\ar[d]_-{G_2}^-{\sim}&C^\infty\ar[d]_-{G_3}^-{\sim}\\
+        \Om^0\ar[r]^-{d^0}&\Om^1\ar[r]^-{d^1}&\Om^2\ar[r]^-{d^2}&\Om^3
+    }\]
+\end{remark}
+
+\begin{proposition}[外積の性質]
+    ベクトル積は
+    \begin{enumerate}
+        \item 反可換な双線型写像である．
+        \item 三重積は次のように表示できる：
+        \[\b{a}\times(\b{b}\times\b{c})=(\b{a}\cdot\b{c})\b{b}-(\b{a}\cdot\b{b})\b{c}.\]
+        \item Jacobiの恒等式を満たす：
+        \[\b{a}\times(\b{b}\times\b{c})+\b{b}\times(\b{c}\times\b{a})+\b{c}\times(\b{a}\times\b{b})=0.\]
+    \end{enumerate}
+\end{proposition}
+
+\begin{proposition}
+    スカラー3重積は
+    \begin{enumerate}
+        \item 多重線形写像である．
+        \item 次の関係がある：\[\b{a}\cdot(\b{b}\times\b{c})=\b{b}\cdot(\b{c}\times\b{a})=\b{c}\cdot(\b{a}\times\b{b}).\]
+    \end{enumerate}
+\end{proposition}
+
+\begin{remarks}
+    その多重線型性より，それぞれの定義は行列式の言葉で表現出来る．
+\end{remarks}
+
+\subsection{曲面論}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    曲面の構成には，径数表示と零点集合としての表示とを許す．
+\end{tcolorbox}
+
+\begin{definition}[平面の向き]\mbox{}
+    \begin{enumerate}
+        \item 平面$S$の法線ベクトルには「同じ向き」という同値関係が定まり，2つの類が得られる．このうち一方を「正」と指定したとき，これを平面$S$の\textbf{向き}という．
+        \item 接ベクトルの組$(\b{e},\b{f})$が\textbf{正の向きの枠}であるとは，$\b{e}\times\b{f}$が正の向きの法線ベクトルであることをいう．
+    \end{enumerate}
+\end{definition}
+
+\begin{definition}[曲面]\mbox{}
+    \begin{enumerate}
+        \item $\Phi\in C(\R^3)$によって$\Phi^{-1}(0)$で表せる，または，領域$U\osub\R^2$上の関数$\gamma\in C(U;\R^3)$の像$\Im(\gamma)$として表せる集合を\textbf{曲面}という．
+        \item 曲面を陰関数$\Phi\in C(\R^3)$によって定義した際，$\Phi$のJacobianが消える点を\textbf{特異点}という．
+        \item 陰関数によって定まる曲面については，ベクトル$\pp{\Phi}{x}\b{i}+\pp{\Phi}{y}\b{j}+\pp{\Phi}{z}\b{k}$を\textbf{外向きの法線ベクトル}という．
+        \item 径数表示によって定まる曲面については，正の向きの単位法線ベクトルへの対応$S\to V^3$が連続であるとき，向きづけられているという．
+    \end{enumerate}
+\end{definition}
+
+\begin{definition}[曲線の基本量]
+    弧長を径数に取った曲線$\b{\rho}:I\to\R^3$については，$\mathbf{t}(t):=\left.\dd{\b{\rho}(s)}{s}\right|_{s=s(t)}$は単位接ベクトルである．
+    ただし，$s:J\to I$を変数変換とした．
+    この微分$\dd{\mathbf{t}}{t}$は$\mathbf{t}$に直交する．
+    \begin{enumerate}
+        \item $\b{\tau}:=s^*\mathbf{t}$を弧長$s$の関数として表した接ベクトルの様子とすると，単位ベクトル$\b{\nu}$と実数$\kappa_1$とを用いて，
+        \[\dd{\b{\tau}}{s}=\kappa_1\b{\nu}\]
+        と表せる．$\b{\nu}$を\textbf{単位主法線ベクトル}，$\kappa_1$を\textbf{曲率}という．$1/\kappa_1$を\textbf{曲率半径}という．$\b{\nu}$は力の加わっている向きを表す．
+        \item $\b{\beta}:=\b{\tau}\times\b{\nu}$を\textbf{単位陪法線ベクトル}という．トルクの向きである．すると，$(\b{\tau},\b{\nu},\b{\beta})$はこの順で右手系をなし，正規直交基底になる．
+        \item 力の増減の考えるために，$\dd{\b{\nu}}{s}$を考える．$\b{\nu}$は規格化されているので$\b{\nu}(s)$の成分は$0$になる．$\b{\tau}$に成分は$-\kappa_1$となる．\footnote{$\b{\tau},\b{\nu}$で張られる平面上で円運動をしているイメージ．}
+        問題は$\b{\beta}$の成分であり，これを$\kappa_2$で表して\textbf{捩率}という．$1/\kappa_2$を\textbf{捩率半径}という．
+    \end{enumerate}
+\end{definition}
+\begin{remarks}
+    捩率は，円運動している物体を，速度ベクトルの方向を軸として回転させる運動に関する「曲率」である．
+\end{remarks}
+
+\begin{proposition}[曲率と捩率の表示]
+    曲線$\b{\rho}:I\to\R^3$は$C^3$-級で，弧長$s$に関する径数表示$(\xi,\eta,\zeta)$を持つとする．このとき，
+    \[\kappa_1=\sqrt{\paren{\dd{^2\xi}{s^2}}^2+\paren{\dd{^2\eta}{s^2}}^2+\paren{\dd{^2\zeta}{s^2}}^2}\]
+    \[\kappa_2=\frac{1}{\paren{\dd{^2\xi}{s^2}}^2+\paren{\dd{^2\eta}{s^2}}^2+\paren{\dd{^2\zeta}{s^2}}^2}\begin{vmatrix}\dd{\xi}{s}&\dd{\eta}{s}&\dd{\zeta}{s}\\\dd{^2\xi}{s^2}&\dd{^2\eta}{s^2}&\dd{^2\zeta}{s^2}\\\dd{^3\xi}{s^3}&\dd{^3\eta}{s^3}&\dd{^3\zeta}{s^3}\end{vmatrix}.\]
+\end{proposition}
+
+\begin{theorem}[Frenet-Serret formula]
+    \[\begin{cases}
+        \dd{\b{\tau}}{s}=\kappa_1\b{\nu},\\
+        \dd{\b{\nu}}{s}=-\kappa_1\b{\tau}+\kappa_2\b{\beta}\\
+        \dd{\b{\beta}}{s}=-\kappa_2\b{\nu}
+    \end{cases}\]
+\end{theorem}
+
+\section{4次元空間と力学}
+
+\begin{definition}
+    4次元空間$A^4$に次の3要素が与えられたとき，\textbf{Galilei空間}という：
+    \begin{enumerate}
+        \item $A^4$の点を世界点または事象という．
+        \item $A^4$の平行移動群$\R^4$上の射影$\ev_1:\R^4\to\R$を時間といい$t$で表す．
+        $t(b-a)=0$のとき，事象$a,b\in A^4$は同時に起こるという．$\ev_4$のファイバーを同時事象の空間という．
+        \item ファイバー$\R^3$に計量が存在する．
+    \end{enumerate}
+    Galilei空間の曲線が，ある可微分曲線$I\to A^3$のグラフであるとき，\textbf{世界線}であるという．
+\end{definition}
+\begin{definition}
+    Galilei構造を保つ変換，すなわち，次を満たす変換を\textbf{Galilei変換}という：
+    \begin{enumerate}
+        \item $A^4$のaffine変換である．
+        \item 時間間隔を保つ．
+        \item 同時事象間の距離を保つ．
+    \end{enumerate}
+\end{definition}
+
+\begin{lemma}\mbox{}
+    \begin{enumerate}
+        \item 標準的なGalilei空間$\R\times\R^3$のGalilei変換は，回転・平行移動・等速運動の積によって一意的に表せる．
+        \item Galilei空間は全て座標空間$\R\times\R^3$に同型である．
+    \end{enumerate}
+\end{lemma}
+
+\begin{axiom}[Galileiの相対性原理]
+    あるGalilei構造が存在して，各点の世界線に同一のGalilei変換を施すと，新たな初期条件に関する新しい世界線を得る．
+\end{axiom}
+
+\section{ベクトル解析}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    微分作用素$\nabla:=\paren{\pp{}{x^1},\cdots,\pp{}{x^n}}:C^1(\Om)\to\X^0(\Om)$について，$\nabla f\in\X^0(\Om),\nabla\times X\in\X^0(\Om),\nabla\cdot X\in C(\Om)$という3種類の線型微分作用素についての結果の$n=3$の場合をベクトル解析という．
+\end{tcolorbox}
+
+\subsection{ベクトル場}
+
+\begin{definition}[flow, complete]\mbox{}
+    \begin{enumerate}
+        \item $C^1$-級ベクトル場が与えられたとき，局所的には\textbf{流線}が存在する．これが$\R_+$上大域的に存在するとき\textbf{正に完備}，$\R$上大域的に存在するとき\textbf{完備}という．
+        \item 正に完備なベクトル場は\textbf{1-径数変換半群}$(T_s)_{s\in\R_+}$を定める．ベクトル場が完備のとき，1-径数変換群という．
+        \item 逆に，変換群$(T_t)_{t\in\R}$から見て，対応する速度のベクトル場$X$を\textbf{無限小変換}という．
+    \end{enumerate}
+\end{definition}
+
+\begin{definition}
+    $f\in C^1(\Om)\;(\Om\osub E^3)$について，
+    \begin{enumerate}
+        \item \textbf{勾配}とは，次で定めるベクトル場をいう：
+        \[\grad f:=\pp{f}{x}\b{i}+\pp{f}{y}\b{j}+\pp{f}{z}\b{k}.\]
+        \item 微分作用素として$\nabla:C^1(\Om)\to\X(\Om)$を
+        \[\nabla:=\pp{}{x}\b{i}+\pp{}{y}\b{j}+\pp{}{z}\b{k}\]
+        で定める．$D$とも書く．
+        \item 任意の$v\in T_p(\Om)$に対して，この方向の方向微分を
+        \[D_vf:=v\cdot\grad f(p)\]
+        で定める．
+        \item 速度の場$\v\in\X(\Om)$に対して，関数の左作用$\rho\v$を\textbf{流束の場}という．
+    \end{enumerate}
+\end{definition}
+
+\subsection{微分形式}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    線積分，面積分は，それぞれ1-形式と2-形式の積分をいう．
+    微分形式は，一般の位相多様体上に定義できて，部分多様体（とその形式線形和)上に測度とそれによる積分を引き起こす．
+    大域的に定義できるのは$k$-次元多様体上の$k$-形式で，それ以外の形式は適切な部分多様体の埋め込み上で定義され，微分形式の引き戻しによる．
+\end{tcolorbox}
+
+\begin{definition}[volume element, surface measure]\mbox{}
+    \begin{enumerate}
+        \item $\R^k$における$k$-形式を一般に体積要素といい，$\dvol$で表す．
+        \item $\R^k$における$k-1$-形式を一般に曲面速度といい，$dS$で表す．
+    \end{enumerate}
+\end{definition}
+
+\begin{definition}[微分形式の積分]
+    $X$を$n$次元位相多様体，$\om\in\Om^n(X)$を連続な$n$-形式とする．$X$がパラコンパクトかつHausdorffならば1の分割$(w_U)$が取れる．
+    $\om_U:=\om|_{U}$を制限とすると，$\om=\sum_Uw_U\om_U$が成り立つから，
+    \[\int_X\om:=\sum_U\int_Uw_U(x^1,\cdots,x^n)\om_U(x^1,\cdots,x^n)dx^1\cdots dx^n\]
+    と定めれば良い．
+\end{definition}
+
+\begin{theorem}
+    この定義は座標系・1の分割の定義に依らないが，多様体$X$の向きに依る．
+    また，微分形式から測度への対応は線型である．
+\end{theorem}
+\begin{remark}
+    擬形式(pseudoform)という概念を使えば向きにも依らない．
+    すると逆に，任意の絶対連続なRadon測度に対して，擬形式が対応する．
+\end{remark}
+
+\subsection{ベクトル値関数}
+
+\begin{theorem}[逆関数定理]
+    開近傍$x_0\in U\osub\R^n$上で
+    $f\in C^1(U;\R^n)$かつ$Jf(x_0)\ne0$ならば，ある開近傍$x_0\in V\subset U$と$z_0\in W$が存在して，次を満たす：
+    \begin{enumerate}
+        \item $f|_V:V\to W$は$C^1$-級の可微分同相写像である．
+        \item $f\in C^k(U;\R^n)$ならば，$f|_V$は$C^k$-級の可微分同相写像でもある．
+    \end{enumerate}
+\end{theorem}
+
+\begin{notation}
+    $(x,y)\in\R^{n+m}$で表す．
+    $z_0=f(x_0,y_0)$に注目する．
+    $Df=(D_xf,D_yf)\in M_{m,n+m}(C(\R^{n+m}))$と分解して，
+    $J_yf:=\abs{\det D_yf}$と表す．
+\end{notation}
+
+\begin{theorem}[陰関数定理]\label{thm-Implicit-Function-Theorem}
+    $U\osub\R^{n+m}$上の関数$f\in C^1(U;\R^m)$が$J_yf(x_0,y_0)\ne0$を満たすならば，
+    開近傍$(x_0,y_0)\in V\subset U$と$x_0\in W\osub\R^n$と陽関数$g\in C^1(W;\R^m)$が存在して，次を満たす：
+    \begin{enumerate}
+        \item $g(x_0)=y_0$．
+        \item $\forall_{x\in W}\;f(x,g(x))=z_0$．
+        \item $\forall_{(x,y)\in V}\;f(x,y)=z_0\Rightarrow y=g(x)$．
+        \item $\forall_{f\in C^k(U;\R^n)}\;g\in C^k(W;\R^m)$．
+    \end{enumerate}
+    この$g$は，方程式$f(x,y)=z_0$によって$x_0$の近傍で陰に定義されている，という．
+\end{theorem}
+\begin{remarks}
+    $\R^{n+1}$上の曲線が，
+    陰関数$f(x,y)=z_0\in\R^1$によって定義されているとする．
+    そのうちのパラメータ$y\in\R^{1}$に注目したとき，$F_{y}(x_0,y_0)\ne0$ならば，
+    $\R^{n}$上の関数$g(x)=y$のグラフとして局所的に理解することが出来る．
+\end{remarks}
+
+\section{場の積分}
+
+\subsection{線積分}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    曲線上に押し出された測度を$ds:=\abs{Dx(t)}dt$または$\abs{ds}$，向き付きの測度を$\cdot ds:=\cdot Dx(t)dt$または$\cdot d\vec{s}$で表す．
+    共通点は小文字ということである．
+\end{tcolorbox}
+
+\begin{definition}[関数とベクトル場の線積分]
+    $x:I\to\R^n$を区間上の正則な$C^1$-曲線，$\gamma:=\Im x$とする．
+    \begin{enumerate}
+        \item 関数$f\in C(\gamma)$の線積分を
+        \[\int_\gamma fds:=\int_If(x(t))\abs{Dx(t)}dt.\]
+        と定める．$ds:=\abs{x'(t)}dt$を\textbf{線素}という．
+        \item ベクトル場$X\in\X(\gamma)$の\textbf{接方向に関する線積分}を
+        \[\int_\gamma X\cdot ds:=\int_I(X(\gamma(t))|D\gamma(t))dt.\]
+        と定める．
+        \item ベクトル場$X\in\X(\gamma)$の\textbf{法線方向に関する線積分}を
+        \[\int_\gamma X\cdot\b{n}ds:=\int_I(X(\gamma(t))|\b{n}(\gamma(t)))\abs{Dx(t)}dt.\]
+        と定める．
+    \end{enumerate}
+\end{definition}
+
+\begin{proposition}[線素の陽関数による表示]
+    $x:I\to\R^2$が正則であるとき，Jacobianは零でないから
+    曲線は局所的な陽な表示を持ち，これを$x_2=f(x_1)$とする．
+    このとき，線素は
+    \[ds=\sqrt{1+f'(t)^2}dt\]
+    に等しい．
+\end{proposition}
+
+\begin{proposition}[線素の単位法線ベクトルによる表示]
+    $\nu:\Im(x)\to\R^2$を各点における上向きの単位法線ベクトルとすると，曲線$(t,f(t))$の方向ベクトルは$(1,f'(t))$であるから，各点で$\nu\perp(1,f')$となる．
+    \begin{enumerate}
+        \item $\nu=\paren{-\frac{f'}{\sqrt{1+f'^2}},\frac{1}{\sqrt{1+f'^2}}}$が成り立つ．
+        \item $dx_1=\nu_2ds=\nu\cdot e_2ds$とも表せる．
+        \item $F(x_1,x_2)=x_2-f(x_1)$とするとグラフの陰関数表示$F(x)=0$を得る．これについて，$\nu=\frac{\nabla F}{\abs{\nabla F}}$である．
+    \end{enumerate}
+\end{proposition}
+
+\subsection{面積分}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    曲面上に押し出された測度を$dS:=\Abs{\pp{\psi}{x}(x,y)\times\pp{\psi}{y}(x,y)}dxdy$または$\abs{dS}$，向き付きの測度を$\cdot dS:=\cdot \paren{\pp{\psi}{x}(x,y)\times\pp{\psi}{y}(x,y)}dxdy=\cdot\b{n}dS$または$\cdot d\Vec{S}$とする．
+\end{tcolorbox}
+
+\begin{definition}[面積分]
+    $R\subset\R^{n-1}$を領域，$\psi:R\to\Om\subset\R^3$を曲面とし，$S:=\Im\psi$とする．
+    \begin{enumerate}
+        \item $\psi:R\to\R^n$が曲面であるとは，$C^1$-級かつ各点でJacobianが消えないことをいう：$\rank\paren{\pp{\psi}{u}}=n-1$．
+        \item 関数$f\in C(\Om)$の面積分を
+        \[\int_SfdS:=\iint_R f(\psi(u))\Norm{\pp{\psi}{u^1}(u)\times\pp{\psi}{u^2}(u)}du^1du^2\]
+        で定める．
+        \item ベクトル場$X\in\X(\Om)$の面積分を
+        \[\int_SX\cdot dS:=\iint_R\paren{X(\psi(u))\middle|\pp{\psi}{u^1}(u)\times\pp{\psi}{u^2}(u)}du^1du^2\]
+        で定める．
+    \end{enumerate}
+\end{definition}
+
+\begin{theorem}[面素の陽関数による表示]
+    曲面$f:R\to\R^n,\Im f=:S$の面積は
+    \[\int_R\paren{1+\paren{\pp{f}{x_1}}^2+\cdots+\paren{\pp{f}{x_{n-1}}}^2}^{1/2}dx_1\cdots dx_{n-1}\]
+    と表せる．一般の場合はこれを面素とする．
+\end{theorem}
+
+\section{場の微分}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    Jacobi行列$Du$は，$u$が実数値のとき勾配に，$u$がベクトル値のときJacobi行列になる．
+    $u$がベクトル値のとき，Jacobi行列の跡を発散という．
+    勾配は単に微分であるため，微積分学の基本定理が成り立つ．
+    実は，$D,\div,\rot$はいずれも外微分に対応する．
+\end{tcolorbox}
+
+\subsection{発散とGauss-Greenの定理}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    発散定理は，「微分の積分」の計算法を単位法線ベクトルの言葉で与えているという意味で，$\R^n$上への微積分学の基本定理の一般化である．
+\end{tcolorbox}
+
+\begin{theorem}[(Ostrogradsky-)Gauss-Green]\label{thm-Gauss-Green}
+    $\Om\osub\R^n$を有界領域，$\partial\Om$を区分的$C^1$-級とする．
+    \begin{enumerate}
+        \item 関数$u\in C^1(\o{U})$について，
+        \[\forall_{i\in[n]}\;\int_Uu_{x_i}dx=\int_{\partial U}u\nu^idS.\]
+        \item ベクトル値関数$u\in C^1(\o{U};\R^n)$について，
+        \[\int_U\div (u)dx=\int_{\partial U}u\cdot \nu\;dS.\]
+    \end{enumerate}
+\end{theorem}
+\begin{history}
+    Gauss (1839)以前にGreen (1828), Ostrogradskii (1831)も発表していた．
+\end{history}
+
+\subsection{Gauss-Greenの定理の系}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    $\R^n$上の部分積分は，その座標方向$i\in[n]$の境界$\partial U$の単位法線ベクトル$\b{\nu}$の成分$\nu^i$を考慮に入れねばならないが，そこだけが相違点である．
+\end{tcolorbox}
+
+\begin{corollary}[成分毎の部分積分公式]\label{cor-partial-integral}
+    $u,v\in C^1(\o{U})$について，
+    \[\tcboxmath{\forall_{i\in[n]}\quad\int_Uu_{x_i}vdx=-\int_Uuv_{x_i}dx+\int_{\partial U}uv\nu^idS.}\]
+\end{corollary}
+\begin{Proof}
+    積$uv\in C^1(\o{U})$についてGauss-Greenの定理を用いると，
+    \begin{align*}
+        \forall_{i\in[n]}\quad\int_U(uv)_{x_i}dx=\int_{\partial U}uv\nu^idS.
+    \end{align*}
+\end{Proof}
+
+\begin{corollary}[Greenの恒等式]\label{cor-Green-identity}
+    $u,v\in C^2(\o{U})$について，次が成り立つ：
+    \begin{enumerate}\setcounter{enumi}{-1}
+        \item Laplacianに対する部分積分公式：
+        \[\tcboxmath{\int_U\Lap udx=\int_{\partial U}\pp{u}{\nu}dS.}\]
+        \item 勾配の内積に対する部分積分公式：
+        \[\tcboxmath{\int_U(Dv|Du)dx=-\int_Uu\Lap vdx+\int_{\partial U}\pp{v}{\nu}udS.}\]
+        \item 対称化された部分積分公式
+        \[\tcboxmath{\int_U(u\Lap v-v\Lap u)dx=\int_{\partial U}\paren{u\pp{v}{\nu}-v\pp{u}{\nu}}dS.}\]
+    \end{enumerate}
+\end{corollary}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item 
+        $u=u_{x_i}$に対して，関数に対するGauss-Greenの定理\ref{thm-Gauss-Green}(1)を用いる：
+        \[\int_U(u_{x_i})_{x_i}dx=\int_{\partial U}u_{x_i}\nu^idS.\]
+        これの$i\in[n]$に対する和を取れば主張を得る．
+        また，$\div(Du)=\Lap u$に注意すれば，
+        ベクトル値関数$Du$に関するGauss-Greenの定理\ref{thm-Gauss-Green}(2)から直接：
+        \[\int_U\div(Du)dx=\int_{\partial U}Du\cdot\b{\nu}dS=\int_{\partial U}\pp{u}{\b{\nu}}dS.\]
+        \item $u_{x_i}v_{x_i}$に関して部分積分を考えると，
+        \[\int_{U}u_{x_i}v_{x_i}dx=-\int_Uuv_{x_ix_i}dx+\int_{\partial U}uv_{x_i}\nu^idS.\]
+        これを$i\in[n]$について足し合わせたものである．
+        \item (2)の$u,v$を入れ替えると，
+        \[\int_UDu\cdot Dvdx=-\int_Uv\Lap udx+\int_{\partial U}\pp{u}{\nu}vdS\]
+        を得る．(2)の辺々から引くと，
+        \[0=\int_U(v\Lap u-u\Lap v)dx+\int_{\partial U}\paren{\pp{v}{\nu}u-\pp{u}{\nu}v}dS.\]
+    \end{enumerate}
+\end{Proof}
+\begin{remarks}[法線方向微分とは]
+    基本的に，$U$上の$D$は$\partial U$上の$\pp{}{\nu}$に対応する．
+    これが(0)の精神であり，成分に拠らない形で理解されるGauss-Greenの定理である．
+    これが劣調和函数の平均定理を導く．
+    \begin{enumerate}
+        \item 第一恒等式は部分積分公式である．
+        \item 第二恒等式は対称な形にした部分積分公式に過ぎないが，
+        $U$上の二階微分を$\partial U$上の法線方向の一階微分に還元する点で，Green関数の解法の中心になる．
+        これを第三恒等式とも言うらしい．
+    \end{enumerate}
+    \[u\xrightarrow{\text{微分}}Du\xrightarrow{\text{微分}}\Lap u\]
+    とし，積分領域に合せて$dx,\cdot\b{\nu}dS$とを合せ，$Du\cdot\b{\nu}=\pp{u}{\b{\nu}}$の規則を忘れなければ間違えない．
+\end{remarks}
+
+\subsection{積分の微分}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    
+\end{tcolorbox}
+
+\begin{theorem}[積分領域が動く積分に対する微分\footnote{\cite{Evans}}]\label{thm-differentiation-of-integral-on-moving-region}
+    $U_\tau\subset\R^n$を滑らかな境界を持つ領域の滑らかな族，
+    $\partial U_\tau$の各点の速度ベクトルを$\b{v}$で表す．
+    このとき，任意の滑らかな関数$f\in C^1(\R^n\times\R)$に対して，
+    \[\dd{}{\tau}\int_{U_\tau}fdx=\int_{\partial U_\tau}f\b{v}\cdot\nu dS+\int_{U_\tau}f_\tau dx.\]
+\end{theorem}
+\begin{history}
+    $n=2$ではLeibnizの微分則，$n=3$ではReynolds transport theorem
+    と呼ばれ，連続体力学の分野で知られていた．
+\end{history}
+\begin{remarks}[物理的直感の先行]
+    微積分学の基本定理の一般化ともみれる．
+    領域が動く場合は，微分と積分の交換だけでなく，
+    余分の項が生じ，それは動いた境界上での吸収量を表す項である．
+\end{remarks}
+
+\begin{example}\label{exp-moving-region-appeared-in-N-C-WE}
+    非斉次な波動方程式の零化された初期値問題のDuhamelの原理による解公式において，次の計算を行なった，
+    \[u(x,t):=\int^t_0u(x,t;s)ds\paren{=\int^1_0u(x,t;tr)tdr}.\]
+    このとき，上の定理によると，
+    \[u_t(x,t)=u(x,t;t)+\int^t_0u_t(x,t;s)ds.\]
+    実際，微分の定義に戻ってみると，
+    \begin{align*}
+        u_t(x,t)&=\lim_{h\to0}\frac{u(x,t+h)-u(x,t)}{h}\\
+        &=\lim_{h\to0}\frac{1}{h}\paren{\int^{t+h}_0u(x,t+h;s)ds-\int^t_0u(x,t;s)ds}\\
+        &=\lim_{h\to0}\frac{1}{h}\int^{t+h}_hu(x,t+h;s)ds+\lim_{h\to0}\int^t_0\frac{u(x,t+h;s)-u(x,t;s)}{h}ds\\
+        &=\lim_{h\to0}\frac{1}{h}\int^{t+h}_t\Paren{u(x,t;s)+hu_t(x,t;s)+O(h^2)}ds+\int^t_0u_t(x,t;s)ds.
+    \end{align*}
+\end{example}
+
+\subsection{勾配}
+
+\begin{definition}[勾配]
+    $\nabla:C^\infty(\Om)\to\X(\Om)$を
+    \[\nabla f:=f^1\pp{}{x^1}+\cdots+f^n\pp{}{x^n}\]
+    で定める．これは$\grad f$とも表す．
+\end{definition}
+
+\begin{theorem}[勾配ベクトル場の積分定理(1次元のStokesの定理)]
+    $f\in C^1(\Om),\gamma:I\to\Om\subset\R^n$を曲線とすると，
+    \[\int_\gamma\grad(f)\cdot dx=\int_{\partial\gamma}f=\int_{\partial I}f\circ\gamma=f(\gamma(b))-f(\gamma(a)).\]
+\end{theorem}
+\begin{remarks}
+    この定理は2次元のGaussの発散定理を含む？
+\end{remarks}
+
+\subsection{微積分学の基本定理の幾何的構造}
+
+\begin{definition}
+    $\om\in\Om^p(\Om)\;(p\in\N^+)$について，
+    \begin{enumerate}
+        \item 外微分が消えることを\textbf{閉}であるという．
+        \item ポテンシャルを持つことを\textbf{完全}であるという：$\exists_{\eta\in\Om^{p-1}(\Om)}\;\om=d\eta$．
+        \item $p=1$のときのポテンシャルを第一積分という．
+    \end{enumerate}
+\end{definition}
+
+\begin{theorem}[Poincaré]
+    単連結領域$\Om\osub\R^n$について，閉形式は完全である．
+\end{theorem}
+\begin{remarks}
+    閉形式と完全形式とはいずれも線型空間をなし，その商空間をde Rhamコホモロジーという．
+\end{remarks}
+
+
+
+\subsection{2次元の回転}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    2次元では回転微分作用素$r:\X\to C^\infty$が登場する．
+    これを通じて定まるベクトル場$X\in\X$のスカラーポテンシャル$r(X)= H$をHamiltonianという？
+\end{tcolorbox}
+
+\begin{definition}[2次元多様体の微分作用素]
+    $\Om\subset\R^2$を領域とする．
+    \begin{enumerate}
+        \item $C^1$-級ベクトル場に対して，2次元の回転を次のように定める：
+        \[\xymatrix@R-2pc{
+            r:\X^1(\Om)\ar[r]&C(\Om)\\
+            \rotatebox[origin=c]{90}{$\in$}&\rotatebox[origin=c]{90}{$\in$}\\
+            f^1\pp{}{x^1}+f^2\pp{}{x^2}\ar@{|->}[r]&\pp{f^2}{x^1}-\pp{f^1}{x^2}.
+        }\]
+        \item $C^\infty(\Om)$-上の代数の同型$G_1:\X(\Om)\iso\Om^1(\Om),G_2:C^\infty(\Om)\iso\Om^2(\Om)$を次で定める：
+        \[\xymatrix@R-2pc{
+            G_1:\X(\Om)\ar[r]_-{\sim}&\Om^1(\Om)&G_2:C^\infty(\Om)\ar[r]_-{\sim}&\Om^2(\Om)\\
+            \rotatebox[origin=c]{90}{$\in$}&\rotatebox[origin=c]{90}{$\in$}&\rotatebox[origin=c]{90}{$\in$}&\rotatebox[origin=c]{90}{$\in$}\\
+            f^1\pp{}{x^1}+f^2\pp{}{x^2}\ar@{|->}[r]&f_1dx^1+f_2dx^2&f\ar@{|->}[r]&fdx^1\wedge dx^2
+        }\]
+    \end{enumerate}
+\end{definition}
+
+\begin{theorem}[Greenの定理]
+    $\Om\subset\R^2$を区分的に$C^1$-級な境界を持つコンパクト領域とする．このとき，
+    \[\int_{\partial\Om}X\cdot ds=\int_\Om r(X)\dvol.\]
+\end{theorem}
+
+\begin{theorem}[2次元のde Rham cohomology]
+    領域$\Om\subset\R^2$について，次の図式は可換である：
+    \[\xymatrix{
+        C^\infty(\Om)\ar[r]^-{\grad}\ar@{=}[d]&\X(\Om)\ar[d]_-{G_1}\ar[r]^-r&C^\infty(\Om)\ar[d]_-{G_2}\\
+        \Om^0(\Om)\ar[r]_-{d^0}&\Om^1(\Om)\ar[r]_-{d^1}&\Om^2(\Om)
+    }\]
+    特に，勾配ベクトル場は回転が消える：$r\circ\grad=0$．
+\end{theorem}
+
+\subsection{3次元の回転}
+
+\begin{history}
+    Heavisideは$\curl$の記法を用いた．
+    ベクトル場が流速の場であるとき，回転を\textbf{渦度}といい，$\int_{\partial S}X\cdot ds$は循環という．
+\end{history}
+
+\begin{definition}[3次元多様体の微分作用素]
+    $\Om\osub\R^n$を領域とする．
+    \begin{enumerate}
+        \item $C^1$-級ベクトル場に対する発散を$\Div(X):=\nabla\cdot X$と定める．
+        \item $C^1$-級ベクトル場に対する回転を次のように定める：
+        \[\xymatrix@R-2pc{
+            \nabla\times:\X(\Om)\ar[r]&\X(\Om)\\
+            \rotatebox[origin=c]{90}{$\in$}&\rotatebox[origin=c]{90}{$\in$}\\
+            {\begin{pmatrix}f^1\\f^2\\f^3\end{pmatrix}}\ar@{|->}[r]&{\begin{pmatrix}\pp{f^3}{x^2}-\pp{f^2}{x^3}\\\pp{f^1}{x^3}-\pp{f^3}{x^1}\\\pp{f^2}{x^1}-\pp{f^1}{x^2}\end{pmatrix}}
+        }\]
+        特に$\rot(X)=\curl(X):=\nabla\times(X)$とも表す．
+        \item $C^\infty(\Om)$-上の代数の同型$G_1:\X\iso\Om^1,G_2:\X\to\Om^2,G_3:C^\infty\to\Om^3$を次のように定める：
+        \[\begin{cases}
+            G_1\paren{f^1\pp{}{x^1}+f^2\pp{}{x^2}+f^3\pp{}{x^3}}=f_1dx^1+f_2dx^2+f_3dx^3\\
+            G_2\paren{f^1\pp{}{x^1}+f^2\pp{}{x^2}+f^3\pp{}{x^3}}=f_1dx^2\wedge dx^3+f_2dx^3\wedge dx^1+f_3dx^1\wedge dx^2\\
+            G_3(f)=fdx^1\wedge dx^2\wedge dx^3.
+        \end{cases}\]
+    \end{enumerate}
+\end{definition}
+\begin{remarks}
+    3次元ベクトル場$X\in\X(\Om)\;(\Om\osub\R^3)$について，$X=\grad f$を満たす関数$f\in C^\infty(\Om)$をスカラーポテンシャル，$X=\rot(Y)$を満たす$Y\in\X(\Om)$をベクトルポテンシャルという．
+\end{remarks}
+
+\begin{theorem}[(Kelvin-)Stokes]
+    $\psi:R\to\R^3$を曲面，$S:=\Im\psi$とする．このとき，
+    \[\int_{\partial S}X\cdot ds=\int_S(\rot X)\cdot dS.\]
+\end{theorem}
+
+\begin{theorem}[3次元のde Rham cohomology]\label{thm-3dimension-deRham}
+    $\Om\osub\R^3$を領域とする．次の図式は可換になる：
+    \[\xymatrix{
+        C^\infty\ar[r]^-\grad\ar@{=}[d]&\X\ar[r]^-\rot\ar[d]_-{G_1}&\X\ar[r]^-\div\ar[d]_-{G_2}&C^\infty\ar[d]_-{G_3}\\
+        \Om^0\ar[r]^-{d^0}&\Om^1\ar[r]^-{d^1}&\Om^2\ar[r]^-{d^2}&\Om^3
+    }\]
+    特に，
+    \begin{enumerate}
+        \item 勾配ベクトル場の回転は零：$\rot\circ\grad=0$．
+        \item 回転ベクトル場の発散は零：$\div\circ\rot=0$．
+    \end{enumerate}
+    また，$\Om$が単連結ならば，逆$\grad\circ\rot=0,\rot\circ\div=0$も成り立つ．
+\end{theorem}
+
+\subsection{ベクトルポテンシャル}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    スカラーポテンシャルは定数分の不定性しかなかったが，ベクトルポテンシャルは渦なしのベクトル場の不定性がある．
+    この議論を通じて，自然に2階の微分$\Lap$に目が行く．
+\end{tcolorbox}
+
+\begin{observation}
+    $\R^3$のde Rham構造\ref{thm-3dimension-deRham}より，ベクトルポテンシャルが存在するためには$\div X=0$が必要．これで十分かは$V$の連結性による．
+\end{observation}
+
+\begin{theorem}
+    領域$V$上の$C^\infty$-級ベクトル場$X$について，次は同値：
+    \begin{enumerate}
+        \item $\div X=0$ならばベクトルポテンシャルが存在する．
+        \item $\R^3\setminus V$はコンパクトな連結成分を持たない．
+    \end{enumerate}
+\end{theorem}
+
+\begin{proposition}[ベクトルポテンシャルの不定性]
+    $Y$を$X$のベクトルポテンシャルとする．第三のベクトル場$Z$が$\rot Z=0$ならば，$Y+Z$も$X$のベクトルポテンシャル．
+\end{proposition}
+
+\begin{theorem}[一般領域上のベクトルポテンシャルの存在条件 de Rham (1931)]
+    一般の領域$V\subset\R^3$上の$C^\infty$-級ベクトル場$X\in\X(V)$について，次は同値：
+    \begin{enumerate}
+        \item ベクトルポテンシャルを持つ：$\exists_{Y\in\X(V)}\;X=\rot(Y)$．
+        \item $V$内の任意の向きのある閉曲面$S$について，
+        \[\int_SX\cdot dS=0.\]
+    \end{enumerate}
+\end{theorem}
+
+\begin{example}
+    Coulomb力ないし重力場ポテンシャルの勾配$f(r)=\frac{r}{\abs{r}^3}$は大域的なベクトルポテンシャルを持たない．
+    これは，$f$が原点で定義されておらず，これを含む球面を取ると循環が消えない．
+\end{example}
+
+\subsection{ベクトル場のHelmholtz分解}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    任意のベクトル場は回転なしの場と発散なしの場の和に分解できる．
+    一般の多様体におけるHodge分解の$n=3$での消息である．
+\end{tcolorbox}
+
+\begin{theorem}[Helmholtz]
+    任意の領域$V\subset\R^3$上の任意の$C^\infty$-級ベクトル場$X$について，
+    \begin{enumerate}
+        \item $\exists_{Y\in \X(V)}\;\Lap Y=X$．
+        \item $X=\grad(\div Y)-\rot(\rot Y)$．
+    \end{enumerate}
+    特に，任意のベクトル場は渦なしのベクトル場と湧き出しなしのベクトル場との重ね合わせで表せる．
+\end{theorem}
+\begin{remarks}
+    $-\div Y,-\rot Y$がそれぞれ$X$のポテンシャルとベクトルポテンシャルと見れば，これは常に存在することになる．
+    特に，Poisson方程式の解を解くことで得られることになる．
+\end{remarks}
+
+\section{積分変換}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    Fourier, Radon変換は$x\in\R^n$についての変換で，平面波に分解する．
+    Laplace変換は時間軸$t\in\R_+$についての変換である．
+\end{tcolorbox}
+
+\subsection{Fourier変換の理論}
+
+\begin{definition}
+    $u\in L^1(\R^n;\C)$に対して，
+    \begin{enumerate}
+        \item Fourier変換を次のように定める：
+        \[\F[u](y)=\wh{u}(y):=\frac{1}{(2\pi)^{n/2}}\int_{\R^n}e^{-ix\cdot y}u(x)dx.\]
+        \item \textbf{Fourier逆変換}を次のように定める：
+        \[\wc{u}(y):=\frac{1}{(2\pi)^{n/2}}\int_{\R^n}e^{ix\cdot y}u(x)dx.\]
+    \end{enumerate}
+\end{definition}
+
+\begin{theorem}[Plancherel]
+    Fourier変換の$L^1(\R^n;\C)\cap L^2(\R^n;\C)$への制限の像は$L^2(\R^n;\C)$に入っており，等長同型を定める．
+\end{theorem}
+
+\begin{proposition}\label{prop-inversion-formula-for-Fourier-transform}
+    $u,v\in L^2(\R^n;\C)$について，
+    \begin{enumerate}
+        \item Fourier変換は内積を保つ：$(u|v)=(\wh{u}|\wh{v})$．
+        \item 任意の$\al\in\N^n$について，$D^\al u\in L^2(\R^n;\C)$ならば，$\wh{(D^\al u)}=(iy)^\al\wh{u}$．
+        \item $u,v\in L^1(\R^n;\C)$でもあるならば，$\wh{(u*v)}=(2\pi)^{n/2}\wh{u}\wh{v}$．
+        \item $u,v\in L^1(\R^n;\C)$でもあるならば，$u=\wc{\wh{u}}$．
+    \end{enumerate}
+\end{proposition}
+
+\subsection{Radon変換}
+
+\begin{notation}\mbox{}
+    \begin{enumerate}
+        \item $S^{n-1}:=\partial B(0,1)\subset\R^n$とし，その点を$\om=(\om_1,\cdots,\om_n)$で表す．
+        \item 超平面を$\Pi(s,\om):=\Brace{y\in\R^n\mid y\cdot\om=s}\;(s\in\R)$で表す．
+    \end{enumerate}
+\end{notation}
+
+\begin{definition}[Radon transform]
+    $u\in C^\infty_c(\R^n)$の\textbf{Radon変換}を次のように定める：
+    \[\cR[u](s,\om)=\wt{u}(s,\om):=\int_{\Pi(s,\om)}udS,\qquad(s,\om)\in\R\times S^{n-1}.\]
+\end{definition}
+
+\begin{theorem}[Radon変換とFourier変換の関係]
+    $u\in C^\infty_c(\R^n)$について，
+    \[\o{u}(r,\om):=\int_\R \wt{u}(s,\om)e^{-irs}ds=(2\pi)^{n/2}\wh{u}(r\om),\quad(r\in\R,\om\in S^{n-1}).\]
+\end{theorem}
+
+\begin{theorem}[Radon変換の反転公式]\mbox{}
+    \begin{enumerate}
+        \item \[u(x)=\frac{1}{2(2\pi)^n}\int_\R\int_{S^{n-1}}\o{u}(r,\om)r^{n-1}e^{ir\om\cdot x}dSdr.\]
+        \item $n=2k+1\;(k\in\N)$次元のとき，さらに
+        \[u(x)=\int_{S^{n-1}}r(x\cdot \om,\om)dS,\quad r(s,\om):=\frac{(-1)^k}{2(2\pi)^{2k}}\pp{^{2k}}{s^{2k}}\wt{u}(s,\om).\]
+    \end{enumerate}
+\end{theorem}
+
+\subsection{Laplace変換}
+
+\begin{definition}[Laplace transform]
+    $u\in L^1(\R^+)$について，\textbf{Laplace変換}を次のように定める：
+    \[\L[u](s)=u^\#(s):=\int^\infty_0e^{-st}u(t)dt,\quad (s\in\R_+).\]
+\end{definition}
+
+\begin{theorem}\label{thm-uniqueness-of-Laplace-transform}
+    $f,g\in C(\R_+)$は増大条件
+    \[\exists_{b>0}\;\sup_{t>0}\paren{\frac{\abs{f(t)}}{e^{bt}}+\frac{\abs{g(t)}}{e^{bt}}}<\infty\]
+    を満たすとする．このとき，ある$c>0$が存在して$\L[f]=\L[g]\;\on{[c,\infty)}$ならば，$f=g\;\In\R_+$である．
+\end{theorem}
+
+\section{不等式}
+
+\begin{proposition}[Cauchyの不等式]\mbox{}
+    \begin{enumerate}
+        \item 任意の$a,b\in\R$について，
+        \[ab\le\frac{a^2+b^2}{2}.\]
+        \item 任意の$a,b>0$と$\ep>0$について，
+        \[ab\le\ep a^2+\frac{b^2}{4\ep}.\]
+    \end{enumerate}
+\end{proposition}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item $(a-b)^2=a^2+b^2-2ab\ge0$による．
+        \item $ab=(\sqrt{2\ep}a)\paren{\frac{b}{\sqrt{2\ep}}}$について(1)を用いる．
+    \end{enumerate}
+\end{Proof}
+
+\begin{proposition}[Youngの不等式]
+    共役指数$p,q\in(1,\infty)$に関して，
+    \begin{enumerate}
+        \item 任意の$a,b>0$について，
+        \[ab\le\frac{a^p}{p}+\frac{b^q}{q}.\]
+        \item $C(\ep):=(\ep p)^{-q/p}q^{-1}$とすると，任意の$a,b>0$と$\ep>0$について，
+        \[ab\le\ep a^p+C(\ep)b^q.\]
+    \end{enumerate}
+\end{proposition}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item $x\mapsto e^x$が凸関数であることを用いると，
+        \[ab=e^{\frac{1}{p}\log a^p+\frac{1}{q}\log b^q}\le\frac{1}{p}e^{\log a^p}+\frac{1}{q}e^{\log b^q}=\frac{a^p}{p}+\frac{b^q}{q}.\]
+        \item $ab=((\ep p)^{1/p}a)\paren{\frac{b}{(\ep p)^{1/p}}}$に対して(1)を用いる．
+    \end{enumerate}
+\end{Proof}
+
+\begin{corollary}[Hölderの不等式]
+    共役指数$p,q\in[1,\infty]$に関して，任意の$u\in L^p(U),v\in L^q(U)$について，
+    \[\int_U\abs{uv}dx\le\norm{u}_{L^p(U)}\norm{v}_{L^q(U)}.\]
+\end{corollary}
+\begin{Proof}
+    $\norm{u}_{L^p(U)}=\norm{v}_{L^p(U)}=1$に規格化して考える．
+    Youngの不等式より，
+    \[\int_U\abs{uv}dx\le\int_U\Abs{\frac{u^p}{p}+\frac{v^q}{q}}dx\le \frac{\norm{u}_{L^p(U)}^p}{p}+\frac{\norm{v}_{L^q(U)}^q}{q}=1=\norm{u}_{L^p(U)}\norm{v}_{L^q(U)}.\]
+\end{Proof}
+
+\section{$n$次元球の体積と極座標}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    $n$次元球の体積を
+    $\om_n:=\abs{B^n(0,1)}$，$n$次元球面の面積を$n\om_n=\abs{S^n}$と表す．
+    \cite{Evans}だと$\al(n)$である．
+    $A_n(r)=\dd{V_{n+1(r)}}{r}$なる関係がある．
+    $A(r),V(r)$の記法は，$dA,\dvol$に合致する．
+\end{tcolorbox}
+
+\subsection{$n$次元球の体積と表面積}
+
+\begin{theorem}[球の体積]
+    $n$次元球$B(0,r)\subset\R^n$について，
+    \begin{enumerate}
+        \item 体積は
+        \[V_n(r)=\frac{\Gamma(1/2)^n}{\Gamma((n+2)/2)}r^n=\om_nr^n.\]
+        \item 特に，$r=1$のとき，体積とその表面積は
+        \[\om_n=\frac{\Gamma(1/2)^n}{\Gamma((n+2)/2)}=\frac{\pi^{n/2}}{(n/2)\Gamma(n/2)},\quad\sigma_n=n\om_n.\]
+    \end{enumerate}
+    特に，関係
+    \[\frac{2}{n\om_n}=\frac{\Gamma\paren{\frac{n}{2}}}{\pi^{n/2}}\]
+    はPoisson核の議論で重宝する．
+\end{theorem}
+\begin{remark}[$\sigma_1$の解釈]
+    $n=1$次元球$[-1,1]$の体積は
+    \[\om_1=\frac{\Gamma(1/2)}{\Gamma(3/2)}=2.\]
+    であるが，その表面積は
+    \[\sigma_1=1\cdot\om_1=2.\]
+    とカウントされる．2点からなる集合であるためだろうか．
+\end{remark}
+
+\begin{lemma}[Gamma関数の性質]\mbox{}
+    \begin{enumerate}
+        \item 任意の$z\in\C\setminus\Z_{\le0}$について，$\Gamma(z+1)=z\Gamma(z)$．
+        \item $\Gamma(1)=\Gamma(2)=1$．$\Gamma\paren{\frac{1}{2}}=\sqrt{\pi}$．
+        \item $\Gamma(k)=(k-1)!$．$\Gamma\Paren{k-\frac{1}{2}}=\paren{k-\frac{3}{2}}\cdots\frac{1}{2}\sqrt{\pi}$．
+    \end{enumerate}
+\end{lemma}
+
+
+\begin{corollary}\mbox{}\label{cor-volume-of-ball-in-odd-and-even-dimension}
+    \begin{enumerate}
+        \item 偶数次元$n=2k\;(k\in\N^+)$のとき，$\om_n=\frac{\pi^k}{k!}$．
+        \item 奇数次元$n=2k-1\;(k\in\N^+)$のとき，
+        \[\om_n=\frac{\pi^{k-1}}{2\paren{k-\frac{1}{2}}!}=\frac{\pi^{k-1}}{2\paren{k-\frac{1}{2}}\paren{k-\frac{3}{2}}\cdots\paren{\frac{1}{2}}}=\frac{\pi^{k-1}}{2}\frac{2^n}{(2k-1)(2k-3)\cdots 1}=\frac{\pi^{k-1}2^{n-1}}{n!!}\]
+        \item $n=2k\;(k\in\N^+)$が偶数次元のとき，
+        \[\frac{\om_{2k}}{\om_{2k+1}}=\frac{\paren{k+\frac{1}{2}}!!}{k!}=\frac{1}{2}\frac{(2k+1)!!}{2k!!}=\frac{1}{2}\frac{(n+1)(n-1)\cdots5\cdot3\cdot1}{n(n-2)\cdots4\cdot2\cdot1}.\]
+    \end{enumerate}
+\end{corollary}
+
+\subsection{極座標積分}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    $\R^n$上の積分を，任意の点$x_0\in\R^n$を中心とした球面$\partial B(x_0,r)$上の積分に分割出来るが，
+    このときJacobianの$r$などは出現しない．これは面積分の妙技による．間違いやすいので注意．
+\end{tcolorbox}
+
+\begin{theorem}[Co-area formula]
+    $u:\R^n\to\R$をLipschitz連続関数とし，殆ど至る所の$r\in\R$について，等位集合$\Brace{x\in\R^n\mid u(x)=r}$は滑らかな超曲面をなすとする．
+    $f:\R^n\to\R$を連続な可積分関数とする．このとき，
+    \[\int_{\R^n}f\abs{Du}dx=\int^\infty_{-\infty}\paren{\int_{\Brace{u=r}}fdS}dr.\]
+\end{theorem}
+
+\begin{corollary}[球面積分の性質]\mbox{}\label{cor-property-of-ball-surface-integral}
+    \begin{enumerate}
+        \item $f:\R^n\to\R$は連続で可積分であるとする．このとき，
+        \[\forall_{x_0\in\R^n}\quad\int_{\R^n}fdx=\int^\infty_0\paren{\int_{\partial B(x_0,r)}fdS}dr.\]
+        \item 特に，次が成り立つ：
+        \[\forall_{r>0}\quad\dd{}{r}\paren{\int_{B(x_0,r)}fdx}=\int_{\partial B(x_0,r)}fdS.\]
+    \end{enumerate}
+\end{corollary}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item 余面積公式を$u(x):=\abs{x}$と取った場合の結果である．
+        \item (1)より，
+        \[\int_{B(x_0,r)}fdx=\int_{l=0}^{l=r}\int_{\partial B(x_0,l)}fdSdl\]
+        と表せる．これを微分すれば従う．
+    \end{enumerate}
+\end{Proof}
+
+\begin{corollary}[球面上の積分と球体上の積分との関係]\label{thm-sphere-and-ball}
+    $B(0,R)\subset\R^n, f\in L^1(B(0,R))$について，
+    \[\int_{B(0,R)}f(x)dx=\int^R_0\int_{\partial B(0,r)}f(x)d\sigma(x)dr=\int^R_0r^{n-1}dr\int_{\partial B(0,1)}f(rx)d\sigma(x).\]
+\end{corollary}
+
+\chapter{曲面論}
+
+\begin{quotation}
+    微分幾何学でも，変分原理でも，
+    大域的な性質に興味がある．そのようなとき，必然的に位相幾何学と深い関わりを持つ．
+    また曲面は2次元Riemann多様体でもあり，Riemann幾何学の大域的な性質も帯びる．
+\end{quotation}
+
+\section{具体的な定義}
+
+\begin{definition}
+    $\R^3$内の
+    \textbf{曲面片}とは，$C^3$-級関数
+    \[\vctr{u}{v}\mapsto\p(u,v)=\begin{pmatrix}x(u,v)\\y(u,v)\\z(u,v)\end{pmatrix}\]
+    であって，Jacobi行列が最大階数$2$であるものをいう． 
+    曲面とは，曲面片の和集合をいう．
+\end{definition}
+
+\subsection{第一基本形式}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    Euclid空間$\R^3$内の曲面の接空間の内積を第一基本形式という．
+    これはその曲面内の曲線の線素の自乗に当たる抽象的存在である：$ds^2=\r{I}$．
+\end{tcolorbox}
+
+\begin{observation}[曲面の接平面の様子]
+    パラメータ$\p$のJacobi行列
+    \[D\p=(\p_u\;\p_v)^\top=\begin{pmatrix}x_u&y_u&z_u\\x_v&y_v&z_v\end{pmatrix}\]
+    はランク落ちせず，2つの速度ベクトル$\p_u,\p_v$は常に一次独立であり，これが曲面の接空間を張る．
+    そしてここには自然な計量が入り，まず速度ベクトルの間の内積の値は
+    \[\mtrx{g_{11}}{g_{12}}{g_{21}}{g_{22}}=\mtrx{E}{F}{F}{G}:=\mtrx{\p_u\cdot\p_u}{\p_u\cdot\p_v}{\p_v\cdot\p_u}{\p_v\cdot\p_v}.\]
+    である(\textbf{第一基本形式の係数})．これを用いて，任意の接ベクトル$\xi\p_u+\eta\p_v\;(\xi,\eta\in\R)$の長さの自乗は
+    \[\norm{\xi\p_u+\eta\p_v}^2=E\xi^2+2F\xi\eta+G\eta^2.\]
+    と計算出来るわけだ．
+\end{observation}
+
+\begin{definition}[first fundamental form]
+    \[\r{I}:=Edudu+2Fdudv+Gdvdv=d\p\cdot d\p.\]
+    を\textbf{第一基本形式}という．
+\end{definition}
+
+\subsection{第二基本形式}
+
+\begin{observation}[ambient spaceに漏れ出す様子]
+    $\p_u\times\p_v$は曲面の法ベクトルであり，規格化すると
+    \[\b{e}:=\frac{\p_u\times\p_v}{\abs{\p_u\times\p_v}}\]
+    と取れる．
+    新たに生じたペアの間の内積を
+    \[\mtrx{L}{M}{M}{N}=\mtrx{\p_{uu}\cdot\e}{\p_{uv}\cdot\e}{\p_{vu}\cdot\e}{\p_{vv}\cdot\e}=-\vctr{\p_u}{\p_v}(\e_u,\e_v).\]
+\end{observation}
+
+\begin{definition}
+    \[\r{II}:=-d\p\cdot d\b{e}=Ldudu+2Mdudv+Ndvdv.\]
+    を\textbf{第二基本形式}という．
+\end{definition}
+
+\begin{lemma}
+    単位ベクトル$\b{a}$が定める
+    曲面上の関数$f(u,v):=\b{a}\cdot\p(u,v)$のHesse行列は第二基本形式の係数行列である：
+    \[H_f(u_0,v_0)=\mtrx{L(u_0,v_0)}{M(u_0,v_0)}{M(u_0,v_0)}{N(u_0,v_0)},\qquad(u_0,v_0)\in\Sigma.\]
+\end{lemma}
+\begin{remarks}
+    $f$は，ベクトル$\b{a}$方向の「高さ」を返す関数である．
+\end{remarks}
+
+\begin{corollary}
+    第二基本形式が
+    \begin{enumerate}
+        \item 定値になる点，すなわち，$LN-M^2>0$を満たすとき，曲面は凸または凹である．
+        \item 不定値になる点，すなわち，$LN-M^2<0$を満たすとき，曲面は鞍点になる．
+    \end{enumerate}
+\end{corollary}
+
+\subsection{種々のベクトルの整理}
+
+\begin{observation}
+    $\R^3$の基底$\p_u,\p_v,\e$が揃ったから，いかなるベクトルもこの３つで表せる．
+    現れる係数に注目したいから名前をつける．
+    \[\begin{cases}
+        \p_{uu}=\Gamma^u_{uu}\p_u+\Gamma^v_{uu}\p_v+L\e,\\
+        \p_{uv}=\Gamma^u_{uv}\p_u+\Gamma^v_{uv}\p_v+M\e,\\
+        \p_{vu}=\Gamma^u_{vu}\p_u+\Gamma^v_{vu}\p_v+M\e,\\
+        \p_{vv}=\Gamma^u_{vv}\p_u+\Gamma^v_{vv}\p_v+N\e,\\
+        \e_u=\frac{FM-GL}{EG-F^2}\p_u+\frac{FL-EM}{EG-F^2}\p_v,\\
+        \e_v=\frac{FN-GM}{EG-F^2}\p_u+\frac{FM-EN}{EG-F^2}\p_v.
+    \end{cases}\]
+    最初の4式をGaussの式，最後の2式をWeingartenの式という．
+\end{observation}
+
+\subsection{曲率}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    法曲率は曲線の曲率と同様の概念であるが，曲面の接方向の曲率は，主成分分析を介する必要がある．
+    加速度ベクトルの変化が最も大きい方向と小さい方向を主方向，その際の変化の大きさを主曲率という．
+
+\end{tcolorbox}
+
+\begin{definition}[geodesic curvature vector, normal curvature]
+    曲面片$(u,v)\mapsto\p(u,v)$内の曲線$s\mapsto\p(s)$について，点$\p(s)$での2階微分を考える：
+    \[\p''(s)=\k_g+\k_n.\]
+    \begin{enumerate}
+        \item $\p''(s)$の曲面の接空間への射影$\k_g$を\textbf{測地的曲率ベクトル}という．
+        \item $\p''(s)$の曲面の法空間への射影$\k_n$を\textbf{法曲率ベクトル}という．
+        \item $\kappa_n:=\abs{\k_n}$を\textbf{法曲率}という．
+    \end{enumerate}
+\end{definition}
+
+\begin{proposition}[法曲率の第二基本形式による表現]
+    \[\kappa_n(s)=\r{II}(\p'(s),\p'(s)).\]
+\end{proposition}
+\begin{remarks}
+    法曲率は，接ベクトル$\p'(s)$のみに依る．
+\end{remarks}
+
+\begin{observation}
+    第二基本形式$\r{II}(\b{w},\b{w})$の点$\p_0$での接空間の単位円周上での最大・最小を考える．
+    \[\abs{\b{w}}^2=E\xi^2+2F\xi\eta+G\eta^2=1\]
+    が制約条件である．第二基本形式の停留条件は
+    \[(EG-F^2)\lambda^2-(EN+GL-2FM)\lambda+LN-M^2=0\]
+    に落ちて，この2解を$\kappa_1,\kappa_2$とする．
+\end{observation}
+
+\begin{definition}
+    \[K:=\kappa_1\kappa_2,\quad H:=\frac{1}{2}(\kappa_1+\kappa_2).\]
+    を\textbf{Gauss曲率}と\textbf{平均曲率}という．
+    \begin{enumerate}
+        \item $K\equiv0$のとき，曲面は\textbf{平坦}であるという．
+        \item $H\equiv0$のとき，曲面は\textbf{極小}であるという．
+        \item $\kappa_1,\kappa_2$をそれぞれ\textbf{主曲率}といい，
+        その最大値点$\b{w}_1,\b{w}_2\in T_{p_0}(\Sigma)$を\textbf{主方向}という．
+    \end{enumerate}
+\end{definition}
+
+\section{抽象的な定義}
+
+\subsection{曲線}
+
+\begin{definition}
+    $M$を位相空間とする．
+    \begin{enumerate}
+        \item $I\subset\R$を区間とし，端点を$a<b$で表す．端点が存在しないとき，$a=-\infty,b=\infty$とする．
+        \item 連続写像$f:I\to M$を\textbf{(向きのついた連続)曲線}と言い，3-組$C=(I,f,M)$でも表す．
+        \item $M=\R^n$のとき，曲線$f:I\to M$が次を満たすとき，\textbf{$C^r$-級可微分曲線}という：
+        \begin{enumerate}
+            \item $f$は$C^r$-級の可微分写像である．
+            \item 勾配$Df$は$I$上で消えない．
+        \end{enumerate}
+        すなわち，区間の$C^r$級の嵌め込みを可微分曲線という．$r=\infty$のとき，\textbf{なめらかな曲線}という．
+        \item $f:I\to M$が$C^r$-級可微分曲線であるだけでなく，単射でもあるとき，\textbf{$C^r$-級の埋め込み}という．
+    \end{enumerate}
+\end{definition}
+
+\subsection{微分幾何による曲面の定義}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    まず向きのあるなしで場合分けをして，可微分多様体を定義する．
+    その後，2次元可微分多様体$M^2$の$\R^3$(または$\R^n$)への嵌め込み$f$を曲面$S=(M,f,\R^n)$とする．
+\end{tcolorbox}
+
+\begin{definition}
+    $M^n,M'^m\;(n\le m)$を可微分多様体，$\phi:M\to M'$を可微分写像とする．
+    \begin{enumerate}
+        \item 微分$(\phi_*)_p:T_p(M)\to T_{\phi(p)}(M')$が任意の$p\in M$で単射のとき，\textbf{嵌め込み}という．
+        \item 元の写像$\phi$も単射であるとき，\textbf{埋め込み}という．
+    \end{enumerate}
+\end{definition}
+
+\begin{theorem}
+    $f:M\to M'$を埋め込みとする．$M$がコンパクトならば，$f(M)$の相対位相は，$M$の位相に等しい．
+\end{theorem}
+
+\begin{theorem}
+    不可符号でコンパクトな境界のない2次元可微分多様体$M^2$の$\R^3$への埋め込みは存在しない．
+\end{theorem}
+\begin{remarks}
+    埋め込み$P^2\mono\R^4$は存在する．なんなら$C^\om$-級のものが存在する．
+    その後に$\R^3$に射影して得る曲面を，SteinerのRoma曲面という．
+\end{remarks}
+
+\subsection{位相幾何による曲面の定義と分類}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    Poincareは多面体を基本言語に位相空間を研究する手法を創始した．
+\end{tcolorbox}
+
+\begin{definition}
+    集合$M\subset\R^3$と，2-単体(三角形)の集合$K$であって$\cup_{e\in K}e=M$を満たすものの組$(M,K)$が次を満たすとき，\textbf{2次元多面体}と言い，$K$をその単体分割・三角形分割という：
+    \begin{enumerate}
+        \item 任意の相異なる三角形$e_1\ne e_2\in K$について，共通部分は空かただ１つの辺かただ１つの頂点である．
+        \item $K$は局所有限である．
+    \end{enumerate}
+    さらに次を満たす多面体を，\textbf{(境界のない)曲面}という：
+    \begin{enumerate}
+        \item 任意の$e\in K$の任意の辺について，これを共有している他の三角形がただ一つ存在する．
+        \item 任意の$\De_0,\De_p\in K$について，三角形鎖$\De_0,\De_1,\cdots,\De_p$であって，一辺ずつ互いに共有しているものが存在する．
+        \item 任意の$e\in K$の任意の頂点について，これを共有する三角形の鎖$\De_0,\cdots,\De_q$であって，一辺ずつ互いに共有しており，$\De_q,\De_0$も互いに共有するものが存在する．
+    \end{enumerate}
+\end{definition}
+
+\begin{definition}[曲面の位相不変量]
+    曲面$(M,K)$について，
+    \begin{enumerate}
+        \item $K$が有限集合のとき(この条件は$M$がコンパクトであることに同値)，\textbf{閉曲面}という．したがって特に境界はない．
+        $K$が可算無限集合のとき，$M$が非コンパクトであることに同値で，これを\textbf{開曲面}という．
+        \item 任意の三角形鎖$\De_1,\cdots,\De_s$でサイクリックに隣り合っているものについて，隣り合っているすべての三角形が互いに同調になるような向き付けが可能であるとき，\textbf{可符号}であるという．
+        \item 穴が$p$個空いたドーナッツ曲面は，\textbf{種数$p$}であるという．
+    \end{enumerate}
+\end{definition}
+\begin{example}[射影平面]
+    Möbiusの帯は境界があり，不可符号である．
+    輪環面(torus)は種数1であり，$M_1$と表せる．
+    $M'_1$は射影平面$P^2$，$M'_2$はKleinの壺で，いずれも不可符号である．
+    $P^2$は$S^2$の外周を，対応する直径対点同士が重なるように貼り合わせた図形に同相である．
+    $S^2$を長方形に連続変形することで，対辺同士を順に捻って貼り合わせれば良い．
+    すると一組の対辺について張り合わせた時点でMöbiusの帯を得る．
+    すなわち，射影平面に1つの穴を開けたものがMöbiusの帯である．
+    長方形の1組の対辺は同方向で，もう1組の対辺は逆方向で貼り合わせたものはKleinの壺である．
+    射影平面もKleinの壺も，Möbiusの帯を含むため不可符号で，したがって$\R^3$に埋め込めない．
+\end{example}
+
+\begin{theorem}
+    任意の(境界のない)閉曲面$M\subset\R^3$は，次のいずれかである：
+    \begin{enumerate}
+        \item 球面$S^2$．
+        \item 種数$p$の可符号閉曲面$M_p$．
+        \item 種数$q$の不可符号閉曲面$M_q'$．
+    \end{enumerate}
+\end{theorem}
+
+\begin{corollary}
+    任意の境界を持つコンパクトな曲面は，どの閉曲面から何個の開円板をくり抜いたかによって分類できる．
+\end{corollary}
+
+\begin{remarks}
+    開曲面は，閉曲面から高々可算個の閉円板をくり抜いたものとして分類できる．
+    境界のある非コンパクトな曲面は高々可算個の開円板と閉円板をくり抜いて得られる．
+\end{remarks}
+
+\subsection{束の用語}
+
+\begin{remarks}\mbox{}
+    \begin{enumerate}
+        \item 写像$\psi_{\mu\lambda}:U_\lambda\cap U_\mu\to \GL_n(\R)$は連続になる．$\GL_n(\R)$を構造群という．
+        このような可微分多様体と全射と群との組をファイバー束という．
+        \item 接空間$T_p(M)$の元を反変ベクトルともいう．これは$\pp{}{x^i}$の係数が上添字であるためだろうか．$\pp{}{x^i}$を\textbf{自然枠}という．
+        \item $T_p(M)$上の双線型形式は2次の共変テンソル，または$(0,2)$-テンソルという．
+        \item 各点$P\in M$における$(0,2)$-テンソルの全体を$M_{2,P}$とおくと，これは$n^2$次元の線型空間になり，$T_2(M):=\cup_{P\in M}M_{2,P}$も接束同様ファイバー束になる．
+        \item 同様にして$T^2(M),T_1^1(M)$が定義できる．
+    \end{enumerate}
+\end{remarks}
+
+\begin{definition}[Poisson bracket]
+    $[X,Y]_Pf=X_P(Yf)-Y_P(Xf)$とおくと，$P$の座標近傍$(U,u^i)$とそれに関する$X,Y$の成分$\xi^j,\eta^j$に関して，
+    \[[X,Y]_P=\sum_{j\in[n]}\paren{\xi^j\pp{\eta^i}{u^j}-\eta^j\pp{\xi^i}{u^j}}.\]
+    これを\textbf{Poisson括弧}という．
+\end{definition}
+
+\section{第一基本テンソル}
+
+\subsection{第一基本テンソル}
+
+\begin{notation}
+    $M$を径数曲面，$f:M\to\R^n$を嵌め込みとして，$\R^n$内の曲面$S:=(M,f,\R^n)$を考える．
+    接ベクトル$X,Y\in T_P(M)$の大きさとなす角を，$f_*X,f_*Y\in T_{f(P)}(\R^n)$で測ることとする．すなわち，$g_P$を$T_P(M)$上の双線型形式として
+    \[g_P(X,Y):=(f_*X|f_*Y)\]
+    と定めると，これは$T_P(M)$上の内積(正定値な2次の対称な共変テンソル)を定める．
+\end{notation}
+
+\begin{definition}
+    曲面$S=(M,f,\R^n)$の\textbf{第１基本テンソル場}とは，嵌め込み$f$が引き戻す計量テンソル場$g=f^*g_0$(ただし$g_0$は$\R^n$のEuclid内積)，すなわち，可微分な正定値2次共変対称テンソル場$g\in \Gamma(T_2(M))$をいう：
+    \[g(X,Y)(P):=g_P(X_P,Y_P),\quad X,Y\in \X(M).\]
+\end{definition}
+
+\subsection{Riemann多様体とその射}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    曲面は$\R^n$からの標準内積の引き戻しを用いれば良いが，一般の多様体にこのようにして計量を毎度入れる必要はなく，それ自身に名前と定義を与えても良いくらい十分独立な概念である．
+\end{tcolorbox}
+
+\begin{definition}
+    $M$を$C^r$-可微分多様体とする．
+    \begin{enumerate}
+        \item $M$上の$C^r$-級な2次の対称で正定値な共変テンソル場$g\in \Gamma(T_2(M))$が与えられたとき，$(M,g)$を\textbf{Riemann多様体}という．
+        \item $g$をその\textbf{基本計量テンソル場}という．
+        \item $\gamma:[a,b]\to M$で与えられる可微分曲線を$C$とする．$C$の長さを
+        \[J(C):=\int^b_a\norm{\dot{\gamma}(t)}dt.\]
+        で定める．ただし，このノルム$\norm{-}$は，$\gamma(t)$の局所座標$u^i(t)$によって，
+        \[\norm{\dot{\gamma}(t)}=\sqrt{\sum g_{ij}(u(t))\dot{u}^i(t)\dot{u}^j(t)}=\sqrt{(u|Gu)}.\]
+        で与えられる．
+        \item $M'$も同次元の$C^r$-Riemann多様体で，$f:M\to M'$を可微分写像とする．これがさらに$f^*g'=g$を満たすとき，\textbf{等長写像}であるという．
+    \end{enumerate}
+\end{definition}
+
+\begin{lemma}
+    $M,M'$を同次元の$C^r$-Riemann多様体，$f:M\to M'$を可微分写像とする．
+    \begin{enumerate}
+        \item $f:M\to M'$は等長写像である．
+        \item $M$上の任意の可微分曲線の長さは，その$f$による像の長さに等しい．
+    \end{enumerate}
+\end{lemma}
+
+\subsection{Riemann多様体の距離構造との整合性}
+
+\begin{definition}
+    $M^n$をRiemann多様体，$\gamma:[a,b]\to M$で定まる区分的$C^1$-曲線を$C$とする．
+    \begin{enumerate}
+        \item $C$の長さを
+        \[J(C)=\sum_{\al=0}^{k-1}\int^{t_{\al+1}}_{t_\al}\norm{\dot{\gamma}(t)}dt.\]
+        で定めると，これは$C$が$C^r$-曲線であった場合，以前の長さの定義に整合する．
+        \item $\Om(A,B)$で，$A,B\in  M$間の全ての区分的$C^1$-曲線の集合とする．
+        \item $\rho(A,B):=\inf_{C\in\Om}J(C)$と定めると，これは$M$に距離を定める．
+    \end{enumerate}
+\end{definition}
+
+\begin{theorem}
+    Riemann多様体$(M,g)$について，その$C^r$-多様体としての位相と，$\rho$による距離空間としての位相とは一致する．
+\end{theorem}
+
+\section{測地線と変分法}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    最短線は見つけにくいので，「相対的最短線」という局所的なものを考える．
+    これをさらに微分学の言葉で捉えることを可能にしたものが測地線である．
+\end{tcolorbox}
+
+\subsection{相対的最短線}
+
+\begin{example}[距離を定義した下限は達成されるとは限らない]
+    $\R^2\setminus\{O\}=:M^2$とし，Euclid計量の制限によってRiemann多様体とみなす．
+    すると，$O$を通る線分の両端$A,M\in M$の距離を達成する区分的$C^1$-曲線は$M$内には存在しない．
+\end{example}
+
+\begin{definition}
+    $C\in\Om$について，ある近傍$C\subset U$が存在して，$U$に含まれる他のどの$\Om$の元よりも$C$が長くはないとき，$C$を\textbf{相対的最短線}という．
+    高々可算な角を無視して，$C^1$-級な相対的最短線を調べるのが変分学である．
+\end{definition}
+
+\subsection{変分原理によるアプローチ：測地線}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    区分的$C^1$-級曲線の空間$\Om$をさらに制限して，変分曲線の空間$\{C_\tau\}_{\tau\in(-\ep,\ep)}$の上での長さ汎関数の停留点を\textbf{測地線}という．
+    その必要条件はEulerの微分方程式で表され，その本質は共変微分が消えることである：$\nabla_{\dot{u}}\dot{u}=0$．
+\end{tcolorbox}
+
+\begin{notation}\label{notation-Einstein-and-Christoffel}
+    微分学による考察を可能にするため，区分的$C^1$-曲線の特別な場合として，単なる$C^1$-級曲線を考える．
+    \begin{enumerate}
+        \item $M^n$を$C^2$-級Riemann多様体，$(U,\varphi)$を座標近傍で局所座標$(u^1,\cdots,u^n)$を持つもの，$f:[a,b]\to U$で与えられる$C^1$-曲線を$C$とし，
+        $f(t)$の局所座標をそれぞれ$u^i(t)$と取っておく．$A:=f(a),B:=f(b)$とする．
+        \item これに対して，元の曲線$C$を$C^1$-級に「変化」させることを考える．$n$座標方向について，$C^1$-級関数$\xi^i:[a,b]\to M$を$\xi^i(a)=\xi^i(b)=0$を満たすようにとり，
+        $F(t,\tau):[a,b]\times(-\ep,\ep)\to U$を，その各局所座標$u^i(t,\tau)$が
+        \[u^i(t,\tau)=u^i(t)+\tau\xi^i(t)\]
+        となる曲線族$(C_\tau)_{\tau\in(-\ep,\ep)}$として定める．
+        この曲線族を\textbf{変分曲線}，$F$を\textbf{変分}という．
+        $F$は$\tau$によって，あり得る曲線のswitchingできる，ある種ホモトピーのようなものである．
+        \item 曲線$C_\tau$の長さは，$\F$をLagrangianとして，
+        \[J(\tau)=\int^b_a\F(u(t)+\tau\xi(t),\dot{u}(t)+\tau\dot{\xi}(t))dt,\quad\F(u,\dot{u}):=\paren{\sum g_{ij}(u)\dot{u}^i\dot{u}^j}^{1/2}=\sqrt{(\dot{u}|G\dot{u})}\]
+        で表される．計量$g$は$C^2$-級と仮定したから，$\F$は$C^2$-級であることに注意．
+        従って非積分関数は$\tau$について$C^2$-級で，$t$に関する連続関数である．
+        \item よって，長さ汎関数$J$は$\tau$について可微分で，
+        \[J'(\tau)=\int^b_a\paren{\partial_1\F\paren{u(t)+\tau\xi(t),\dot{u}(t)+\tau\dot{\xi}(t)}\xi(t)+\partial_2\F\paren{u(t)+\tau\xi(t),\dot{u}(t)+\tau\dot{\xi}(t)}\dot{\xi}(t)}dt.\]
+        この$\tau=0$での微分係数
+        \[J'(0)=\int^b_a\paren{\partial_1\F\paren{u(t),\dot{u}(t)}\xi(t)+\partial_2\F\paren{u(t),\dot{u}(t)}\dot{\xi}(t)}dt.\]
+        を，$C$の長さ積分
+        \[J(C)=\int^b_a\F(u(t),\dot{u}(t))dt\]
+        の\textbf{第一変分}といい，$\delta J$でも表す．
+        \item このLagrangian $\F$に注目する．両辺を$u^l$で微分すると，
+        \begin{align*}
+            \pp{\F}{u^l}(u,\dot{u})&=\frac{1}{2}\paren{\sum_{i,j\in[n]}g_{ij}(u)\dot{u}^i\dot{u}^j}^{-1/2}\sum_{j,k\in[n]}\pp{g_{jk}}{u^l}\dot{u}^j\dot{u}^k\\
+            &=\frac{1}{2\F(u,\dot{u})}\sum_{j,k\in[n]}\pp{g_{jk}}{u^l}\dot{u}^j\dot{u}^k=:\frac{1}{2\F}\pp{g_{jk}}{u^l}\dot{u}^j\dot{u}^k.
+        \end{align*}
+        最右辺のように$\sum$を省略して，上下に2度登場する添字$j,k$を見て和を取るものと了解する記法をEinsteinの和の規約という．
+        \item 続いて，第１種Christoffelの記号
+        \[[jk,l]:=\frac{1}{2}\paren{\pp{g_{jl}}{u^k}+\pp{g_{lk}}{u^j}-\pp{g_{jk}}{u^l}}\]
+        を導入すると，次が成り立つ：
+        \begin{enumerate}
+            \item $[jk,l]=[kj,l]$．
+            \item $\pp{g_{jk}}{u^l}=[jl,k]+[kl,j]$．
+        \end{enumerate}
+        \item これを元に，\textbf{(第２種)Christoffelの記号}を，
+        \[\Gamma^i_{jk}=\Christ{i}{jk}:=\frac{1}{2}g^{ih}\paren{\pp{g_{jh}}{u^k}+\pp{g_{hk}}{u^j}-\pp{g_{jk}}{u^h}}=g^{ih}[jk,h].\]
+        と定める．
+    \end{enumerate}
+\end{notation}
+
+\begin{lemma}[du Bois-Reymond]
+    連続関数$H:[a,b]\to\R$は次を満たすならば，定数である：
+    \[\forall_{\xi\in C^1([a,b])}\;\xi(a)=\xi(b)=0\Rightarrow\int^b_a\dot{\xi}Hdt=0.\]
+\end{lemma}
+\begin{Proof}
+    $H\in L^1([a,b])$に注意して，
+    \[c:=\frac{1}{b-a}\int^b_aH(t)dt\]
+    とおく．これに対して，
+    \[\xi(t):=\int^t_a(H(t)-c)dt\]
+    とおけば，これは$a,b$で$0$になる$C^1$-曲線である．よって補題の仮定より，
+    \[\int^b_a(H(t)-c)H(t)dt=0\]
+    であるが，$c\int^b_a(H(t)-c)dt=0$と併せて両辺を引くと，
+    \[\int^b_a(H(t)-c)^2dt=0.\]
+\end{Proof}
+
+\subsection{測地線の定義と性質}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    長さ汎関数に関する変分問題の解を測地線といい，この場合のEuler-Lagrange方程式をEulerの方程式という．
+\end{tcolorbox}
+
+\begin{definition}[geodesic]
+    $C^1$-曲線$f:[a,b]\to U$の径数表示$(u^1,\cdots,u^n):[a,b]\to\R^n$が，Lagrangian $\F$について
+    \[\forall_{i\in[n]}\quad\pp{\F}{u^i}-\dd{}{t}\pp{\F}{\dot{u}^i}=0\]
+    を満たすとき，\textbf{測地線}という．この$n$連立方程式を\textbf{Eulerの微分方程式}という．
+    なお，$\pp{\F}{\dot{u}^i}$はやはり$\dot{u}^i$を含む式であるため，これの$t$での可微分性は$\F$独自の性質であり，直ぐには明らかでないことに注意．
+\end{definition}
+
+\begin{proposition}\mbox{}
+    \begin{enumerate}
+        \item $C$が相対的最短線であるためには，測地線であることが必要である．
+        \item Riemann多様体が$C^1$-級であるとしても，測地線は$C^2$-級である．
+    \end{enumerate}
+\end{proposition}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item 一般性を失わず，$\xi^2,\cdots,\xi^n=0$として良い，すると，$C$が相対的最短線であるためには，$J'(0)=0$が必要である．すなわち，
+        \begin{align*}
+            &\int^b_a(\F_{u^1}(u(t),\dot{u}(t))\xi^1+\F_{\dot{u}^1}(u(t),\dot{u}(t))\dot{\xi}^1)dt\\
+            &=\Square{\xi^1\int^t_a\F_{u^1}(u(t),\dot{u}(t))dt}^b_a-\int^b_a\dot{\xi}^1\paren{\int^t_a\F_{u^1}(u(t),\dot{u}(t))dt}dt+\int^b_a\F_{\dot{u}^1}(u(t),\dot{u}(t))\dot{\xi}^1dt\\
+            &=\int^b_a\dot{\xi}^1\paren{\F_{\dot{u}^1}(u(t),\dot{u}(t))-\int^t_a\F_{u^1}(u(t),\dot{u}(t))dt}dt=0.
+        \end{align*}
+        これはdu Bois-Reymondの補題より，
+        \[\F_{\dot{u}^1}(u(t),\dot{u}(t))=\int^t_a\F_{u^1}(u(t),\dot{u}(t))dt+\const\]
+        が必要．すると右辺は$t$で可微分だから，(曲線は$C^1$-級としたので)左辺の$\dot{u}^i$の$t$での可微分性は不明であるにも拘らず，$t$で微分可能で，
+        \[\F_{u^1}(u(t),\dot{u}(t))-\dd{}{t}\F_{\dot{u}^1}(u(t),\dot{u}(t))=0.\]
+        \item 同時に示した．実際，
+        \[\F_{\dot{u}^1}(u(t),\dot{u}(t))=\int^t_a\F_{u^1}(u(t),\dot{u}(t))dt+\const\]
+        の左辺は
+        \[\F_{\dot{u}^i}=\frac{1}{2}\paren{\sum_{i,j\in[n]}g_{ij}(u)\dot{u}^i\dot{u}^j}^{-\frac{1}{2}}\sum_{j\in[n]}g_{ij}(u)\dot{u}^j\]
+        より，総じて
+        \[\sum_{j\in[n]}g_{ij}(u)\dot{u}^j=2\F(u,\dot{u})\paren{\int^t_a\F_{u^i}dt+\const}\]
+        に変形される．右辺の$t$についての可微分性は，$\F$自身は問題ないが$\dot{u}$を含んでしまうことが問題であるが，径数$t$として測地線$C$の弧長を取れば，$C$上で$\F=1$と定数になることより，右辺は$t$について可微分になり得る．
+        よって，左辺も可微分で，$\dd{^2u^i}{s^2}$は存在して連続であることが必要．
+    \end{enumerate}
+\end{Proof}
+
+\begin{theorem}[測地線の微分方程式のLagrange形式・Hamilton形式による特徴付け]\mbox{}
+    \begin{enumerate}
+        \item Eulerの微分方程式は次に同値：
+        \[\dd{^2u^i}{d^2}+\sum_{jk}\Gamma_{jk}^i\dd{u^j}{s}\dd{u^k}{s}=0\quad(i\in[n])\]
+        \item また，次のようにも表せる：
+        \[\begin{cases}
+            \dd{u^i}{s}=v^i,\\
+            \dd{v^i}{s}=-\Gamma^i_{jk}v^jv^k.
+        \end{cases}\]
+    \end{enumerate}
+\end{theorem}
+\begin{Proof}\mbox{}
+    \begin{description}
+        \item[Lagrangianの導関数の計算] 記法\ref{notation-Einstein-and-Christoffel}において，Lagrangian $\F(u,\dot{u})=\sqrt{(\dot{u}|G\cdot{u})}$
+        の両辺を$u^l$で微分すると，
+        \begin{align*}
+            \pp{\F}{u^l}(u,\dot{u})&=\frac{1}{2}\paren{\sum_{i,j\in[n]}g_{ij}(u)\dot{u}^i\dot{u}^j}^{-1/2}\sum_{j,k\in[n]}\pp{g_{jk}}{u^l}\dot{u}^j\dot{u}^k\\
+            &=\frac{1}{2\F(u,\dot{u})}\sum_{j,k\in[n]}\pp{g_{jk}}{u^k}\dot{u}^j\dot{u}^k=\frac{1}{2\F}\pp{g_{jk}}{u^k}\dot{u}^j\dot{u}^k.
+        \end{align*}
+        となることを得た．これを第一種Christoffelの記号を用いて簡略化すると同時に，弧長が定めるパラメータ$s$への変換を考えると，
+        \begin{align*}
+            \pp{\F}{u^l}(u,\dot{u})&=[kl,j]\dd{u^j}{s}\dd{u^k}{s}\dd{s}{t}
+        \end{align*}
+        続いて，$\dd{s}{t}=\F$に注意して，
+        \begin{align*}
+            \pp{\F}{\dot{u}^l}(u,\dot{u})&=\frac{1}{\F}g_{il}\dot{u}^i=g_{il}\dd{u^i}{s}.
+        \end{align*}
+        で，続いて，
+        \begin{align*}
+            \dd{}{t}\paren{\pp{\F}{\dot{u}^l}}&=\paren{g_{ij}\dd{^2u^i}{s^2}+([jk,l]+[lk,j])\dd{u^j}{s}\dd{u^k}{s}}\dd{s}{t}.
+        \end{align*}
+        \item[Eulerの方程式の書き換え] 以上の計算を踏まえて，
+        \begin{align*}
+            \pp{\F}{u^l}-\dd{}{t}\paren{\pp{\F}{\dot{u}^l}}&=-\paren{g_{il}\dd{^2u^i}{s^2}+[jk,l]\dd{u^j}{s}\dd{u^k}{s}}\dd{s}{t}\\
+            &=-g_{il}\paren{\dd{^2u^i}{s^2}+\Gamma^i_{jk}\dd{u^j}{s}\dd{u^k}{s}}\dd{s}{t}
+        \end{align*}
+        とかける．いま，$\det\abs{g_{il}}\ne0$かつ$\dd{s}{t}=\F\ne0$であるから，これは
+        \[\dd{^2u^i}{s^2}+\Gamma^i_{jk}\dd{u^j}{s}\dd{u^k}{s}=0\]
+        に同値．
+    \end{description}
+\end{Proof}
+\begin{remarks}
+    接空間上のものを測地流，余接空間上のものを余測地流という．
+\end{remarks}
+
+\begin{corollary}
+    Riemann多様体$M$の各点から各方向に1本，そしてただ1本の測地線が存在する．
+\end{corollary}
+\begin{Proof}
+    Eulerの微分方程式のHamilton系としての特徴付けと，常微分方程式の解の存在と一意性定理より．
+\end{Proof}
+
+\begin{example}
+    $S^2$の測地線は全て大円である．
+\end{example}
+
+\subsection{エネルギー汎関数による議論}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    
+\end{tcolorbox}
+
+\begin{observation}
+    長さ汎関数
+    \[\L(\gamma)=\int^b_a\norm{v(t)}dt.\]
+    はパラメータの取替(=Gauge変換)について不変である．
+    一方で，
+    \[\E(\gamma):=\int^b_a\frac{1}{2}\norm{v(t)}dt.\]
+    を考えると，Gauge対称性はない．
+    一般に，Gauge対称性を持つ場に対して，エネルギー汎関数$\E$を構成し，
+    $d\E|_{\gamma}=0\Rightarrow d\L|_\gamma=0$という理論を立てることは
+    有用な手法である．
+\end{observation}
+
+\begin{proposition}
+    \[\E(\gamma)\ge\frac{1}{2(b-a)}\L(\gamma)^2.\]
+    等号成立は，$v$が定数，すなわち弧長が定めるパラメータの定数倍であるとき．
+    これを\textbf{affineパラメータ}という．
+\end{proposition}
+\begin{Proof}
+    被積分関数
+    \[\norm{v(t)}=\sqrt{g_{ij}(\gamma(t))\dd{\gamma^i(t)}{t}\dd{\gamma^j(t)}{t}}\]
+    を有限な測度空間$[a,b]$上の確率変数$V$と見ると，平均値は
+    \[\o{V}=\frac{1}{b-a}\int^b_a\norm{v(t)}dt=\frac{1}{b-a}\L(\gamma)\]
+    である．分散は非負であることから，
+    \begin{align*}
+        0&\le\int^b_a(v(t)-\o{V})dt\\
+        &=2\E(\gamma)-2\o{V}\L(\gamma)+(b-a)\o{V}^2\\
+        &=2\E(\gamma)-\frac{\L(\gamma)^2}{b-a}.
+    \end{align*}
+\end{Proof}
+
+\begin{proposition}
+    任意の微分が消えない曲線$\gamma:[a,b]\to M$に対して，パラメータの変換$f:[c,d]\to[a,b]$であって，
+    $\gamma\circ f$がaffineパラメータになるようなものが存在する．
+\end{proposition}
+\begin{Proof}
+    $c:=0,d:=L(\gamma)$とし，
+    $\varphi:[a,b]\to[c,d]$を
+    \[\varphi(t):=\int^{t}_a\norm{\gamma'(t)}dt\]
+    と定めると，$\varphi'(t)=\norm{\gamma'(t)}\;(t\in[a,b])$が成り立つ．
+    $\gamma$は正則としたから$\varphi'>0$
+    より狭義単調増加であり，
+    特に可微分同相である．よって，可微分な逆$\varphi^{-1}$を持つから，これについて$\wgamma:=\gamma(\psi)$とすれば良い．
+    実際，
+    \[\wgamma'(s)=\gamma'(\psi(s))\psi'(s)=\frac{\gamma'(\psi(s))}{\norm{\gamma'(\psi(s))}}\qquad(s\in[c,d]).\]
+    より，これは弧長が定めるパラメータである．
+\end{Proof}
+
+\begin{theorem}[測地線であるためのエネルギー汎関数による必要条件]
+    affineパラメータを持つ曲線の全体を$\A$とする．
+    $\gamma\in\A$について，
+    次は同値：
+    \begin{enumerate}
+        \item $d\E|_{\gamma}=0$．
+        \item $d\L|_{\gamma}=0$．
+    \end{enumerate}
+\end{theorem}
+\begin{remarks}
+    Gauge orbitは$\L$の等高線をなし，affineパラメータを持つ曲線の族$\A$は全ての等高線に交わる．
+    すなわち，$\L$を考えるにあたって，曲線のクラスは$\A$に注目すれば十分である．
+\end{remarks}
+
+\begin{remarks}
+    実際，Lorentz計量に関するRiemann幾何学では，長さは一般相対論の固有時としての解釈を持ち，
+    測地線の問題がそのまま自由落下問題として解釈される．
+\end{remarks}
+
+\section{共変微分と曲率テンソル}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    可微分多様体$M$上の関数$f\in C^\infty(M)$の偏微分$f_{x_i}$は，$M$上の大域的な共変ベクトル場$\grad f$の自然枠に関する成分である．
+    同様のことが一般のテンソル場についていえる訳ではないが，$M$がRiemann多様体である場合は成り立つ．
+\end{tcolorbox}
+
+\subsection{動機とベクトル場の共変微分}
+
+\begin{proposition}
+    $X\in\X(M)$，$(U,\varphi),(\o{U},\o{\varphi})$を近傍座標とする．それぞれの自然枠と双対基底を$\{e_i\},\{\theta^i\},\{\o{e}_a\},\{\o{\theta}^a\}$とする．
+    \begin{enumerate}
+        \item 自然枠の変換関係：
+        \[e_i=\pp{\o{u}^a}{u^i}\o{e}_a,\quad\theta^i=\pp{u^i}{\o{u}^a}\o{\theta}^a,\qquad\In U\cap\o{U}.\]
+        \item $X$のそれぞれの近傍座標における成分を$X^i,\o{X}^a$とすると，
+        \[\o{X}^a=\pp{\o{u}^a}{u^i}X^i,\qquad\In U\cap\o{U}.\]
+    \end{enumerate}
+\end{proposition}
+\begin{remarks}
+    (2)の式を$\o{u}^c$で偏微分すると，
+    \[\pp{\o{X}^a}{\o{u}^c}=\pp{\o{u}^a}{u^i}\pp{u^k}{\o{u}^c}\pp{X^i}{u^k}+\pp{^2\o{u}^a}{u^j\partial u^k}\pp{u^k}{\o{u}^c}x^j.\]
+    よって，
+    \[\sum_{i}\pp{X^i}{u^k}e_k\]
+    なる量は$M$上の大域的なテンソル場を定めないことが解る．一方で，$M$がRiemann多様体であるとき，
+    \[\nabla_kX^i:=\pp{X^i}{u^k}+\Christ{i}{jk}X^j\]
+    と定めると，これは変換則
+    \[\nabla_c\o{X}^a=\pp{\o{u}^a}{u^i}\pp{u^k}{\o{u}^c}\nabla_kX^i.\]
+    を満たすから，$M$上に$(1,1)$-型のテンソル場を定める．
+\end{remarks}
+
+\begin{definition}[covariant derivative of vector field]
+    $M$をRiemann多様体とする．
+    ベクトル場$X\in\X(M)$が定める$(1,1)$-テンソル場$\nabla X$を\textbf{共変微分}という．
+    $M$上の関数族$\{\Gamma^i_{jk}\}$は共変微分$\nabla$の自然枠$\Brace{\pp{}{u^k}}$に関する\textbf{接続係数}という．
+\end{definition}
+\begin{remark}[勾配行列は共変微分の退化した例と見れる]
+    $M$をEuclid空間，$u^1,\cdots,u^n$を直交座標とすると，計量テンソル場の自然枠に関する成分は$\delta_{ij}$で，$\Gamma^i_{jk}$はすべて零であり，
+    共変微分は勾配行列$\pp{X^i}{u^k}$に等しい．
+\end{remark}
+
+\subsection{微分形式の共変微分}
+
+\begin{definition}[covariant derivative of differential form]
+    $w\in\Om^\infty(M)$を共変ベクトル場(1-形式)とする．
+    各座標近傍$(U,u^k)$上の自然枠$\Brace{\pp{}{u^k}}$の双対基底に関する成分$w_j$を用いて
+    \[\nabla_kw_j=w_{j,k}:=\pp{w_j}{u^k}-\Christ{i}{jk}w_i\]
+    は$M$上の$(0,2)$-型のテンソル場を定める．これを\textbf{共変微分}という．
+\end{definition}
+\begin{remarks}
+    \[w_{j,k}-w_{k,j}=\pp{w_j}{u^k}-\pp{w_k}{u^j}.\]
+    はRiemann計量に無関係なテンソル場であり，実際これが外微分である．
+\end{remarks}
+
+\subsection{テンソル場の共変微分}
+
+\begin{definition}
+    $F$を$(1,1)$-型のテンソル場とする．
+    各近傍座標の自然枠とその双対基底に対して
+    \[\nabla_kF^i_j=F^i_{j,k}:=\pp{F^i_j}{u^k}+\Christ{i}{hk}F^h_j-\Christ{h}{jk}F^i_h.\]
+    で定まる$(1,2)$-型のテンソル場を\textbf{共変微分}という．
+\end{definition}
+
+\begin{example}[Ricciの補題]
+    計量テンソルの場$g$は$(0,2)$-型であるが，その共変微分は$g_{jk,l}=0$を満たす．
+\end{example}
+
+\subsection{曲率テンソル}
+
+\begin{observation}
+    $X\in\X^r(M)$について，$\nabla X$は$(1,1)$-テンソル場，$\nabla\nabla X$は$(1,2)$-テンソル場であり，
+    \[\nabla_l\nabla_kX^i=X^i_{,kl}=\pp{X^i_{,k}}{u^l}+\Christ{i}{hl}X^h_{,k}-\Christ{h}{kl}X^i_{,h}.\]
+    $X$の可微分性から$X^i_{u^ku^l}=X^i_{u^lu^k}$であるから，
+    \[X^i_{,kl}-X^i_{,lk}=R^i_{jkl}X^j,\qquad R^i_{jkl}:=\pp{\Gamma^i_{jk}}{u^l}-\pp{\Gamma^i_{jl}}{u^k}+\Gamma^i_{hl}\Gamma^h_{jk}-\Gamma^i_{hk}\Gamma^h_{jl}.\]
+    このとき左辺は$(1,2)$-テンソル場を定めており，
+    $R^i_{jkl}$は$(1,3)$-テンソル場を定めている．
+\end{observation}
+
+\begin{definition}
+    近傍座標の自然枠とその双対基底に関する成分
+    \[R^i_{jkl}:=\pp{\Gamma^i_{jk}}{u^l}-\pp{\Gamma^i_{jl}}{u^k}+\Gamma^i_{hl}\Gamma^h_{jk}-\Gamma^i_{hk}\Gamma^h_{jl}.\]
+    によって定まる$(1,3)$-テンソルを\textbf{曲率テンソル}という．
+\end{definition}
+
+\begin{proposition}
+    曲率テンソルについて，
+    $R_{ijkl}:=g_{ih}R^h_{ljk}$とおくと，次が成り立つ：
+    \begin{enumerate}
+        \item $R_{ijkl}=-R_{ijlk}$．
+        \item $R_{ijkl}+R_{iklj}+R_{iljk}=0$．
+        \item $R_{ijkl}=-R_{jikl}$．
+        \item $R_{ijkl}=R_{klij}$．
+    \end{enumerate}
+\end{proposition}
+
+\subsection{Gauss曲率}
+
+\begin{proposition}
+    $M$を2次元Riemann多様体，$(U,\varphi),(\o{U},\o{\varphi})$を局所座標とする．
+    \begin{enumerate}
+        \item $R$の成分のうち非零であるものは，$\pm R_{1212}$に限る．
+        \item 自然枠$\{\o{e}^1,\o{e}^2\}$に関する計量テンソルの成分を$\o{g}_{ab}\;(a,b=1,2)$とすると，
+        \[\o{g}_{11}\o{g}_{22}-\o{g}_{12}^2=(g_{11}g_{22}-g_{12}^2)\paren{\pp{(u^1,u^2)}{(\o{u}^1,\o{u}^2)}}^2.\]
+        \item 自然枠$\{\o{e}^1,\o{e}^2\}$に関する計量テンソル
+    \end{enumerate}
+\end{proposition}
+
+\begin{definition}[Gauss curvature]
+    そこで，
+    \[K:=-\frac{R_{1212}}{g_{11}g_{22}-g_{12}^2}.\]
+    で定まる関数$K:M\to\R$を\textbf{Gauss曲率}という．
+\end{definition}
+
+\subsection{径数曲面のGauss曲率と平均曲率}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    2つの基本テンソル=2次形式$g,h$を得た．$g$は正定値であるから，$g$に関する$h$の固有値，固有ベクトルの考察をすれば，曲面の$P$の近傍の性質について局所座標系の選び方に依らない不変量が得られるだろう．
+\end{tcolorbox}
+
+\begin{proposition}
+    $g,h$の自然枠$(e_1,e_2)$に関する成分をそれぞれ$g_{ij},h_{ij}\;(i,j=1,2)$とする．
+    このとき，
+    \begin{enumerate}
+        \item 固有方程式は
+        \[\det\abs{h_{ij}-\rho g_{ij}}=0.\]
+        すなわち
+        \[\Delta\cdot\rho^2-\Delta\cdot g^{ij}h_{ij}\rho+\det\abs{h_{ij}}=0,\qquad\Delta:=\det\abs{g_{ij}}.\]
+        となる．
+        \item 固有値を$k_1,k_2$とすると，
+        \[k_1+k_2=g^{ij}h_{ij}=:2H,\quad k_1k_2=\frac{\det\abs{h_{ij}}}{\det\abs{g_{ij}}}=:K.\]
+    \end{enumerate}
+\end{proposition}
+
+\begin{definition}
+    径数曲面$M$について，
+    \begin{enumerate}
+        \item $K$を\textbf{Gauss曲率}といい，$M$が可符号であるかに依らずに$M$上の大域的な可微分関数を定める．
+        \item $H$を\textbf{平均曲率}といい，$n(P)$の選び方に依存する．$M$が可符号であるとき，$M$上の大域的な可微分関数を定める．
+        \item $H=0$という性質は単位法ベクトル場の選び方に依らない性質であり，これを満たす曲面$S=(M,f,\R^3)$を\textbf{極小曲面}という．
+    \end{enumerate}
+\end{definition}
+
+\begin{example}
+    Mobuisの和では，単位法ベクトル場$n$は局所的に定義できるのみである．
+\end{example}
+
+\begin{theorem}[Gaussの驚異定理]
+    $S=(M,f,\R^3)$を$C^3$-曲面，$(U,\varphi)$を$M$の近傍座標とする．$M$上への誘導計量$g$，$U$上の第2基本テンソル場$h$より定まるGauss曲率$K(P)$
+    \[K=k_1k_2=\frac{\det\abs{h_{ij}}}{\det\abs{g_{ij}}}\]
+    は，Riemann多様体$(M,g)$のGauss曲率
+    \[K=-\frac{R_{1212}}{g_{11}g_{22}-g_{12}^2}.\]
+    の$U$への制限と一致する．
+\end{theorem}
+
+\subsection{法曲率}
+
+\begin{proposition}\mbox{}
+    \begin{enumerate}
+        \item 固有値$k_1$に対応する固有ベクトル$X_1$は
+        \[(h_{ij}-k_1g_{ij})X^j_1=0,\qquad i=1,2.\]
+        を満たす．固有値$k_2$に対応する固有ベクトル$X_2$は
+        \[(h_{ij}-k_2g_{ij})X_2^j=0,\qquad i=1,2.\]
+        を満たす．
+        \item 点$P\in M$で$k_1\ne k_2$ならば，2つの固有ベクトルは直交する．
+    \end{enumerate}
+\end{proposition}
+\begin{Proof}\mbox{}
+    \begin{description}
+        \item[(2)] 2式から
+        \[(k_1-k_2)g_{ij}X^i_1X^j_2=0.\]
+    \end{description}
+\end{Proof}
+
+\begin{definition}\mbox{}
+    \begin{enumerate}
+        \item 各点$P\in M$の接ベクトル$X\in T_P(M)$について，
+        \[k:=\frac{h(X,X)}{g(X,X)}\]
+        を$X$と$n$を含む平面に対応する\textbf{法曲率}という．
+        $k_1,k_2$はこの最大値と最小値である．
+        \item 固有ベクトル$X_1,X_2$の方向を\textbf{曲率方向}といい，接ベクトルが常にその始点での曲率方向を向いている曲線を\textbf{曲率線}という．
+        \item $X\in T_P(M)$が$h(X,X)=0$を満たすとき，\textbf{主接線方向}という．$K(P)>0$のときは存在しない．
+        $K(P)=0$かつ$\rank(h_{ij})=1$のときは$-1$倍を区別しなければ1つに定まり，$\rank(h_{ij})=0$のときは全ての$T_P(M)$の元が主接線方向である．
+        \item 曲線$\lambda:I\to M$の接ベクトルが常に主接線方向を向いているとき，\textbf{主接線曲線}という．
+    \end{enumerate}
+\end{definition}
+
+\subsection{第二基本テンソルと単位法ベクトル場の関係}
+
+\begin{proposition}\mbox{}
+    \begin{enumerate}
+        \item Gaussの方程式：$R^i_{jkl}=h_{jk}h_l^i-h_{jl}h^i_k$．
+        \item Codazziの方程式：$h_{jk,l}=h_{jl,k}$．
+    \end{enumerate}
+\end{proposition}
+
+\section{第二基本テンソル}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    $f(U)$上に単位法ベクトル場$n$が存在するが，このとき$U$上に$(0,2)$-テンソル場$h$を定めている．
+\end{tcolorbox}
+
+\subsection{Gauss枠}
+
+\begin{observation}
+    $M$を径数曲面，$f:M\to\R^3$をその$C^3$-級はめこみとすると，計量の引き戻し$g:=f^*g_0$が存在する．
+    $M$上に座標近傍$(U,\varphi)$を取る．
+    \begin{enumerate}
+        \item 自然枠$\{e_1,e_2\}$に関する$g$の成分は$B_i=f_*e_i\;(i=1,2)$として，
+        \[g_{ij}=g(e_1,e_2)=(B_i|B_j)\]
+        で与えられる．
+        \item 各点$P\in U$に対応する点$f(P)$で$f_*(T_P(M))$に垂直な$\R^3$の単位ベクトルを$n(P)$とすると，次を満たす：
+        \[(B_i|n)=0,\quad(n|n)=1.\]
+        さらに$\det\abs{B_1\;B_2\;n}>0$を課せば$n(P)$は一意に定まり，
+        \[n=\frac{B_1\times B_2}{\sqrt{g_{11}g_{22}-g_{12}^2}}.\]
+        と表せ，$n$は$U$上の可微分ベクトル場をなす．
+    \end{enumerate}
+\end{observation}
+
+\begin{definition}[Gaussian frame]
+    各点$f(P)$において$\{B_1,B_2,n\}$は$\R^3$の基底をなす．これを，近傍座標$(U,\varphi)$の点$P$に対する\textbf{Gauss枠}という．
+\end{definition}
+
+\subsection{Gaussの誘導方程式}
+
+\begin{remarks}
+    曲面$S=(M,f,\R^3)$の直観的イメージは$f(M)$である．
+    $f_*(T_P(M))$とは，$f(U)$の$f(P)$における接平面である．
+    $f_*(T_P(M))$が$P$に依存してどう動くかを調べるには，$\pp{B_j}{u^k}\;(j,k=1,2)$を調べればよい．
+\end{remarks}
+
+\begin{proposition}
+    \[\pp{B_j}{u^k}=\Gamma_{jk}^iB_i+h_{jk}n.\]
+    を満たす関数の組$\Gamma^i_{jk},h_{jk}$が存在する．
+    これについて，
+    \begin{enumerate}
+        \item $\Gamma_{jk|i}:=\Gamma_{jk}^hg_{ih}$
+        とおくと，
+        \[\Gamma_{ik|j}+\Gamma_{jk|i}=\pp{g_{ij}}{u^k}.\]
+        \item $\Gamma_{jk|i}=[jk,i]$である．
+        \item $\Gamma^{i}_{jk}=\Christ{i}{jk}$．
+        \item $B_{j,k}:=\pp{B_j}{u^k}-\Christ{i}{jk}B_i$とおくと，
+        \[B_{j,k}=h_{jk}n.\]
+    \end{enumerate}
+    最後の式を，曲面$S=(M,f)$の$U$での\textbf{Gaussの誘導方程式}という．
+\end{proposition}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item $g_{ij}=(B_i|B_j)$の両辺を微分して
+        \[\paren{\pp{B_i}{u^k}\middle|B_j}+\paren{B_i\middle|\pp{B_j}{u^k}}=\pp{g_{ij}}{u^k}.\]
+        に代入すると，
+        \[\Gamma^h_{ik}g_{hj}+\Gamma_{jk}^hg_{ij}=\pp{g_{ij}}{u^k}.\]
+        を得る．
+        \item $\pp{B_j}{u^k}$は$j,k$について対称，したがって$\Gamma_{jk}^i,h_{jk}$も$jk$について対称，
+        よって$\Gamma_{jk|i}$も$j,k$について対称であるから，
+        \[\Gamma_{ji|k}+\Gamma_{ki|j}=\pp{g_{jk}}{u^i},\quad\Gamma_{kj|i}+\Gamma_{ij|k}=\pp{g_{ki}}{u^j}.\]
+        から
+        \[\Gamma_{jk|i}=\frac{1}{2}\paren{\pp{g_{ij}}{u^k}+\pp{g_{ki}}{u^j}-\pp{g_{jk}}{u^i}}=[jk,i].\]
+        \item (2)から
+        \[\Gamma_{jk}^i=g^{ih}\Gamma_{jk|h}=g^{ih}[jk,h]=\Christ{i}{jk}.\]
+        \item 最初の式に代入すると得る．
+    \end{enumerate}
+\end{Proof}
+
+\subsection{第2基本テンソル}
+
+\begin{proposition}
+    径数曲面$M$は可符号であるとし，向きを1つ定める．単位法ベクトル
+    \[n=\frac{B_1\times B_2}{\sqrt{g_{11}g_{22}-g_{12}^2}}.\]
+    の場は$M$上の$(0,2)$-テンソル場を定める．これを\textbf{第二基本テンソル}という．
+\end{proposition}
+
+\subsection{Weingartenの誘導方程式}
+
+\begin{proposition}\mbox{}
+    \begin{enumerate}
+        \item \[\pp{n}{u^j}=k^h_jB_h.\]
+        を満たす関数の組$k_j^h\;(h,j=1,2)$が存在する．
+        \item $h^i_j:=h_{jm}g^{im}$と定義すると，
+        \[\pp{n}{u^j}=-h^i_jB_i.\]
+        を満たす．
+        \item 径数曲面$M$は可符号であるとする．このとき，$h^i_j$は$M$上の$(1,1)$-テンソル場を定める．
+    \end{enumerate}
+\end{proposition}
+
+\section{曲面論の基本定理}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    Gaussの方程式，Codazziの方程式は$h$と$n$の間の関係として得たが，逆が示せる．
+    すなわち，可符号な$\R^3$曲面の性質は，第1,2基本テンソル場$g,h$に全て含まれている．
+\end{tcolorbox}
+
+\begin{definition}\mbox{}
+    \begin{enumerate}
+        \item $T_P(M)$の部分空間$V_P(M)$の束$\D$を\textbf{分布}という．
+        \item 分布が\textbf{可微分}であるとは，各点$P\in M$の近傍$U$において，
+        \[X_1(Q),\cdots,X_m(Q)\]
+        が各$Q\in U$について$V_Q$を張るように選べることをいう．
+        \item 可微分な分布$\D$が\textbf{対合的}であるとは，各点$P\in M$の近傍$U$における生成系$X_1,\cdots,X_m$の全てのPoisson括弧が
+        \[[X_i,X_j]\in\D,\qquad i,j\in[m].\]
+        を満たすことをいう．
+        \item 可微分分布$\D$の\textbf{積分多様体}とは，埋め込み$i:N\mono M$であって，$T_P(N)\subset V_P$が各$P\in M$について成り立つことをいう．
+    \end{enumerate}
+\end{definition}
+
+\begin{lemma}[Frobenius]
+    $M^n$を可微分多様体，$\D^m$をその上の可微分で対合的な分布とする．
+    このとき，各$P\in M$を通る$\D$の$m$次元の最大積分多様体$N(P)$が存在する．
+\end{lemma}
+
+\begin{theorem}
+    単連結領域$D\subset\R^2$上の$C^2$-級正定値な2次対称テンソル場$g_{jk}(u^1,u^2)$と，$C^1$-級2次対称テンソル場$h_{jk}$とが，GaussとCodazziの方程式を満たすとする．
+    このとき，はめ込み$D\mono\R^3$が与える曲面で，所与のテンソル場$g,h$をそれぞれ第1,第2基本テンソルとするものが存在する．
+\end{theorem}
+
+\begin{theorem}
+    単連結領域$D\subset\R^2$上の2つのはめ込み$f_1:D\to\R^3,f_2:D\to\R^3$が定義する2つの可微分曲面$S_1,S_2$が，同じテンソル場をそれぞれ第1,第2基本テンソルとして持つとする．
+    このとき，$\R^3$の運動$T$であって$f_2=T\circ f_1$を満たすものが存在する．
+\end{theorem}
+
+\section{Riemann多様体の完備性}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    ある点でGauss曲率が$0$というのは小域的性質，特性類が$0$というのは大域的性質である．
+    Hopf, Rinow (1931)によると，Riemann幾何学の大域的研究に最も適しているのは，より狭い完備なRiemann多様体のクラスであることを示した．
+\end{tcolorbox}
+
+\begin{definition}
+    Riemann多様体について，
+    \begin{enumerate}
+        \item 距離空間として完備であるとき，これを\textbf{完備}という．
+        \item $M$のある1点からある方向に引いた測地線が，測地線という性質を保たせて可能な限り延長したとき，これを\textbf{半測地線}という．
+        \item 曲線$f:\R_+\to M$が，任意の発散点列を発散点列に写すとき，\textbf{発散曲線}と呼ぼう．
+    \end{enumerate}
+\end{definition}
+
+\begin{theorem}
+    $M$をRiemann多様体とする．次は同値：
+    \begin{enumerate}
+        \item 任意の半測地線は無限大の長さを持つ．
+        \item 任意の発散曲線は無限大の長さを持つ．
+        \item 距離空間として完備である．
+    \end{enumerate}
+    この条件が満たされるとき，任意の2点は最短測地線で結ばれる．
+\end{theorem}
+
+\section{完備で平旦なRiemann多様体}
+
+\subsection{被覆多様体}
+
+\begin{definition}
+    $M,M'$を位相多様体，$\pi:M'\epi M$を連続全射，$\pi^{-1}(P)=:\{P'_{\lambda}\}_{\lambda\in\N}$は可算とする．
+    これらが次の2条件を満たす近傍の組$U,U'_\lambda$を持つとき，$(M',\pi)$を$M$の\textbf{被覆}，$M'$を$M$の\textbf{被覆多様体}，$\abs{\pi^{-1}(P)}$を葉数という．
+    \begin{enumerate}
+        \item $U$は$P$の，$U'_\lambda$は$P'_\lambda$の近傍で，$\pi|_{U'_\lambda}:U'_\lambda\to U$は位相同型であり，任意の$\lambda,\mu\in\N$について
+        \[U'_\lambda\cap U'_\mu=\emptyset.\]
+        \item 任意の$Q\in U$に対して，$\pi^{-1}(Q)=\{Q'_\lambda\}_{\lambda\in\N}$．すなわち，$\pi^{-1}(Q)$に属すが，どの葉$U'_\lambda$にも属さない点は存在しない．
+    \end{enumerate}
+\end{definition}
+
+\subsection{平坦性}
+
+\begin{definition}
+    $(M,g)$を2次元Riemann多様体とする．$P\in M$で\textbf{平旦}であるとは，$K(P)=0$を満たすことをいう．
+\end{definition}
+\begin{example}
+    $\R^3$の直円柱，直円錐から頂点を除いた曲面は，ともに平旦であるが，後者は母線である測地線が直線錐の頂点のところで切れてしまうので完備ではない．
+\end{example}
+
+\subsection{完備平旦Riemann多様体の分類}
+
+\begin{theorem}
+    $\R^2$は，完備平旦な2次元Riemann多様体の普遍被覆多様体である．
+\end{theorem}
+
+\begin{theorem}
+    連結で完備で平旦な2次元Riemann多様体$M$は，Euclid平面$\R^2$の合同変換群$G$の不動点を持たぬ元よりなる真性不連続な部分群$\Gamma$による商空間$\R^2\setminus\Gamma$と等長であり，逆もまた正しい．
+\end{theorem}
+
+\section{極小曲面}
+
+\begin{problem}[停留曲面は極小曲面に同値]
+    $R\subset\R^2$を曲面，$C$を$\partial R$の$\R^3$へのある滑らかな埋め込み像とし，
+    \[\Om(C):=\Brace{\Sigma\subset\R^3\mid\exists_{\varphi\in C^3(R,\R^3)}\;\varphi(R)=\Sigma,\partial\Sigma=C}.\]
+    とし，$S(\Sigma)$をその面積として変分問題$(\Om(C),S)$を定める．このとき，次は同値：
+    \begin{enumerate}
+        \item $\Sigma$は停留曲面である．
+        \item $\Sigma$の平均曲率$H$は消える：$H\equiv0$．
+    \end{enumerate}
+\end{problem}
+\begin{Proof}
+    任意の曲面片$\Sigma\in\Om(C)$とそのパラメータ付け$\p(R)=\Sigma$に対して，任意に$f(\partial R)=\{0\}$を満たす可微分関数$f:R\to\R$を取る．
+    $\e$を曲面片$\Sigma$上の単位法ベクトル場とし，関数$f$が定める
+    曲面$\Sigma$のパラメータ付け$\p$の摂動
+    \[\o{\p}:=\p+\ep f\e\qquad(\ep\in\R)\]
+    を考え，$\Sigma_\ep:=\o{\p}(R)$で表す．
+    補題より，$A(\ep):=S(\Sigma_\ep)$とすると，
+    \[A'(0)=-\iint_RfH\,dA=-\iint_RfH\sqrt{g_{11}g_{22}-g_{12}^2}dudv\]
+    が成り立つ．
+    \begin{description}
+        \item[(1)$\Rightarrow$(2)] $\Sigma$が停留曲面であるとき，任意の$f$と$\ep$について$A'(0)=0$が成り立つから，これは変分法の基本補題より，$H\equiv0$を意味する．
+        実際，もし$H$がある正の測度を持つ集合上で非零ならば，$\varphi$を$R$内部で正で$\partial R$上で$0$となる関数として，$f$として$\varphi H$を取ると，
+        \[A'(0)=-\iint_R\varphi H^2\,dA<0\]
+        より矛盾．
+        \item[(2)$\Rightarrow$(1)] $H\equiv0$ならば，任意の$f,\ep$について$A'(0)=0$であるから，$\Sigma$は停留曲面である．
+    \end{description}
+\end{Proof}
+
+\begin{lemma}[曲面の変分に対する面積変化 \cite{佐々木}4.1節]
+    任意の曲面片$\Sigma\in\Om(C)$とそのパラメータ付け$\p(R)=\Sigma$に対して，任意に$f(\partial R)=\{0\}$を満たす可微分関数$f:R\to\R$を取る．
+    $\e$を曲面片$\Sigma$上の単位法ベクトル場とし，関数$f$が定める
+    曲面$\Sigma$のパラメータ付け$\p$の摂動
+    \[\o{\p}:=\p+\ep f\e\qquad(\ep\in\R)\]
+    を考え，$\Sigma_\ep:=\o{\p}(R)$で表す．
+    いま，$A(\ep):=S(\Sigma_\ep)$とすると，
+    \[A'(0)=-\iint_RfH\,dA=-\iint_RfH\sqrt{g_{11}g_{22}-g_{12}^2}dudv\]
+    が成り立つ．
+\end{lemma}
+\begin{Proof}
+    \begin{align*}
+        \o{g}_{ij}&:=\o{\p}_i\cdot\o{\p}_j=(\p_i+\ep f_i\e+\ep f\e_i)\cdot(\p_j+\ep f_j\e+\ep f\e_j)\\
+        &=g_{ij}+\ep f\e_i\cdot\p_j+\ep^2f_if_j\e\cdot\e+\ep f\e_i\cdot\p_j+(\ep f)^2\e_i\cdot\e_j\\
+        &=g_{ij}-2\ep f\cdot h_{ij}+\ep^2(f_if_j+f^2k_{ij}).
+    \end{align*}
+    最後の等式は，Weingartenの式から$\e_i\cdot\p_j=-h_{ij}$であることによる．
+    ただし，$\p_i,f_i,\e_i$は$i=1$のとき
+    $u$での偏微分，$i=2$のとき$v$での偏微分とし，
+    \[h_{ij}:=\e_i\cdot\p_j,\quad k_{ij}:=\e_i\cdot\e_j.\]
+    を第二基本形式の係数と第三基本形式の係数とした．
+    以上より，面積要素の変換は，Einsteinの記法に注意して，
+    \begin{align*}
+        \o{g}_{11}\o{g}_{22}-\o{g}_{12}^2&=\Paren{g_{11}-2\ep fh_{11}+\ep^2(f_1^2+f^2k_{11})}\Paren{g_{22}+2\ep fh_{22}+\ep^2(f^2_2+f^2k_{22})}\\
+        &\qquad\qquad-\Paren{g_{12}+2\ep f_{12}+\ep^2(f_1f_2+f^2k_{12})}^2\\
+        &=(g_{11}g_{22}-g_{12}^2)\Biggl(1 - 2\ep f\underbrace{\frac{h_{11}g_{22}+g_{11}h_{22}-2h_{12}g_{12}}{\abs{g_{ij}}}}_{=g^{ij}h_{ij}=2H} +4 \ep^2f^2\underbrace{\frac{\abs{h_{ij}}}{\abs{g_{ij}}}}_{=K}\\
+        &\qquad\qquad+\ep^2f^2\underbrace{\frac{g_{11}k_{22}+g_{22}k_{11}-g_{12}k_{12}-g_{21}k_{21}}{\abs{g_{ij}}}}_{=g^{ij}k_{ij}}+\ep^2\frac{f_1^2g_{22}+f_2^fg_{11}-2f_1f_2g_{12}}{\abs{g_{ij}}}\Biggr)+o(\ep^3)\\
+        &=(g_{11}g_{22}-g_{12}^2)\Paren{1-4\ep fH+\ep^2f^2(4K+g^{ij}k_{ij}+g^{ij}f_if_j)}+o(\ep^3)
+    \end{align*}
+    と変換される．
+    ただし，$\abs{g_{ij}}$は行列$\mtrx{g_{11}}{g_{12}}{g_{21}}{g_{22}}$の行列式，$K$はGauss曲率とした．
+    この計算から，ある$c>0$が存在して，任意の十分に小さい$\ep>0$について，
+    \[\Abs{\sqrt{\o{g}_{11}\o{g}_{22}-\o{g}_{12}^2}-\sqrt{g_{11}g_{22}-g_{12}^2}(1-2\ep fH)}<c\ep^2\]
+    すなわち，
+    \[\Abs{A(\ep)-A(0)+2\ep\iint_RfHdA}<c'\ep^2\]
+    \[\Abs{\frac{A(\ep)-A(0)}{\ep}+2\iint_RfH\,dA}<c'\ep.\]
+    以上より，
+    \[A'(0)=-2\iint_RfH^,dA\]
+    を得た．
+\end{Proof}
+
+\chapter{Riemann幾何学}
+
+\section{指数写像と正規座標系}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    Riemann多様体の構造のみを用いて，その上に局所座標系を定義できる．
+    これを\textbf{正規座標系}，一般相対論では\textbf{局所慣性系}という．
+\end{tcolorbox}
+
+\subsection{正規座標系}
+
+\begin{problem}[正規座標系の定義\footnote{\cite{Petersen16-RiemannianGeometry}命題5.5.1}]
+    $n$次元
+    Riemann多様体$M^n$の任意の点$x\in M$について，
+    $(x,v)\in T(M)$を$t=0$に通る測地線$c_v:(-\ep,\ep)\to M$は唯一つに定まる．
+    このとき，接空間内のある開集合$U\osub T_x(M)$が存在して，
+    \[\xymatrix@R-2pc{
+        \exp_x:U\subset T_x(M)\ar[r]&M\\
+        \rotatebox[origin=c]{90}{$\in$}&\rotatebox[origin=c]{90}{$\in$}\\
+        v\ar@{|->}[r]&c_v(1)
+    }\]
+    は$x\in M$の近傍座標を与える．これを\textbf{Riemann指数写像}という．
+\end{problem}
+\begin{Proof}\mbox{}
+    \begin{description}
+        \item[方針] \[O_x:=\Brace{v\in T_x(M)\mid v\text{を初速度とする測地線}c_v\text{は}[0,1]\text{の近傍で定まる}}.\]
+        とすると，$0\in O_x$である．写像$\exp_x:O_x\to M$の微分の$0\in T_x(M)$での値
+        \[d\exp_x:T_0(T_x(M))\to T_x(M)\]
+        が非特異であることを示せば良い．
+        すると，逆関数定理から$\exp_x$は局所微分同相であるから，$0\in T_x(M)$のある開近傍$U\osub T_x(M)$が存在して$\exp_x|_U$は可微分同相であり，
+        $x\in\exp_x(U)$である．
+        \item[準備] 任意の$\al>0$と，$c_{\al v}$の定義されている任意の$t\in\R_+$について，$c_{\al v}(t)=c_v(\al t)$が成り立つ．
+        実際，$t\mapsto c_v(\al t)$は$t=0$にて$(x,\al v)$を通る$T(M)$上の曲線であるが，常微分方程式系の初期値問題の解の一意性から，これは$c_{\al v}$に等しい．
+        \item[証明] よって，$O_x$の定め方から，任意の$v\in O_x$について$c_v(t)=c_{tv}(1)\;(t\in[0,1])$が成り立つ．さらに，
+        \[I_0(v):=\dd{}{t}(tv)\biggr|_{t=0},\qquad(v\in T_p(M)).\]
+        により定まる線型写像$T_p(M)\to T_0(T_p(M))$は同型である．これは$T_p(M)$の局所自明性から明らか．
+        いま，
+        \begin{align*}
+            d\exp_x(I_0(v))&=\dd{}{t}\exp_x(tv)\biggr|_{t_0}&\text{写像の微分の定義}\\
+            &=\dd{}{t}c_{tv}(1)\biggr|_{t_0}&\text{指数写像の定義}\\
+            &=\dd{}{t}c_v(t)\biggr|_{t=0}=v.
+        \end{align*}
+        より，$d\exp_x\circ I_0=\id_{T_p(M)}$を得る．特に，$T_0(T_p(M))$の原点にて非特異である．
+    \end{description}
+\end{Proof}
+
+\begin{definition}
+    こうして定まる座標系を\textbf{標準座標}\cite{志賀浩二-多様体}p.186という．
+\end{definition}
+
+\subsection{Lie群}
+
+\begin{problem}
+    Lie群$G\subset\GL_n(\C)$の測地線は$\gamma(t)=\gamma(0)e^{tX}$の形で与えられる．
+\end{problem}
+\begin{remarks}
+    ここから，一般に常微分方程式の解曲線に沿った可微分同相群を指数写像と呼ぶ．
+\end{remarks}
+
+\begin{example}
+    \[\exp:M_n(\C)\to\GL_n(\C)\]
+    は指数写像であり，全射である．
+\end{example}
+
+\begin{problem}
+    $\SL_2(\R)$のLie環は
+    \[\r{sl}_2(\R):=\Brace{A\in M_2(\R)\mid\tr(A)=0}.\]
+    なる3次元空間になる．一般に
+    $\det(e^A)=e^{\tr(A)}$が成り立つことに注意．このとき，
+    指数写像$\exp:\r{sl}_2(\R)\to\SL_2(\R)$は全射でない．
+\end{problem}
+\begin{Proof}
+    $g\in\SL_2(\R)$であって，$\tr g<-2$を満たすものを取れば，
+    これは$e^X\;(X\in \SL_2(\R))$の形では表せない．例えば
+    \[g=\mtrx{-2}{0}{0}{-\frac{1}{2}}\]
+    など．
+    
+    任意に$X\in \SL_2(\R)$を取り，その固有値を$\al,\beta$とすると，
+    \[\tr(e^X)=e^\al+e^\beta\]
+    が成り立つことはすぐに分かる．
+    $\al,\beta$がいずれも実数である場合は，これは$0$より大きい．
+    $\al,\beta$が実数でない場合は，ある$a,b\in\R$を用いて$\{\al,\beta\}=\{a\pm bi\}$と表せるが，
+    $\tr(X)=0$より$a=0$が必要．
+    よって，
+    \[\tr(e^X)=e^{bi}+e^{-bi}=2\cos b\ge-2.\]
+    いずれの場合も，$\tr(g)=\tr(e^X)<-2$としたことに矛盾．
+\end{Proof}
+\begin{remarks}[de Sitter space]
+    これは空間$\SL_2(\R)\simeq\SO_2(\R)\times\R^2$は連結であるにも拘わらず，原点からの自由落下によって決して到達出来ない点があるとも解釈出来る．
+\end{remarks}
+
+\begin{example}
+    $\SO_3(\R)$はコンパクトである．
+    $\r{so}_3(\R)\to\SO_3(\R)$は全射になり，ベクトル束でもある．
+    サランラップで巻いているような対応になっている．
+\end{example}
+
+\section{Minkowski幾何学}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    Minkowski空間$\R^{1,3}$は擬Riemann多様体である．
+    この空間でのLegendre変換$v_i\leftrightarrow p_i$は非線形になる．
+\end{tcolorbox}
+
+\begin{discussion}
+    Euclid空間$\R^2$にて，回転行列は内積(とノルム)を保つ：$R_\theta X_1\cdot R_\theta X_2=X_1\cdot X_2$．
+    すなわちベクトルの長さと角度という$A^2$の構造も保つ．
+    こうして，座標は相対的であるが，ノルムは絶対的である．
+    座標に依らない，時空多様体の上に定まっていると見做せる量のみを用いて物理法則を記述すべし，というのが(Galilei)相対性原理である．
+    一方Minkowski空間のLorentz変換は，任意の$t^2-z^2=k$という等高線を保つ．
+\end{discussion}
+
+\subsection{時空とその変換}
+
+\begin{definition}[spacetime, history / worldline, event, lightcone, Lorentz matrix (1895)]\mbox{}
+    \begin{enumerate}
+        \item 拡張相空間$\R\times M$を\textbf{時空}と呼び，そこにリフトされた物体の運動を\textbf{歴史}または\textbf{世界線}という．時空の1点は\textbf{事象}という．
+        \item 光の世界線$\Brace{(t,z)\in\R\times M\mid t^2-z^2=0}$を\textbf{光錐}という．
+        \item 次の行列を\textbf{Lorentz行列}という：
+        \[L_v=\frac{1}{\sqrt{1-v^2}}\mtrx{1}{v}{v}{1}.\]
+        %\[L^{-1}_v=\mtrx{\frac{1}{\sqrt{1-v^2}}}{\frac{-v}{\sqrt{1-v^2}}}{\frac{-v}{\sqrt{1-v^2}}}{\frac{1}{\sqrt{1-v^2}}}=L_{-v}.\]
+    \end{enumerate}
+\end{definition}
+
+\begin{theorem}
+    光錐を変えない線型変換$B_v$はLorentz行列倍写像である必要がある：$B_v=L_v$．
+\end{theorem}
+\begin{remarks}
+    一般には
+    \[B_v=\mtrx{a}{b}{b}{a},\qquad a^2-b^2=1,a>0.\]
+    と表示出来る．
+\end{remarks}
+
+\subsection{Lorentz行列の表示}
+
+\begin{proposition}\mbox{}\label{prop-parametrization-of-hyperbola}
+    \begin{enumerate}
+        \item 標準双曲線の任意の点$(x,y)\in\Brace{(x,y)\in\R^2\mid x^2-y^2=1,x>0}$はある$u\in\R$を用いて
+        \[\vctr{x}{y}=\vctr{\cosh u}{\sinh u}.\]
+        と表せる．
+        \item 次の座標変換$v\to u$より，Lorentz行列は次の表示を持つ：
+        \[H_u:=\mtrx{\cosh u}{\sinh u}{\sinh u}{\cosh u}=B_v,\qquad u:=\tanh^{-1}v.\]
+    \end{enumerate}
+\end{proposition}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item $u:=\sinh^{-1}y$とすればよい．
+        \item $v:=\tanh u$とすると，
+        \[\sinh u=\frac{v}{\sqrt{1-v^2}},\quad\cosh u=\frac{1}{\sqrt{1-v^2}}.\]
+    \end{enumerate}
+\end{Proof}
+
+\begin{remarks}[Lorentz行列の2つの意味]
+    $L_v=B_v=H_{\tanh^{-1}v}$すなわち
+    $H_u=B_{\tanh u}$について，
+    \begin{enumerate}
+        \item 物理：$B_v$の表示を速度$v$の\textbf{boost}という．
+        \item 幾何：$H_u$の表示を角度$u$の\textbf{双曲回転}(hyperbolic rotation)という．
+    \end{enumerate}
+\end{remarks}
+
+\subsection{Minkowskiノルム}
+
+\begin{theorem}[Lorentz変換は双曲線族を保つ]
+    $\tau^2-\zeta^2=k$かつある$u\in\R$について
+    \[\vctr{t}{z}=H_u\vctr{\tau}{\zeta}=\mtrx{\cosh u}{\sinh u}{\sinh u}{\cosh u}\vctr{\tau}{\zeta}.\]
+    ならば，$t^2-z^2=k$でもある．
+\end{theorem}
+\begin{Proof}
+    計算による．
+\end{Proof}
+\begin{remarks}
+    双曲線族$t^2-z^2=k$の漸近線はいずれも光錐である．
+    これは回転変換がGalilei空間の円$t^2+z^2=k$を保つことに当たる．
+    ここから，Minkowski空間の自然な距離の消息を得る．
+    これがMinkowski (1907)．
+\end{remarks}
+
+\begin{definition}[timelike, spacelike, lightlike]
+    事象$E\in\R\times\R^3$について，
+    \[\norm{E}:=\sqrt{\abs{Q(E)}},\quad Q(E):=t^2-x^2-y^2-z^2.\]
+    と定める．
+    \begin{enumerate}
+        \item $Q(E)>0$のとき，$E$は\textbf{時間的}であるという．
+        これは光錐の内部に含まれるための条件と同値．
+        \item $Q(E)<0$のとき，$E$は\textbf{空間的}という．
+        \item $Q(E)=0$のとき，$E$は\textbf{光的}という．
+        \item 非空間的な事象についてはさらに，$t>0$のとき$E$は\textbf{未来方向}，$t<0$のとき$E$は\textbf{過去方向}という．
+        \item 2つの事象$E_1,E_2$の乖離が時間的とは，$E_2-E_1$が時間的であるという．
+    \end{enumerate}
+\end{definition}
+\begin{remarks}[Minkowskiノルムと固有時]
+    Minkowskiノルムは時間の次元を持つ．これを\textbf{固有時}という．
+    単位円の代わりに「単位双曲線」を持ち，
+    標準双曲線$\Brace{t^2-z^2=\pm1}$上の点は全て長さ$1$である．
+\end{remarks}
+
+\begin{theorem}
+    任意のLorentz変換$H_u\;(u\in\R)$について，
+    \begin{enumerate}
+        \item 事象$E\in\R\times\R^3$の時間的・空間的である属性と，未来方向・過去方向である属性とを保つ．
+        \item 未来方向の時間的事象の全体を$\F$とする．$H_u|_\F:\F\to\F$は全単射である．
+        \item $\F$は和と正スカラー倍について閉じている．
+    \end{enumerate}
+\end{theorem}
+
+\subsection{双曲角}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    群
+    $\{H_u\}_{u\in\R}$は$\F$上に回転を定める．
+\end{tcolorbox}
+
+\begin{definition}[future ray, hyperbolic angle]\mbox{}
+    \begin{enumerate}
+        \item 未来射線とは，未来方向の時間的事象からなる原点を出発する半直線をいう．
+        \item 未来射線$\rho_1,\rho_2$の\textbf{双曲角}$\angle\rho_1\rho_2$とは，それぞれの標準双曲線$t^2-z^2=1$との交点を$(\cosh\al_1,\sinh\al_1),(\cosh\al_2,\sinh\al_2)$として，
+        \[\angle\rho_1\rho_2:=\al_2-\al_1.\]
+        と定める．定理\ref{prop-parametrization-of-hyperbola}よりwell-definedである．
+    \end{enumerate}
+\end{definition}
+
+\begin{theorem}
+    $\rho$を未来射線とする．このとき，任意の$u\in\R$について，
+    \[\angle\rho H_u(\rho)=u.\]
+\end{theorem}
+\begin{Proof}
+    $\rho$の双曲偏角を$\al\in\R$とする．このとき，
+    \[H_u\vctr{\cosh\al}{\sinh\al}=\vctr{\cosh(u+\al)}{\sinh(u+\al)}.\]
+    であるため．
+\end{Proof}
+
+\begin{corollary}
+    $\rho_1,\rho_2$を未来射線とする．
+    \begin{enumerate}
+        \item $\angle\rho_1\rho_2=\beta$と$\rho_2=H_\beta(\rho_1)$は同値．
+        \item $\angle\rho_1\rho_2=\angle H(\rho_1)H(\rho_2)$．
+    \end{enumerate}
+\end{corollary}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item $H_u$の$\F$上の全単射性より．
+        \item $\beta:=\angle\rho_1\rho_2$とすると，$H_u(\rho_2)=H_\beta(H_u(\rho_1))$より．
+    \end{enumerate}
+\end{Proof}
+
+\subsection{Minkowski内積}
+
+\begin{definition}[Minkowski inner product]\mbox{}
+    \begin{enumerate}
+        \item Minkowski空間の第一基本テンソルは
+        \[J_{p,q}:=\diag(\underbrace{1,\cdots,1}_p,\underbrace{-1,\cdots,-1}_{q}).\]
+        \item $\R\times\R^3$のMinkowski内積を$\rE_1\cdot\rE_2:=\rE_1^\top J_{1,3}\rE_2$と定める．
+    \end{enumerate}
+\end{definition}
+
+\begin{theorem}\mbox{}
+    \begin{enumerate}
+        \item ノルムとの関係：
+        \[\rE\cdot\rE=\begin{cases}
+            -\norm{\rE}^2&\rE\text{は空間的},\\
+            \norm{\rE}^2&\otherwise.
+        \end{cases}\]
+        \item 双曲回転はMinkowskiノルムを保つ．
+    \end{enumerate}
+\end{theorem}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item $E\cdot E=t^2-x^2-y^2-z^2=Q(E)$である．いま，
+        \[\norm{E}:=\sqrt{\abs{Q(E)}}\quad\Leftrightarrow\quad\norm{E}=\begin{cases}
+            \sqrt{Q(E)}&Q(E)\ge0,\\
+            \sqrt{-Q(E)}&Q(E)<0\;\text{すなわち，Eは空間的}
+        \end{cases}\]
+        と定めたことから従う．
+        \item 次のように計算できる：
+        \begin{align*}
+            H_u(E_1)\cdot H_u(E_2)&=(H_uE_1)^\top J_{1,1}H_uE=E_1^\top H_u^\top J_{1,1}H_uE_2\\
+            &=E_1^\top\mtrx{\cosh u}{\sinh u}{\sinh u}{\cosh u}\mtrx{1}{0}{0}{-1}\mtrx{\cosh u}{\sinh u}{\sinh u}{\cosh u}E_2\\
+            &=E_1^\top\mtrx{1}{0}{0}{-1}E_2=E_1\cdot E_2.
+        \end{align*}
+    \end{enumerate}
+\end{Proof}
+
+\begin{theorem}[Minkowski内積の表示 \cite{Callahan00-Spacetime}Th'm 2.8]
+    任意の未来方向の時間的事象$\r{E_1,E_2}$について，
+    その双曲角を$\angle\r{E_1E_2}=:\beta$とすると，
+    \[\rE_1\cdot\rE_2=\norm{\rE_1}\norm{\rE_2}\cosh\beta.\]
+\end{theorem}
+\begin{Proof}
+    Minkowski空間を$\R^2$として考える．一般の場合も，空間変数$z$を多次元に解釈し，
+    $z^2=\sum_{i\in[n]}z_i^2$と読み替えることで
+    同様に示せる．
+    \begin{enumerate}[{Step}1]
+        \item 単位化を$\rU_i:=\frac{\rE_i}{\norm{\rE_i}}\;(i=1,2)$とすると，これは標準双曲線上の点である．
+        Lorentz変換は双曲角を保つから，
+        ある$u\in\R$が存在して，
+        \[H_u(\rU_1)=\vctr{1}{0},\quad H_u(\rU_2)=\vctr{\cosh\beta}{\sinh\beta}.\]
+        と表せる．これについて，
+        \[H_u(\rU_1)\cdot H_u(\rU_2)=(1\;0)\mtrx{1}{0}{0}{-1}\vctr{\cosh\beta}{\sinh\beta}=\cosh\beta\]
+        がわかり，Lorentz変換はMinkowski内積を保つから，$\rU_1\cdot \rU_2=H_u(\rU_1)\cdot H_u(\rU_2)=\cosh\beta$である．
+        \item 元のベクトルについても，Minkowski内積の双線型性から，
+        \[\rE_1\cdot\rE_2=(\norm{\rE_1}\rU_1)\cdot(\norm{\rE_2}\rU_2)=\norm{\rE_1\rE_2}(\rU_1\cdot \rU_2)=\norm{\rE_1\rE_2}\cosh\beta.\]
+    \end{enumerate}
+\end{Proof}
+
+\begin{corollary}[逆向きの三角不等式]
+    任意の未来方向の時間的事象$\r{E_1,E_2}$について，$\angle\r{E_1E_2}=:\beta$とする．
+    \begin{enumerate}
+        \item $\norm{\r{E_1+E_2}}^2=\norm{\r{E_1}}^2+\norm{\r{E_2}}^2+2\norm{\r{E_1}}\norm{\r{E_2}}$．
+        \item 逆向きの三角不等式：$\norm{\r{E_1+E_2}}^2\ge\norm{\r{E_1}}+\norm{\r{E_2}}$．
+    \end{enumerate}
+\end{corollary}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item $\rE_1+\rE_2$は再び未来方向かつ時間的事象である．実際，
+        \[\rE_1=\vctr{t_1}{z_1},\quad\rE_2=\vctr{t_2}{z_2}\]
+        とすると，$-(t_1+t_2)<z_1+z_2<t_1+t_2$であることが解る．
+        これについて，
+        \begin{align*}
+            \norm{\rE_1+\rE_2}^2&=(\rE_1+\rE_2)\cdot(\rE_1+\rE_2)=\norm{\rE_1}^2+\norm{\rE_2}^2+2\rE_1\cdot\rE_2\\
+            &=\norm{\rE_1}^2+\norm{\rE_2}^2+2\norm{\rE_1}\norm{\rE_2}\cosh\beta.
+        \end{align*}
+        \item $\cosh\beta=\frac{e^\beta+e^{-\beta}}{2}\ge\sqrt{e^\beta\cdot e^{-\beta}}=1$より，(1)から
+        \begin{align*}
+            \norm{\rE_1+\rE_2}&=\sqrt{\norm{\rE_1}^2+\norm{\rE_2}^2+2\norm{\rE_1}\norm{\rE_2}\cosh\beta}\\
+            &\ge\sqrt{\norm{\rE_1}^2+\norm{\rE_2}^2+2\norm{\rE_1}\norm{\rE_2}}=\norm{\rE_1}+\norm{\rE_2}.
+        \end{align*}
+    \end{enumerate}
+\end{Proof}
+
+\chapter{微分形式の幾何学}
+
+\begin{quotation}
+    \begin{description}
+        \item[微分形式] Leibnizの頃から懐胎していた微分形式の概念はPoincareの『天体力学の新方法』の第三巻「積分不変式論」が契機になって，Cartan (1899)が定義した．
+        これが位相不変量としてde Rhamの理論に結節する．
+        \item[Symplectic幾何] するとHamiltonianは相空間(=余接束)上の幾何学ということになり，これを抽象化した対象としてsymplectic多様体を得る．
+        \item[接触幾何] 奇数次元における対応概念は接触幾何と呼ばれ，2つを総合するのがPoisson多様体である．
+        \item[Lagrange部分多様体] 偶数次元の多様体の中で，実多様体のように振る舞う$n$次元部分多様体をLagrange部分多様体といい，中心的な役割を占める．
+        \item[歴史] Gromov (1985)の擬正則曲線(pseudo-holomogrphic curve)の理論，それに続くFloerの理論がシンプレクティック幾何学を拓いた．   
+    \end{description}
+\end{quotation}
+
+\section{交代形式}
+
+\subsection{交代形式の定義と特徴付け}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white, breakable]
+    非退化交代形式の場合は，対称形式の場合
+    と違って，$K$の標数に依らずに斜交座標が存在する．
+    また，非退化交代形式が存在する空間$V$の次元は必ず偶数である．
+\end{tcolorbox}
+
+\begin{definition}[alternating form, skew-symmetric form, symplectic basis, symplectic form, symplectic vector space]
+    $b:V\times V\to K\;(V\in\Vect)$を双線型形式とする．
+    \begin{enumerate}
+        \item $b$が\textbf{交代形式}であるとは，次が成り立つことをいう：$\forall_{ x\in V}\;b(x,x)=0$．
+        \item $b$が\textbf{歪対称形式}であるとは，次が成り立つことをいう：$\forall_{x,y\in V}\;b(x,y)=-b(y,x)$．
+        \item $b$を非退化な交代線型形式とする．$V$の基底$x_1,\cdots,x_{2n}$に関する$b$の行列表示が
+        \[\begin{pmatrix}0&1_n\\-1_n&0\end{pmatrix}\in M_{2n}(K)\]
+        である時，$x_1,\cdots,x_{2n}$を\textbf{斜交基底}または\textbf{標準(調素)基底}という．
+    \end{enumerate}
+\end{definition}
+
+\begin{lemma}
+    双線型形式$b\in(V\otimes V)^*$に対して，一般に(1)$\Rightarrow$(2)であり，$K$の標数が2でないならば，(2)$\Rightarrow$(1)でもある．
+    \begin{enumerate}
+        \item $b$は交代形式である．
+        \item $b$は歪対称形式である．
+    \end{enumerate}
+\end{lemma}
+\begin{Proof}\mbox{}
+    \begin{description}
+        \item[(1)$\Rightarrow$(2)] 任意の$x,y\in V$に対して，
+        \begin{align*}
+            b(x+y,x+y)&=b(x,x+y)+b(y,x+y)\\
+            &=b(x,x)+b(x,y)+b(y,x)+b(y,y)\\
+            &=b(x,y)+b(y,x)=0.
+        \end{align*}
+        \item[(2)$\Rightarrow$(1)] 任意の$x\in V$に対して，$b(x,x)=-b(x,x)\Leftrightarrow 2b(x,x)=0$であるが，$K$の標数が2でないならば，これは$b(x,x)=0$に同値．
+    \end{description}
+\end{Proof}
+
+\begin{lemma}
+    双線型形式$b\in(V\otimes V)^*$に対して，次は同値：
+    \begin{enumerate}
+        \item $b$は交代形式である．
+        \item $b$の表現行列は交代行列になる．
+    \end{enumerate}
+\end{lemma}
+
+\subsection{symplectic基底}
+
+\begin{theorem}[symplectic基底の存在]\label{thm-existence-of-symplectic-basis}
+    $V\in\FVS_K$とし，$\om:V\times V\to K$を歪対称形式とする．
+    \begin{enumerate}
+        \item ある$V$の基底$u_1,\cdots,u_k,e_1,\cdots,e_m,f_1,\cdots,f_m$であって，次を満たすようなものが存在する：
+        \begin{enumerate}
+            \item $\forall_{x\in V}\;\om(u_i,v)=0$．
+            \item $\om(e_i,e_j)=\om(f_i,f_j)=0$．
+            \item $\om(e_i,f_j)=\delta_{ij}$．
+        \end{enumerate}
+        すなわち，この基底についての$\om$の行列表示は，
+        \[\om(u,v)=u\begin{pmatrix}
+            O_k&0&0\\
+            0&0&I_m\\
+            0&-I_m&0
+        \end{pmatrix}\]
+        となる．
+        このとき，$m$を$\om$の\textbf{階数}という．
+        \item 特に，$\om$が非退化ならば，$V$の次元は偶数であり，$V$の斜交基底が存在する．
+    \end{enumerate}
+\end{theorem}
+\begin{Proof}
+    交代形式版のGram-Schmidt算譜による．
+\end{Proof}
+
+\subsection{交代形式の例}
+
+\begin{example}[symplectic形式の本質的にすべての例]
+    実は，うまく斜交基底を取ることで，全てのsymplectic形式は次のようなもののみだと考えることができる．
+    \begin{enumerate}
+        \item $\R^{2n}$上の行列$J_n:=\mtrx{O_n}{I_n}{-I_n}{O_n}$について，
+        \[\om_0(x,y):=(Jx|y)={}^t\!x{}^t\!Jy=-{}^t\!xJy={}^t\!yJx\]
+        は調素形式である．
+        \item 一般の$W\in\FVS_\R$に対して$V:=W\oplus W^*$とし，標準的なペアリング$\brac{-,-}:W\otimes W^*\to\bF$に対して
+        \[\om(u,u'):=\brac{p,q'}-\brac{p',q}=p(q')-p'(q),\qquad u=q'+p',u'=q'+p'\in V=W\oplus W^*.\]
+        は調素形式である．このとき，$\om$は上の表現行列$J_n$を持つ．
+    \end{enumerate}
+\end{example}
+
+\begin{example}[複素構造の定めるsymplectic形式]
+    $V\in\FVS_\R$とする．次の例も，全てのsymplectic線型空間を尽くしているとみれる．
+    \begin{enumerate}
+        \item この上の自己同型$J\in\Aut(V)$で$J^2=-\id$を満たすものを\textbf{複素構造}という．
+        すると，作用$\C\times V\to V$が，この$J\in\Aut(V)$を$i\in\C$に対応づけることで$(a+bi)x:=ax+bJx$によって定まる．
+        実際，$J^2=-\id$としたから，$\forall_{z,w\in\C}\;(zw)x=z(wx)$は明らかである．
+        よって，スカラー倍をこのように定めることで$V$は同時に$n$次元複素線型空間でもある．
+        これを$V_\C$と表して区別する．
+        \item $x=Jx\Rightarrow x=0$より，$V_\C\simeq_\R V\oplus V$とみなせる．
+        こうして2倍の次元の実線型空間とみたものを$V_\C'$としよう．
+        同様に$V_\C\simeq V\overset{\R}{\otimes}\C$ともみなせる．
+        \item このとき，$V_\C$にHermite内積$(-|-)$が定まっているならば，$(V_\C',\Im(-|-))$は調素線型空間である．
+    \end{enumerate}
+\end{example}
+\begin{Proof}
+    元の空間$V\in\FVS_\R$の基底を$e_1,\cdots,e_n$とすると，任意の$z\in V_\C'$の元は$z=(x_i+iy_i)e_i$と表せる．
+    このとき，内積は任意の$z,z'\in V_\C'$に対して，
+    \[(z|z')=\sum_{i=1}^n(x_ix_i'+y_iy_i')+i\sum_{i=1}^n(x_i'y_i-x_iy_i')\]
+    と表せる．したがって，$\Re(z|z')$は対称，$\Im(z|z')$は歪対称な形式である．
+\end{Proof}
+
+\begin{proposition}[symplectic空間が定める複素内積空間]
+    任意の$2n$次元調素線型空間$(V,\om)$に対して，ある複素構造$J^2=-\id_V$が存在して，
+    $g(x,y):=\om(x,Jy)$について，$(V,J)$は$n$次元複素内積空間となる．
+\end{proposition}
+\begin{Proof}\mbox{}
+    \begin{description}
+        \item[複素線型空間として$V$を見る] $V$の標準基底$\al_1,\cdots,\al_n,\beta_1,\cdots,\beta_n$を取ると，これについて$\om$の行列表示は
+        $J_n:=\mtrx{O_n}{I_n}{-I_n}{O_n}$となる．
+        これを用いて，複素構造$J:V\to V$を$-J_n$倍線型写像とする．
+        このとき，$J(\al_i)=-J_n\al_i=\beta_i$に注意すれば，作用
+        \[\xymatrix@R-2pc{
+            \rho:\C\times V\ar[r]&V\\
+            \rotatebox[origin=c]{90}{$\in$}&\rotatebox[origin=c]{90}{$\in$}\\
+            (\xi+i\eta,x)\ar@{|->}[r]&\xi x+\eta J(x)
+        }\]
+        の$\al_i$-軌道は$\brac{\al_i,\beta_i}$という形の部分空間となる．
+        よって，$V$は上記の$\rho$をスカラー倍とすることで，
+        $\al_1,\cdots,\al_n$を基底とする$n$次元複素線型空間とみなせる．
+        これを$V'$と表す．
+        \item[$g$が内積となる] 
+        \[g(x,y):=\om(x,Jy)\]
+        と定めると，$g$は$V'$の内積である．
+        実際，その$\al_1,\cdots,\al_n$に関する行列表示は
+        \[g(\al_i,\al_j)=\om(\al_i,J\al_j)=\om(\al_i,\beta_j)=\delta_{ij}.\]
+        より，$g$は確かに半正定値な対称形式である．
+        半線形性は，第一引数に関する線形性は明らかで，第二引数についても，任意の$x,y\in V$と$z\in\C$について，
+        \[g(x,(\xi+i\eta)y)=\om(x,J(\xi+i\eta)y)=\om(x,J\xi y)+\om(x,J^2\eta y)=\om\]
+        非退化性も明らかである．
+    \end{description}
+\end{Proof}
+
+\section{Symplectic線型空間}
+
+\begin{definition}[symplectic vector space]
+    $V$を線型空間とする．
+    \begin{enumerate}
+        \item 非退化な歪対称形式$\om\in\Lambda^2V$であって，
+        $\om^{\wedge n}$が極大階数を持つものを\textbf{symplectic形式}という．
+        \item 組$(V,\om)$を\textbf{symplectic線形空間}という．
+    \end{enumerate}
+\end{definition}
+
+\subsection{Symplectic直交}
+
+\begin{definition}
+    $(V^{2n},\om)$を調素部分空間，$W\subset V$を線型部分空間とする．
+    $W$の\textbf{直交}とは，
+    \[W^\perp:=\Brace{x\in V\mid\forall_{y\in W}\;\om(x,y)=0}\]
+    をいう．
+\end{definition}
+
+\begin{proposition}
+    $(V^{2n},\om)$を調素部分空間，$W,W_1,W_2\subset V$を線型部分空間とする．
+    \begin{enumerate}
+        \item $\dim W+\dim W^\perp=\dim V$．
+        \item $(W^\perp)^\perp=W$．
+        \item $W_1\subset W_2\Leftrightarrow W_1^\perp\supset W_2^\perp$．
+        \item $(W_1+W_2)^\perp=W_1^\perp\cap W_2^\perp$．
+        \item $(W_1\cap W_2)^\perp=W_1^\perp+W_2^\perp$．
+    \end{enumerate}
+\end{proposition}
+\begin{Proof}
+    $V$のsymplectic基底を$e_1,\cdots,e_{2n}$とすると，これについて$\om$は行列$J_n:=\mtrx{O_n}{I_n}{-I_n}{O_n}$によって表現される．
+    \begin{enumerate}
+        \item $\om^\#:V\to V^*$の誘導する線型写像
+        \[\xymatrix@R-2pc{
+            f:V\ar[r]&W^*\\
+            \rotatebox[origin=c]{90}{$\in$}&\rotatebox[origin=c]{90}{$\in$}\\
+            x\ar@{|->}[r]&\om(x,-)|_{W}
+        }\]
+        を考えると，$\Ker f=W^\perp$である．
+        またこの線型写像は全射であることは，$\om^\#$と全射$i^*:V^*\epi W^*$の合成であることによる．
+        よって，$\dim V=\dim W+\dim W^\perp$．
+        \item \begin{description}
+            \item[$W\subset(W^\perp)^\perp$] $(W^\perp)^\perp$の元であるための必要十分条件は，$\forall_{y\in W^\perp}\;\om(x,y)=0$を満たすことであるが，
+            そもそも任意の$y\in W^\perp$は任意の$x\in W$に対して$\om(x,y)=0$を満たすから，任意の$x\in W$は$(W^\perp)^\perp$の元である．
+            \item[$W=(W^\perp)^\perp$] 
+            (1)から
+            \[\dim W+\dim W^\perp=\dim V=\dim W^\perp+\dim (W^\perp)^\perp\]
+            より，$\dim W=\dim(W^\perp)^\perp$．よって特に等号が成り立つことがわかる．
+        \end{description}
+        \item 
+        \begin{description}
+            \item[$\Rightarrow$] $x\in W_2^\perp$を任意にとる．
+            すると$\forall_{y\in W_2}\;\om(y,x)=0$であるから，特に$x\in W^\perp_1$．
+            \item[$\Leftarrow$] $\Rightarrow$の結果と(2)から
+            \[W_1=(W_1^\perp)^\perp\subset(W_2^\perp)^\perp=W_2.\]
+        \end{description}
+    \end{enumerate}
+    \begin{description}
+        \item[(4),(5)] \mbox{}
+        \begin{enumerate}[{Step}1]
+            \item 任意の$x+y\in W_1^\perp+W_2^\perp$を取ると，
+            \[\forall_{z\in W_1\cap W_2}\;\om(x+y,z)=\om(x,z)+\om(y,z)=0.\]
+            であるから，$x+y\in(W_1\cap W_2)^\perp$．
+            これより$W_1^\perp+W_2^\perp\subset(W_1\cap W_2)^\perp$である．
+            両辺の直交を取ると$(W_1^\perp+W_2^\perp)^\perp\subset W_1\cap W_2$であるが，
+            $W_1,W_2$をその直交に取り直すことで$(W_1+W_2)^\perp\subset W_1^\perp\cap W_2^\perp$も成り立つ．
+            \item 任意の$x\in(W_1+W_2)^\perp$を取ると，
+            \[\forall_{y\in W_1}\;\forall_{z\in W_2}\;\om(x,y+z)=\om(x,y)+\om(x,z)=0.\]
+            が成り立つ．特に$y=0,z=0$の場合をそれぞれ考えると，$x\in W_1^\perp$かつ$x\in W_2^\perp$であることがわかるから，
+            $(W_1+W_2)^\perp\subset W_1^\perp\cap W_2^\perp$．
+            両辺の直交を取ると$(W^\perp_1\cap W^\perp_2)^\perp\subset W_1+W_2$であり，
+            $W_1,W_2$をその直交に取り直すことで$(W_1\cap W_2)^\perp\subset W_1^\perp+W_2^\perp$．
+        \end{enumerate}
+    \end{description}
+\end{Proof}
+
+\subsection{Symplectic同型}
+
+\begin{definition}[symplectic isomorphism]
+    2つの調素空間$(V,\om),(V',\om')$が\textbf{調素同型}であるとは，
+    次を満たす線型同型$\varphi:V\to V'$が存在することをいう：$\varphi^*\om'=\om$．
+\end{definition}
+\begin{remarks}
+    symplectic基底の存在定理\ref{thm-existence-of-symplectic-basis}より，任意の$2n$次元調素空間は，標準調素空間$(\R^{2n},\om_n)$に同型．
+\end{remarks}
+
+\subsection{部分空間}
+
+\begin{definition}[isotropic subspace, coisotropic subspace, Lagrangian subspace, symplectic subspace]
+    $(V,\om)$を調素部分空間，$W\subset V$を線型部分空間とする．
+    \begin{enumerate}
+        \item $W$が\textbf{等方部分空間}であるとは，$W\subset W^\perp$を満たすことをいう．これは$\om^\#|_W=0$に同値．
+        \item $W$が\textbf{余等方部分空間}であるとは，$W^\perp\subset W$を満たすことをいう．
+        \item $W$が\textbf{Lagrange部分空間}であるとは，$W^\perp=W$を満たすことをいう．
+        \item $W$が$W^\perp$と互いに素であるとき，\textbf{調素部分空間}であるという．これは$\om^\#|_W$が再び非退化であることに同値．
+        このとき，$V=W\oplus W^\perp$が成り立っている．
+    \end{enumerate}
+\end{definition}
+
+\begin{example}
+    $\R^{2n}$上の標準symplectic形式$\om_0$を考える．
+    標準symplectic座標を$(q,p)\in\R^{2n}$で表す．$r\in[n]$とする．
+    \begin{enumerate}
+        \item $q=(0_r,*)$により定まる部分空間は余等方である．また，全ての余次元1の部分空間は余等方である．
+        \item $q=0,p=(0_r,*)$により定まる部分空間は等方である．
+        \item $q=(*,0_{r_1}),p=(0_{r_2},*)$により定まる部分空間はLagrangeである．
+        \item $q=(*,0_{r_1}),p=(*,0_{r_1})$により定まる部分空間はsymplecticである．
+    \end{enumerate}
+\end{example}
+
+\begin{proposition}
+    $\dim V=2n$，$W\subset V$を線型部分空間とする．
+    \begin{enumerate}
+        \item $W$がisotropicならば，$\dim W\le n$．
+        \item $W$がcoisotropicならば，$\dim W\ge n$．
+    \end{enumerate}
+    特に，$W$がLagrangeならば，$\dim W=n$である．
+\end{proposition}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item $W$がisotropicとは，$W\subset W^\perp$ということである．このとき当然$\dim W\le\dim W^\perp$．
+        いま，等式$\dim W+\dim W^\perp=2n$より，$2\dim W\le\dim W+\dim W^\perp=2n$．
+        \item $W$がcoisotropicのとき，$W^\perp$はisotropicであるから，(1)より$\dim W^\perp\le n$．よって，$\dim W\ge n$．
+    \end{enumerate}
+\end{Proof}
+
+\begin{proposition}
+    部分空間$W\subset V$について，次は同値：
+    \begin{enumerate}
+        \item $W$はsymplectic．
+        \item $W\cap W^\top=0$．
+        \item $V=W\oplus W^\top$．
+    \end{enumerate}
+\end{proposition}
+
+\subsection{Lagrange部分空間}
+
+\begin{lemma}
+    任意の線型空間$V$に対して，$(V\oplus V^*,\om_0)$を
+    \[\om_0(u\oplus\al,v\oplus\beta):=\beta(u)-\al(v).\]
+    と定めると，これはsymplectic線型空間で，$V$の基底$x_1,\cdots,x_n$とその双対$f_1,\cdots,f_n$に対して，
+    $x_1\oplus0,\cdots,x_n\oplus0,0\oplus f_1,\cdots,0\oplus f_n$はsymplectic基底になる．
+\end{lemma}
+
+\begin{proposition}
+    $W\subset V$をLagrange部分空間とする．
+    \begin{enumerate}
+        \item 任意の$W$の基底$e_1,\cdots,e_n$は，ある$V$の基底への延長$e_1,\cdots,e_n,f_1,\cdots,f_n$を持つ．
+        \item $(W\oplus W^*,\om_0)$を
+        \[\om_0(u\oplus\al,v\oplus\beta):=\beta(u)-\al(v).\]
+        と定めると，$(V,\om)$とsymplectic同型である．
+    \end{enumerate}
+\end{proposition}
+
+\section{Symplectic多様体と余接束}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=]
+    余接束として得た多様体を抽象化すると，調素多様体を得る．
+\end{tcolorbox}
+
+\begin{definition}[symplectic form, symplectic manifold]
+    $M$を多様体，$\om\in\Om^2(M)$を2-形式とする．
+    $\om$が\textbf{symplectic形式}であるとは，次の2条件を満たすことをいう：
+    \begin{enumerate}
+        \item $\om$は閉形式である：$d\om=0$．
+        \item 各点$p\in M$において，$\om_p$は$T_p(M)$上のsymplectic形式である．
+    \end{enumerate}
+    $\om$がsymplectic形式ならば，$M$は偶数次元である．
+    組$(M,\om)$を\textbf{調素多様体}という．
+\end{definition}
+
+\begin{example}[標準symplectic多様体]
+    $\R^{2n}$上の2-形式
+    \[\om:=\sum_{i\in[n]}dx_i\wedge dy_i\]
+    はsymplectic形式である．$T_p(M)$の基底
+    \[\paren{\pp{}{x_1}}_p,\cdots,\paren{\pp{}{x_n}}_q,\paren{\pp{}{y_1}}_q,\cdots,\paren{\pp{}{y_n}}_q\]
+    はsymplectic基底である．
+\end{example}
+
+\begin{definition}[symplectic diffeomorphism]
+    2つの調素多様体$(M,\om),(M',\om')$が\textbf{調素同相}であるとは，
+    次を満たす可微分同相$\varphi:M\to M'$が存在することをいう：$\varphi^*\om'=\om$．
+\end{definition}
+
+\begin{theorem}[Darboux]
+    $(M^{2n},\om)$をsymplectic多様体とする．任意の点$p\in M$に対して，$\om=\sum_{i\in[n]}dx_i\wedge dy_i$と表せるような近傍座標$(U;x_1,\cdots,x_n,y_1,\cdots,y_n)$が存在する．
+    すなわち，$(\R^{2n},\om_0)$にsymplectic同相である．
+    これを\textbf{Darboux座標}という．
+\end{theorem}
+
+\section{Poisson代数}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    普通の意味での代数とLie代数の構造を併せ持ち，さらに微分の構造と共存するものをいう．
+
+\end{tcolorbox}
+
+\begin{definition}[Poisson Algebra]
+    体$K$上のPoisson代数$A$とは，可換な双線型写像$\cdot:A\otimes A\to A$を備えた体$K$上の加群であって，
+    \begin{enumerate}
+        \item 歪双線型写像$[-,-]:A\otimes A\to A$についてLie代数でもあり：$\forall_{a,b,c\in A}\;[a,[b,c]]+[c,[a,b]]+[b,[c,a]]=0$．
+        \item これは任意の$a\in A$について，$[a,-]:A\to A$が代数$(A,\cdot)$上の導分でもある：代数の準同型であり，Leibniz則を満たす：$\forall_{b,c\in A}\;[a,bc]=[a,b]c+b[a,c]$．
+    \end{enumerate}
+    実Poisson代数の圏Poissは，古典力学系のなす圏の反対圏である．
+\end{definition}
+
+\begin{definition}[Poisson manifolds]
+    \textbf{Poisson多様体}とは，実可微分多様体$M$であって，その上の関数$C^\infty(M)$がPoisson代数となるもののことをいう．
+    シンプレクティク多様体はPoisson多様体である．Poisson多様体は相空間の形式的な双対対象とみれる．
+\end{definition}
+
+\begin{example}
+    相空間のなす
+    Poisson多様体$M$の双対空間(余接空間)上の歪双線型写像$[-,-]$を$\{-,-\}$とも表し\textbf{Poisson括弧}という．
+    任意の$f\in C^\infty(M)$に対して，これの「微分」にあたるベクトル場$\Brace{f,-}\in\X(M)$が存在し，これを\textbf{Hamiltonベクトル場}という．
+\end{example}
+
+\section{外積}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white, breakable,
+    title=外積代数とその圏と，行列式という言葉]
+    外積代数とは，テンソル積にさらに条件を貸した部分代数である，この構成をまず商空間の言葉$p:V^{\otimes r}\to\Lambda^rV$で定義する．
+    この間の線型写像はHom集合$f^{\otimes r}:V^{\otimes r}\to W^{\otimes r}$を制限して得る交代的な重線型形式$\wedge^rf:\Lambda^rV\to\Lambda^rW$となる．
+    すると，テンソル積の構成も商空間の言葉で行ったから，その特殊化として，普遍交代$r$線型写像$p\circ\otimes^r:V^{\times r}\to\Lambda^rV$が全く同様に定まる．
+    これに沿って，$r$次外冪からの線型写像が，交代$r$重線型写像と1対1に対応する：$(p\circ\otimes^r)^*:\Hom_K(\Lambda^rV,W)\to\mathrm{Alt}_r(V^{\times r},W)$．
+    以上により，テンソル積から，完全に新しい対象とその間の射を定めてしまった．
+    このテンソル積$V^{\otimes r}$からの構成を，普遍構成の言葉で整備して終わりにしたい．
+    \begin{itemize}
+        \item 直和の外積代数$\Lambda^r(V\oplus W)$は，外積代数のテンソル積の直和$\bigoplus_{p=0}^r\Lambda^pV\otimes\Lambda^{r-p}W$と同型である．
+        \item 線型写像の空間の間に定まる$\Lambda^r:\Hom_K(V,W)\to\Hom_K(\Lambda^rV,\Lambda^rW)$は共変Hom関手で，単射・全射性を保存する．
+        \item 
+    \end{itemize}
+    以上の外積代数の構造「交代的な多重線型写像」のうち，規格化されたものとして特徴付けられるのは行列式である．
+    \textbf{複雑な代数ではないのだが，データ構造が非常に込み入っていて，手計算では見通しが悪い．そんな状況に一筋の光を差し込んでくれるのが行列式という言葉である}．
+\end{tcolorbox}
+
+\subsection{外積代数の定義}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white, breakable,
+    title=外積]
+    外積とは，クロス積の代数的法則を抽出して得られる形式的な代数的構成である．
+    この構成は完全に関手$\Lambda:\Vect_K\to\Alg_K$として定式化される．
+
+    ここでは，交代性$v\wedge v=0$を満たす代数を構成するのに，テンソル積と同様にして商空間の方法を用いることとする．
+\end{tcolorbox}
+
+\begin{notation}
+    $V\in\Vect_K$について，
+    \[V^{\otimes r}=V\otimes V\otimes\cdots\otimes V\;(r\in\N)\]
+    とする．
+\end{notation}
+
+\begin{definition}[exterior power, exterior / Grassmann algebra]
+    $V\in\Vect_K$とし，$r\in\N$とする．
+    \begin{enumerate}
+        \item $V^{\otimes r}$の部分空間
+        \[R_r:=\langle x_1\otimes\cdots\otimes x_i\otimes\cdots\otimes x_r\mid 1\le i<j\le r,x_i=x_j\rangle\]
+        による更なる商$V^{\otimes r}/R_r$を，$V$の\textbf{$r$次外冪}と呼び，$\Lambda^rV$で表す．
+        $x_1\otimes\cdots\otimes x_r\in V^{\otimes r}$の像を$x_1\wedge\cdots\wedge x_r\in\Lambda^rV$で表す．
+        \item ベクトル空間$V$の\textbf{外積代数}$\Lambda V$とは，直和$\bigoplus_{r\in\N}\Lambda^rV$をいう．
+    \end{enumerate}
+\end{definition}
+\begin{remarks}
+    外戚代数は，$V$上のfree graded-commutative algebraである．忘却関手$\Lambda V\to V$の値は，１次(degree)の元とみなされる．係数体の元が$0$次．
+\end{remarks}
+\begin{example}\mbox{}
+    \begin{enumerate}
+        \item $r=0$の時は，$\Lambda^0V=V^{\otimes 0}=K$．
+        \item $r=1$の時は，$\Lambda^1V=V^{\otimes 1}=V$．
+        \item $V=K$の時，$\Lambda^rK=0\;(r\ge 2)$．
+    \end{enumerate}
+\end{example}
+
+\subsection{外積演算}
+
+\begin{proposition}[外積]
+    $V\in\Vect_K$とし，$p+q=r$を自然数とする．自然な同型$V^{\otimes p}\otimes V^{\otimes q}\to V^{\otimes r}$に対応する双線型写像$V^{\otimes p}\times V^{\otimes q}\to V^{\otimes r}$は，双線型写像
+    \[\wedge:\Lambda^p V\times\Lambda^qV\to\Lambda^rV\]
+    を引き起こす．
+\end{proposition}
+\begin{Proof}
+    名前$\wedge$を付けたかったのが双線型写像の方であったというだけで，自然な同型$V^{\otimes p}\otimes V^{\otimes q}\to V^{\otimes r}$が
+    線型写像$\Lambda^p V\otimes\Lambda^qV\to\Lambda^rV$を引き起こすことを示せば良い．
+    次の図式を可換にする線型写像の存在を示せば良い．ただし，商写像を$p:V^{\otimes p}\to\Lambda^pV,q:V^{\otimes q}\to\Lambda^qV,r:V^{\otimes r}\to\Lambda^rV$とした．
+    \[\xymatrix{
+        V^{\otimes p}\otimes V^{\otimes q}\ar[r]^-{\cong}\ar[d]_-{p\otimes q}&V^{\otimes r}\ar[d]^-{r}\\
+        \Lambda^pV\otimes\Lambda^qV\ar@{.>}[r]&\Lambda^rV
+    }\]
+    いま，$\Lambda^pV\otimes\Lambda^qV=V^{\otimes p}\otimes V^{\otimes p}\to V^{\otimes r}$であり，$R_p\otimes V^{\otimes p}+V^{\otimes q}\otimes R_q\subset R_r$であるから，上の線型写像$\Lambda^p V\otimes\Lambda^qV\to\Lambda^rV$は一意的に存在する．
+\end{Proof}
+\begin{remarks}[外積代数の特徴づけ]
+    「圏論の言葉で言えば、外積代数は普遍構成によって与えられる、ベクトル空間の圏上の函手の典型である。」
+    外積代数$\Lambda V$の$\Lambda$とは生成関手で，$V$の通常のスカラー積と和に加えて，外積$\wedge$の３つの演算（双線型写像）で自由生成される代数系をいう．
+\end{remarks}
+
+\begin{definition}[exterior product / wedge product]
+    命題の双線型写像$\wedge:\Lambda^p V\times\Lambda^qV\to\Lambda^rV$による$(s,t)$の像を中置記法$s\wedge t$でかき，$s$と$t$の\textbf{外積}という．
+\end{definition}
+
+\subsection{外積代数の普遍性}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white, breakable,
+    title=外冪が定義する交代$r$重線型写像]
+    テンソル積の普遍性を繰り返し用いることより，
+    $r$重線型写像
+    \[\xymatrix@R-2pc{
+        V^{\times r}\ar[r]&V^{\otimes r}\\
+        (x_1,\cdots,x_r)\ar@{|->}[r]&x_1\otimes\cdots\otimes x_r
+    }\]
+    が引き起こす写像$\Hom_K(V^{\otimes r},W)\to\mathrm{Mulinear}_r(V^{\times r},W)$は可逆である．
+    交代$r$重線型写像とは，この部分可逆写像$\Hom(\Lambda^rV,W)\to\mathrm{Alt}_r(V^{\times r},W)$が定めるクラスである．
+    これはテンソル積の普遍性に含まれているもので，$p\circ\otimes^{\times r}$を普遍交代$r$重線型写像という．
+\end{tcolorbox}
+
+\begin{definition}[$r$-ple linear mapping, alternating]
+    $V\in\Vect_K,r\in\N$とする．
+    \begin{enumerate}
+        \item 写像$f:V^{\times r}=V\times V\times\cdots\times V\to W$が\textbf{$r$重線型写像}であるとは，次の２条件が成り立つことをいう．
+        \begin{enumerate}[(1)]
+            \item $\forall i\in[r],\;\forall x_1,\cdots,x_r,y_i\in V,\;f(x_1,\cdots,x_i+y_i,\cdots x_r)=f(x_1,\cdots,x_i,\cdots,x_r)+f(x_1,\cdots,y_i,\cdots,x_r)$．
+            \item $\forall i\in[r],\;\forall a\in K,\;\forall x_1,\cdots,x_r\in V,\;f(x_1,\cdots,ax_i,\cdots,x_r)=af(x_1,\cdots,x_i,\cdots,x_r)$．
+        \end{enumerate}
+        \item $r$多重線型写像$f:V^{\times r}\to W$が\textbf{交代}であるとは，次が成り立つことをいう：$\forall x_1,\cdots,x_r\in V,\; [\exists i,j\in[r]\;\;x_i=x_j\Rightarrow f(x_1,\cdots,x_r)=0]$．
+    \end{enumerate}
+\end{definition}
+\begin{example}[行列式が定める交代$n$重線型写像]\mbox{}\label{example-determinant-1}
+    \begin{enumerate}
+        \item $r=0$の時は，$V^{\times 0}=0=\{0\}$であり，任意の写像$\{0\}\to W$は$0$重線型写像で交代である．$r=1$のときもそうである．
+        $f:V^{\times r}\to W$が交代$r$重線型写像で$g:V'\to V$が線型写像ならば，合成$f\circ g^{\times r}:V'^{\times r}\to V^{\times r}\to W$も交代$r$重線型写像である．
+        \item 行列を縦ベクトルの組と考えて$M_n(K)=(K^n)^{\times n}$をみなす．行列式が定める写像$\det:(K^n)^{\times n}=M_n(K)\to K$は交代$n$重線型写像である．
+        \item $f_1,\cdots,f_r:V\to K$を線型形式とする．次の写像$f_1\wedge\cdots\wedge f_r:V^{\times r}\to K$は交代$r$重線型形式である．
+        \[\xymatrix@R-2pc{
+            f_1\wedge\cdots\wedge f_r:V^{\times r}\ar[r]&K\\
+            \rotatebox[origin=c]{90}{$\in$}&\rotatebox[origin=c]{90}{$\in$}\\
+            (x_1,\cdots,x_r)\ar@{|->}[r]&\det(f_i(x_j))
+        }\]
+    \end{enumerate}
+\end{example}
+
+\begin{proposition}[交代$r$重線型写像]
+    $V,W\in\Vect_K$とする．自然な可逆写像$\Hom_K(V^{\otimes r},W)\to\mathrm{Mulinear}_r(V^{\times r},W)$は，可逆写像$\Hom(\Lambda^rV,W)\to\mathrm{Alt}_r(V^{\times r},W)$を引き起こす．
+\end{proposition}
+\begin{Proof}
+    線型写像$f:V^{\otimes r}\to W$に対応する$r$重線型写像$V^{\times r}\to W$が交代であるための必要十分条件は$f(R_r)=0$であることである．
+    従って，商空間の普遍性より，次の写像は存在し，また可逆である．
+    \[\xymatrix{
+        V^{\otimes r}\ar[r]^-p\ar[d]&\Lambda^rV\ar@{.>}[dl]\\
+        W
+    }\]
+\end{Proof}
+\begin{remarks}
+    これは構成を商空間の言葉を用いて巧妙に作ったためである．
+\end{remarks}
+
+\begin{definition}[universal alternating $r$-ple linear mapping]\label{def-universal-alternating-r-ple-linear-map}
+    $\Lambda^rV$の恒等写像$\id_{\Lambda^rV}$に対応する交代$r$重線型写像$V^{\times r}\to\Lambda^rV$は，合成写像$p\circ\otimes^{\times r}:V^{\times r}\to\Lambda^rV$である．これを\textbf{普遍交代$r$重線型写像}という．
+    \[\xymatrix{
+        V^{\times r}\ar[r]^-{\otimes^{\times r}}\ar@{.>}[d]&V^{\otimes r}\ar[r]^-p&\Lambda^rV\ar[dll]^-{\id_{\Lambda^rV}}\\
+        W=\Lambda^rV
+    }\]
+    これは普遍双線型写像$\otimes$と同様な，次のような写像である，便宜的に$\wedge$という名前をつける．
+    \[\xymatrix@R-2pc{
+        \wedge:V^{\times r}\ar[r]&\Lambda^rV\\
+        \rotatebox[origin=c]{90}{$\in$}&\rotatebox[origin=c]{90}{$\in$}\\
+        (x_1,\cdots,x_r)\ar@{|->}[r]&x_1\wedge\cdots\wedge x_r
+    }\]
+\end{definition}
+
+\subsection{交代多重線型写像の性質}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white, breakable,
+    title=交代$r$重線型写像の性質]
+    交代$r$重線型写像の性質を調べることによって，外積代数に迫る．
+    自由生成の代数なので，極めて形式的な議論となる．基本的には，外積代数の定義から帰納的に示される．
+\end{tcolorbox}
+
+\begin{proposition}[交代性]\label{prop-交代線型写像の計算規則}
+    $V\in\Vect_K,r\in\N,f:V^{\times r}\to W$を交代$r$重線型写像とする．
+    置換$\sigma\in\mathfrak{S}_n$に対し，
+    \[f(x_{\sigma(1)},\cdots,x_{\sigma(r)})=\sgn(\sigma)f(x_1,\cdots,x_r)\]
+    が成り立つ．
+\end{proposition}
+
+\begin{corollary}
+    $s\in\Lambda^pV,t\in\Lambda^qV$ならば，$t\wedge s=(-1)^{pq}s\wedge t$である．
+\end{corollary}
+
+\subsection{外積代数の構造}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white, breakable,
+    title=exterior algebra is a free graded-commutative algebra]
+    ２つの外積代数$\Lambda V,\Lambda W$の外積演算は階層的に定められている：$\coprod_{p+q=r\\p,q\in\N}(\wedge:\Lambda^pV\otimes\Lambda^qV\to\Lambda^rV)$．
+    この２つの演算を結合して，外積代数の直和$\Lambda V\coprod\Lambda W$を定義したい．
+    これを内部直和として解釈すると，内部の構造が見えてくる．
+    $r$次外冪は，パスカルの三角形のような生成原理で到達される元であるので，二項展開と同じ構造になる：$\Lambda^r(V\oplus W)\cong\bigoplus^r_{p=0}(\Lambda^pV\otimes\Lambda^{r-p}W)$．
+
+    $n$次元空間$V$の$r$次外冪$\Lambda^rV$は$\begin{pmatrix}\dim V\\r\end{pmatrix}$次元である．$x\wedge y+y\wedge x=0$という規則があり，順番に関しては線型従属であるためである．
+\end{tcolorbox}
+
+\begin{notation}
+    $f:V\to W$を線型写像とする．次の交代$r$重線型写像
+    \[\xymatrix@R-2pc{
+        V^{\times r}\ar[r]^-{f^{\times r}}&W^{\times r}\ar[r]^-{\wedge}&\Lambda^rW\\
+        \rotatebox[origin=c]{90}{$\in$}&\rotatebox[origin=c]{90}{$\in$}&\rotatebox[origin=c]{90}{$\in$}\\
+        (x_1,\cdots,x_r)\ar@{|->}[r]&(f(x_1),\cdots,f(x_r))\ar@{|->}[r]&f(x_1)\wedge\cdots\wedge f(x_r)
+    }\]
+    が定める線型写像を
+    \[\xymatrix@R-2pc{
+        \wedge^rf:\Lambda^rV\ar[r]&\Lambda^rW\\
+        \rotatebox[origin=c]{90}{$\in$}&\rotatebox[origin=c]{90}{$\in$}\\
+        x_1\wedge\cdots\wedge x_r\ar@{|->}[r]&f(x_1)\wedge\cdots\wedge f(x_r)
+    }\]
+    と表すこととする．
+    \[\xymatrix{
+        V^{\times r}\ar[r]^-{p\circ\otimes^{\times r}}\ar[d]_-{\wedge\circ f^{\times r}}&\Lambda^rV\ar[dl]^-{\wedge^rf}\\
+        \Lambda^rW
+    }\]
+\end{notation}
+
+\begin{proposition}[２つの外積代数の間の外積演算の階層構造の結合]\label{prop-coproduct-of-exterior-algebras}
+    $V,W\in\Vect_K,r\in\N$とする．$p+q=r$を満たす自然数に対し，線型写像
+    \[\xymatrix@R-2pc{
+        \wedge\circ(\Lambda^pi\otimes\Lambda^qj):\Lambda^pV\otimes\Lambda^qW\ar[r]&\Lambda^r(V\oplus W)\\
+        \rotatebox[origin=c]{90}{$\in$}&\rotatebox[origin=c]{90}{$\in$}\\
+        s\otimes w\ar@{|->}[r]&s\wedge t
+    }\]
+    を\footnote{より正確には，$s\otimes t\mapsto (s,0)\otimes(0,t)\mapsto (s,0)\wedge(0,t)$と表すべきなのかもしれないが，$V,W$の元と$V\oplus W$の元とを同一視した．}，包含写像$i:V\to V\oplus W,j:W\to V\oplus W$が引き起こす線型写像$\wedge^pi:\Lambda^pV\to\Lambda^p(V\oplus W),\wedge^qj:\Lambda^qV\to\Lambda^q(V\oplus W)$のテンソル積と外積$\wedge:\Lambda^p(V\oplus W)\otimes\Lambda^q(V\oplus W)\to\Lambda^r(V\oplus W)$との合成とする．
+    これらの直和
+    \[f:=\coprod_{p+q=r\\p,q\in\N}(\wedge\circ(\wedge^pi\otimes\wedge^qj)):\begin{array}{l}
+        \Lambda^rV\oplus(\Lambda^{r-1}V\otimes W)\oplus(\Lambda^{r-2}V\otimes\Lambda^1W)\oplus\\
+        \cdots\oplus(V\otimes\Lambda^{r-1}W)\oplus\Lambda^rW
+    \end{array}\to\Lambda^r(V\oplus W)\]
+    は同型である．
+\end{proposition}
+\begin{Proof}\mbox{}
+    \begin{description}
+        \item[逆写像の構成] 交代$r$重線型写像
+        \[\xymatrix@R-2pc{
+            g:(V\oplus W)^{\times r}\ar[r]&\bigoplus^r_{p=0}(\Lambda^pV\otimes\Lambda^{r-p}W)\\
+            \rotatebox[origin=c]{90}{$\in$}&\rotatebox[origin=c]{90}{$\in$}\\
+            (x_1+y_1,\cdots,x_r+y_r)\ar@{|->}[r]&\sum^n_{p=0}\sum_{\sigma\in\mathfrak{S}_r^{(p)}}\sgn(\sigma)\cdot (x_{\sigma(1)}\wedge\cdots\wedge x_{\sigma(p)})\otimes(y_{\sigma(p+1)}\wedge\cdots\wedge y_{\sigma(r)})
+        }\]
+        が定める線型写像$h:\Lambda^r(V\oplus W)\to\bigoplus^r_{p=0}(\Lambda^pV\otimes\Lambda^{r-p}W)$が$f$の逆写像となっていることを示す．
+        ただし，$\mathfrak{S}_r^{(p)}:=\{\sigma\in\mathfrak{S}_r\mid\sigma(1)<\sigma(2)<\cdots<\sigma(p),\sigma(p+1)<\sigma(p+2)<\cdots<\sigma(r)\}$と定めた．
+        \item[逆写像であることの証明] 
+        $0\le p\le r,x_1,\cdots,x_p\in V,\;y_1,\cdots,y_{r-p}\in W$を任意に取る．
+        \begin{align*}
+            h(f((x_1\wedge\cdots\wedge x_p)\otimes(y_1\wedge\cdots\wedge y_{r-p})))&=h(x_1\wedge\cdots\wedge x_p\wedge y_1\wedge\cdots\wedge y_{r-p})\\
+            &=g(x_1,\cdots,x_p,y_1,\cdots,y_{r-p})\\
+            &=(x_1\wedge\cdots\wedge x_p)\otimes(y_1\wedge\cdots\wedge y_{r-p}).
+        \end{align*}
+        また，$x_1,\cdots,x_r\in V,\;y_1,\cdots,y_r\in W$とすると，
+        \begin{align*}
+            f(g((x_1+y_1)\wedge\cdots\wedge(x_r+y_r)))&=f(g(x_1+y_1,\cdots,x_r+y_t))\\
+            &=\sum^n_{p=0}\sum_{\sigma\in\mathfrak{S}_r^{(p)}}\sgn(\sigma)\cdot (x_{\sigma(1)}\wedge\cdots\wedge x_{\sigma(p)})\otimes(y_{\sigma(p+1)}\wedge\cdots\wedge y_{\sigma(r)}\\
+            &=(x_1+y_1)\wedge\cdots\wedge(x_r+y_r).&命題\ref{prop-交代線型写像の計算規則}に従って括る
+        \end{align*}
+    \end{description}
+\end{Proof}
+\begin{remarks}
+    多重線形性というものが手強すぎるために，$g$を定義するのにたくさんの演算の知識が必要となった．
+    が，本質的にはこれだけである．
+    $f$の階層別に定義されたwedge積はわかりやすい．分配法則を適用すれば良い．これを戻すためには，計算規則\ref{prop-交代線型写像の計算規則}に沿った展開が必要になる．
+\end{remarks}
+
+\begin{corollary}[外積代数の次元]\label{cor-basis-of-exterior-algebra}
+    $x_1,\cdots,x_n$が$V$の基底ならば，$x_{i_1}\wedge\cdots\wedge x_{i_r}\;(1\le i_1<i_2<\cdots<i_r\le n)$は$\Lambda^rV$の基底である．
+    特に，$r=\dim V$ならば$\dim\Lambda^rV=1$である．$r>\dim V\Leftrightarrow \dim\Lambda^rV=0$である．
+\end{corollary}
+\begin{Proof}
+    数学的帰納法による．
+    \begin{enumerate}
+        \item $r\le 1$ならば，$\Lambda^0V=K,\Lambda^1V=V$より，成り立つ．
+        \item $r\ge 2$として，$n=\dim V$に関する帰納法で示す．
+        \begin{enumerate}[(1)]
+            \item $r\ge 2,n\le 1$ならば，$\Lambda^1V=0$である．
+            \item $n\ge 2$とし，$W:=\langle x_1,\cdots,x_{n-1}$とすると，$V=W\oplus Kx_n$と分解できる．命題より，標準的な同型$\Lambda^rW\oplus(\Lambda^{r-1}W\otimes Kx_n)\to\Lambda^rV$がある．
+        \end{enumerate}
+    \end{enumerate}
+\end{Proof}
+
+\begin{example}[行列式の射程]
+    行列式は，規格化された交代多重線型形式として特徴付けられる写像で，これによって種々の写像が定義できる極めて普遍的な言葉である．
+    \begin{enumerate}
+        \item $V:=K^n$を縦ベクトルの空間とする．例\ref{example-determinant-1}の行列式が定める$n$重交代線型写像$V^{n}\to K;(a_1,\cdots,a_n)\mapsto\det(a_i)$が定める線型写像$\det:\Lambda^nV\to K$は\textbf{同型}である．
+        $p+q=n$ならば，外積演算$\wedge$に関する引き戻し$\wedge^*\det=\det\circ\wedge:\Lambda^pV\times\Lambda^qV\to K$は非退化であり，同型$\Lambda^qV\to(\Lambda^pV)^*$を定める．curryingの一般化のようなものである．
+        \item $V=\R^3$をベクトルの空間とし，基底$e_2\wedge e_3,e_3\wedge e_1,e_1\wedge e_2\in\Lambda^2V$と$e_1,e_2,e_3\in V$とが定める同型$\Lambda^2V\to V$に対応する交代双線型形式$\times:V\times V\to V$を\textbf{ベクトル積}という．ちょうど外積は，このベクトル積の代数法則を抽出して自由生成される代数系となっている．
+        \item 開集合$U\subset\R^3$上の各点にベクトルを定義する関数$U\to\R^3$を，$U$上の\textbf{ベクトル場}という．
+        \item 開集合$U\subset\R^3$上の各点に線型形式を定義する関数$U\to(\R^3)^*=(\Lambda^1\R^3)^*$を，$U$上の１次\textbf{微分形式}という．関数$U\to(\Lambda^2\R^3)^*$を２次微分形式と呼ぶ．
+        \item ベクトル場は反変テンソル場であり（ベクトルを位置ベクトルだと思うと，点の座標と同じ変換を受けるため），１次微分形式は共変テンソル場である（接ベクトル空間の基底のようなものであるため）．
+        \item 前述の同型$\R^3\to(\Lambda^2\R^3)^*$により，２次微分形式をベクトル場と考えたものを，\textbf{軸性(axial)ベクトル場}，または擬ベクトルという．座標の反転に対し符号が変わらない（向きが反転する）という特徴づけを持つ．このとき通常のベクトル場は\textbf{極性(polar)ベクトル場}という．古典電磁気学において，電場は極性ベクトル場の例で，磁束密度は軸性ベクトル場の例である．極性ベクトル場が微分１形式に対応し，軸性ベクトル場が微分２形式に対応するのである．前者では線積分やrotを考え，後者では面積分やdivを考えるベクトル場である．
+    \end{enumerate}
+\end{example}
+
+\begin{proposition}[???]
+    $x,y\in V$とする．
+    \begin{enumerate}
+        \item 次の２条件は同値である．
+        \begin{enumerate}[(1)]
+            \item $x\wedge y\ne 0$．
+            \item $x,y$は一次独立．
+        \end{enumerate}
+        \item $x,y$は一次独立とする．$x',y'\in V$について，次の２条件は同値である．
+        \begin{enumerate}[(1)]
+            \item $x\wedge y=x'\wedge y'$．
+            \item $x'=ax+by,y'=cx+dy$を満たす$\begin{pmatrix}a&c\\b&d\end{pmatrix}\in\SL_2(K)$が存在する．
+        \end{enumerate}
+    \end{enumerate}
+\end{proposition}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item \begin{description}
+            \item[(1)$\Rightarrow$(2)] $ax+by=0$とする，$(ax+by)\wedge y=0,(ax+by)\wedge x=0$から，それぞれ$a=0,b=0$が従う．
+            \item[(2)$\Rightarrow$(1)] $V$の$\bracket{x,y}$に関する補空間を$V'$とすると，$V=(Kx\oplus Ky)\oplus V'$と表せる．
+            命題\ref{prop-coproduct-of-exterior-algebras}より，2次外冪の空間は$\Lambda^2V=\Lambda^2(Kx\oplus Ky)\oplus(Kx\oplus Ky)\otimes V'\oplus\Lambda^2V'$と表せる．
+            今，$x\wedge y\in\Lambda^2(Kx\oplus Ky)$は基底である（系\ref{cor-basis-of-exterior-algebra}）．
+            よって，$x\wedge y\ne 0$である．
+        \end{description}
+        \item \begin{description}
+            \item[(1)$\Rightarrow$(2)] $r=3$についても1と同様の議論より，
+            \begin{align*}
+                (x\wedge y)\wedge x'&=(x'\wedge y')\wedge x'=0\\
+                (x\wedge y)\wedge y'&=(x'\wedge y')\wedge y'=0
+            \end{align*}
+            から，$x,y,x'$と$x,y,y'$は一次従属．\footnote{\cite{斎藤毅-線型代数}は$\Lambda^2V$の直和分解を用いて論じている．}
+            \item[(1)$\Rightarrow$(2) \cite{斎藤毅-線型代数}] 
+            2次外冪の空間は$\Lambda^2V=\Lambda^2(Kx\oplus Ky)\oplus(Kx\oplus Ky)\otimes V'\oplus\Lambda^2V'$と表せることより，
+            \begin{align*}
+                x'&=(ax+by)+x'',&y'&=(cx+dy)+y'',
+            \end{align*}
+            と置くと，
+            \begin{align*}
+                x'\wedge y'&=(ax+by)\wedge(cx+dy)+(ax+by)\oplus y''-(cx+dy)\oplus x''+x''\wedge y''
+            \end{align*}
+            と展開できる．いま，\footnote{まじで分からない}
+        \end{description}
+    \end{enumerate}
+\end{Proof}
+\begin{remarks}
+    命題\ref{prop-coproduct-of-exterior-algebras}の運用ヤバイな．$\wedge$になりきれない$\otimes$が存在するのか．では次の計算規則はどういう意味論がつくのか．$\wedge:\Lambda^2V\times\Lambda^2V\to\Lambda^2(Kx\otimes Ky)\oplus\Lambda^2(V)\oplus\Lambda^2V'$は変だ．なんだこれは．
+    \begin{align*}
+        x'\wedge y'&=(ax+by)\wedge(cx+dy)+(ax+by)\wedge y''-(cx+dy)\wedge x''+x''\wedge y''
+    \end{align*}
+\end{remarks}
+
+\subsection{線型写像の外積}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white, breakable,
+    title=線型写像の外積の構成は共変Hom関手]
+    $\Lambda^r:\Hom_K(V,W)\to\Hom_K(\Lambda^rV,\Lambda^rW)$は共変Hom関手で，単射・全射性を保存するということか．
+    また，線型写像の外冪の行列表示の成分は，元の線型写像の行列表示の小行列式となる．
+\end{tcolorbox}
+
+\begin{proposition}[線型写像の外積の構成は共変Hom関手]
+    $f:V\to W$を線型写像とし，$r\in\N$とする．
+    \begin{enumerate}
+        \item $f$が全射ならば$\Lambda^rf$も全射である．
+        \item $f$が単射ならば$\Lambda^rf$も単射である．
+        \item $\Im(\Lambda^rf)=\Lambda^r\Im f$である．従って，$\rank\Lambda^rf=\begin{pmatrix}\rank f\\r\end{pmatrix}$であり，$r>\rank f$と$\Lambda^rf=0$とは同値である．
+        \item $f$の基底$x_1,\cdots,x_n\in V$と$y_1,\cdots,y_m\in W$とに関する行列表示を$A\in M_{mn}(K)$とする．$\Lambda^rf$の基底$x_{j_1}\wedge\cdots\wedge x_{j_r}$と$y_{i_1}\wedge\cdots\wedge y_{i_r}$に関する行列表示$M_{\begin{pmatrix}m\\r\end{pmatrix}\begin{pmatrix}n\\r\end{pmatrix}}(K)$の，$(i_1\cdots i_r)(j_1\cdots j_r)$成分\footnote{この意味論が実はよくわかっていない．$(i_1\cdots i_r)=(1\cdots r)$の時に１で，$i_1\cdots i_r=(r\cdots 1)$の時に$\begin{pmatrix}n\\r\end{pmatrix}$であるはず}は$A$の小行列式$\det(a_{i_kj_l})$である．特に，$V=W$かつ$r=\dim V$ならば，$\Lambda^rf$は$\det f$倍写像である．
+    \end{enumerate}
+\end{proposition}
+\begin{Proof}\mbox{}
+    \begin{enumerate}
+        \item $f$が全射ならば，$f^{\otimes r}:V^{\otimes r}\to W^{\otimes r}$も全射線型写像である．
+        よって，$\Lambda^rf$も全射である（$f^{\otimes r}$が全射ならば$q\circ f^{\otimes r}$も全射であるため）．
+        \[\xymatrix{
+            V^{\times r}\ar[d]_-{f^{\times r}}\ar[r]^-{\otimes^r}&V^{\otimes r}\ar[d]_-{f^{\otimes r}}\ar[r]^-p&\Lambda^rf\ar@{.>}[d]^-{\Lambda^rf}\\
+            W^{\times r}\ar[r]_-{\otimes^r}&W^{\otimes r}\ar[r]_-q&\Lambda^rW
+        }\]
+        \item $f$が単射のとき，$W=V\oplus V'$かつ$f:V\to W$が包含写像である場合について示せば十分である．そしてこの場合は，外積代数の直和についての命題\ref{prop-coproduct-of-exterior-algebras}により，同型$\bigoplus^r_{p=0}(\Lambda^pV\otimes\Lambda^{r-p}V')\to\Lambda^rW$が存在するので，その$\Lambda^rV$への制限$\Lambda^rf$は単射である．
+        \item $f$を，全射$p:V\to\Im f$と単射$i:\Im f\to W$とに分解して考える．
+        \[\xymatrix{
+            V\ar[r]^-f\ar[dr]_-p&W\\
+            &\Im f\ar[u]_-i
+        }\]
+        すると，（共変関手性より，）$\Lambda^r(i\circ p)=\Lambda^ri\circ\Lambda^rp$であるから，
+        \begin{align*}
+            \Im(\Lambda^rf)&=\Im(\Lambda^ri\circ\Lambda^rp)\\
+            &=\Im(\Lambda^ri)&\because pが全射より，1.から\Lambda^rpも全射\\
+            &=\Lambda^r\Im f.&後述
+        \end{align*}
+        包含写像$i$の定める線型写像
+        $\Lambda^ri:\Lambda^r\Im f\to\Lambda^rW=\Lambda^r(\Im f\oplus W_1)$は（$W$の$\Im f$に対する補空間を$W_1$と置いた），
+        も包含写像であり，その値域は$\Lambda^r\Im f$である．実際，
+        同型
+        \[\bigoplus^r_{p=0}\paren{\Lambda^p\Im f\otimes\Lambda^{r-p}W_1}\to\Lambda^rW\]
+        の$\Lambda^r\Im f$への制限であるから．
+        \item 第$(i_1\cdots i_r)(j_1\cdots j_r)$成分とは，基底$x_{j_1}\wedge\cdots\wedge x_{j_r}\in\Lambda^rV$の$\Lambda^rf$による値の，基底$y_{i_1}\wedge\cdots\wedge y_{i_r}$に関する係数であるから，
+        \begin{align*}
+            \Lambda^rf ( x_{j_1} \wedge\cdots\wedge x_{j_r} ) &= f(x_{j_1}) \wedge\cdots\wedge f(x_{j_r})\\
+            &= (a_{1j_1}y_1+\cdots+a_{mj_1}y_m)\wedge\cdots\wedge(a_{1j_r}y_1+\cdots+a_{mj_r}y_m)\\
+            &= (a_{1j_1}y_1+\cdots+a_{mj_1}y_m)\wedge\cdots\wedge(a_{1j_r}y_1+\cdots+a_{mj_r}y_m)\\
+            &= \sum_{単射f\in\Map([r],[m])}a_{f(1)j_1}\cdots a_{f(r)j_r}\cdot y_{f(1)}\wedge\cdots\wedge y_{f(r)}\qquad\because 他の項は=0となるため\\
+            &= \sum_{ 1\le i_1<\cdots<i_r\le m,\sigma\in\mathfrak{S}_r }\sgn(\sigma)\cdot a_{i_{\sigma(1)}j_1}\cdots a_{i_{\sigma(r)}j_r}\cdot y_{i_1}\wedge\cdots\wedge y_{i_r}\qquad\because 整理した\\
+            &= \sum_{1\le i_1<\cdots<i_r\le m}\det(a_{i_kj_l})y_{i_1}\wedge\cdots\wedge y_{i_r}.
+        \end{align*}
+    \end{enumerate}
+\end{Proof}
+\begin{remarks}
+    $\Lambda^r:\Hom_K(V,W)\to\Hom_K(\Lambda^rV,\Lambda^rW)$は共変Hom関手で，単射・全射性を保存するということか．
+\end{remarks}
+
+\subsection{交代化作用素}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white, breakable,
+    title=交代化作用素]
+    テンソル積$V^{\otimes r}$から，外積代数$(V^{\otimes r})^\alt$を抽出する構成を一般化するために，射影子の言葉で定義する．
+    $p:V^{\otimes r}\to\Lambda^rV=V^{\otimes r}/R_r$を外積代数を構成する時に用いた標準全射とすると，$\Ker p=R_r$の補空間として$(V^{\otimes r})^{\alt}$を定義したということに他ならない．
+\end{tcolorbox}
+
+\begin{notation}\mbox{}
+    \begin{enumerate}
+        \item $\sigma\in\mathfrak{S}_r$に対し，$V^{\otimes r}$の自己準同型$\sigma^*$を，$\sigma^*(x_1\otimes\cdots\otimes x_r)=x_{\sigma(1)}\otimes\cdots\otimes x_{\sigma(r)}$で定める．
+        これは$x_1,\cdots,x_r$などを値点と見て射$r\to V^{\otimes r}$と見れば，この射に対する反変Hom関手として定式化できることを意識した記法であろう．
+        \item 部分空間を
+        \[(V^{\otimes r})^\alt:=\{x\in V^{\otimes r}\mid \forall\sigma\in\mathfrak{S}_r,\;\sigma^*(x)=\sgn(\sigma)\cdot x\}\]
+        と表す．
+    \end{enumerate}
+\end{notation}
+
+\begin{proposition}[alternizer]
+    $K$の標数$p$は$p=0$または$p>r$とする．この時，標準全射$V^{\otimes r}\to\Lambda^rV$の$(V^{\otimes r})^\alt$への制限$f:(V^{\otimes r})^\alt\to\Lambda^rV$は同型である．
+\end{proposition}
+\begin{Proof}
+    $r=0$の時，$V^{\otimes r}=\Lambda^rV=(V^{\otimes r})^\alt=K$で，$r=1$の時は$V^{\otimes r}=\Lambda^rV=(V^{\otimes r})^\alt=V$であるから，$r\ge 2$の場合について示せば十分である．
+    従って，$-1\ne 1$と仮定する．
+    \begin{description}
+        \item[射影子$e_\alt$の構成] 
+        $V$の自己準同型$e_\alt\in\End_K(V^{\otimes r})$を，$e_\alt:=\frac{1}{r!}\sum_{\sigma\in\mathfrak{S}_r}\sgn(\sigma)\cdot \sigma^*$と定めると，$e_{\alt}$は射影子で（即ち$e^2=e$をみたし），$\Im e_\alt=(V^{\otimes r})^\alt$であることを示す．
+        \begin{enumerate}
+            \item \begin{align*}
+                e^2_\alt&=\frac{1}{(r!)^2}\sum_{\sigma,\tau\in\mathfrak{S}_r}\sgn(\sigma)\sgn(\tau)\sigma^*\circ\tau^*\\
+                &=\frac{1}{(r!)^2}\sum_{\sigma,\tau\in\mathfrak{S}_r}\sgn(\sigma\tau)(\tau\sigma)^*\\
+                &=e_\alt
+            \end{align*}
+            \item 
+        \end{enumerate}
+    \end{description}
+\end{Proof}
+
+\chapter{調和積分論}
+
+\begin{quotation}
+    古典的な微分幾何学は局所的であったが，特性類，Hodge調和積分，Atiyah-Singerの指数定理などは大域的な結果である．
+\end{quotation}
+
+\section{Riemann多様体}
+
+\begin{definition}[metric]
+    ベクトル束$\pi:E\epi M$について，次を満たす$s\in\Gamma((E\otimes E)^*)$を\textbf{計量}という：\footnote{$E\otimes E$とは，各ファイバー毎にテンソル積を取ることによって得られるテンソル束である．}
+    \begin{quote}
+        各双線型形式$s(x):E\otimes E\to\R\;(x\in M)$は$E_x$上の内積である．
+    \end{quote}
+    ベクトル束が接束であったとき，特にRiemann計量という．
+\end{definition}
+\begin{remarks}
+    Riemann計量は$\Om^p(M)$上に内積を定義する：
+    \[(\om|\tau):=\int_M(\om(x)|\tau(x))\dvol(x).\]
+\end{remarks}
+
+\section{Laplace作用素}
+
+\begin{definition}[Hodge star-operator, Laplacian]
+    正規直交基底$e_1,\cdots,e_m$を持つ
+    $m$次元内積空間$V\in\FinVect$について，$\bigwedge^pV$にも計量が誘導される．
+    \begin{enumerate}
+        \item 線型写像$*:\bigwedge^pV\to\bigwedge^{m-p}V$を
+        \[\forall_{\om\in\wedge^pV,\tau\in\wedge^{m-p}V}\quad (*\om|\tau)e^1\wedge\cdots\wedge e^m=\om\wedge\tau\]
+        を満たすものとして定義する．これを\textbf{Hodge$*$-作用素}という．
+        \item $V$をRiemann多様体$M$の接空間$T_xM$とすると，Hodge$*$-作用素は微分形式の空間上に定まる：$*:\Om^p(M)\iso \Om^{m-p}(M)$．
+        \item 外微分$d:\Om^{m-p}(M)\to \Om^{m-p-1}(M)$に対して，線型作用素$\delta:\Om^p(M)\to \Om^{p-1}(M)$を$\delta\om:=(-1)^p*^{-1}d*\om$で定める．
+        \item 線型作用素$\De_p:\Om^p(M)\to\Om^p(M)$を$\De_p:=(-d\circ\delta+\delta\circ d)$で定める．これを\textbf{Laplace作用素}という．
+    \end{enumerate}
+\end{definition}
+
+\begin{lemma}\mbox{}
+    \begin{enumerate}
+        \item Hodge双対$*:\bigwedge^pV\to\bigwedge^{m-p}V$はwell-definedであり，線型同型になる．
+        \item Laplace作用素は，$M$の局所座標$(x^1,\cdots,x^m)$を用いて，次のように表示される：
+        \[\De_0 f=\sum_{j,k\in[m]}\frac{1}{\sqrt{G}}\pp{}{x^j}\paren{\sqrt{G}g^{jk}\pp{f}{x^k}}\quad g_{jk}:=g\paren{\pp{}{x^j},\pp{}{x^k}},G:=\det(g_{jk}).\]
+    \end{enumerate}
+\end{lemma}
+
+\section{Hodge-小平の分解定理}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    これは多様体上のPoisson方程式に関する消息であったが，熱方程式を考察することによって証明できる．
+    熱核の方が構成しやすく，その性質も調べやすいようである．
+\end{tcolorbox}
+
+\begin{definition}
+    $p$-形式$\om\in\Om^p(M)$が$\De\om=0$を満たすとき，\textbf{調和}であるという．
+\end{definition}
+
+\begin{theorem}[Hodge-小平]
+    $M^m$を向きづけられたコンパクトRiemann多様体とする．$\Om^p(M)$は次のように直交直和分解される：
+    \[\Om^p(M)=\Ker\De_p\oplus\Im\De_p=\Ker\De_p\otimes\Im d\oplus\Im\delta.\]
+    さらに，次が成り立つ：$\dim\Ker\De_p<\infty$．
+\end{theorem}
+
+\subsection{熱方程式}
+
+\begin{definition}
+    $\om\in C^\infty(M\times\R^+;\bigwedge^pT^*M)$は$M\times\R_+$上に連続に延長するとする．
+    このとき，任意の$\om_0\in\Om^p(M)$について，次の条件を考える：
+    \[\pp{\om}{t}=\De\om,\quad\om(x,0)=\om_0(x).\]
+\end{definition}
+
+\begin{theorem}
+    熱方程式は一意の解を持ち，熱核を使って表示できる．
+\end{theorem}
+
+\subsection{漸近状況}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    Riemann多様体の幾何学的性質と，Laplace作用素$\De_p$の固有値との関連を調べる分野をスペクトル幾何という．
+\end{tcolorbox}
+
+\chapter{参考文献}
+
+\cite{小松ベクトル解析I}
+\cite{小松ベクトル解析II}
+\cite{佐々木}
+
+\bibliography{../StatisticalSciences.bib,../SocialSciences.bib,../mathematics.bib,../statistics.bib}
+
+\end{document}

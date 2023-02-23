@@ -1,0 +1,23 @@
+\documentclass[dvipdfmx]{article}
+\usepackage{tikz,bm}\usetikzlibrary{arrows.meta, angles, quotes} 
+
+\begin{document}
+
+\begin{tikzpicture}[>=stealth, x=6mm, y=6mm, thick]
+    \draw (-5.5,0) -- (5.5,0) node[right] {$\boldsymbol{x}$};
+    \draw (0,-5.5) -- (0,5.5) node[above] {$\boldsymbol{y}$};
+    \draw (5,0.1) -- (5,-0.1) node[below] {$\boldsymbol{5}$};
+    \draw (0.1,5) -- (-0.1,5) node[left] {$\boldsymbol{5}$};
+    \draw (-5,0.1) -- (-5,-0.1) node[below] {$\boldsymbol{5}$};
+    \draw (0.1,-5) -- (-0.1,-5) node[left] {$\boldsymbol{5}$};
+    \draw[-{Stealth[length=3mm]}] (0,0) -- (4,-3);
+    \node[below] at (2,-1.5) {$\mathbf{A}$};
+    \draw[dotted] (4,0) -- (4,-3);
+    \draw[dotted] (0,-3) -- (4,-3);
+    \node[right] at (4,-2) {$\boldsymbol{-3}$};
+    \node[below] at (2,-3) {$\boldsymbol{4}$};
+    \coordinate (a) at (0,0); \coordinate (b) at (1,0); \coordinate (c) at (2,-1.5);
+    \draw pic[draw, angle radius=0.8cm, "$\boldsymbol{\alpha}$" shift={(0.2,-0.1)}] {angle=c--a--b};
+\end{tikzpicture}
+
+\end{document}

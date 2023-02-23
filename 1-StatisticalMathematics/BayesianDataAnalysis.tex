@@ -1,0 +1,493 @@
+\documentclass[uplatex,dvipdfmx]{jsreport}
+\title{Bayes統計学と計算統計}
+\author{}
+\pagestyle{headings} \setcounter{secnumdepth}{4}
+\input{/Users/Hirofumi Shiba/NatureOfStatistics/preamble_no_fonts.tex}
+%\input{/Users/hirofumi.shiba48/NatureOfStatistics/preamble_no_fonts.tex}
+\usepackage[math]{anttor}
+\begin{document}
+\tableofcontents
+
+\chapter{基礎概念と枠組み}
+
+\begin{quote}
+    \begin{description}
+        \item[統計学とは] 確率的な模型の現実への当てはめである．
+        \item[Bayes推定とは] 対象となる母数またはその関数の推定の結果を，値域上の確率分布によって表現する枠組みである．
+        \item[Bayesデータ解析の流れ] \mbox{}
+        \begin{enumerate}[({B}1)]
+            \item 事前情報とデータ収集過程に関する知見を基に，可観測量と非可観測量の結合分布について模型を用意する．
+            \item 観測量を得た際に，これによって条件付けることで非可観測量の条件付き分布を計算し，推定の結果とする．
+            \item 模型から得た結果を基に，模型評価をする．特に，(1)での模型設定に対する結果の頑健性を評価する．
+        \end{enumerate}
+        \item[Bayes統計学と計算統計学] (2)の段階において数値積分計算が必要不可欠となる．
+        特に，数値計算可能な問題がすなわち，Bayes統計学が扱える模型の範囲となってしまう．
+        Bayes模型の魅力をその簡明な意味論であるとするならば，これを失わない範囲で強力な計算手法の開発は一つ大きな需要である．
+        \item[Bayes統計学とデータ解析] (1)の段階が模型の設計，(3)の段階がデータ訊問の段階であり，模型と現実の双方に対する深い理解と，継続的な対話を要する．
+        \item[所信表明] 事前共役分布の範囲でしかBayes模型が得られなかった時代が打開され，Bayes統計学が現実的な意味をもって再興するいま，Bayes推定が最も人口に膾炙すべき形式だと考えるならば，(3)を通じて(1)の模型建設にも光が必要である．
+        Bayes推定の概念の数理理論化も必要である．
+        模型の数理と自然の摂理とを繋ぐ者になりたいと考える．
+    \end{description}
+\end{quote}
+
+\section{歴史}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    Bayes統計学は計算機の成熟とMCMC法の発明により可能になった夢の統計学である．
+\end{tcolorbox}
+
+\subsection{Bayes統計学の興隆まで}
+
+\begin{history}[Wald]
+    Waldの『統計的決定理論』で，minimax戦略とBayes戦略は同等に扱われている（完備類定理）．
+    こうして統一的な数理統計学的な視点が得られる．
+    これを土壌として，Neyman-Pearson理論からBayes統計学への移行が可能になった．
+\end{history}
+
+\begin{history}\mbox{}
+    \begin{enumerate}
+        \item Harold Jeffreys 91-89：「不変原理」を導入し，これがJeffreysの事前分布ルールとなる．
+        \item Bruno de Finetti 06-85：確率変数の交換可能性を導入した．彼の名前がついた定理は次のようなものである：
+        交換可能な無限列$X_1,X_2,\cdots\sim\Bernoulli(p)$は，交換可能な$\sigma$-代数$\F$に対して，条件付き独立同分布である．
+    \end{enumerate}
+\end{history}
+
+\subsection{現代の動き}
+
+\begin{history}[ブログ集]\mbox{}
+    \begin{enumerate}
+        \item Prof. Andrew Gelmanの\href{https://statmodeling.stat.columbia.edu/}{ブログ}．
+        \item C. P. Robertの\href{https://xianblog.wordpress.com/}{ブログ}．
+        \item Kruschkeの\href{https://sites.google.com/site/doingbayesiandataanalysis/}{Doing Bayesian Data Analysis}．
+    \end{enumerate}
+\end{history}
+
+\begin{history}[鎌谷研吾]\mbox{}
+    \begin{enumerate}
+        \item \href{http://gakui.dl.itc.u-tokyo.ac.jp/data/h20/124166/124166b.pdf}{博士論文}：MCMC法は従来計算機科学的な文脈から，標本数$n$を固定した収束性が議論されていたが，統計手法としての議論は漸近論によってなされるべきである．その$n\to\infty$の収束理論の要点はMarkov連鎖のエルゴード性の証明にあるが，MCMCで得られるMarkov連鎖は相空間が一般に非コンパクトであり，ここの打解がなされていなかった．これを，ある種の確率論的な新しい評価法を導入することで，極めて一般的な状況で証明することに成功した．特に，EMアルゴリズムとGibbsサンプラーの収束が大域的な意味で正当化され，さらにFisher情報行列に関連する行列を用いて，複数のアルゴリズムの性能を評価する実際的な方法を提案した．
+        \item 柔軟な疑似ハミルトニアンによるモンテカルロ法の展開：計算近似問題は，興味のある確率分布に対応する，ハミルトニアンと呼ばれる関数をうまく捉えることに集約される．多くの従来研究では，その近似を試みていた．本研究はそうしたアプローチとは異なる．おおざっぱな「近似」をあえてつかうことで，返って数値計算のパフォーマンスが良くなることがある．
+        \item (挑戦的研究) スケーラブルなベイズ計算法の解析：	
+        ベイズ統計学においても，データサイズに関して頑健なアルゴリズムが注目を集めている．そうしたアルゴリズムは，正確で時間のかかる手法に取って代わり，いまでは基本的なアルゴリズムとみなされている．しかし，スケーラブルの実現のために，ベイズ統計学の特徴であった明瞭な意味を失ってしまう．
+        この数年に，従来の常識を覆す，明瞭な意味を保ついくつかの手法が提案されてきた．いずれも確率過程を用いた手法だ．確率過程の生成には技術的な困難がともなう．
+    \end{enumerate}
+\end{history}
+
+\begin{history}[CREST]
+    \begin{enumerate}
+        \item 坪井俊：現代の数理科学と連携するモデリング手法の構築 - 吉田朋広：先端的確率統計学が開く大規模従属性モデリング (平成26年採択)．高頻度取引を可能にした．
+        \item 大規模時空間従属性データ科学へ向けた先端的確率統計学の新展開 (令和3年度採択)：研究代表者が吉田先生，共同研究者が内田先生，鎌谷先生，鈴木大慈先生，増田先生．最先端の数理科学により、従属性のある巨大なデータへの統計的モデリングと、確率統計学の原理に則った統計解析のための包括的体系を創出し、時系列データに関わる諸分野の研究を推進します。機械学習などのデータ駆動型方法と、堅固な数学の上に構築された確率過程の統計学およびシミュレーション技術の融合によって、従来の時系列解析が適用できなかった従属性の探索とモデル化による正確な将来予測と確率制御を可能にします。
+    \end{enumerate}
+\end{history}
+
+\begin{history}\mbox{}
+    \begin{enumerate}
+        \item Alexander Philip Dawid 46- 英 Cambridge：条件付き独立性の理論で基礎を固めながら知識発見・因果推論などの分野に応用するBayes統計学の騎手．Pearlの構造的因果模型をinfluence diagramの観点から受容した\cite{Dawid00-Causal}, \cite{Dawid02-InfluenceDiagram}．
+    \end{enumerate}
+\end{history}
+
+\subsection{計算統計学}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    リサンプリング法，数値計算などにおいて，MC法が応用出来る．
+    MC法は(ひょっとしたら広義の)計算機を必要とする．
+\end{tcolorbox}
+
+\begin{remarks}[計算統計学について]
+    計算機の統計学への応用については，次のような切り口がある．
+    \begin{enumerate}
+        \item リサンプリング法：標本を，別の標本を得るために再利用すること．
+        Bootstrap法は(殆ど)ノンパラメトリックな最尤法である．解析的な方法はパラメトリックな仮定を要請するが，リサンプリング方によって(極めてゆるい正則性の仮定の下で)統計量の精密分布の近似を得ることが出来る．しかし最終的には，その性能の漸近論的な評価が必要になる．これはBhattacharya and Ghosh 78のEdgeworth展開によってなされた．
+        \begin{enumerate}
+            \item 例えばQuenouille (49)が開発しTukeyが普及させたjackknife法は非復元的なリサンプリング方であるが，決定関数$\bP_n\mapsto\wh{\theta}$の滑らかさが必要になる．
+            jackknife法は標本$[n]$の大きさ$n-1$の$n$個の部分標本から，$n$個の統計量を複製し，これらの平均を取る．これは$U$-統計量である．
+            \item Bootstrap法は復元抽出をするMC法である．というのも，$\bP_n$からサイズ$n$のBootstrap標本を改めて作り出し，推定量を何通りも計算し直すことで，精密分布を近似出来る．
+        \end{enumerate}
+
+    \end{enumerate}
+\end{remarks}
+
+\begin{remarks}[確率過程の発生算譜]
+    数値計算とBayes統計学において，確率論が応用できる．
+    \begin{enumerate}
+        \item MC法：von Neumannが命名．MC法はStanislaw Ulamが開発して以来，その高速化は水爆開発での課題の一つであった．
+        一般の用法としては，なにかの分布$P$から標本を人工的に発生させればMC法である．
+        \begin{enumerate}
+            \item 計算理論においてMCとは，乱択アルゴリズムのうち誤答確率が上に有界であるものをいう．一般にMC法は実行時間を犠牲にすれば誤答確率を任意に小さく出来る．
+            \item 数値積分において，空間に一様乱数を発生させて，領域内に入る確率によって積分値が近似出来る，というのは自然な発想である．逆に，空間が5次元を超えると「最後の手法」としてMC法しか残らないことが知られていた．
+            \item 一様乱数の代わりに超一様分布列を用いたものを準モンテカルロ法という．これによって収束を速くすることが可能である．
+        \end{enumerate}
+        \item MCMC法：与えられた分布$P$に対して，その標本の代わりに，これを均衡分布として持つMarkov連鎖を発生させる．
+        これは，MC法の適用が難しい分布$P$に対しても可能である．この計算手法が1990sのBayes統計の興隆に寄与した．
+        \begin{enumerate}
+            \item Metropolis-Hastings法：Metropolis (53)がBoltzman分布のために開発し，Hastingsが一般化．
+            \item Gibbsサンプリング：棄却されることのないM-H法であるが，使える分布$P$はM-H法より狭い．
+        \end{enumerate}
+    \end{enumerate}
+\end{remarks}
+
+\begin{remarks}[粒子フィルター / 逐次モンテカルロ法]
+    シュミレーションを用いて，複雑なベイズモデルも推定する手法．
+    \begin{enumerate}
+        \item 1993年1月に北川源四郎がモンテカルロフィルタの名称で、1993年4月にN.J. Gordonらがブートストラップフィルタの名称で同時期に同じものを発表した。
+        \item MCMCはバッチ処理であることに対比して，逐次モンテカルロ法とも呼ばれる．
+    \end{enumerate}
+\end{remarks}
+
+\subsection{Bayes統計学と潜在変数を含むモデル}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    応用上は欠測のあるモデルばかりである．
+\end{tcolorbox}
+
+\begin{remarks}[Bayes統計学の歴史]\mbox{}
+    \begin{enumerate}
+        \item Thomas Bayes 1702-61はプロテスタントの牧師であった．事象の確率を手元の数回の試行からどのように推測すべきか？という問題に対して，Bayesの定理を用いた回答を出し，その際には事前分布に一様分布の仮定を置いた．Fisherはこの点を批判した．
+        \item LaplaceはBayesの考え方を踏襲し，「結果の確率」と「原因の確率」の2つの概念を峻別した．
+        \item Dennis Lindley 23-2013 (London Univ.)がBayes統計学の復興の立役者である．
+        \item Savage (1954) 『統計学の基礎理論』は「統計学はBayesしかありえない」とした．
+        \item Wald (1950) 『統計的決定理論』は統計学に意思決定の要素を見出し，ゲーム理論の発想から特徴付けなおした．その中で注目したのがミニマックス戦略とBayes戦略である．
+        \item Raiffa-Schlaifer (1961)らHarvardのビジネススクールはBayes統計学応用の素地を整えた．
+    \end{enumerate}
+\end{remarks}
+
+\begin{remarks}[Bayes統計学への要請]
+    生物統計学の流れとは違い，心理学・経済学では，隠れ変数の考え方が生まれ，これに対する混合効果モデル・因子分析などが探究された．
+    そしてBayes統計学はこの潜在変数の推測に極めて親和性の高い手法である．
+    このようにして，Bayes統計は，従来の統計手法の堅さへの反逆である．こうして
+    Bayes流のアプローチは医学・臨床統計にも流入し，一般に利用される手法に比べ
+    て，時間・予算・人的資源・サンプルサイズを節約しつつ適切な情報を得ることができるため，医薬品開発の分野で関心が
+    高まっている(Woodcock 2005)．
+    漸近決定理論の裾野を広げ，Bayes統計にまで拡張することが喫緊の課題であるかもしれない．
+\end{remarks}
+
+\begin{remarks}[計算機科学的な観点から見る統計モデル]
+    複雑な対象を扱う科学では潜在変数を含むモデルが欠かせず，ここではグラフィカルモデルの観点が欠かせない．
+    \begin{enumerate}
+        \item 模型の変数が高次元の場合，その間の依存性の構造はグラフの構造を持つ．これを\textbf{確率的グラフィカルモデル}という．
+        \item 隠れ変数が多い場合，分布に種々の仮定を置くことを許し，その下で隠れ変数を1つにまとめることが探究される．その手法の一つが平均場近似である．
+        モデルが特定のグラフ構造(Bayesian networkという, Pearl 85)を持つとき，平均場近似の算譜を議論したのがPearl (88)の，因果推論の成果と全く独立な成果である（この成果でTuring賞を得る）．
+        なお，グラフィカルモデルが有向かつ非巡回であるとき，\textbf{Bayesian network}という．
+    \end{enumerate}
+\end{remarks}
+
+\begin{remarks}
+    潜在変数を含むモデルの解法は，必然的に計算機集約的になる．
+    \begin{enumerate}
+        \item EM法 (Dempster, Larid, Rubin 77)：欠測のあるモデルにおいて，パラメータの点推定を与える算譜．
+        潜在変数も説明変数と同等に扱い，欠測を埋めて擬似的な完全データを作り，
+        観測データの対数尤度の最大化を目的関数として，更新していく素直な算譜である．当然，特に期待値計算のEのステップに，計算困難性があり，分布の仮定を取り去ることが出来なかった．
+        \item 変分Bayes法：パラメータの分布の推定量を与える算譜．
+        その際の期待値計算の算譜に変分近似を用いる．EM法ではBayes推定量を扱っていたのに対して，事後分布自体をBayes決定関数とすることが可能になった．
+        \item 
+    \end{enumerate}
+\end{remarks}
+
+\section{(B1) Bayes模型}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    Bayes模型は本質的に分布の構造（特に依存・相関・接触構造）を深く省察することになる．
+\end{tcolorbox}
+
+\subsection{Bayes模型と分割表}
+
+\begin{definition}
+    統計的実験$(\X,\A,(P_\theta)_{\theta\in\Theta})$と統計的汎関数$\psi:\Theta\to\Y$とに対して，
+    積空間$\X\times\Y$上の確率分布の族を\textbf{Bayes模型}という．
+\end{definition}
+
+\begin{example}[contingency / cross table]
+    $x\in\X$を可観測量，$y\in\Y$を推定したい未知変量とすると，積空間$\X\times\Y$上の確率分布を設定することが，
+    Bayesデータ分析の最初のステップ(B1)である．
+    このとき，$(\X\times\Y)^{\otimes n}$上の統計量として，次に注目出来る．
+    \begin{enumerate}
+        \item 特に，$\X=\Brace{X_1,\cdots,X_p},\Y=\Brace{Y_1,\cdots,Y_q}$が有限集合であるとき，
+        データ$(x_1,y_1),\cdots,(x_n,y_n)$に対して
+        $a_{ij}:=\#\Brace{k\in[n]\mid(x_k,y_k)=(X_i,Y_j)}$で定まる行列$A=(a_{ij})\in M_{pq}(\R)$を\textbf{分割表}という．
+        \item 分割表について，各行の合計$\norm{a^i}_1$を行周辺合計(row marginal total)，各列の合計$\norm{a_j}_1$を列周辺合計という．さらに，それぞれの和$\sum_{i\in[p]}\norm{a^i}_1=\sum_{j\in[q]}\norm{a_j}_1=n$を\textbf{総計}(grand total)という．
+        \item \cite{鎌谷-モンテカルロ} では総計が1になるように規格化した行列$A/n:=(a_{ij}/n)$を\textbf{確率表}といい，一方で行周辺合計の列が$(\norm{a^i}_1)=1_p$になるように規格化して得る確率行列を\textbf{尤度表}と呼んでいる．
+        データ数$n$に加えて，行同士の関係に関する情報を落として得る行列であるが，まだ十分統計量なのであろう．
+        \item 句"a future contingency"には「不慮の出来事」の義があるが，そもそも"contingence"は接触の義である．
+        "contingency table"の語は \cite{Pearson04} が初出で，独立でないことを指す言葉として定義された．
+    \end{enumerate}
+\end{example}
+
+\subsection{事前分布の選び方}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    事前情報を「確からしさ」として反映する部分が事前分布であるから，
+    極めて個別具体的な議論になる．
+    が，その中でも普遍的な方法論として，
+    次の手法が提案されている（これを\textbf{客観的事前分布}という）．
+    \begin{enumerate}
+        \item 共役事前分布：数値積分が必要にならないが，モデルが限定されてしまう．
+        \item Lindleyのあいまい事前分布．
+        \item Jeffreys事前分布：パラメータ変換に対する不変性は「客観性」の大事な要素であろう．まるで物理理論である．
+        \item Box-Tiaoの無情報的事前分布．
+    \end{enumerate}
+\end{tcolorbox}
+
+\begin{definition}[improper]
+    統計的実験$(\X\times\Y,\A\otimes\B,(P_\theta)_{\theta\in\Theta})$を考える．
+    \begin{enumerate}
+        \item 空間$\Theta$が非コンパクトであるとき，この上に一様性を持つ分布を仮定したい場合がある．このとき，確率分布の模型として非有限な測度を採用するとき，\textbf{非正則な分布}という．
+    \end{enumerate}
+\end{definition}
+
+\begin{remarks}[sampling theory]
+    Neyman-Pearson理論はその枠組から「頻度主義」または「標本理論」という．
+    「有限の標本から無限の標本を近似する」という数学的操作に支えられた統計学であるため，モデリングの力はそこまで高くない．
+    例えば信頼区間は，サンプル$(X_1,\cdots,X_n)$の複製に関しての(統計物理学的な)確率であり，
+    手元の1つの信頼区間がどれくらの割合で真の値を含むかの「確からしさ」の一つの解釈でしかない．
+    そこで殆どの場合はBayes信頼区間の形で応用される．
+    なお，2つは特定の事前分布に関しては一致する．
+    一方で例えばLaplaceは，頻度論が「この眼の前の事象は，10回に1回しか見られないものだった」という
+    結果の確率を与えるのに対して，Bayesの定理を「原因の確率」と呼んでいる．
+    ここには俗に言って「逆」の考え方がある．「起こってしまった事象の条件付き確率」を反転させれば，「いま見たものから，将来起こることの予測」になるはずである．
+\end{remarks}
+
+\begin{remarks}[Bayesの定理の射程]
+    そもそも「データを見てそこからモデルを作る」という統計学者の営み自体が，データから情報を取り出してそれを用いて事前分布を更新していく作業である．
+    従って，単なるモデル化の進歩とも見れる．
+\end{remarks}
+
+\subsection{Jeffreys事前分布}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    $\Theta$上の座標変換について不変である分布の密度は，行列式の定数倍に限る．
+\end{tcolorbox}
+
+\begin{definition}
+    $p(\theta)\propto\sqrt{\det I(\theta)}$を満たす分布を\textbf{Jeffreys事前分布}という．
+\end{definition}
+
+\begin{example}\mbox{}
+    \begin{enumerate}
+        \item $\Bernoulli(1,\theta)$に従う観測に対して，$\Beta(1/2,1/2)$は$\varphi=\theta^2$に関して不変である．
+        \item $\Pois(\theta)$に従う観測に対して，$p(\theta)=\theta^{-1/2}$は非正則なJeffreys事前分布で，事後分布はGamma分布に従う．
+    \end{enumerate}
+\end{example}
+
+\section{(B2) Bayes更新}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=データ分析の騎手]
+    データの形で得られる前の事前知識を取り込む余地があるモデルを提供するのがBayes統計学である．
+    データは情報の一形態であり，情報はあくまで「確率分布の更新」である．その更新の仕方を与える真に一般的な定理がBayesの定理となる．
+\end{tcolorbox}
+
+\subsection{Poisson-Gamma模型}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    指数分布のPoisson観測による更新はGamma分布になる．
+\end{tcolorbox}
+
+\begin{proposition}
+    $\Theta=\R^+$とし，この上の事前分布を$\Exp(1)$とする：$p(\theta)=e^{-\theta}$．
+    $x_1,\cdots,x_N\sim\Pois(\theta)$を観測とすると，その尤度関数は
+    \[p(x|\theta)=\frac{\theta^{\sum_{i\in[N]} x_i}}{x_1!\cdots x_N!}e^{-N\theta}.\]
+    この観測による更新は
+    \[p(\theta|x)\propto p(x|\theta)p(\theta)\propto \theta^{\sum_{i\in [N]}x_i}e^{-(N+1)\theta}.\]
+    これは，$\rG\paren{\sum_{i\in[N]}x_i+1,N+1}$の密度関数である．
+\end{proposition}
+
+\subsection{正規模型}
+
+\begin{proposition}
+    $\al,\beta\in\R$を既知，$\mu\in\R,\tau>0$を未知とする．
+    母数の空間を$(\mu,\tau)\in\Theta=\R\times\R^+$とする．
+    次を仮定する．
+    \begin{enumerate}[({A}1)]
+        \item 条件付き確率変数$x_1,\cdots,x_N|\mu,\tau$は条件付き独立で$N(\mu,\tau^{-1})$に従う．
+        \item $\mu|\tau\sim N(0,\tau^{-1}),\tau\sim\rG(\al,\beta)$とする．
+    \end{enumerate}
+    このとき，事後密度関数は
+    \[p(\mu,\tau|x)\propto \tau^{\frac{N-1}{2}+\al}\exp\paren{-\paren{\frac{1}{2}\sum_{n\in [N]}(x_n-\mu)^2+\frac{1}{2}\mu^2+\beta}\tau}.\]
+    特に，
+    \begin{enumerate}
+        \item $\tau$の事後周辺分布はGamma分布に，$\mu|\tau$が正規分布に従う．
+        \item $\tau|\mu,x$はGamma分布に，$\mu|x$は$t$-分布に従う．
+    \end{enumerate}
+\end{proposition}
+
+\subsection{Gibbsサンプリング}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    模型の構造を利用した，内的な方法でMarkov連鎖を定義する．
+\end{tcolorbox}
+
+\begin{example}[有限混合模型のGibbsサンプリング]
+    $X\in L(\Om)$は，2値確率変数$I\sim\Bernoulli(\theta)$の値に応じて，$P_0$または$P_1$に従うとする．
+    パラメータ$\theta\in\Theta:=[0,1]$上の一様分布を事前分布とすると，独立観測による事後分布は極めて複雑になるが，$I$の値が既知であるならば，表が出た総数を$m\in[n]$とすれば，
+    $\theta|I,\x\sim\Beta(n-m+1,m+1)$となる．
+    逆に，$I|\theta,\x$も簡単である．
+    よって，
+    \begin{enumerate}
+        \item $\theta_0\in(0,1)$を適当に決める．
+        \item 観測から，$I$の事後予測分布を得て，ここから擬似乱数を用いてコインの値$I_1,\cdots,I_n$を生成する．
+        \item コインの情報を擬似観測として，$\theta$の事後予測分布を得て，ここから擬似乱数を用いて$\theta_1$を生成する．
+        \item (1)に戻る．
+    \end{enumerate}
+    とすると，Markov連鎖$(\theta_n)$を定める．
+\end{example}
+
+\subsection{Metropolis-Hastings法}
+
+\begin{remarks}
+    状態空間$E$は都市$x\in E$のなす離散集合で，理想的な人口配分など，興味のある分布$\Pi\in P(E)$を考える．
+    人の動きは理想とは違うものであるから，このままでは人口配分はいくら待っても$\Pi$になってくれないであろう．
+    この世界の人が都市$x\in E$から$y\in E$へ動く確率を$q(x,y)$で表す．
+    都市$x$から$y$への移住希望者のうち，割合
+    \[\al(x,y):=1\land\frac{\pi(y)q(y,x)}{\pi(x)q(x,y)}\]
+    で移動を許可することで，都市$x\to y$と$y\to x$と移動する期待人数は常に一定に保たれる．
+    この世界に住む１人の住人の移動はMarkov連鎖になり，これをを十分長く追うことで，分布$\Pi$が未知の場合でもこれに収束するMarkov連鎖が得られる．
+\end{remarks}
+
+\begin{definition}[proposal kernel, acception, MH-kernel]
+    \begin{enumerate}
+        \item $Q(x,-)$は密度$q(x,-)$を持つとする．この$Q$を\textbf{提案カーネル}という．
+        \item 初期値$x\in E$を任意に取り，$Q(x,-)$から移動先$y\in E$を疑似乱数として生成する．さらに一様乱数$u\sim\rU([0,1])$に従って，$u\le\al(x,y)$ならば$y$への移動は\textbf{採択}される．
+        \item 上述の算譜が定めるMarkov核$P(x,A):=P[X_{n+1}\in A\mid X_n=x]\;(x\in E,A\in\B(E))$を\textbf{MH-核}という．
+    \end{enumerate}
+\end{definition}
+
+\begin{theorem}
+    MH-核$P$について，
+    \begin{enumerate}
+        \item $\Pi$-対称である．特に，$\Pi$-不変である．
+        \item $\pi,q$が正値ならば，Ergode性を持つ．
+    \end{enumerate}
+\end{theorem}
+
+\section{(B2) Bayes推定・検定}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    基本は事後分布が興味の対象であるが，$\Y$が高次元の場合は，さらに統計量を構成してこれを使うことになる．
+\end{tcolorbox}
+
+\subsection{信用集合}
+
+\begin{definition}[credible set]
+    統計的実験$(\X\times\Y,\A\otimes\B,(P_\theta)_{\theta\in\Theta})$を考える．
+    実数$\al\in(0,1)$に対して，
+    \[C:=\Brace{\theta\in\Theta\;\middle|\;\int_Cp(\theta|x)d\theta\ge\al}\]
+    を\textbf{信用集合}という．
+\end{definition}
+\begin{remark}
+    定義は「$C$の中に真のパラメータが在る確率が$\al$以上である」と言っているとみなせて，特に信用集合は一意に定まらない．そこで，数々の指標が提案されることになる．
+\end{remark}
+
+\begin{example}[Highest Posterior Density]
+    特に，事後確率密度$p(\theta|x)$の値が大きいものから選び出して構成された信用集合を\textbf{HPD-信用集合}という：
+    \[\exists_{c>0}\quad C=\Brace{\theta\in\Theta\mid p(\theta|x)>c}\]
+    非常に直感的でわかりやすいが，導出は困難であることが多い．
+\end{example}
+
+\subsection{事後予測分布}
+
+\begin{definition}[posterior predictive distribution]
+    統計的実験$(\X\times\Y,\A\otimes\B,(P_\theta)_{\theta\in\Theta})$を考える．
+    $\X$上の確率分布$P(X|(x_1,\cdots,x_N))$を\textbf{事後予測分布}という．
+\end{definition}
+
+
+
+\subsection{仮説検定}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    Neyman-Pearson理論の方が仮説検定の理論はわかりやすかった．
+    が，Bayes統計も，Bayes因数(Bayes factor)を用いる方法は，尤度比検定に漸近同等である．
+\end{tcolorbox}
+
+\section{(B3) Bayes模型診断}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    Bayes模型は明確な意味論を持つために，Neyman-Pearson理論のような枠組みを排し，個別具体的な議論を尊重する傾向がある．
+    その中でも，普遍的な状況で有用な基準と呼ぶべき手法が提案されている．
+\end{tcolorbox}
+
+\subsection{模型事後確率}
+
+\begin{definition}
+    統計的実験の列$(\X\times\Y,\A\otimes\B)$に対して，$M$個の模型$(P^{(1)}_\theta)_{\theta\in\Theta_1},\cdots,(P^{(M)}_\theta)_{\theta\in\Theta_M}$を考える．
+    \[p(m|x)=\frac{\int_{\Theta_m}p(x|\theta_m,m)p(\theta_m|m)p(m)d\theta_m}{\sum_{m\in[M]}\int_{\Theta_M}p(x|\theta_m,m)p(\theta_m|m)p(m)d\theta_m}\]
+    を\textbf{模型事後確率}という．
+\end{definition}
+
+\subsection{Bayes因子}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    Jeffreysが提案した客観的な基準である．
+\end{tcolorbox}
+
+\begin{definition}
+    統計的実験の列$(\X\times\Y,\A\otimes\B)$に対して，$M$個の模型$(P^{(1)}_\theta)_{\theta\in\Theta_1},\cdots,(P^{(M)}_\theta)_{\theta\in\Theta_M}$を考える．
+    模型$i$の$j$に対する\textbf{Bayes因子}とは，
+    \[B_{ij}:=\frac{p(x|i)}{p(x|j)},\quad i,j\in[M]\]
+    をいう．
+    \begin{enumerate}
+        \item $\log_{10}B_{ij}\le1/2$ならば，模型$i$の証拠は弱い，という．
+        \item $\log_{10}B_{ij}\in[1/2,1]$ならば，模型$i$の重要な証拠である，という．
+        \item $\log_{10}B_{ij}\in[1,2]$ならば，模型$i$の強力な証拠である，という．
+        \item $\log_{10}B_{ij}\ge2$ならば，模型$i$の証拠は疑いの余地がない，という．
+    \end{enumerate}
+\end{definition}
+
+\begin{example}
+    線型正規回帰模型$y_n|\al,\beta\sim\rN(\al+\beta x_n,\sigma^2)$について，$\al,\beta$に対して独立な正規事前分布$N(0,\sigma^2)$を仮定し，
+    これの観測$y$に対する事後分布は
+    \[\al|y\sim\rN\paren{\frac{\sum_{n\in[N]}y_n}{1+N},\frac{\sigma^2}{1+N}},\quad\beta|y\sim\rN\paren{\frac{\sum_{n\in[N]}x_ny_n}{1+\sum_{n\in[N]}x_n^2},\frac{\sigma^2}{1+\sum_{n\in[N]}x_n^2}}.\]
+    となる．
+    実数$x$を確定させた際に，$y$の事後予測分布は再び正規分布になる．
+
+    この模型の有意性検定は，$\beta=0$とした模型$\M_0$に対する検定になる．
+    2つの模型への事前確率は一様すれば，Bayes因子は
+    \[B_{10}=\exp\paren{\frac{1}{2\sigma^2}\frac{\paren{\sum_{n\in[N]}x_ny_n}^2}{1+\sum_{n\in[N]}x_n^2}}\paren{\frac{1}{1+\sum_{n\in[N]}x_n^2}}^{1/2}\]
+    となる．
+    \texttt{airquality}によるとBayes因子は41.8で，疑いの余地がない．
+\end{example}
+
+\chapter{Bayes統計学によるデータ解析}
+
+\begin{quotation}
+    \begin{description}
+        \item[Bayesデータ解析の流れ] \begin{enumerate}
+            \item 事前情報とデータ収集過程に関する知見を基に，可観測量と非可観測量の結合分布について模型を用意する．
+            \item 観測量を得た際に，これによって条件付けることで非可観測量の条件付き分布を計算し，推定の結果とする．
+            \item 模型から得た結果を基に，模型評価をする．特に，(1)での模型設定に対する結果の頑健性を評価する．
+        \end{enumerate}
+    \end{description}
+\end{quotation}
+
+\chapter{Bayes計算}
+
+\chapter{参考文献}
+
+\bibliography{../StatisticalSciences.bib,../SocialSciences.bib,../mathematics.bib,../statistics.bib}
+\begin{thebibliography}{99}
+    \item 
+    Andrew Gelman, John Carlin, Hal Stern, David Dunson, Aki Vehtari, and Donald Rubin. (2021). \href{http://www.stat.columbia.edu/~gelman/book/}{\textit{Bayesian Data Analysis}}.
+    \item
+    Kruschke. \href{https://sites.google.com/site/doingbayesiandataanalysis/}{Doing Bayesian Data Analysis}.
+
+    \item{松原望}
+    松原望 (2010). 『ベイズ統計学概説』（培風館）．
+    \item{鈴木}
+    鈴木雪夫，国友直人 (1989). 『ベイズ統計学とその応用』（東京大学出版会）．
+
+    \item{EM}
+    黒田正博 (2020). 『EMアルゴリズム』（統計学One Point 18，共立出版）．
+\end{thebibliography}
+
+\end{document}

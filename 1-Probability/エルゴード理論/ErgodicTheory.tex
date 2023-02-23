@@ -1,0 +1,1015 @@
+\documentclass[uplatex,dvipdfmx]{jsreport}
+\title{エルゴード理論}
+\author{}
+\pagestyle{headings} \setcounter{secnumdepth}{4}
+\input{/Users/Hirofumi Shiba/NatureOfStatistics/preamble_no_fonts.tex}
+%\input{/Users/hirofumi.shiba48/NatureOfStatistics/preamble_no_fonts.tex}
+\usepackage[math]{anttor}
+\newcommand{\Car}{\mathrm{Car}}
+\begin{document}
+\tableofcontents
+
+\chapter{古典的エルゴード理論}
+
+\begin{quotation}
+    古典力学系，統計的集団，相空間，量子系と情報理論，確率空間，これらに共通する性質を抽出したい．
+    いずれも，保測変換なる射が定める1-径数変換群の極限定理として知識のクラスが得られる．
+    これは積分の収束定理でもあれば，大数の法則でもあれば，確率過程の収束定理でもある．
+    しかし，一度作用素論的な定式化を得ると，関数解析の中で真の自由度を得る．
+\end{quotation}
+
+\section{歴史}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+古典的にエルゴード理論とは，特定の力学系が満たす性質「時間平均と空間平均の一致」を主張する定理である．
+これは元々統計力学黎明期においてBoltzmanとGibbsによって採択された作業仮説で，一般に計算困難な時間平均を，空間平均として現時点の情報から計算可能なものに置き換える点で有効であった．
+形式的には，収束定理の変種に思える．
+\end{tcolorbox}
+
+\begin{enumerate}
+    \item (古典統計力学での問題意識) Ergode理論はMaxwellとBoltzmannの気体分子運動論に端を発した．
+    Botlzmannは，あるひとつのmacrostateに対応する微視的状態の集合（統計集団）をmonodeと呼んだ，現在はGibbsの用語\textbf{集団(ensemble)}が採用されている．
+    気体ではなく，ひとつの分子についてはergodeと呼び，Gibbsは小正準集団(microcanonical ensemble)と呼んだ．
+    \item (古典力学系の合流) また，力学系が定める相空間の1-パラメータ変換群の研究が，Poincareの再帰定理を基礎に置いて，さらに測度論の手段を吸収して進んだ．
+    これはMaxwellとBoltzmannらの作業仮設の正当化ともみれるが，実際にエルゴード的な力学系の具体例は殆ど知られていない．
+    \item (数学的定式化) von Neumannのmean ergodic theorem (32)とBrikhoffのindividual ergodic theorem (31)により数学理論となった．
+    \item (エントロピーによる同型問題の解決) Kolmogorovらが，スペクトルやエントロピー，エルゴード性やさらに強い種々の混合性などの性質が不変量として取り上げられ，それらに基づいて，函数解析，情報理論，確率論の手法を用いて，保測変換の構造が調べられた．
+    \item (von Neumann環の理論が受け継ぐ) 軌道同型というさらに弱い同値関係については，フォンノイマン環の分類問題の発展に触発されて進んだ．
+    \item (数論との繋がり) 1970sには，Furstenbergが，組み合わせ数論の問題からの流入口を繋いだ．
+    この道には，Host and Kra, Green and Taoらが続く．
+    おそらくコラッツ予想も続く．
+    \item (確率過程論) 定常過程の理論の本質的な部分はエルゴード理論に関わっている(定常過程のエントロピー解析など)．ここでの変換とは，時間発展である．
+\end{enumerate}
+
+\begin{remarks}[作用素論的定式化]
+    こうして，強い物理学的な動機を持った，確率論，組み合わせ論，群論，位相空間論，数理論理学の上にたった異様な理論となっている．
+しかし，そのはじめのことから，作用素論が中心的な役割を果たすのは必須であった．
+Koopman作用素により，状態空間の力学$\varphi$が線型作用素$T$に線形化され，関数解析の知見が流入する．
+
+\begin{quote}
+    However, this is not a one-way street. Results and problems from ergodic theory,
+once formulated in operator theoretic terms, tend to emancipate from their parental
+home and to lead their own life in functional analysis, with sometimes stunning
+applicability (like the mean ergodic theorem, see Chapter 8). We, as functional
+analysts, are fascinated by this interplay, and the present book is the result of this
+fascination.\cite{OperatorTheoretic}
+\end{quote}
+\end{remarks}
+
+\subsection{力学からの動機}
+
+\begin{discussion}[問題設定]
+    $d$粒子系の理想気体の状態空間は$X\subset\R^{6d}$となる．
+    時間発展は$X$上の軌跡で表せ，これはNewton力学に従う．したがって，Hamiltonの微分方程式で定まる．
+    これは群作用が定めるflowとも考えられれば，$\varphi:X\to X$による離散力学系とも考えられる．
+    連続にしろ離散にしろ，組$(X,\varphi)$を\textbf{力学系}という．
+\end{discussion}
+
+\begin{definition}[molecular chaos]
+    気体分子運動論において，衝突する粒子の位置と速度の間には相関がないとする仮定を\textbf{分子的混沌}という．
+\end{definition}
+\begin{remarks}
+    これを仮定すると，「十分長い時間スケール（普通の観測に要する時間程度）をとると、系は微視的には小正準集団の状態のすべてをとりうる」ことが導かれる．これを\textbf{エルゴード仮説}という．
+\end{remarks}
+
+\subsection{物理的制約}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    力学系の分野では，合成作用素をKoopman作用素と呼び，その随伴である転送作用素をFrobenius-Perron作用素と呼ぶ．
+\end{tcolorbox}
+
+\begin{definition}[observable, Koopman operator]
+    現実問題，必ずしも状態空間の中の点を確定させることが出来るわけではない．
+    \begin{enumerate}
+        \item 可測関数$f:X\to\R$を\textbf{可観測量}という．系の温度など．
+        \item 可観測量の時間発展は，$\varphi$による引き戻しが定める線型作用素$T_\varphi:\Meas(X,\R)\to\Meas(X,\R);f\mapsto f\circ\varphi$が支配する．これを\textbf{Koopman作用素}という．
+    \end{enumerate}
+\end{definition}
+\begin{remarks}
+    このように，空間$X$上の軌道を考える代わりに位相線型空間$\Meas(X,\R)$上の軌道を考えることは，物理学的な動機も，数学的な動機も備える．
+\end{remarks}
+
+\begin{definition}[time mean]
+    特に量子系において，時間発展が極めて速いので，忠実にその発展を観測できるわけではない．
+    \begin{enumerate}
+        \item 可観測量$f$の状態$x_0\in X$における\textbf{時間平均}とは，$\lim_{N\to\infty}\frac{1}{N}\sum^{N-1}_{n=0}T^n_{\varphi}f(x_0)$をいう．
+        \item しかしこれは$\varphi^n(x_0)$またはその観測$f(\varphi^n(x_0))$なる要素を含んでおり，これが観測可能であるとは限らないという問題を孕む．
+        そこで，時間平均は初期状態$x_0\in X$に依らないとする．
+    \end{enumerate}
+\end{definition}
+
+\begin{hypothesis}[Ergodic Hypothesis]
+    ある標準的な確率測度$\mu\in P(X)$が存在し，
+    任意の初期状態$x_0\in X$と可観測量$f\in\F\subset\Meas(X,\R)$に対して，時間平均は一定で，次のように表される：
+    \[\lim_{N\to\infty}\frac{1}{N}\sum^{N-1}_{n=0}f(\varphi^n(x_0))=\int_Xfd\mu.\]
+\end{hypothesis}
+
+\subsection{数論への応用}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    Borelのnormal numbersについての定理とWeylのequidistribution theorem (1909)に見られる通り，物理学から始まった数学的対象が，unreasonable effectivenessを発揮した分野の例が数論である．
+\end{tcolorbox}
+
+\begin{definition}[normal number (Borel 09)]
+    $\abs{\Sigma}=r\in\N$を満たすアルファベット$\Sigma$上の無限列$S\in\Sigma^\infty$が\textbf{正規}であるとは，次が成り立つことを言う：
+    \[\forall_{w\in\Sigma^*}\;\lim_{n\to\infty}\frac{N_S(w,n)}{n}=\frac{1}{e^{\abs{w}}}.\]
+    ただし，$\Sigma^*$を有限列全体の集合，$N_S(w,n)$を文字列$S$の最初の$n$個に$w$が現れる回数を表す関数とする．
+\end{definition}
+
+\begin{theorem}[Borel]
+    任意の$r\ge 2$について，$r$進正規でない数の集合は（非可算無限集合であるが）Lebesgue零集合である．
+\end{theorem}
+\begin{remark}
+    ただし，正規数の例は，Sierpinskiによる1917年の構成まで待つことになる．
+\end{remark}
+
+\begin{theorem}
+    $\{x\}$で実数$x\in\R$の小数部分を表す．
+    \begin{enumerate}
+        \item (Kroneckerの稠密定理) $\forall_{\al\in\R\setminus\Q}\;\forall_{(a,b)\subset[0,1]}\;\exists_{n\in\N}\{n\al\}\in(a,b)$．
+        \item (Weylの一様分布定理) $\forall_{\al\in\R\setminus\Q}\;\forall_{(a,b)\subset[0,1]}\;\lim_{N\to\infty}\frac{\#\Brace{n\al\mid n\le N,\{a_n\}\in(a,b)}}{N}=b-a$．
+    \end{enumerate}
+\end{theorem}
+\begin{remark}
+    $x$が$r$進正規であることと，数列$(r^nx)_{n\in\N}$がWeylの意味で一様分布することは同値．
+\end{remark}
+
+\begin{theorem}[Green-Tao]
+    素数の集合$\bP$は，$\forall_{k\in\N}\;\exists_{a\in\bP}\;\exists_{n\in\N}\;a,a+n,a+2n,\cdots,a+(k-1)n\in\bP$を満たす．
+\end{theorem}
+
+\section{保測変換}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    保測変換とは，Probの自己同型である．
+    対象として，保測変換を考えることとこれが生成する離散流を考えることは等しい．
+    そして離散流とは定常過程に等しい．
+    こうして，対象としての確率空間・相空間と，射としての微分方程式・確率過程とに対応がつく．
+\end{tcolorbox}
+
+\begin{notation}\mbox{}
+    \begin{enumerate}
+        \item $\{x_n\}_{n\in\Z}\subset\Om$は非圧縮な定常流とする．
+        \item 非圧縮性とは，位相体積不変性のことであり，任意の可測集合$A\subset\Om$に対して$T^i(A)$の測度は変わらないことをいう．
+    \end{enumerate}
+\end{notation}
+
+\subsection{保測変換の定義}
+
+\begin{definition}[measure-preserving transformation, flow]
+    確率空間$(\Om,\F,P)$上の
+    可測写像$T:\Om\to\Om$が\textbf{保測写像}であるとは，次の(3)を満たすもの，\textbf{保測変換}であるとは次の3条件を満たすものをいう：
+    \begin{enumerate}
+        \item $T$は全単射．
+        \item $T$も$T^{-1}$も可測：$T(\F)=T(\F^{-1})=\F$．
+        \item $P\circ T^*=P$．すなわち，$\forall_{A\in\F}\;P[T^{-1}(A)]=P[A]$．
+    \end{enumerate}
+    細く変換の実径数群を\textbf{流れ}という．
+\end{definition}
+
+\begin{definition}[homomorphism of Prob]
+    Probの\textbf{準同型}とは，それぞれの充満集合$\Om_0,\Om'_0$が存在して，
+    次を満たす可測写像$\varphi:\Om_0\to\Om'_0$が存在することをいう：
+    \begin{enumerate}
+        \item $\varphi$は全射．
+        \item 同値な測度を押し出す：$P\circ\varphi^*=P'$．
+        \item 相対測度について可測：$\varphi^{-1}(\F'\cap\Om_0')\subset\F\cap\Om_0$．
+    \end{enumerate}
+    この奇怪さから，準同型の代わりに\textbf{商写像}ともいう．
+\end{definition}
+
+\begin{definition}[射の同型]
+    ここで，それぞれの保測変換$T,T'$が同型であるとは，
+    \begin{enumerate}
+        \item $T(\Om_0)=\Om_0,T(\Om_0')=\Om_0'$．
+        \item $\varphi\circ T=T'\circ\varphi\;\on\Om_0$．
+    \end{enumerate}
+\end{definition}
+
+\subsection{例}
+
+\begin{example}[Bernoulli shift]
+    ある$P\in P(\R)$に対して，これが定める定常過程を$X:\R^\Z\to\R$とする(これは独立同分布列である)．
+    このとき，$T:\R^Z\to\R^Z$をずらし作用素とすると，$\forall_{m<n}\;\forall_{A\in\F^{\otimes(n-m)}}\;P[(X_m,\cdots,X_n)\in A]=P[(X_{m+k},\cdots,X_{n+k})\in A]=P[X_m\in A]^{n-m}$が成り立つ．
+    この$T$を\textbf{Bernoulli変換}という．
+\end{example}
+
+\begin{definition}
+    写像$P:S\times\B(S)\to[0,1]$が\textbf{遷移確率}であるとは，次の2条件を満たすことをいう：
+    \begin{enumerate}
+        \item $\forall_{e\in E}\;P[e:-]\in P(S)$．
+        \item $\forall_{A\in\B(S)}\;P[-:A]\in L(S)$．
+    \end{enumerate}
+    さらに，$Q\in P(S)$が$P$の\textbf{定常確率}であるとは，
+    \[\int_SP[e:A]dQ(e)=Q(A)\]
+    を満たすことをいう．
+\end{definition}
+
+\begin{example}[Markov transformation]
+    これが定める確率過程のずらし作用素を\textbf{Markov変換}という．
+\end{example}
+
+\subsection{流れが定めるユニタリ作用素}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    純点スペクトルを持つエルゴード的な流れにおいては，スペクトル同型ならば同型である(Neumann 1932)．すなわち，流れの構造がユニタリ作用素群に完全に反映される．
+    そこで，純点スペクトルでない場合の同型問題を解決する不変量が志向される．
+    エルゴード性と混合性はスペクトル構造より弱い．
+
+    単独の保測変換については，Bernoulli変換は全て同じスペクトル構造(無限重Lebesgueスペクトル)を持つが，互いに同型かの問題でさえ難しい．
+    互いに同型でないことをエントロピーなる不変量によってKolmogorov (58)が示し，Sinaiが改良し，
+    2つのBernoulli変換が有限な同じエントロピーを持つならば，互いに他の商変換と同型である(弱同型)ことを示す(62)．
+    最終的に，エントロピーが等しいBernoulli変換は同型であることをOrnstein (70)が示す．
+\end{tcolorbox}
+
+\begin{definition}[unitary equivalent, spectral isomorphic]
+    $\Om\in\Prob$を完備可分，$(T_t)$を流れとする．
+    \begin{enumerate}
+        \item $U_tf:=f\circ T^{-1}_t$として定まるユニタリ変換の群
+        $\{U_t\}_{t\in\R}\subset\Aut_\Hilb(L^2(\Om))$を\textbf{ユニタリ作用素群}という．
+        \item 2つのユニタリ作用素群$\{U_t\}\subset\Aut_\Hilb(H),\{U'_t\}\subset\Aut_\Hilb(H')$が\textbf{ユニタリ同値}であるとは，等長同型$V:H\to H'$が存在して$VU_t=U_t'V$を満たすことをいう．
+        \item 2つの流れ$(T_t),(T'_t)$について，これらが定めるユニタリ作用素群がユニタリ同値であることを\textbf{スペクトル同型}であるという．
+    \end{enumerate}
+\end{definition}
+
+\begin{proposition}
+    $(U_t)$をHilbert空間$H$のユニタリ作用素群とする．
+    \begin{enumerate}
+        \item $(U_t)$は強連続である．
+        \item (Stone) $H$を可分とする．$L^2(\Om)$の単位の分解$(E(\lambda))_{\lambda\in\Lambda}$が存在して，一意にスペクトル分解される：
+        \[U_t=\int_\R e^{2\pi it\lambda}dE(\lambda).\]
+        \begin{enumerate}
+            \item $E(\lambda)$は射影作用素である．
+            \item $\forall_{\mu<\lambda}\;E(\lambda)E(\mu)=E(\mu)$．
+            \item $E(\lambda)$は右強連続．
+            \item $E(-\infty)=0,E(\infty)=1$．
+        \end{enumerate}
+        さらに，次の反転公式が成り立つ：
+        \[E^*(\mu)-E^*(\lambda)=\lim_{R\to\infty}\int^R_{-R}\frac{e^{-2\pi i\mu t}-e^{-2\pi i\lambda t}}{-2\pi it}U_tdt,\quad E^*(\lambda)=\frac{E(\lambda)+E(\lambda-)}{2}\]
+        \item (Hellinger-Hahn) (2)のとき，列$\{h_n\}\subset H$が存在して，次が成り立つ：
+        \begin{enumerate}
+            \item $d\mu_n(\lambda):=\norm{dE(\lambda)h_n}^2$とおくと，$\mu_1\gg\mu_2\gg\mu_3\gg\cdots$．
+            \item $H_n:=\Brace{f\in H\;\middle|\;\exists_{g\in L^2(\R;\mu_n)}\;f=\int_\R g(\lambda)dE(\lambda)h_n}$とおくと$(U_t)$-不変である．
+            \item $H=\oplus_{n\ge1}H_n$．
+            \item 任意の(1)~(3)を満たす$(h'_n)$について，$\forall_{n\ge1}\;\mu_n\sim\mu'_n$．
+        \end{enumerate}
+        \item $(U_t)$の$H_n$への制限は，$(V_tg)(\lambda)=e^{2\pi it\lambda}g(\lambda)$で定まる$\{V_t\}\subset\Aut_\Hilb(L^2(\R,\mu))$にユニタリ同値である．
+        \item 定める測度の列$(\mu_n)$が各$n$について互いに絶対連続であることと，元の$(U_t),(U'_t)$はユニタリ同値であることとは同値である．
+    \end{enumerate}
+\end{proposition}
+
+\begin{corollary}
+    ユニタリ作用素群$(U_t)$が重複度$\kappa$の一様Lebesgueスペクトルを持つための必要十分条件は，次が成り立つことである：$H$は
+    \[H=\oplus_{m\in[\kappa]}H_n,\quad\forall_{t\in\R}\;\forall_{n\in[\kappa]}\;U_tH_n=H_n.\]
+    と不変部分空間に分解され，各$H_n$への$(U_t)$の制限は$L^2(\R,ds)$上のユニタリ作用素群
+    \[\forall_{t\in\R}\;\forall_{g\in L^2(\R,ds)}\;(W_tg)(s)=g(s-t)\]
+    にユニタリ同値である．
+\end{corollary}
+\begin{Proof}
+    Fourier変換$\F:L^2(\R,d\lambda)\to L^2(\R,d\lambda)$は全単射な等長変換である．
+\end{Proof}
+
+\begin{definition}[simple, pure point spectrum, continuous spectrum]\mbox{}
+    \begin{enumerate}
+        \item $H_\lambda:=(E(\lambda)-E(\lambda-))H$を固有値$\lambda$に属する\textbf{固有空間}という．その元を\textbf{固有関数}という．
+        \item $H_\lambda$が一次元ならば，固有値$\lambda$は\textbf{単純}であるという．
+        \item $H$が固有空間の直和で表せるとき，\textbf{純点スペクトル}を持つという．
+        \item $(U_t)$が固有値を持たないとき，\textbf{連続スペクトル}を持つという．
+        \item $(\mu_n)$を$(U_t)$の\textbf{スペクトル系}，$\mu_1$を\textbf{最大スペクトル型}という．
+        \item $(\mu_n)$が$\R$上のLebesgue測度と同値ならば，\textbf{一様Lebesgueスペクトル}を持つという．
+        \item $m(\lambda):=\max\Brace{n\in\N\mid\lambda\in\Car(\mu_n)}$とすると，これは$d\mu_1(\lambda)\sim d\lambda$かつ$m$が定数であることに同値．
+        \item 重複度が無限大の一様Lebesgueスペクトルを\textbf{無限重Lebesgueスペクトル}(countably multiple Lebesgue spectrum)または\textbf{$\sigma$-Lebesgueスペクトル}という．
+    \end{enumerate}
+    この用語は$(T_t)$にも使うが，この場合$H_0$は定数のなす一次元空間を必ず含むため，この直交補空間上で固有空間分解を議論する．
+\end{definition}
+\begin{remark}
+    流れ$(T_t)$ではなく，単独の保測変換$T$についても，スペクトル積分の区間を$[-1/2,1/2]$に制限して同様の議論が成り立つ．
+    すると，可分なHilbert空間上の単一のユニタリ作用素$U$が重複度$\kappa$の一様Lebesgueスペクトルを持つための必要十分条件は，次を満たす正規直交基底$(h_{n,k})_{n\in[\kappa],k\in\Z}$が存在することになる：
+    \[\forall_{n\in[\kappa]}\;\forall_{k\in\Z}\;Uh_{n,k}=h_{n,k+1}\]
+\end{remark}
+
+\begin{proposition}
+    $\lambda\in\R$について，次の2条件は同値：
+    \begin{enumerate}
+        \item $\lambda$は$(U_t)$の固有値である．
+        \item $\exists_{f\in H}\;\forall_{t\in\R}\;U_tf=e^{2\pi it\lambda}f$．
+    \end{enumerate}
+\end{proposition}
+
+\section{古典的エルゴード定理}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    種々の表現で，物理量の「時間平均」の存在を主張する．
+    そしてこれが「空間平均」に等しいとき，「エルゴード性を持つ」という．
+    証明の基礎は最大不等式である．
+\end{tcolorbox}
+
+\begin{definition}
+    $\Om\in\Prob,f\in L(\Om),T\in\Aut_\Prob(\Om),A\in\F$について，
+    \begin{enumerate}
+        \item $f$が\textbf{$T$-不変}であるとは，$f\circ T=f\;\as\;\on\;\Om$を満たすことをいう．
+        \item $A$が\textbf{$T$-不変}であるとは，$1_A\in L(\Om)$が$T$-不変であることをいう．これは$P[T(A)\triangle A]=0$に同値．
+    \end{enumerate}
+\end{definition}
+
+\subsection{Poincareの再帰定理}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    零でない事象$A\in\F$について，$A$の殆ど全ての根元事象$\om\in A$は無限回$A$に戻ってくる．
+\end{tcolorbox}
+
+\begin{theorem}[Poincare]
+    $\Om\in\Prob$を完備，$T\in\Aut_\Prob(\Om)$を保測変換とする．
+    \[\forall_{A\in\F}\;P[T^n\om\in A\;\io\text{-}n\ge0]=P[A].\]
+\end{theorem}
+
+\subsection{最大不等式}
+
+\begin{lemma}
+    \[B_a:=\Brace{\om\in\Om\;\middle|\;\sup_{n\ge1}\frac{1}{n}\sum_{k\in n}f(T^k(\om))>a}.\]
+    について，
+    \[\forall_{A\in\F^T}\;\int_{B_a\cap A}fdP\ge aP[B_a\cap A].\]
+\end{lemma}
+
+\subsection{個別エルゴード理論}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    Poincareの再帰定理により無限回帰ることはわかったが，
+\end{tcolorbox}
+
+\begin{theorem}[Birkhoff (32)]
+    $\Om\in\Prob,T\in\Aut_\Prob(\Om)$とする．
+    \begin{enumerate}
+        \item 時間平均の存在：$\forall_{f\in L^1(\Om)}\;\forall_{\wh{f}\in (L^1(\Om))^T}\;\lim_{n\to\infty}\frac{1}{n}\sum_{k\in n}f(T^k(\om))=\wh{f}(\om)\;\as$
+        \item 空間平均との一致：$\forall_{A\in\F^T}\;\int_A\wh{f}dP=\int_AfdP$．
+    \end{enumerate}
+\end{theorem}
+
+\subsection{平均エルゴード理論}
+
+\begin{theorem}[von Neumann (1932)]
+    Birkhoffの定理の(1)式は$L^1(\Om)$の意味でも収束する．
+\end{theorem}
+
+\begin{theorem}[Riesz (1938)]
+    $X$を一様凸Banach空間とする．
+    $T\in B(X)$を$\norm{T}\le1$とすると，任意の$x\in X$に対して
+    \[p_x=\lim_{n\to\infty}\frac{x+Tx+\cdots+T^nx}{n+1}\in X\]
+    は存在して，
+    $Px=p_x$によって$P\in B(X)$を定めると，
+    これは部分空間$Y=\Brace{y\in X\mid Ty=y}$への射影である．
+\end{theorem}
+
+\subsection{逆の極限}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    Brown運動同様，$t\to0$の状況も双対的に調べることができる．
+\end{tcolorbox}
+
+\begin{theorem}[Wiener]
+    $(T_t)$を$\Om\in\Prob$上の流れとする．
+    \[\forall_{f\in L^1(\Om)}\;\lim_{t\to\infty}\frac{1}{t}\int^t_0f(T_s(\om))ds=f(\om)\;\as\]
+\end{theorem}
+
+\subsection{流れのエルゴード性の定義}
+
+\begin{proposition}
+    $\Om\in\Prob$を完備，$(T_t)$をその上の流れとする．次の3条件は同値：
+    \begin{enumerate}
+        \item $(T_t)$-不変な可測集合は，零集合と充満集合とに限る．
+        \item $(T_t)$-不変な可測集合は殆ど至る所定数である．
+        \item $\forall_{f\in L^1(\Om)}\;\lim_{t\to\infty}\frac{1}{t}\int^t_0f(T_s(\om))ds=\int_\Om fdP\;\as$
+    \end{enumerate}
+    この条件を満たすとき，$(T_t)$は\textbf{エルゴード的}であるという．
+\end{proposition}
+
+\begin{lemma}
+    任意の$(T_t)$-不変な可測関数は，狭義に不変な修正を持つ．
+\end{lemma}
+
+\subsection{流れのエルゴード性の特徴付け}
+
+\begin{lemma}[確率測度による特徴付け]
+    $(T_t)$はエルゴード的であるとする．
+    \begin{enumerate}
+        \item 次が成り立つ：
+        \[\forall_{f,g\in L^\infty(\Om)}\;\lim_{t\to\infty}\frac{1}{t}\int^t_0\int_\Om f(T_s(\om))g(\om)dPds=\int_\Om fdP\int_\Om gdP.\]
+        \item 特に次が成り立ち，次を満たすならば$(T_t)$はエルゴード的である：
+        \[\forall_{A,B\in\F}\;\lim_{t\to\infty}\frac{1}{t}\int^t_0P[T_s(A)\cap B]ds=P[A]P[B].\]
+    \end{enumerate}
+\end{lemma}
+
+\begin{proposition}[エルゴード性のユニタリ作用素群のスペクトルによる特徴付け]
+    次の3つは同値：
+    \begin{enumerate}
+        \item $(T_t)$はエルゴード的である．
+        \item 固有値$\lambda=0$は単純である．
+        \item 全ての固有値は単純である．
+    \end{enumerate}
+\end{proposition}
+
+\subsection{混合性}
+
+\begin{definition}[weakly mixing, mixing]
+    $\Om\in\Prob$の流れ$(T_t)$について，
+    \begin{enumerate}
+        \item 次を満たすとき，\textbf{弱混合的}であるという：
+        \[\forall_{A,B\in\F}\;\lim_{t\to\infty}\frac{1}{t}\int^t_0\abs{P[T_s(A)\cap B]-P[A]P[B]}ds=0.\]
+        \item 次を満たすとき，\textbf{混合的}であるという：
+        \[\forall_{A,B\in\F}\;\lim_{t\to\infty}P[T_t(A)\cap B]=P[A]P[B].\]
+    \end{enumerate}
+\end{definition}
+
+\begin{proposition}[弱混合性の特徴付け]
+    次は同値：
+    \begin{enumerate}
+        \item $(T_t)$は弱混合的．
+        \item $(T_t)$の定める$L^2(\Om)$のユニタリ作用素群$(U_t)$は次を満たす：
+        \[\forall_{f,g\in L^2(\Om)}\;\lim_{t\to\infty}\frac{1}{t}\int^t_0\abs{(U_sf|g)-(f,1)\o{(g,1)}}ds=0.\]
+        \item 固有値$\lambda=0$は単純で，かつこれが唯一の固有値である．すなわち，$(T_t)$は連続スペクトルを持つ．
+        \item 任意の$t\ne0$に対して，単独の保測変換$T_t$はエルゴード的である．
+        \item 直積$\{T_t\times T_t\}$が定める$\Om\otimes\Om$上の流れはエルゴード的である．
+    \end{enumerate}
+\end{proposition}
+
+\begin{proposition}[混合性の特徴付け]
+    次は同値：
+    \begin{enumerate}
+        \item $(T_t)$は混合的．
+        \item $(T_t)$の定める$L^2(\Om)$のユニタリ作用素群$(U_t)$は次を満たす：
+        \[\lim_{t\to\infty}(U_tf|g)=(f|1)\o{(g|1)}.\]
+        \item 最大スペクトル型$\mu$の特性関数$\varphi$が$t\to\infty$の極限で消える．
+    \end{enumerate}
+\end{proposition}
+
+\begin{corollary}
+    流れ$(T_t)$が一様Lebesgueスペクトルを持てば，混合的である．
+\end{corollary}
+
+\subsection{例}
+
+\begin{example}
+    $\Om:=[0,1)$とし，$P$をLebesgue測度とする．$T_\al(\om)=\om+\al\mod 1\;(\al\in\Om)$とするとこれは保測変換である．
+    \begin{enumerate}
+        \item 純点スペクトルを持ち，$(e^{2\pi in\om})_{n\in\Z}$は固有関数からなる$L^2(\Om)$の生成系である．従って$T$は混合的でない．
+        \item $\al$が有理数ならば$T$は周期的になり，エルゴード的でもない．
+        \item $\al$が無理数ならばエルゴード的である．
+        実際，任意の$f\in L^2(\Om)$は$f=\sum_{n\in\Z}a_ne^{2\pi in\om}$とFourier展開でき，$Uf=\sum_{n\in\Z}a_ne^{-2\pi in\al}f_n$となるから，これが不変ならば$n\ne0$のとき$a_n=0$となり，殆ど至る所定数．
+    \end{enumerate}
+\end{example}
+
+\section{抽象Lebesgue空間}
+
+\subsection{Radon測度論}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    内部正則なBorel確率測度をRadon測度という．
+\end{tcolorbox}
+
+\begin{lemma}
+    HausdorffなBorel確率空間$\Om_1,\Om_2\in\Prob$について，
+    \begin{enumerate}
+        \item $P_1$がRadonかつ準同型$f:\Om_1\to\Om_2$で次を満たすものが存在するなら，$P_2$もRadon：
+        \[\forall_{\ep>0}\;\exists_{F\csub\Om_1}\;P_1[F^\comp]<\ep\land f|_F\in C(F;\Om_2).\]
+        \item Radon測度$P_1$の連続写像$f:\Om_1\to\Om_2$による押し出しはRadonである．
+        \item さらに$f$が単射ならば，$(\Om_2,\B(\Om_2),f_*P_1)$に同型を定める．
+    \end{enumerate}
+\end{lemma}
+
+\begin{proposition}
+    第２可算かつ完備に距離付け可能な空間上のBorel確率測度はRadonである．
+\end{proposition}
+
+\subsection{真の可分性}
+
+\begin{definition}[separating system, complete, properly separable]
+    可算系$\B=\{B_n\}_{n\in\N}\subset\F$について，
+    \begin{enumerate}
+        \item \textbf{分離系}であるとは，
+        \[\forall_{(C_n)_{n\in\N}\in\prod_{n\in\N}\Brace{B_n,B_n^\comp}}\;\Abs{\cap_{n\in\N}C_n}\le1.\]
+        \item $\abs{\cap_{n\in\N}C_n}=1$と等号が成り立つとき，\textbf{完全な分離系}であるとする．
+        \item 確率空間$(\Om,\F,P)$が\textbf{真に可分}であるとは，$\F$がある分離系$\B$によって生成されることをいう．このとき，$\B$を\textbf{基底}という．
+    \end{enumerate}
+\end{definition}
+
+\begin{lemma}[真に可分な確率空間には完全拡大が存在する]
+    基底$\B$を持つ真に可分な確率空間$(\Om,\F,P)$に対して，次を満たす真に可分な確率空間$(\wt{\Om},\wt{\F},\wt{P})$が存在する：
+    \begin{enumerate}
+        \item 基底$\wt{\B}$であって完全なものを持つ．
+        \item 部分集合$\Om'\subset\wt{\Om}$が存在して，
+        \begin{enumerate}[(a)]
+            \item $\wt{P}$-外測度は1である．
+            \item 同型$f:(\Om,\F,P)\iso(\Om',\wt{\F}|_{\Om'},\wt{P}|_{\Om'})$が存在する．
+            \item $f(\B)=\wt{\B}\cap\Om'$．
+        \end{enumerate}
+    \end{enumerate}
+    この$(\wt{\Om},\wt{\F},\wt{P})$を\textbf{$\B$-完全拡大}という．
+\end{lemma}
+
+\begin{lemma}
+    基底$\B=(B_n)_{n\in\N}$を持つ真に可分な確率空間$(\Om,\F,P)$に対して，位相$\tau[\B]:=\tau[B_n,B_n^\comp|n\in\N]$を考えると，これは$\B(\tau[\B])=\sigma[\B]$かつ$\F=\o{\B(\tau[\B])}$を満たす．
+    このとき，次は同値：
+    \begin{enumerate}
+        \item $\Om$が$\B$-完全拡大において可測．
+        \item $P$は$(\Om,\tau[\B])$上のRadon測度．
+    \end{enumerate}
+    また，完全拡大における$\Om$の可測性は基底の取り方に依らない．
+\end{lemma}
+
+\subsection{Lebesgue空間}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    $([0,1],\o{\B([0,1])},dm)$を具体Lebesgue空間，そのProbでの同型類(と原子を持つ離散空間)を抽象Lebesgue空間という．
+\end{tcolorbox}
+
+\begin{definition}
+    確率空間$(\Om,\F,P)$が\textbf{(抽象)Lebesgue空間}であるとは，次を満たすことをいう：
+    \begin{enumerate}
+        \item 真に可分である．
+        \item 完全な拡大において$\Om$は可測である．
+    \end{enumerate}
+    (2)は，(1)の下で，ある基底$\B$を発見し，$P$が$(\Om,\tau[\B])$上のRadon測度であることを見れば十分である．
+\end{definition}
+
+\begin{definition}[standard space]
+    完備可分距離空間$(\Om',\tau')$から，Borel可測な逆を持つBorel可測写像$f:\Om'\iso\Om$が存在するとき，$(\Om,\tau)$を\textbf{標準的空間}という．
+    Schwartzの超関数の空間$\D'$に弱位相を入れたもの，$\S'$に弱・強位相を入れたものは標準的空間である．
+    これらの空間でのBorel $\sigma$-集合体は筒集合の生成する$\sigma$-代数に一致することは，CartierのBourbaki(63)による．
+\end{definition}
+\begin{remarks}[standard Borel space]
+    可分な距離空間$S$で考えてみると，その完備化$S\mono\o{S}$が存在するが，$S$がそのBorel可測な部分空間であるとは限らない．これが保証されるとき，標準Borel空間といい，これに完備なBorel確率測度(これは必ずRadonである)を添加したものが抽象Lebesgue空間である．
+    これについては，より強い可測性補題が成り立つ：2つの標準Borel空間の間の単射なBorel可測写像によるBorel可測部分集合の像は再びBorel可測である．
+\end{remarks}
+
+\begin{theorem}[Lebesgue空間同型定理]
+    原子を持たないLebesgue空間は，通常のLebesgue測度を持つ区間$[0,1]$に同型である．
+\end{theorem}
+
+\begin{example}\mbox{}
+    \begin{enumerate}
+        \item 原子を持つ場合：離散空間$\Om:=\Brace{\om_n}_{n\in\N},P[\om_n]>0$はLebesgue空間である．
+        \item 完備可分距離空間上の完備確率空間はLebesgue空間である．
+    \end{enumerate}
+\end{example}
+
+
+
+\section{純点スペクトルを持つ流れ}
+
+\begin{theorem}[von Neumann (32)]
+    2つのLebesgue空間$\Om,\Om'$上の流れ$(T_t),(T'_t)$は純点スペクトルを持ち，エルゴード的であるとする．このとき，次は同値：
+    \begin{enumerate}
+        \item $(T_t),(T'_t)$の固有値は一致する．
+        \item $(T_t),(T'_t)$はスペクトル同型．
+        \item $(T_t),(T'_t)$は同型．
+    \end{enumerate}
+\end{theorem}
+
+\section{エントロピー}
+
+\subsection{分割のエントロピー}
+
+\begin{definition}
+    $\Om$をLebesgue空間，$\xi$を可測分割とする．
+    \begin{enumerate}
+        \item $A(\om)\in\xi$を$\om\in A$を満たす分割$\xi$の元とし，$P[\om;\xi]:=P[A(\om)]$とする．
+        \item $\xi$の\textbf{分割のエントロピー}とは，
+        \[H(\xi):=-\int_\Om\log_2 P[\om;\xi]dP.\]
+        をいう．
+    \end{enumerate}
+\end{definition}
+\begin{remarks}
+    積分で書いたが，次が成り立っている：$(A_i)_{i\in\N}$を$\xi$の元で正の測度をもつもの，$A:=\cup_{i\in\N}A_i$をその合併とする．
+    \[H(\xi):=\begin{cases}
+        -\sum_{i\in\N}P[A_i]\log P[A_i]&P[A]=1,\\
+        +\infty&P[A]<1.
+    \end{cases}\]
+\end{remarks}
+
+\begin{proposition}
+    $\Delta$を$\Om$の可測分割の全体とする，$\Delta_{<\infty}$を有限なものの全体．
+    $H:\Delta\to\R_+$は正な線型汎函数に非常に近い．
+    $H(\Delta)$は再び束の良い構造を持ち，「連続」である．
+    \begin{enumerate}
+        \item 正：$H(\xi)\ge0$．等号成立は$\xi$が自明な分割であるとき．
+        \item $\xi\le\eta\Rightarrow H(\xi)\le H(\eta)$．なお，$\xi\le\eta\Rightarrow H(\xi)=H(\eta)<\infty$ならば$\xi=\eta$．
+        \item $\xi_n\nearrow\xi\Rightarrow H(\xi_n)\nearrow H(\xi)$．
+        \item $\xi_n\searrow\xi\land H(\xi_1)<\infty\Rightarrow H(\xi_n)\searrow H(\xi)$．
+        \item $H(\xi)=\sup\Brace{H(\eta)\in\R_+\mid\xi\ge\eta\in\Delta_{<\infty}}$．
+        \item $\xi=\Brace{A_i}_{i\in[n]}$のとき，$H(\xi)\le\log n$で，等号成立は離散一様分布に限る．
+    \end{enumerate}
+\end{proposition}
+\begin{Proof}\mbox{}
+    \begin{description}
+        \item[(5)] 任意の可測分割$\xi$に対して，これに下から収束する有限分割の列が取れるためである．
+    \end{description}
+\end{Proof}
+
+\subsection{分割の条件付きエントロピー}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    商空間と条件付き測度の言葉を援用する．
+\end{tcolorbox}
+
+\begin{definition}
+    $\xi,\zeta$を可測分割とする．
+    \begin{enumerate}
+        \item 殆ど至る所の$C\in\zeta$に対して，$\xi$は$C$上の可測分割$\xi_C:=\xi\cap C$を定める．このエントロピーは$H(\xi_-):\Om/\zeta\to\R_+$は可測である．
+        \item 積分
+        \[H(\xi|\zeta):=\int_{\Om/\zeta}H(\xi_C)dP_\zeta\]
+        を\textbf{条件付きエントロピー}という．
+    \end{enumerate}
+\end{definition}
+\begin{remarks}
+    同様の記法，$\om\in A(\om)\in\xi,\om\in C(\om)\in\zeta$について，$P[\om;\xi|\zeta]:=P_{C(\om)}[A(\om)]$と定めると，
+    \[H(\xi|\zeta)=-\int_\Om\log P[\om;\xi|\zeta]dP\]
+    と表せる．
+\end{remarks}
+
+\begin{proposition}
+    $\nu$を自明な分割とする．
+    \begin{enumerate}
+        \item $H(\xi|\nu)=H(\xi)$．
+        \item $\eta\le\xi\Rightarrow H(\xi\lor\eta|\zeta)=H(\xi|\zeta)$．
+        \item $H(\xi|\zeta)\ge0$．等号成立条件は$\xi\le\zeta$．
+        \item $\xi\le\eta\Rightarrow H(\xi|\zeta)\le H(\eta|\zeta)$．なお，$\xi\le\eta\land H(\xi|\zeta)=H(\eta|\zeta)<\infty$ならば，$\xi\lor\zeta=\eta\lor\zeta$．
+        \item 単調な収束列について連続である．
+        \item $H(\xi|\zeta)=\sup\Brace{H(\eta|\zeta)\in\R_+\mid\xi\ge\eta\in\Delta_{<\infty}}$．
+        \item $\eta\le\zeta\Rightarrow H(\xi|\eta)\ge H(\xi|\zeta)$．
+    \end{enumerate}
+\end{proposition}
+
+\begin{proposition}
+    \[H(\xi\lor\eta|\zeta)=H(\xi|\zeta)+H(\eta|\zeta\lor\xi)\le H(\xi|\zeta)+H(\eta|\zeta).\]
+\end{proposition}
+
+\begin{proposition}
+    $\zeta_n\nearrow\zeta$かつ$H(\xi|\zeta_1)<\infty$，または，$\zeta_n\searrow\zeta$ならば，
+    \[\lim_{n\to\infty}H(\xi|\zeta_n)=H(\xi|\zeta).\]
+\end{proposition}
+\begin{Proof}
+    条件付き期待値に関するDoobの定理より，
+    \[\forall_{A\in\F}\;\lim_{n\to\infty}P[A|\zeta_n;\om]=P[A|\zeta;\om]\;\ae\]
+\end{Proof}
+
+\subsection{独立性}
+
+\begin{proposition}
+    $\xi,\eta\in\Delta$について，
+    \begin{enumerate}
+        \item $H(\xi)<\infty$ならば，$\xi\indep\eta\Leftrightarrow H(\xi|\eta)=H(\xi)$．
+        \item $H(\xi),H(\eta)<\infty$ならば，$\xi\indep\eta\Leftrightarrow H(\xi\lor\eta)=H(\xi)+H(\eta)$．
+    \end{enumerate}
+\end{proposition}
+
+\subsection{保測変換のエントロピー}
+
+\begin{proposition}
+    $H(T\xi|T\zeta)=H(\xi|\zeta)$．
+\end{proposition}
+
+\begin{definition}
+    \[\xi^n_m=\xi^n_m(T):=\bigwedge_{k=m}^nT^k\xi\quad-\infty\le m<n\le\infty\]
+    とする．
+    \begin{enumerate}
+        \item $h(T,\xi):=H(\xi|\xi^{-1}_{-\infty})$を分割$\xi$に関するエントロピー．
+        \item $h(T):=\sup\Brace{h(T,\xi)\mid H(\xi)<\infty}$を保測変換のエントロピーという．
+    \end{enumerate}
+\end{definition}
+
+\begin{theorem}
+    2つの保測変換について，同じエントロピーを持つことは同型であることに同値．
+\end{theorem}
+
+\subsection{Shannon-McMillanの定理}
+
+\section{位相力学系}
+
+\begin{definition}[topological dynamical system]
+    コンパクトハウスドルフ空間$K$と連続写像$\varphi:K\to K$との組$(K,\varphi)$を\textbf{位相力学系}という．
+    $\varphi$が全射・可逆であるとき，系が全射・可逆であるという．
+\end{definition}
+\begin{remark}
+    $K$をコンパクトハウスドルフとしたのは，明らかに圏の同値$C:\Top_\cpt\to C^*\Alg^\op_\com$を見据えている．
+\end{remark}
+
+
+\chapter{作用素論による定式化}
+
+\begin{quotation}
+    $(K,\varphi)$の研究と，$(C(K),T_\varphi)$の研究とは，双対的な関係にある．
+    これが幾何-代数双対性である．
+    圏の同値$C:\Top_\cpt\to C^*\Alg^\op_\com$を用いた越境である．
+\end{quotation}
+
+\section{Lebesgue空間}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    抽象Lebesgue空間と無限抽象Lebesgue空間を，合わせてLebesgue空間という．
+\end{tcolorbox}
+
+\begin{notation}\mbox{}
+    \begin{enumerate}
+        \item $\Om$を距離空間とする．
+        \item 任意の$A\in P(\Om)$に対して，$\mu(F)=\inf\Brace{\mu(E)\mid A\subset E\in\F}=:\mu^*(A)$を満たす$F\in\F$を\textbf{可測包}という．
+        \item $\F$の$\mu$に関する完備化を$\F_\mu$と表す．
+    \end{enumerate}
+\end{notation}
+
+\subsection{距離空間上の確率空間}
+
+\begin{proposition}[距離空間上の完備確率空間の性質]
+    $\Om$を距離空間，$(\Om,\F,P)$をBorel確率空間とする．このとき，$A\in P(\Om)$について次の2条件は同値：
+    \begin{enumerate}
+        \item $A\in\F_\mu$．
+        \item $A$には$F_\sigma$な可測核$E\subset A$が存在する：$\mu(E)=\mu^*(A)$．
+    \end{enumerate}
+\end{proposition}
+\begin{proposition}[押し出しは充満集合を保つ]
+    $\Om,\Om'$をコンパクト距離空間とし，$(\Om,\F,\mu),(\Om',\F',\mu')$をBorel確率空間，
+    $f\in C(\Om,\Om')$が$\mu$を$\mu'$に押し出すとする．このとき，$\forall_{A\in\F_\mu}\;\mu(A)=1\Rightarrow f(A)\in\F'_{\mu'}\land \mu'(f(A))=1$．
+\end{proposition}
+
+\subsection{狭義の準同型}
+
+\begin{definition}
+    $(X,\B,m)$を完備確率空間とする．$\{B_n\}\subset\B$が\textbf{基底}であるとは，次の2条件を満たすことをいう：
+    \begin{enumerate}
+        \item $\sigma[B_n|n\in\N]$の$m$-完備化は$\B$である．
+        \item $\B$は$X$の点を分離する．
+    \end{enumerate}
+\end{definition}
+
+\begin{definition}[strictly isomorphic]
+    $X_1,X_2\in\Prob$，
+    $\theta:X_1\to X_2$を可測写像とする．$\theta$が\textbf{狭義準同型}であるとは，
+    \begin{enumerate}
+        \item $\theta$は全射である．
+        \item $\theta_*m_1$と$m_2$は同値である（互いに絶対連続である）．
+    \end{enumerate}
+    $\theta$が単射でもあり，$\theta^{-1}$も可測ならば，\textbf{狭義の同型}という．
+\end{definition}
+
+\begin{definition}[isomorphic]
+    確率空間$(X,\B,m),(Y,\A,\nu)$が\textbf{同型}であるとは，充満集合$X_0\in\B,Y_0\in\A$が存在して，$(X_0,X_0\cap\B,m)\simeq(Y_0,Y_0\cap\A,\nu)$が成り立つことをいう．
+    $(Y,\A,\nu)$が\textbf{準同型像}または\textbf{商空間}であるとは，同様な充満集合が存在して，その部分空間の間に狭義の準同型が存在することをいう．
+\end{definition}
+
+\subsection{Lebesgue空間}
+
+\begin{proposition}[具体Lebesgue空間]
+    離散空間の積空間$\Om:=2^\N$について，
+    \begin{enumerate}
+        \item 距離化可能である．
+        \item 筒集合$E_n:=\Brace{\om\in\Om\mid\om_n=1}$の全体はBorel $\sigma$-集合族を生成する．
+        \item $(E_n)$が生成する集合族は可算で，$E(\ep_1,\cdots,\ep_k;n_1,\cdots,n_k)=\Brace{\om\in\Om\mid\forall_{j\in[k]}\;\om_{n_j}=\om_j}$の有限排反和で表せる．
+    \end{enumerate}
+\end{proposition}
+
+\begin{definition}
+    $(X,B,m)$が\textbf{抽象Lebesgue空間}であるとは，次を満たすことをいう：
+    \begin{enumerate}
+        \item $(X,B,m)$は完備である．
+        \item 離散空間の積空間$\Om=2^\N$上のBorel確率測度$\mu$と，$\B(\Om)_\mu$に属する充満集合$\Om_0\subset\Om$について，$(X,B,m)\simeq(\Om_0,\Om_0\cap\B(\Om)_\mu,\mu)$が成り立つことをいう．
+    \end{enumerate}
+\end{definition}
+
+\begin{proposition}
+    完備確率空間$(X,\B,m)$について，次の2条件は同値：
+    \begin{enumerate}
+        \item 抽象Lebesgue空間である．
+        \item 基底$(B_n)$をもち，これが定める写像$\tau_\B:=(1_{B_n}):X\to\Om$が押し出す確率測度$(\tau_\B)_*m=:\mu_\B$が$\Om_\B:=\tau_B(X)\in\F_{\mu_\B}$を満たす．
+    \end{enumerate}
+    これは基底の選び方には依らない．
+\end{proposition}
+
+\begin{proposition}
+    $(X,\B,m)$を抽象Lebesgue空間，$(Y,\A,\nu)$を準同型像とする．$(Y,\A,\nu)$が基底を持つならば，これも抽象Lebesgue空間である．
+\end{proposition}
+
+\subsection{標準Lebesgue空間}
+
+\begin{definition}
+    $X=[0,1],\B:=\M(X)$をLebesgue可測集合の全体，$m$をLebesgue測度としたときの$(X,\B,m)$を\textbf{標準的Lebesgue空間}という．$\tau_\B:X\to\Om_\B$は二進数展開である．
+\end{definition}
+
+\begin{proposition}
+    任意の非原子的な抽象Lebesgue空間は標準Lebesgue空間と同型である．
+\end{proposition}
+
+\begin{proposition}
+    $Y$を完備可分距離空間とし，その上のBorel確率空間の完備化$(Y,A_\nu,\nu)$は抽象Lebesgue空間である．
+\end{proposition}
+
+\begin{proposition}[抽象Lebesgue空間への同型の特徴付け]
+    $(X,\B,m)$を完備確率空間，$(Y,A,\nu)$を抽象Lebesgue空間とする．
+    $\theta:X\to Y$が次を満たすならば，同型である．
+    \begin{enumerate}
+        \item 全単射である．
+        \item $\theta^{-1}(\A)\subset\B$．
+        \item $\forall_{A\in\A}\;m(\theta^{-1}(A))=\nu(A)$．
+    \end{enumerate}
+\end{proposition}
+
+\subsection{無限抽象Lebesgue空間}
+
+\begin{definition}
+    $(X,\B,m)$を無限測度空間とする．これが抽象Lebesgue空間の可算直和に可測に分割できるとき，これを\textbf{無限抽象Lebesgue空間}という．
+\end{definition}
+
+\begin{proposition}
+    無限測度空間$(X,\B,m)$について，次の2条件は同値：
+    \begin{enumerate}
+        \item 無限抽象Lebesgue空間である．
+        \item $m$と同値な任意の確率測度$\nu$について，$(X,\B,\nu)$は抽象Lebesgue空間である．
+    \end{enumerate}
+\end{proposition}
+
+\subsection{測度代数}
+
+\begin{proposition}[measure algebra]
+    $(X,\B,m)$を完備確率空間とし，$\cN\subset\B$を零集合のイデアルとする．
+    $B_1\triangle B_2\in\cN$なる同値関係の商集合$\B/\cN$は$d(A+\cN,B+\cN)=m(A\triangle B)$により完備距離空間となる．
+    これはBanach空間$L^1(X)$の閉部分空間$\{1_A\}_{A\in\B}$に等しい．
+    これは再びBoole代数である．これを\textbf{測度代数}という．
+\end{proposition}
+
+\begin{theorem}
+    $(X_1,\B_1,m_1),(X_2,\B_2,m_2)$を完備確率空間，$(B_1/\cN_1,d_1),(B_2/\cN_2,d_2)$を付随する測度代数とする．
+    \begin{enumerate}
+        \item 準同型$\varphi:X_1\to X_2$に対して，$\varphi^*:\B_2\to\B_1$はBoole $\sigma$-代数の準同型であり，等長写像である．
+        \item $X_2$はLebesgue空間であるとする．このとき，$\sigma$-準同型写像$\Phi:\B_2/\cN_2\to\B_1/\cN_1$であって$\Phi(X_2)=\Phi(X_1)$を満たすものに対して，ある準同型$\varphi:X_1\to X_2$が存在して，$\Phi=\varphi^*$を満たし，$\ae$の差を除いて一意である．
+    \end{enumerate}
+\end{theorem}
+
+\begin{corollary}
+    Lebesgue空間の間の準同型$\varphi:X_1\to X_2$と$\sigma$-同型$\Phi:\B_2/\cN_2\to\B_1/\cN_1$とは一対一対応する．
+\end{corollary}
+
+\section{可測分割と条件付き測度}
+
+\begin{definition}
+    $(X,\B)$を可測空間，$\zeta$がその分割とする．
+    \begin{enumerate}
+        \item $\S=\{S_i\}_{i\in I}\subset P(X)$が$\zeta$の\textbf{基底}であるとは，$\tau(x)(i)=1_{S_i}(x)$と定めたときの写像$\tau:X\to 2^I$が$X$に定める同値類が$\zeta$に等しいことをいう．
+        \item 可算個の可測集合からなる基底$\{S_n\}_{n\in\N}\subset\B$を持つとき，$\zeta$を\textbf{可測分割}という．
+    \end{enumerate}
+\end{definition}
+
+\subsection{商空間}
+
+\begin{theorem}
+    $(X,\B,m)$をLebesgue空間，$\zeta$をその分割とする．
+    $X/\zeta$に対して，$\B_\zeta:=\Brace{Z\subset X/\zeta\mid\pi^{-1}(Z)\in\B}$，$m_\zeta(Z):=m(\pi^{-1}(Z))$と定める．
+    \begin{enumerate}
+        \item $(X/\zeta,\B_\zeta,m_\zeta)$は完備確率空間である．
+        \item $\pi:X\to X/\zeta$は狭義の準同型である．
+        \item $X/\zeta$がLebesgue空間になることは，$\zeta$が可測分割であることに同値．
+    \end{enumerate}
+\end{theorem}
+
+\begin{corollary}
+    Lebesgue空間の間の準同型が定める分割は可測である．
+\end{corollary}
+
+\subsection{条件付き測度}
+
+\begin{definition}
+    $(X,\B,m)$をLebesgue空間，$\zeta$をその分割，$(B_n)$をその基底，$(B_n)$の生成する$\sigma$-加法族を$\M$とする．
+    確率測度の族$\{m(-|C)\}_{C\in X/\zeta}\subset P(X)$が次の条件を満たすとき，\textbf{$\zeta$が定める条件付き測度}という．
+    \begin{enumerate}
+        \item $\forall_{C\in X/\zeta}\;m(\pi^{-1}(C)|C)=1$．
+        \item 任意の$C\in X/\zeta$について，$\M\cap\pi^{-1}(C)$の$m(-|C)$に関する完備化を$\M_C$とすると，$(\pi^{-1}(C),\M_C,m(-|C))$はLebesgue空間となる．
+        \item 任意の$B\in\B$について，次の3条件が成り立つ：
+        \begin{enumerate}[(a)]
+            \item $m_\zeta$-a.e.の$C$について，$B\cap\pi^{-1}(C)\in\M_C$．
+            \item $m(B|-):X/\zeta\to[0,1]$は$\B_\zeta$-可測である．
+            \item $\forall_{Z\in\B_\zeta}\;\int_Zm(B|C)dm_\zeta(C)=m(B\cap\pi^{-1}(Z))$．
+        \end{enumerate}
+    \end{enumerate}
+\end{definition}
+
+\begin{proposition}
+    Lebesgue空間の任意の分割に関する条件付き測度は，$m_\zeta$-a.e.の違いを除いて一意的である．
+\end{proposition}
+
+\begin{proposition}
+    $X$をLebesgue空間とする．その分割$\zeta$について，次の2条件は同値．
+    \begin{enumerate}
+        \item 条件付き測度が存在する．
+        \item $\zeta$は可測分割である．
+    \end{enumerate}
+\end{proposition}
+
+\subsection{代表系の理論}
+
+\begin{definition}[one-sheeted set, cross-section]
+    $\zeta$を可測空間$(X,\B)$の分割とする．
+    \begin{enumerate}
+        \item $A\in\B$が分割$\zeta$の各成分$\pi^{-1}(C)$と高々1点でしか交わらないとき，\textbf{一葉集合}という．
+        \item ほとんど全ての$C\in X/\zeta$について，$\pi^{-1}(C)$と1点で交わる一葉集合を\textbf{$\zeta$の切断集合}という．
+    \end{enumerate}
+\end{definition}
+
+\begin{theorem}
+    
+\end{theorem}
+
+\subsection{切断定理}
+
+\section{非特異変換とエルゴード定理}
+
+\begin{definition}
+    $(\Om,\B,m)$をLebesgue空間とし，$T:\Om\to\Om$を写像とする．
+    \begin{enumerate}
+        \item $T$が\textbf{両可測}であるとは，$T$が全単射かつ$T^{-1}(\B)=\B$を満たすことをいう．
+        \item 両可測写像$T$が\textbf{非特異}であるとは，$\forall_{B\in\B}\;m(B)=0\Leftrightarrow m(T(B))=0$を満たすことをいう．
+        \item 両可測かつ非特異な写像の全体を$\A(\Om)$で表すと，これは群をなす．
+        \item 台となる測度空間$(\Om,\B)$上の測度$\mu$が$T\in\A(\Om)$に対して\textbf{$T$-不変}であるとは，$\forall_{B\in\B}\;\mu(T(B))=\mu(B)$を満たすことをいう．このとき$T$を\textbf{$\mu$-保測変換}という．
+        \item $W\in\B$が$T\in\A(\Om)$に対して\textbf{$T$-遊走集合}であるとは，$\forall_{n\in\N^+}\;m(T^n(W)\cap W)=0$を満たすことをいう．
+        \item $T\in\A(\Om)$について，
+        \begin{enumerate}[(a)]
+            \item \textbf{散逸的変換}であるとは，$T$-遊走集合$W\in\B$が存在して，$\Om=\cup_{n\in\Z}T^n(W)$が成り立つことをいう．
+            \item \textbf{再帰的変換}または\textbf{保存的変換}であるとは，全ての$T$-遊走集合は零集合であることをいう．
+        \end{enumerate}
+    \end{enumerate}
+\end{definition}
+
+\begin{theorem}
+    $T\in\A(\Om)$について，次の条件は同値：
+    \begin{enumerate}
+        \item $T$は再帰的である．
+        \item 任意の$B\in\B$に対して，$B_r:=\Brace{\om\in B\mid\exists_{n\in\N^+}\;T^n(\om)\in B}$とすると，$m(B\setminus B_r)=0$．
+        \item $\forall_{f\in L(\Om)}\;f(T(\om))\le f(\om)\;\ae\Rightarrow f(T(\om))=f(\om)\;\ae$
+        \item $\forall_{g\in L(\Om)_+}\;m\Brace{\om\in\Om\mid 0<\sum_{n=0}^\infty g(T^n\om)<\infty}=0$．
+        \item 任意の$B\in\B$に対して，$B_\infty:=\Brace{\om\in B\mid T^n\om\in B\;\io}$とすると，$m(B\setminus B_\infty)=0$．
+    \end{enumerate}
+\end{theorem}
+
+\begin{corollary}[Poincareの再帰定理]
+    $(\Om,\B,m)$と$T\in\A(\Om)$について，$m$と同値な有限測度$\mu$が存在して，$T$-不変であるならば，$T$は再帰的である．
+\end{corollary}
+
+\subsection{不変関数}
+
+\begin{definition}
+    $T\in\A(\Om)$について，
+    \begin{enumerate}
+        \item $E\in\B$が\textbf{$T$-不変集合}であるとは，$m(T(E)\triangle E)=0$を満たすことをいう．
+        \item $f\in L(\Om)$が\textbf{$T$-不変関数}であるとは，$f(T(\om))=f(\om)\;\ae$を満たすことをいう．
+        \item $T$が\textbf{エルゴード的}であるとは，$T$-不変関数が殆ど至る所定数な関数に限ることをいう．これは，$T$-不変集合が零集合と充満集合とに限ることに同値．
+        \item $\Gamma\subset\A(\Om)$が\textbf{エルゴード的に作用する}とは，$E\in\B$が任意の$T\in\Gamma$について$T$-不変ならば充満集合か零集合に限ることをいう．
+    \end{enumerate}
+\end{definition}
+
+\section{エルゴード分解}
+
+\begin{definition}
+    $G\subset\A(\Om)$をLebesgue空間に作用する可算な非特異変換群とする．
+    \begin{enumerate}
+        \item 
+    \end{enumerate}
+\end{definition}
+
+\chapter{量子確率論}
+
+\chapter{参考文献}
+
+\begin{thebibliography}{99}
+    \bibitem{伊藤・浜地}
+    伊藤雄二，浜地敏弘 (1992) 『エルゴード理論とフォン・ノイマン環』（紀伊国屋書店）
+    \bibitem{十時}
+    十時東生 (1971) 『エルゴード理論入門』（共立出版）
+    \bibitem{井原}
+    井原俊輔 (1984) 『確率過程とエントロピー』（岩波書店）．
+    \bibitem{Coudene}
+    Yves Coudene "Ergodic Theory and Dynamical System"
+    相互に独立した12章からなり，それぞれの分野のオムニバスのような内容．
+    \bibitem{Araki}
+    H. Araki, C. Moore, S. Stratila, D. Voiculescu "Operator Algebras and their Connections with Topology and Ergodic Theory"
+    \bibitem{Foundations}
+    Marcelo Viana "Foundations of Ergodic Theory"
+    初歩的なところから高みまで登らせてくれる入門書．
+    \bibitem{OperatorTheoretic}
+    Tanja Eisner, Balint Farkas, Markus Haase, Rainer Nagel, "Operator Theoretic Asepcts of Ergodic Theory"
+    Ergode理論と作用素論との繋がりを中心に入門を記述した本．
+    survey articles by Bryna Kra (2006), (2007) and Terence Tao (2007) on the Green-Tao theoremによってお蔵入りになったものが復活して出来た書籍．
+
+    \bibitem{Allen}
+    Allen, G. D. (1976). On the Multiplicity and Spectral Type of a Class of Stochastic Processes. \textit{SIAM Journal on Applied Mathematics}. 30(1): 90-97.
+\end{thebibliography}
+
+\end{document}

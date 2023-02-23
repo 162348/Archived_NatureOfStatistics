@@ -1,0 +1,877 @@
+\documentclass[uplatex,dvipdfmx]{jsreport}
+\title{統計学}
+\author{司馬博文}
+\date{\today}
+\pagestyle{headings} \setcounter{secnumdepth}{4}
+\input{/Users/Hirofumi Shiba/NatureOfStatistics/preamble_no_fonts.tex}
+%\input{/Users/hirofumi.shiba48/StatisticalNature/preamble_no_fonts.tex}
+\usepackage[math]{anttor}
+\begin{document}
+\tableofcontents
+
+\chapter{縦割りの統計学}
+
+\begin{quotation}
+    推測統計学は，観測データの背後に確率モデルを想定する仮定から始まる．
+\end{quotation}
+
+\section{記述 vs 推測}
+
+\subsection{二項対立の構造}
+
+記述統計学と推測統計学との手法の違いは，データの背後に確率論的な構造を考えるかどうかという点にある．
+データを所与のものと思い，データに対する理解を深める手法と，データを確率変数の実現値と捉えて予測を目指す手法とである．
+
+これはアルゴリズム vs 推論という二項対立でもある．汎関数の計算・実装と，推定である．
+現在は前者の黄金期であり，推論法に進化を要求する．
+アルゴリズムは統計学の外に触発される，神経回路網，サポートベクトルマシン，ブースティングなど．
+そしてこれを受け止めるために数理がさらに豊かになる．
+
+\subsection{回帰の例}
+
+線型回帰の最小二乗法は古典的なアルゴリズムである．
+その推定の正確性を評価する推論法には，標準誤差などがある（95\% で入る振れ幅）．
+近年のアルゴリズムにはlowess (locally weighted scatterplot smoother)がある．
+これには$\pm 2$倍のブートストラップ標準誤差などで推論される．
+ブートストラップ法は解析的な方法ではない（標準誤差のように式を持たない）が，
+それゆえにいかなる複雑なアルゴリズムにも適用できることが有用になる，
+計算量にものを言わせる脳筋手法である．
+
+\subsection{仮説検定}
+
+推定量の評価以外にもう一つ，推論法が要請される分野は，仮説検定である．
+２標本$t$-統計量$t=\frac{\o{x}-\o{y}}{\wh{\sd}}$は，ステューデントの$t$分布が帰無分布となる．
+
+
+\section{頻度派 vs Bayes派}
+
+20Cから統計学の営みが開始され，卓上計算機でも実行可能なアルゴリズムによる理論が完成した．
+これを古典理論，または，頻度派的な推論という．
+
+\section{検定論 vs 知識発見}
+
+Neyman-Pearsonから続く品質工学から大きな対抗馬として出現し，ビッグデータの時代にまで続く知識発見の文脈の先駆けとなったのが，Tukeyによる探索的データ解析である．
+これらはLaplace以来の指数型分布族などの解析理論への偏重への対抗の歴史となる．
+EDAの遺産はその後1990sからの知識発見の分野に引き継がれ，現代のビッグデータ解析に繋がる．
+
+本来は検定と補間的な，「何を検定するべきかの発見まで」を担当する技術であるが，
+これらはLaplace以来の指数型分布族などの解析理論への偏重への対抗の歴史となる．
+
+\section{臨床 vs 疫学}
+
+経済にミクロとマクロがあるように，生物統計学にも臨床統計と疫学統計がある．
+これらをまとめて生物統計学と呼ぶようだ．
+
+\section{因果推論}
+
+物理学実験手法は確率された数理科学であるが，その他の自然科学・社会科学に
+回転させるには，因果推論の技法が必要になる．
+物理現象をモデルするのにはEuclid空間などが用いられたが，
+社会現象・生物現象をモデル化するには，確率や因果といった概念の形式化も必要となる．
+Newtonの「力」のようなものである．
+
+\chapter{現代データ解析}
+
+\begin{quotation}
+    現代の企業で，品質工学的な需要は薄い．むしろ，データが氾濫したIoTの世界で，検定を適用するところの「発見」が不足している．
+\end{quotation}
+
+\section{歴史}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    Neyman-Pearsonから続く品質工学から大きな対抗馬として出現し，ビッグデータの時代にまで続く知識発見の文脈の先駆けとなったのが，Tukeyによる探索的データ解析である．
+    本来は検定と補間的な，「何を検定するべきかの発見まで」を担当する技術であるが，
+    これらはLaplace以来の指数型分布族などの解析理論への偏重への対抗の歴史となる．
+\end{tcolorbox}
+
+\begin{history}[John Tukeyとexploratory data analysis]
+    John Tukey 15-00により推進された
+    特徴要約と視覚化を\textbf{探索的データ解析}という，彼は同名の著書で箱ひげ図を発明した．
+    当時は，Neyman-Pearsonの仮説検定ばかりが重視されている風潮に対抗する文脈もあった．
+    Jack Knife法の開発，von Neumannとのコンピュータの設計においてbitの造語も行った．
+    \begin{enumerate}
+        \item 1984にはBell研究所でS言語が開発されたが，これらを後押しした精神がEDAである．
+        \item 定式化の誤りに対するモデルの感度を低減させる手法に，Robust統計学とNon-parametric統計学がある．Tukeyの箱ひげ図に採用されている5数要約$(Q_{i/4})_{i\in 5}$は，$P(\R)$上大域的に定義されており，さらに歪みと裾の重さに対してロバストである．
+        \item Jackknife法もBootstrap法に代表されるリサンプリング統計も頑健な手法である．
+    \end{enumerate}
+\end{history}
+
+\chapter{ノンパラメトリック推定}
+
+\begin{quotation}
+    Lehmann\cite{Lehmann}が当時の実用書で読みやすい．
+    基本的に分布の正規近似と極限定理を用いて，どのように検定を構成すれば良いかを記述した，応用数学者の真髄が現れている書籍である．
+\end{quotation}
+
+\section{歴史}
+
+\begin{history}[漸近論]
+    生存解析の分野で，60sにWilcoxon統計量をはじめとしてノンパラメトリックな手法が発展し，パラメトリックな手法に比べて遜色ないことが明らかになった．
+    40sのジャックナイフ法からその萌芽があったが，80sに統計計算として再興した．
+    以来，漸近理論は数理統計学の中心になっている．
+    主要な手法は分布の近似を標本数に依存した関数で近似するEdgeworth展開，コーニッシュ・フィッシャー展開や，統計量を変換することで近似を改良する分散安定化変換や正規化変換がある．
+\end{history}
+
+\begin{history}[前園さんの研究]
+    Wilcoxon統計量の性質を研究していると，$U$-統計量というクラスにつながり，このEdgeworth展開を考えている．
+    $U$-統計量は条件付き期待値＝射影の方法で漸近正規性がすぐに示せる，線型な統計汎関数である．
+    70sには独立確率変数の和の収束レートの理論を$U$-統計量に一般化する理論が「ベリー・エシーン限界」を見つけ，80sにはEdgeworth展開が考えられて標本数の逆数までの近似が得られた．
+    Lai and Wang (93)は「漸近$U$-統計量」に理論を一般化した．このクラスはほとんどの独立同一観測から構成される統計量が満たす．
+\end{history}
+
+\section{Wilcoxonの順位和検定}
+
+\subsection{基本的な設定}
+
+$N$人から，処置群$n$人を同様に確からしく選ぶ．
+全被験者$N$人の中で，効果を定量化して，順位をつける．順位の付け方は，
+処置群の中で$S_1<\cdots<S_n$となり(添字$1,\cdots,n$を並べ替える)．
+対照群の中でも$R_1<\cdots<R_m$を満たすようにつけたとすると，
+$\Brace{S_1,\cdots,S_n,R_1,\cdots,R_m}=[N]$を満たす．
+すると，順位の和
+\[W_s:=S_1+\cdots+S_n\]
+が十分に小さいとき，処置効果がないという仮説$H$を棄却することが考え得る．
+
+このとき，$W_s$は独立ではない確率変数の和であるが，これも漸近正規になる．
+
+\subsection{2標本問題化}
+
+与えられた母集団から，上述の被験者$N$人を抽出することを考慮に入れる．
+そしてこの母集団から任意に抽出した1人が，処置を受けたときの反応$Y$と，対照として用いられたときの反応$X$とを比較したい．
+母集団からの抽出の確らしさを仮定すれば，処置効果がないということは$X$と$Y$の分布が等しいということを意味する．
+ここにさらに，「母集団は十分に大きいので，$X$と$Y$の間の相関は無視できる」という仮定も置いたとき，このモデルを\textbf{母集団モデル}といい，
+i.i.d.列$X_1,\cdots,X_m\sim F$と$Y_1,\cdots,Y_n\sim G$の間で$H:G=F$を検定する．
+これを\textbf{2標本問題}という．
+
+\begin{theorem}
+    帰無仮説$H:F=G$の下で，$(S_1,\cdots,S_n)$は$[N]$から$(s_1,\cdots,s_n)$の選び方$\begin{pmatrix}N\\n\end{pmatrix}$通りの上の一様分布に従う．
+\end{theorem}
+
+\begin{remark}
+    このとき，分布$F$には一才の仮定を置いてないので，どのような場合でも使える．この観点から，順位検定は\textbf{ノンパラメトリックな検定}であるという．
+\end{remark}
+
+\subsection{統計量の分布}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    Hajek (1961)による理論の特殊化になる．
+\end{tcolorbox}
+
+\begin{notation}
+    母集団の列$\Pi_1,\Pi_2,\cdots$は，$\Pi_n:=\Brace{v_{n1},\cdots,v_{nn}}$からなるとする．
+    $N$番目の母集団から，大きさ$n:=n(N)$の標本を抽出し，値を$A_{N_1},\cdots,A_{N_n}$とする．
+    標本平均と母平均とをそれぞれ
+    \[S_N:=\sum_{i=1}^nA_{N_i},\quad v_N:=\frac{\sum_{i=1}^Nv_{Ni}}{N}\]
+    とおく．$S_N$の各項は\textbf{有限標本からの抽出であるが故の重属性}があるので，中心極限定理が直接には適用できない．
+\end{notation}
+
+\begin{theorem}[Hajek 1961 の特殊化]
+    標準化された変数$S^*_N:=\frac{S_N-E[S_N]}{\sqrt{\Var[S_N]}}$が漸近的に$N(0,1)$に従うための十分条件は，次の2条件が与える：
+    \begin{enumerate}
+        \item $n,m:=N-n\to\infty$．
+        \item $\frac{\max_{i\in[N]}(v_{Ni}-v_{N})^2}{\sum_{j=1}^N(v_{Nj}-v_N)^2}\max\paren{\frac{m}{n},\frac{n}{m}}\to0$．
+    \end{enumerate}
+\end{theorem}
+
+\begin{corollary}
+    条件(2)を
+    $N\to\infty$のとき，$\frac{\max_{i\in[N]}(v_{Ni}-v_{N})^2}{\sum_{j=1}^N(v_{Nj}-v_N)^2/N}$が有界である，という条件に弱めても，定理は成り立つ．
+\end{corollary}
+
+\begin{example}
+    $\Pi_N$は$d_N$個の$1$と$N-d_N$個の$0$からなるとすると，確率変数$S_N$は超幾何分布に従う確率変数である．
+    すなわち，定理は標準化された超幾何確率変数は$N(0,1)$に漸近することが含意されている．
+\end{example}
+
+\begin{example}
+    $\Pi_N:=[N]$のとき，$S_N$はWilcoxon統計量になる．
+\end{example}
+
+\section{$U$-統計量}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    Hoeffding (48)によるアプローチで，対立仮説の下での順位統計量の漸近分布を考える．
+\end{tcolorbox}
+
+\begin{notation}
+    $\varphi:\R^2\to\R$を任意の実関数とし，これに対して
+    \[U:=\frac{1}{mn}\sum^m_{i=1}\sum^n_{j=1}\varphi(X_i,Y_j)\]
+    とおく．
+    なるほど，$U$統計量は，母集団モデル／2標本問題において自然に現れるのか．
+\end{notation}
+
+\begin{remarks}
+    基本的なHajek (61)の方針は，$S=\sum_{i=1}a_i(X_i)+\sum_{j=1}b_j(Y_j)$という，核$a_i,b_j$が定める線型な統計汎関数の和と漸近同等であることを示すにあたって，$a_i,b_j$を「射影（2乗和を最小にするもの）」により構成する
+    ことである．
+\end{remarks}
+
+\begin{theorem}
+    $m\le n$かつ$m/n\xrightarrow{m,n\to\infty}\lambda\in\R$とする．このとき，$T:=\sqrt{m}(U-\theta)$は漸近正規で，$N(0,\sigma^2),\sigma^2=\sigma_{10}^2+\lambda\sigma_{01}^2$に従う．
+\end{theorem}
+
+これを単一標本で考えることとする．
+
+\begin{theorem}
+    $X_1,\cdots,X_N$は独立同分布に従うとし，
+    \[U:=\frac{1}{\begin{pmatrix}N\\2\end{pmatrix}}\sum_{i<j}\varphi(X_i,X_j)\]
+    とする．このとき，$T:=\sqrt{N}(U-\theta)$は漸近正規で，$N(0,4\sigma_1^2)$に従う．
+\end{theorem}
+
+
+
+\chapter{臨床統計}
+
+\begin{quotation}
+    臨床試験に関する統計解析では，
+    adaptationについての統計的研究が大事になる．
+    また，因果推論がほとんど全ての問題設定である．
+    さらに，Woodcock (2005)が指摘しているように，Bayes流のアプローチは，一般に利用される手法に比べて，時間・予算・人的資源・サンプルサイズを節約しつつ適切な情報を得ることができるため，医薬品開発の分野で関心が高まっている．
+    Temple (2005)は，Bayes流のアプローチが用いられていないにも拘らずFDAの審査官がBayes流の思考プロセスを採用していることを指摘している．
+    人間共同体の全体を実験としているのである！
+
+    clinical testと社会実験と政策評価と心理学実験とは全て相似形であるはず．
+    そもそも全ての「社会科学」的な行為が，因果推論を基本言語として統合されるのかもしれない．
+    初めから物理学が厳密な実験科学であったが，メディアが揃うことで起こる，数理科学による回転である．
+    なら，どこにポジションを取るか？
+\end{quotation}
+
+\section{治験とは何か}
+
+\begin{definition}[clinical research, case-history research, observational study, cohort / prospective / follow-up study, case-control / retrospective study, double blind test]\mbox{}
+    \begin{enumerate}
+        \item ヒトを対象にした医学研究のことを\textbf{臨床研究}，それ以外を\textbf{非臨床研究}という．
+        \item 臨床研究は，設計のない\textbf{症例報告}から，コホート研究＝追跡研究＝前向き研究や患者-対照研究＝後ろ向き研究などの\textbf{観察研究}，通常の診療行為以外の介入を行う\textbf{介入研究}または\textbf{臨床試験}という．新薬開発における介入研究を\textbf{治験}という．
+        \item 抗がん剤を除いた治験は，3段階に分けられる．第I相は安全性の検査，第II相は主に第III相の設計のための予備調査をする．第III相にて，効果の定量的な評価のために，盲検などの本格的なデザインがなされる．
+        \item 二重盲検とは，患者だけでなく医者も，処置群か対照群か判別がつかないように設計された試験をいう．
+    \end{enumerate}
+\end{definition}
+\begin{remark}
+    疫学的には，仮説生成のために患者-対照研究を行い，仮設検定のためにコホート研究を行う．
+    症例対照研究は，マッチングなどにより因果効果の測定をする観察研究である．
+\end{remark}
+
+\section{FDA draft guidance for adaptive design}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    \href{https://www.fda.gov/regulatory-information/search-fda-guidance-documents/adaptive-design-clinical-trials-drugs-and-biologics-guidance-industry}{FDA}
+    Guidance document "Adaptive Design Clinical Trials for Drugs and Biologics Guidance for Industry"を2019年12月に公開している．
+    adaptationとは修正または変更である．これをad hocにするのではなく，by designで行う，という時代の進化をいう．
+    しかし，adaptationは研究者やスポンサーにとっては魅力的であろうと，規制当局との衝突が起こるため，法学的な視点も必要となる．
+\end{tcolorbox}
+
+\begin{history}
+    FDA Modernization Act (97)では，"adequate and well-controlled  clinical trials"によって被験薬の効果を認めることとしている．これは，
+    試験目的，解析方法，デザイン，患者選択，患者割り当て，試験参加者，反応の評価，効果の評価の8要件を満たすprotocol(実施計画書)によって認められる．
+    デザインに組み込まれたプロトコル逸脱を，adaptiveという．
+\end{history}
+
+\begin{definition}[adaptive design]
+    a clinical trial design that
+    allows for prospectively planned modifications to one or more aspects of the design based on
+    accumulating data from subjects in the trial.
+\end{definition}
+\begin{remark}
+    "prospectively planned"により，バイアスが発生しない．
+\end{remark}
+
+\section{研究倫理}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    生命倫理学は1960年の米国から始まった．大きく分けて医療倫理と研究倫理がある．
+    しかし，診療と研究の別とはなんだろうか？
+    ヒトゲノムは個人情報であるか？
+\end{tcolorbox}
+
+\section{生存時間解析}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    Cox 72 は臨床医学の原著論文の中で最も頻繁に応用される統計文献となった．
+    それは，これらの分野（医薬学・生物学・公衆衛生・疫学）では，「イベントの発生にまで掛かる時間」が主要な研究対象となるためである．
+    なお，工学では信頼性分析，経済学では継続時間分析，社会学ではイベント履歴分析という．
+\end{tcolorbox}
+
+\begin{history}\mbox{}
+    \begin{enumerate}
+        \item 生存時間を推定するための最も古典的な方法として，生命表(life table)はHalley 1656-1742が発明した．58のKaplan-Meier推定量も本質的に変わらず，この時点までその歴史が続く．
+        \item 1960半ばに群間比較の手法が取り入れられた．Wilcoxonの順序情報を利用するノンパラメトリック検定を，打ち切りがある場合に拡張した一般化Wilcoxon法(Gehan 65)とlog-rank法(Mantel 66)など．
+        \item 60後半から70sにかけて，臨床研究への応用が盛んになり，共変量のモデル化が問題になり，Coxによりセミパラメトリックモデルが始まった．これは生存時間分布に全く仮定を置かないことになる．
+        \item 1980sに確立過程論（特にマルチンゲール）が追いついて，Cox回帰の理論的な正当化がなされた．
+    \end{enumerate}
+    信頼性工学では，Weibull分布を主にしたパラメトリックな手法が用いられ，臨床統計はログランク検定などのノンパラかCox回帰を使う．
+\end{history}
+
+\begin{notation}
+    $X:\Om\to\R_+$を発生時刻とする．
+\end{notation}
+
+\begin{definition}[survival function, hazard function / ratio, expected remaining lifetime]
+    $X$は確率密度関数$f:\R_+\to[0,1]$を持つとする．$f(x)$とは，年齢$x$で死亡する確率である．
+    \begin{enumerate}
+        \item $S(x):=P[X>x]$により定まる$S:\R_+\to[0,1]$を\textbf{生存関数}という．累積分布関数$F$に対して$S=1-F$が成り立つ．
+        \item $h(x):=\frac{f(x)}{S(x)}$により定まる$h:\R_+\to\R_+$を\textbf{危険関数}または\textbf{（確率過程の）強度関数}という．時刻$x$まで生存している
+        \item $\mrl(x):=E[X-x|X>x]$により定まる$\mrl:\R_+\to\R_+$を
+        \textbf{平均余命関数}という．
+        \item $H(x):=\int^x_0h(u)du=-\log S(x)$により定まる$H:\R_*\to\R_+$を
+        \textbf{累積危険関数}という．
+    \end{enumerate}
+\end{definition}
+
+\begin{proposition}
+    \[S(x)=e^{-H(x)}=\exp\paren{-\int^x_0h(u)du}.\]
+\end{proposition}
+
+\begin{remarks}
+    多くの分布族が$f$のモデルに使われる．
+    Weibull分布はRosen and Rammler (33)が「粉末状炭の細かさを決定する法則」を記述するのに使用し，Weibull (39,51)が次に物質の寿命の解析に使用した．
+\end{remarks}
+
+\section{打ち切りと切断}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    これらの研究対象として基本的な欠測データは，打ち切り(censoring)と切断である．
+    尤度を用いた古典的なアプローチと，Aalen 75による計数過程によるアプローチがある．
+    こちらは，確率過程の方法論で，確率積分・連続時間マルチンゲールとの合わせ技になる．
+\end{tcolorbox}
+
+\begin{definition}[counting process]
+    非負整数値の単調増加過程
+    $N:\R_+\to\N$を\textbf{計数過程}という．
+    Poisson過程は計数過程である．
+\end{definition}
+
+
+\section{Coxモデル}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+また，集団が一様でない場合（多くの臨床試験，コホート調査，観測調査がそうである）は，共変量による線形回帰と誤差項を考えることになる．
+\end{tcolorbox}
+
+\begin{notation}
+    2つ以上のグループのイベント発生までの時間を比較し，共変量も調整することを考える．
+    データ$(T_j,\delta_j,Z_j(t))\;(j\in[n])$を集める．$T_j\in\R_+$は調査時間，$\delta_i\in 2$はその期間内にイベントが発生したか，$Z_j\in\R^p$は経時共変量とする．
+\end{notation}
+
+\begin{model}
+    Coxモデルは，ハザード関数$h(t|Z)$を，乗法的関係・比例関係としてモデルする：
+    \[h(t|Z)=h_0(t)c(\beta^\top Z(t))\qquad(h_0\in\L(\R_+),c\in\L(\R),\beta\in\R^p).\]
+    これは，共変量$Z$の効果についてのみ，$\beta\in\R^p$というパラメトリックな仮定を置いている．
+    ただし$c$は既知の関数として固定する．$c=\exp$など．スケール$h_0$については何の仮定もおかない局外母数とする．
+\end{model}
+
+\chapter{疫学統計}
+
+\begin{quotation}
+    臨床試験に関する統計学がミクロ生物学だとしたら，疫学とは人類と疾患要因（動物・菌類・ウイルスかもしれないし，環境や生活習慣かもしれない）
+    との系を対象とするマクロ生物学である．
+    僕が本当にやりたいことはここにあるかもしれない．
+
+    予防医療に関するデータ活用や，人間・生物を取り巻く生態系をデザインしたいとは思う．
+\end{quotation}
+
+\section{公衆衛生}
+
+医師法第1条には「医師は，医療及び保健指導を掌ることによって公衆衛生の向上及び増進に寄与し，以て国民の健康な生活を確保するものとする」とある．
+公衆衛生とは，マクロで見た人類共同体のwell-beingをいう(absense of diseaseでは足りない)．
+\begin{quote}
+    Public health has been defined as "the science and art of preventing disease, prolonging life and promoting health through the organized efforts and informed choices of society, organizations, public and private, communities and individuals".
+    Analyzing the determinants of health of a population and the threats it faces is the basis for public health.
+\end{quote}
+疫学とは「ある人間集団を対象として，人間の健康と人間に生じる異常の原因を，宿主・病因・環境・行動のそれぞれの面から研究する分野」である．
+
+\section{実験計画法}
+
+\begin{history}
+    元々はFisherが20sに農学試験をモデルに理論化した．
+    注目したい要因（これを\textbf{因子}という）による効果を\textbf{要因効果}，それ以外を\textbf{実験誤差}と呼ぶ．
+    各因子（変数）のカテゴリ数（定義域の濃度）を\textbf{水準(level)}という．
+    要因効果と実験誤差とに分解して解析する手法を\textbf{分散分析}という．
+\end{history}
+
+\begin{axiom}
+    実験計画の3原則は以下の通りで，(3)が物理学にはない，特有のものである．
+    \begin{enumerate}
+        \item 局所管理科：因子以外の要因を一定にする．
+        \item 同条件でなるべく反復する．
+        \item 無作為化，または，介入ができない場合は共変量調整
+    \end{enumerate}
+\end{axiom}
+
+\section{ブロックデザイン}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    edgeが任意個数の頂点と結合できるグラフをハイパーグラフといい，ブロックデザインはハイパーグラフである．
+\end{tcolorbox}
+
+複数の因子があるとき，どのブロックでどの因子を共通とするかの定め方が，「均一」になるデザインを「ブロック」という．
+これは特殊なハイパーグラフを構成する問題になる．
+その後分散分析がなされ，処置効果が推定される．
+最も効率よく処置効果が推定できるようなブロックデザインが問題になり，これを最適計画と呼ぶ．
+
+\chapter{計算統計学}
+
+\begin{quotation}
+    統計的な手法を用いて，次元の呪いや爆発的な計算量を乗り越える手法をいう．
+    統計学には計算機科学者の参入もあり，全く違う統計モデル観がある．
+    生物統計学とは世界観が違う．
+    特に隠れ変数がその萌芽で，ベイズ法というのは隠れ変数の極みとも思えるのではないか（推定量を推定分布としてしまう）．
+    \begin{enumerate}
+        \item 統計量は解析的な計算でも求められるが，リサンプリングによる実験を手元で繰り返すことによって近似計算も可能である（ブートストラップ Efron 79）．
+        \item 確率計算は時折，高次元の積分計算を必要とする．する．超一様分布列が用いられることもある．
+    \end{enumerate}
+\end{quotation}
+
+\section{リサンプリング法}
+
+\begin{history}
+    ブートストラップは計算機を援用したリサンプリング法である．
+    リサンプリング法自体の歴史は古く，1960sにSimonが社会学にて用いている．数式が増えてな統計学専攻生のシミュレーションの手段として使われていた．
+    70sに計算機が成熟する前に，モンテカルロ法などの有効性が議論されていた．
+\end{history}
+
+\begin{history}[Bootstrapの正当化]
+    70sで計算環境の整備によりブートストラップ法が提案され，その後70s後半に，これを正当化する2つの理論が生まれた．
+    \begin{enumerate}
+        \item Huber 81による頑健統計学の完成で，統計的汎関数の理論が広く知られた．
+        \item Bhattacharya and Ghosh 78のEdgeworth展開理論も成熟した．
+    \end{enumerate}
+    ノンパラメトリック最尤法と解釈できる．名前は"by one's own bootstraps"（自力で行う）から．なんの自力かというと電力供給を計算機にすれば良いだけ，という意味である．
+\end{history}
+
+\begin{discussion}
+    いろいろな滑らかさが十分条件になるが，例えばTukeyが普及させたjackknife法(Quenouille)は非復元リサンプリング法であるが，推定量$\wh{\theta}$の経験分布関数に対する滑らかさが必要になる．
+    ブートストラップを簡単に言えば，$H(F)$が滑らかで，何かの期待値として表されているとき，近似可能である，という原理である．
+    $F$を経験分布関数$\bF_n$で推定するときは特にノンパラメトリックブートストラップという．
+\end{discussion}
+
+\begin{definition}
+    $T:=T(X_1,\cdots,X_n)$を$\theta$の推定量とし，$X_i$を除いた$n-1$個のデータから定まる推定量を$T_i$とする．
+    $J^i:=nT-(n-1)T_i$として，
+    \[J(T):=\frac{1}{n}\sum_{i=1}^nJ^i\]
+    を\textbf{jackknife statistic}という．
+\end{definition}
+
+\begin{theorem}
+    $T$が一致推定量でなく，さらに$\exists_{\theta_1\in\R}\;E[T]=\theta+\frac{\theta_1}{n}$を満たすならば，$J(T)$は一致推定量である．
+\end{theorem}
+
+\section{超一様分布列}
+
+\begin{history}[low-discrepancy sequences]
+    Hammersley and Handscomb "Monte Carlo Methods"(1964)では「準乱数(quasi-random numbers)」と，疑似乱数と区別して呼ばれていた．
+
+    一様分布論は，空間内の点列の漸近分布を議論するエルゴード理論の一部であるが，これが"irregularities of distribution"なる分野に変化した．
+    分布の不規則性＝一様分布からのズレの尺度を"discrepancy"と呼ぶ．
+
+    数値積分では5,6次元を超えると，「最後の手法(last resort)」としてのモンテカルロ法しか残らないことが知られているが，収束が非常に遅い．
+    1960sにすでに，モンテカルロ法の問題点を克服するために，「準乱数」が用いられていた．特に，ソ連での水爆開発でのモンテカルロ計算の高速化に研究されていた．
+    Riemann積分の代表点を「一様に」取ると，うまく積分の値に収束するかもしれない．
+    特にMBS(morgage-backed securities)の価格計算では360次元の数値積分が登場するが，このような例でも著しい高速化が可能になった．
+\end{history}
+
+\section{平均場近似}
+
+\begin{history}
+    多体問題を1体問題に帰着される手法として平均場近似が考えられていた(Weiss 07)．
+    統計手法では，大自由度統計モデルに関する積分（平均）の計算において，特殊な分布属では計算の困難さが下がり，真の分布が近似できる．
+
+    統計計算が容易になるグラフ構造に関して，汎用的なアルゴリズムの形で初めて明確に議論したのがPearl(88)である，
+    これをグラフによる因果推論の議論と同時に発表したため，混乱されやすいが，全く独立の2つの議論である．
+
+\end{history}
+
+\section{EM法}
+
+\begin{discussion}
+    統計モデルの変数は，観測変数／顕在変数と潜在変数／隠れ変数の22種類があり，音声認識での隠れマルコフモデルや，時系列解析の状態空間モデル，
+    因子分析モデルなどのCS的な統計モデルでは隠れ変数を持つモデルが多い．
+    そのようなモデルのパラメータに対する最尤推定を行うアルゴリズムをEM法(Dempster, Larid, Rubin 77)である．
+
+    ただし，Eステップに計算困難性があり，例えばモンテカルロ法で近似できるが，以前計算量は大きい．
+    変分近似を採用する手法を\textbf{一般化EM法}という．
+\end{discussion}
+
+\section{変分ベイズ法}
+
+\begin{history}
+    ベイズ推定は最尤推定と異なり，未学習データの予測値ではなく予測分布を求める．
+    少ないデータ数に対して最尤推定よりも高い汎化能力を持つ利点はあるが，計算困難性が強い．
+    特に積分計算について，従来はMCMC法が用いられたが，ここに変分近似ほうを用いる手法は\textbf{変分ベイズ法}と呼ばれる．
+\end{history}
+
+\section{マルコフ連鎖モンテカルロ法}
+
+\begin{history}
+    統計物理で1950sに導入され（動的モンテカルロ法とも呼ばれる），統計科学の分野に流入したのは1990sで，これがベイズ統計のきっかけとなった．
+    計算の困難さがアルゴリズムの発展によって除去されたことによる影響が大きい．
+    また変数の離散・連続の別を撤廃したことが実質的には大きい．
+\end{history}
+
+基本的には種々の離散・連続分布から，解析的性質がよくわかっているか／どれほど高次元かに依らずサンプルを得るための
+手法である．
+
+\section{逐次モンテカルロ法}
+
+\begin{history}
+    分野によってはparticle filter / Monte Carlo filterや，ロボティクスではcondensationと呼ばれる手法の総称．
+    遺伝的アルゴリズムに似た面もあるが，状態空間モデルに基づく統計を背景にしている．
+\end{history}
+
+\chapter{計量経済学と多変量・時系列解析}
+
+\section{歴史}
+
+\begin{enumerate}
+    \item 現代的な数理統計学の理論体系が確立したのは1920sのFisher, Neyman, E. S. Pearsonらによる．
+    \item この枠組み（相関分析など）に沿って，30sからは自然な形で多変量に拡張された．Fisher自身も多くの貢献をしたが，Hotelling, Wilks, Wishartらの仕事が基礎になっている．
+    \item 多変量推測統計のAndersonによる標準的教科書"An Introduction to Multivariate Statistical Analysis"は1958年に刊行された．この頃には多変量正規分布と線型モデルに基づく推測理論の基礎は確立していた．
+    \item 1970s以降の計算機時代では，今日ではほとんどのデータは多変量データであり，取り立てて多変量分析と言わなくても，新たな統計手法は押し並べて多変量データを扱う手法となっている．
+    今日の統計パッケージの中にある探索的データ解析や射影追跡などは，正規分布を前提としない，非線形的手法である．
+\end{enumerate}
+\cite{フロンティア１}の序文．
+
+\begin{example}
+    回帰分析，分散分析，主成分分析，判別分析，因子分析，分割表，グラフィカルモデル．
+\end{example}
+
+\section{多変量解析の考え方}
+
+多変量解析においては，連続分布としては多変量正規分布以外に扱いやすい分布が少ない．
+ところが，実際のデータ解析の場面では多変量正規分布の仮定の妥当性が疑われる場面が多く，
+記述統計的な手法と推測統計的な手法の間に大きなギャップがあるのが現状．\cite{フロンティア１}
+
+\section{用語と記法}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    行列やベクトルを言葉として用いるのが特徴であり，経済学はこのAndersonらの慣習を強く受け継いでいる．
+\end{tcolorbox}
+
+\begin{definition}[data matrix, sample size, dimension]\mbox{}
+    \begin{enumerate}
+        \item 多変量データを\textbf{データ行列}とも呼ぶ．一般には行を個体，列を変数とする．それぞれの添字を$t$と$i,j$と使い分ける．
+        \item $n\times m$データ行列の行数$n$を\textbf{標本の大きさ}といい，列数$m$を標本の\textbf{次元}という．\footnote{高次元データを，なんらかの形で２次元空間に写して解釈する記述統計的手法を，次元の縮約という．}
+        \item 値が数ではない変数を\textbf{質的変数}という．これを量的変数に変換する手法を\textbf{数量化}という．
+    \end{enumerate}
+\end{definition}
+\begin{remark}[spatial statistics, random field]
+    データ行列の古典的な枠組みに入らない多変量データには，地理的なデータなどがある．これには\textbf{空間統計}や\textbf{確率場}の手法がある．
+    また，質問表に分岐がある場合は，特定の回答をした者以外の値が\textbf{欠測値}となる．
+\end{remark}
+
+\section{経験論 vs 計量経済学}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    構造方程式モデルの前夜まで繋ぐ歴史がある．
+\end{tcolorbox}
+
+\begin{history}[empiricsを乗り越えた偉人たち：Slutsky, KoopmansとCowles委員会の時代]
+    経済学では，Sir William Pettyが 17 世紀イギリスにおいて経済データを記録して（作り出して）以来、経験的／実証的な研究がずっと重要な役割を果たしてきた．\footnote{労働価値説を初めて唱え、政治算術派の先駆となったことから、古典派経済学と統計学の始祖ともいわれる。}
+    \begin{enumerate}
+        \item 帰納的アプローチ・記述統計学：データを慎重に検討することで経済学的な洞察が得られる．
+        \item 理論的アプローチ・推測統計学：既存の統計理論の検証が大事（ちょうど実験物理学のように）．
+    \end{enumerate}
+    Léon Walras 34-10 (仏)は経済分析に数学的手法を積極的に活用し，一般均衡理論を最初に定式化した．つまり，「需要曲線」を初めて定立した．
+    これは，凸解析や不動点定理などでかなりの分析が可能な数学的に優れた構造を持ち，例えば均衡価格の存在が示せる．
+    そこで弟子のHenry Mooreは，統計的な検証をしようと試みる．さらにその弟子が同様の研究を1930sまで続け，Pigouなども同様の研究をしている．
+    その後すぐにアメリカでWesley Clair Mitchell 74-48を中心に，ビジネスサイクルの研究がNational Bureau of Economic Researchで始まった．
+    その中心的な手法が帰納的アプローチであった．SchumpeterやPigouは理論研究を志向したが，その統計手法は徹底されたものではなかった．
+    NBERの研究は特にEugene Slutsky 1880-1948や\textbf{Tjalling Koopmans} 10-86によって批判され，Cowles財団を立ち上げ，これが数理経済学・計量経済学の先駆けとなった．
+    Kantorovichとノーベル記念賞を受賞した．
+\end{history}
+
+\begin{history}[Haavelmoによる確率論的アプローチによるCawles財団の加速]
+    Tinbergenはこの方向からビジネスサイクル理論に切り込み，Keynesと戦った．
+    Tinbergenを乗り越える形で，計量経済学は一気に「確率論的アプローチ」の色を深めた，特にHaavelmo 11-．
+    これにCawles委員会も応え，教科書なども整備されていった．
+
+    ある意味で、ホーヴェルモーの研究は昔の計量経済学者たちが事実上主張してきたことではあった。でも、それを確固たるものにしたのは ホーヴェルモーだ。クープマンス主導のコウルズ委員会 と、古参の NBER 制度学派たち（Rutlege Vining が筆頭) との間の手法論争は、1947 年から 1949 年まで続き、その結果として確率的理論研究が経験論的経済学での支配的な理論として確立した。
+\end{history}
+
+\begin{history}[Cowles委員会の超克：Lucasの時系列]
+    Herman Woldは，連立方程式系の大規模モデルの「同時手法」を批難し，代わりに再帰的手法を支持した．
+    \textbf{Robert E. Lucas} 37- (1976) が最も有名な批判を発表した。大規模モデルの構造パラメータはとりわけ政策に用いられるときには一定だと想定されている。でもこれは新マクロ経済学理論の本流になりつつあった理論の主張とは一致しないのだ、と彼は主張したのだった。 別の一連の論文で ルーカスは新しい計量経済学の方法論を述べた。それが\textbf{時系列の計量経済学}だ。
+\end{history}
+
+\section{構造方程式モデル}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    構造方程式・同時方程式(simultaneous equiation)は，
+    なんと，数理統計学の「推定方程式」なる用語と同義である！
+\end{tcolorbox}
+
+\begin{history}[同時方程式モデル]
+    29世界恐慌で，統計的な手法の変革が迫られた．
+    特にA. Cowlesがコウルズ委員会を創始し，現在のCowles財団となっている．
+    この委員会のモノグラフKoopmans (50), Hood and Koopmans (53)が同時方程式モデルの始まりである．
+    Klein (50)がこれをマクロ計量モデルに応用した．
+\end{history}
+
+同時方程式は2本などに見えても，実際は無数に存在し，見かけ上は全ての方程式を同時に満たす．
+（満たすべき方程式の線型空間でも生成しているのか？）
+この全体を構造型または構造方程式と呼ぶ．
+
+\section{状態空間モデル}
+
+観測方程式と推移方程式の組みをいい，推移方程式により変化していく観測されない変数（\textbf{状態変数}）を推定することが問題になる．
+将来の値を予測する推定問題に加えて，現在利用可能な変数から現在の状態変数を推定するのが\textbf{濾過問題(filtering)}，過去の状態変数を推定するのが\textbf{平滑問題(smoothing)}である．
+
+\section{プロビットモデル}
+
+割り当てなど，説明変数がダミー変数になることはよくあるが，
+結果変数がダミー変数になるとき，制限被説明変数モデル(limiteddependent variable model)という．
+ここで，条件付き確率$P[Y_i=1|X_i]=\Phi(\al+\beta X_i)$を考えるとき，
+$\Phi$が正規ならば\textbf{プロビットモデル}，ロジスティックモデルならロジットモデルである．
+Tobin (58)はTobitモデルも開発した．
+
+\chapter{フィルタリング理論と工学}
+
+\section{歴史}
+
+\begin{history}
+    Kalman (60), Kalman and Bucy (61)による．70sから経済にも応用された．
+\end{history}
+
+\chapter{頑健統計}
+
+\begin{quotation}
+    ある時期，正規分布から外れた状態の下でもロバストであるような推定量についての研究が盛んに行われたことがあった．
+    その結論としては，位置母数に関する限り，正規分布を想定した推定方法は，正規分布からのズレが著しく大きくない限り十分効率が良い＝ロバストである．
+    また，正規分布からのズレが大きい時も，標本数が著しく小さくない限り，そのことが検出できることがわかる．
+\end{quotation}
+
+\section{歴史}
+
+\begin{history}
+    1920sにFisherが統計モデルの量を倍にしたが，それらは仮定に強く依存するものであった．
+    そこで，「分布に仮定を置かなくても使えるモデル」が志向されたのと同様に，
+    パラメトリックモデルの表現力と両立させるために，セミパラメトリックモデルとその上の頑健統計が志向されるのは来たる研究テーマとして当然の流れであろう．
+
+    Huber (64)が初めてこの問題に挑み，「真の分布」を含むようなモデルとその近傍を考察し，そのようなモデルのすべてでうまく働く推定量のクラスを確定した．
+    引き続き複数のアプローチを開発し，Robust Statistics (81)にまとめた．
+    一方Hampel (68, 71, 74)は影響関数による手法を開発した．
+    正則関数との類比でいえば，微分が影響関数で，特異点がbreakdown pointである．
+    これはHuber (64)より簡略化され，さらに適応範囲も広い（最尤法と尤度比検定が使えるすべてのモデルに使える）数理手法と言える．
+\end{history}
+
+\section{議論}
+
+母数$\theta$を観測した値$X_i$から推定することを考えると，$X_i=\theta+\ep_i$と表せる．
+
+
+例えば誤差分布に正規分布を仮定することは，よく管理された実験を表す．
+もっと裾が長いことの方が考ええる．
+このときに，正規分布に対する精度が落ちても，頑健な統計量を考えたい．
+$M$推定量の改良として，最小化する目的関数を
+\[\sum\rho(X_i-\theta)\quad\rho(u)=u^21_{\abs{u}\le k}+(2k\abs{u}-k^2)1_{\abs{u}>k}\]
+とすることによってこれを与えたのがHuberである．
+
+\section{von Mises解析}
+
+\begin{history}
+    von Mises (47)で意識されたのは"Volterra derivative"である．
+    これは60sの頑健統計の勃興，特にHampelの博士論文(68)まで待って，「影響曲線」なる概念に進化した．
+    1980sに，Frechet微分，Hadamard微分，コンパクト微分の言葉で基礎づけがなされた．（\cite{von Mises calculus}全文）．
+    \begin{quote}
+        The purpose of these notes is to provide von Mises' theory with a rig-
+orous mathematical framework which is sufficiently straightforward so that it can be applied routinely with little more effort than is required for the calculation of the influence curve. The approach presented here is based on the Hadamard derivative and is applicable to diverse forms of sta- tistical functionals.\cite{von Mises calculus}
+    \end{quote}
+\end{history}
+
+\chapter{高次元統計学}
+
+\section{lasso推定量}
+
+\begin{definition}[least absolute  shrinkage and selection operator]
+    
+\end{definition}
+
+\chapter{極値統計学}
+
+\begin{quotation}
+    Emil Julius Gumbel 91-66はHeidelberg数理統計学教授の座を追われたユダヤ系数学者で，最終的にはFisherと極値統計学を築いた．
+    統計学の中でも特殊な分野と見做されるかもしれないが「この外れ値を採用すべきか否か？」という問題を数理化する非常に基本的な試みである．
+    その開拓者はなんとFrechet (27)とFisher (28)であった．
+\end{quotation}
+
+\chapter{時系列解析}
+
+\begin{quotation}
+    確率変数列$X_1,\cdots,X_n$の実現値と見做し得るデータに対する統計解析を多変量解析と呼ぶならば，確率過程の実現値と見做し得るデータに対する統計解析を時系列解析という．
+    そこで，
+\end{quotation}
+
+\section{歴史}
+
+\begin{enumerate}
+    \item 1940sよりWienerやKolmogorovにより弱定常過程のスペクトル解析と予測の理論が確立される．特に連続時間の確率過程の理論の精緻な発展の原動力となった．
+    \item 1976年刊行のGeorge BoxとJenkinsによる"Time Series Analysis, Forecasting and Control"が，自己回帰移動平均(ARMA)モデルと呼ばれる線型モデルの構築と予測のための標準的な手続きが確立した．
+    これ以降はARMAモデルの限界を乗り越えることを念頭に，非線形モデルなどさまざまな手法が提案されることになる．
+\end{enumerate}
+
+通常の統計学は主に独立標本に対する議論であるが，
+時系列解析は時間軸の間にも従属関係がある状況での統計解析であり，
+その点で一般化であると捉えられる．
+
+\subsection{パラメータ付け}
+
+まず，時系列データを定量的に特徴付ける(パラメータ付ける)手法を考える．
+\begin{enumerate}
+    \item 時間領域法：自己相関など．
+    \item 周波数領域法：スペクトル解析など，
+\end{enumerate}
+
+\begin{definition}[autocorrelation function]
+    確率過程の共分散関数の概念を自己相関または自己共分散といい，
+    相関係数版の概念を\textbf{自己相関関数}という．
+\end{definition}
+\begin{remark}
+    しかし，実際のデータから推定しにくい，視覚化しにくいなどの難点がある．
+\end{remark}
+
+\subsection{推定法}
+
+等間隔標本$(X_t)_{t\in\Z}$の
+i.i.d.を仮定するとGlivenko-Cantelliの補題から一致推定が可能であるが，
+一般には他の仮定を必要とする．
+
+\section{基本的性質}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    i.i.d.以外に等間隔標本$(X_t)_{t\in\Z}$にどんな仮定をおけるかを考える．
+\end{tcolorbox}
+
+\subsection{エルゴード性}
+
+\begin{notation}
+    はじめの$n$回の観測からの
+    標本平均を$\wt{x}=\wt{x}_n:=n^{-1}\sum^n_{t=1}X_t$とする．
+\end{notation}
+
+\begin{definition}[EPCL: ergodic property with a constant limit]
+    \[\exists_{\mu\in\R}\;P\Square{\lim_{n\to\infty}\wt{x}=\mu}=1.\]
+\end{definition}
+
+\section{定常過程}
+
+\section{スペクトル解析}
+
+
+
+\section{リード・ラグ効果とCCK理論}
+
+\begin{definition}\mbox{}
+    \begin{enumerate}
+        \item 2つの時系列がタイムラグを持って相関する現象をlead-lag効果という．
+        \item 
+    \end{enumerate}
+\end{definition}
+\begin{remarks}
+    現状の取引の流動性では，msの世界で存在する．結果，80sまでは分のスケールで観測されていた現象だが，現在は高頻度データと呼ばれる分野となってしまった．
+    そこで，古いモデルが使えなくなってしまったこの現象に対して，Hoffmann, Rosenbaum, and Yoshida (2013)が新しいモデルと推定法を提案した．
+    
+\end{remarks}
+
+\chapter{乱数}
+
+\begin{quotation}
+    サイコロを使う，国勢調査報告書の中の数字を抜き出す．
+    擬似乱数という計算機援用による方法がvon Neumannによって始められた．
+    これは「一様性」を満たせば良いので，「予測不可能かどうか」を厳密な意味で満たしている必要はない．
+\end{quotation}
+
+\section{一様乱数の生成法}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    Lehmer (1948)による線形合同法(linear congruential method)が40年に渡って使われてきた．
+    が，高次元化や，大量の乱数を作る実験には不向きである．
+    そこで現代的には，$M$-系列を用いる方法などがある．
+\end{tcolorbox}
+
+\begin{model}
+    よく選択された$a,M$について，
+    \[X_n\equiv aX_{n-1}+c\mod M\]
+    を用いて非負正数列$(X_n)$を生成する．
+\end{model}
+\begin{remarks}
+    高次元になればなるほど規則的にバラバラになってしまう．
+    これを「多次元疎結晶構造」という．
+    そこで，高次の項を追加することも考えられる．
+\end{remarks}
+
+\begin{definition}
+    次の3条件を満たす独立なRademacher確率変数列$(X_n)_{n\in[T]}$を\textbf{擬似ランダム系列}という．
+    \begin{enumerate}
+        \item $\lim_{T\to\infty}\frac{\abs{\Brace{n\in[T]\mid X_n=1}}}{\abs{\Brace{n\in[T]\mid X_n=-1}}}=1$．
+        \item $\lim_{T\to\infty}\frac{\abs{\Brace{n\in[T]\mid X_n=X_{n+1}=\cdots=X_{n+k+1}}}}{\abs{\Brace{n\in[T]\mid X_n=X_{n+1}=\cdots=X_{n+k}}}}=1$．
+        \item $\lim_{T\to\infty}\frac{1}{T-s}\sum_{t=1}^{T-s}X_tX_{t+s}=1_{s=0}$．
+    \end{enumerate}
+\end{definition}
+\begin{remarks}
+    自己相関のないRademacher確率変数を，位相をずらして各桁とすれば良い．
+\end{remarks}
+
+\section{一様乱数の変換}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    $X:=F^{-1}(U)$とすれば，所望の分布が得られる．これを逆関数法という．
+\end{tcolorbox}
+
+\begin{notation}
+    分布関数$F$に対して，$F^{-1}(y)=\inf\Brace{x\in\R\mid F(x)\ge y}$と定める．この値をquantilesという．
+\end{notation}
+
+\section{統計的検定}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    例えば合同法に対するスペクトル検定によって，乱数の精度を検証できるが，1周期全体の帯域的性質はわかっても，局所的な性質は検定に頼って泥臭く検証していくことになる．
+    これは結局適合度検定であり，$\chi^2$-検定やKolmogorov-Smirnov検定となる．
+    K-S検定では
+    \[K_n:=\max(K_n^+,K_n^-),\qquad\paren{K_n^+:=\sqrt{n}\max_{x\in\R}(F_n(x)-F(x)),K_n^-:=\sqrt{n}\max_{x\in\R}(F(x)-F_n(x))}.\]
+    なる統計量を用いる．これは可測性が怪しいはず．
+\end{tcolorbox}
+
+\chapter{数理物理学}
+
+
+
+\section{浸透理論}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=]
+    percolation理論は，ランダム系の統計的考察をする数理工学の分野と，spin glass (磁性体のスピンがアモルファスのように乱雑なまま固まっった物質のこと)における秩序の拡散を記述する．
+    狭義には，相転移の最も簡単なモデルをいう．
+\end{tcolorbox}
+
+\chapter{参考文献}
+
+\begin{thebibliography}{99}
+    \bibitem{フロンティア１}
+    『統計科学のフロンティア１　統計学の基礎I　線型モデルからの出発』（第I部「多変量解析入門」（竹村彰道），第II部「時系列解析入門」（谷口正信））
+    \bibitem{Lehmann}
+    E. L. Lehmann - Nonparametrics: Statistical Methods Based on Ranks
+    \bibitem{Chow-Chang}
+    Shein-Chung Chow, Mark Chang - Adaptive Design Methods in Clinical Trials
+    \bibitem{生命倫理学}
+    シリーズ生命倫理学『医学研究』
+    \bibitem{Klein-Moeschberger}
+    John P. Klein and Melvin L. Moeschberger - Survival Analysis
+    \bibitem{von Mises calculus}
+    Luisa T. Fernholz.  (1983)．
+\end{thebibliography}
+
+\end{document}

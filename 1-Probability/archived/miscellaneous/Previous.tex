@@ -1,0 +1,902 @@
+\documentclass[uplatex,dvipdfmx]{jsarticle}
+\title{\large 東京大学大学院 数理科学研究科 数理科学専攻 修士課程\\
+\Huge 専門科目B（筆記試験） 回答例\\\large 関数解析・確率論・実解析分野}
+\author{あの
+\footnote{e-mail address : anomath57@gmail.com\\URL : \url{https://anomath.com/}}
+}
+\date{\today}
+\pagestyle{headings} \setcounter{secnumdepth}{4}
+\input{/Users/Hirofumi Shiba/NatureOfStatistics/preamble_no_fonts.tex}
+%\input{/Users/hirofumi.shiba48/NatureOfStatistics/preamble_no_fonts.tex}
+\usepackage[math]{anttor}
+\begin{document}
+\maketitle
+\tableofcontents
+
+\begin{notation}
+    次の記法は以後断りなく用いる．
+    \begin{enumerate}
+        \item $n=1,2,\cdots$について，$n:=\Brace{0,1,2,\cdots,n-1}$，$[n]:=\{1,2,\cdots,n\}$．$\N=\{0,1,2,\cdots\}$，$\N^+=\N_{>0}=\{1,2,3,\cdots\}$．
+        \item 同様にして，$\R_+:=\Brace{x\in\R\mid x\ge0}$，$\R^+:=\Brace{x\in\R\mid x>0}$，$\o{\R_+}:=[0,\infty]$．
+        \item $(\Om,\F,P)$を確率空間，$L(\Om)=\Brace{X:\Om\to\R\mid X\text{は可測関数}}$．
+        \item $H$をノルム空間とするとき，$B=\Brace{x\in H\mid\norm{x}\le1}$で閉単位球を表す．$H$がHilbert空間のとき，内積を$(-|-)$で表す．
+        \item Banach空間$X,Y$について，この間の有界線型作用素全体のなすBanach空間を$B(X,Y)$で表す．$B(X):=B(X,X)$と略記する．
+    \end{enumerate}
+    問題文の表現は筆者の都合で一部変えています．
+    過去3年分の入学試験問題は\href{https://www.ms.u-tokyo.ac.jp/kyoumu/_52023_52023_pdfadobe_acrobat_reader.html}{こちら}から見れます．
+\end{notation}
+
+\section{2022年度(令和4年)実施}
+
+\begin{feels*}
+    この年度の実解析と関数解析の問題はいずれも有限測度空間を扱っており，いずれもVitaliの収束定理を用いることで打開策が見つかる場面がある．
+\end{feels*}
+
+\begin{definition}[uniformly integrable]
+    関数族$\F\subset L^1(\Om)$が\textbf{一様可積分}であるとは，次が成り立つことをいう：
+    \[\forall_{\ep>0}\;\exists_{\delta>0}\;\forall_{f\in\F}\;\forall_{E\in\F}\;\mu(E)<\delta\Rightarrow\Abs{\int_Efd\mu}<\ep.\]
+\end{definition}
+
+\begin{proposition}
+    $(\Om,\F,\mu)$を有限測度空間，$\{f_n\}\subset L^1(\Om)$を関数列とする．ある$1<p$について
+    \[\sup_{n\in\N}\int_\Om\abs{f_n}^pd\mu<\infty\]
+    が成り立つならば，$\{f_n\}$は一様可積分である．
+\end{proposition}
+\begin{Proof}
+    任意の$\lambda\ge 0$と$n\in\N$について，
+    \[\int_\Om 1_{\Brace{\abs{f_n}>\lambda}}\abs{f_n}d\mu\le\int1_{\Brace{\abs{f_n}>\lambda}}\frac{\abs{f_n}^p}{\lambda^{p-1}}d\mu\frac{1}{\lambda^{p-1}}\int\abs{f_n}^pd\mu\]
+    より，
+    \[\sup_{n\in\N}\int_{\Brace{\abs{f_n}>\lambda}}\abs{f_n}d\mu\le\lambda^{-(p-1)}\sup_{n\in\N}\int\abs{f_n}^pd\mu\xrightarrow{\lambda\to\infty}0.\]
+    これを得れば，任意の$\ep>0$について，ある$\lambda>0$が存在して$\int_{\Brace{\abs{f_n}>\lambda}}\abs{f_n}d\mu<\ep$を満たすため，$\mu(E)<\ep/\lambda$を満たす任意の$E\in\F$について，
+    \[\int_E\abs{f_n}d\mu=\int_{E\cap\Brace{\abs{f_n}>\lambda}}\abs{f_n}d\mu+\int_{E\cap\Brace{\abs{f_n}\le\lambda}}\abs{f_n}d\mu<2\ep.\]
+\end{Proof}
+
+\begin{theorem}[Vitali]
+    $(\Om,\F,\mu)$を有限測度空間，$\{f_n\}_{n\in\N}\subset L^1(\Om)$は一様可積分な列であるとする．
+    このとき，$(f_n)$が殆ど至る所有限値な関数$f\in L(\Om)$に概収束するならば，$f\in L^1(\Om)$でもあり，
+    \[\lim_{n\to\infty}\int_\Om\abs{f_n-f}d\mu=0.\]
+\end{theorem}
+
+\subsection{実解析}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=B 第10問（実解析）]
+    測度空間$(\Om,\F,\mu)$は$\mu(\Om)=1$を満たすとする．
+    \begin{enumerate}
+        \item 任意の正の定数$a\in\R^+$と$f\in L^1(\Om)$に対して次を示せ：
+        \[\mu(\abs{f}\ge a)\le\frac{1}{a}\int_\Om\abs{f(x)}d\mu(x).\]
+        \item 関数列$\{f_n\}_{n\in\N}\subset L^1(\Om)$は次を満たすとする：
+        \begin{enumerate}[(i)]
+            \item $\lim_{n\to\infty}\iint_{\Om\times\Om}\abs{f_n(x)-f_n(y)}d\mu(x)d\mu(y)=0$，
+            \item $\sup_{n\in\N}\int_\Om\abs{f_n(x)}^2d\mu(x)\le 1$，
+            \item $\forall_{n\in\N^+}\;\int_\Om f_n(x)d\mu(x)=0$．
+        \end{enumerate}
+        このとき，$\lim_{n\to\infty}\int_\Om\abs{f_n(x)}d\mu(x)=0$を示せ．
+        \item (2)の(i),(ii),(iii)を満たし，$\inf_{n\in\N}\int_\Om\abs{f_n(x)}^2d\mu(x)>0$となるような測度空間$(\Om,\F,\mu)$と関数列$\{f_n\}_{n\in\N}$の例をあげよ．
+    \end{enumerate}
+\end{tcolorbox}
+\begin{proof}[\textbf{\underline{［解答例］}}]\mbox{}
+    \begin{enumerate}
+        \item 集合$\Brace{x\in\Om\mid\abs{f(x)}\ge a}$の定義関数を$1_{\Brace{\abs{f}\ge a}}$で表すと，$1_{\Brace{\abs{f}\ge a}}\le\frac{\abs{f}}{a}1_{\Brace{\abs{f}\ge a}}$より，
+        \begin{align*}
+            \mu(\abs{f}\ge a)&=\int_\Om 1_{\Brace{\abs{f}\ge a}}d\mu(x)\le\int_\Om\frac{\abs{f}}{a}1_{\Brace{\abs{f}\ge a}}d\mu(x)\\
+            &\le\frac{1}{a}\int_\Om\abs{f(x)}d\mu(x).
+        \end{align*}
+        \item 
+    \end{enumerate}
+\end{proof}
+
+\subsection{関数解析}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=B 第9問（関数解析）]
+    $X$をBanach空間$L^\infty([0,1])$とする．ただし，$[0,1]$上の測度としてはLebesgue測度を考える．
+    \begin{enumerate}
+        \item 任意の$f\in X$に対し，次で定まる関数$Tf:[0,1]\to\R$は連続であることを示せ：
+        \[(Tf)(x)=\int^1_0\frac{f(y)}{\abs{x-y}^{1/2}}dy\quad(x\in[0,1])\]
+        \item 線型作用素$T:X\to X$の作用素ノルム$\norm{T}$を求めよ．
+        \item $f\in X$が等式$\norm{Tf}_\infty=\norm{T}\norm{f}_\infty$を満たすならば，$f$は定数関数であることを示せ．
+    \end{enumerate}
+\end{tcolorbox}
+\begin{lemma}[作用素ノルムの特徴付け]
+    次の3つのノルムは等しい(任意の$T\in B(X,Y)$について同じ値を取る)．
+    \begin{enumerate}
+        \item $\norm{T}_1=\sup_{x\in B}\norm{Tx}$．
+        \item $\norm{T}_2=\sup_{x\in\partial B}\norm{Tx}$．
+        \item $\norm{T}_3=\sup_{x\ne 0}\frac{\norm{Tx}}{\norm{x}}$．
+    \end{enumerate}
+\end{lemma}
+\begin{Proof}
+    $T\in B(X,Y)$を任意に取る．
+    すると，$x/\norm{x}$のノルムが1であることに注意すると，$\norm{T}_3\le\norm{T}_2\le\norm{T}_1$は明らか．
+    ここで，$\norm{T}_1\le\norm{T}_3$でもある．これは，任意の$x\in B$について，$\norm{Tx}\le\norm{Tx}/\norm{x}$であるため．
+\end{Proof}
+\begin{proof}[\textbf{\underline{［解答例］}}]\mbox{}
+    \begin{enumerate}
+        \item 任意の$x\in[0,1]$に収束する任意の点列$\{x_n\}\subset[0,1]$について，$Tf(x_n)\xrightarrow{n\to\infty}Tf(x)$を示せば良い．
+        Hölderの不等式より，
+        \[\abs{Tf(x_n)-Tf(x)}=\Abs{\int^1_0f(y)\paren{\abs{x_n-y}^{-1/2}-\abs{x-y}^{-1/2}}dy}\le\norm{f}_\infty\Norm{\abs{x_n-y}^{-1/2}-\abs{x-y}^{-1/2}}_1\]
+        が成り立つから，$\Norm{\abs{x_n-y}^{-1/2}-\abs{x-y}^{-1/2}}_1\xrightarrow{n\to\infty}0$，すなわち，$[0,1]$上の関数$f_n(y)=\abs{x_n-y}^{-1/2}$が$f(y)=\abs{x-y}^{-1/2}$に$L^1(\Om)$-収束することを示せば良い．
+        これは，
+        \begin{enumerate}[(a)]
+            \item $x$の関数$x\mapsto\abs{x-y}^{-1/2}$が$[0,1]\setminus\{y\}$上連続であることより$\abs{x_n-y}^{-1/2}\xrightarrow{n\to\infty}\abs{x-y}\;\mu\dae y$．
+            \item $\{f_n\}$は$L^{3/2}([0,1])$-有界であるから，一様可積分である．実際，
+            \begin{align*}
+                \int_0^1\abs{f_n(y)}^{3/2}d\mu(y)&=\int^1_0\abs{x_n-y}^{-3/4}\\
+                &=\int^{x_n}_0(x_n-y)^{-3/4}d\mu(y)+\int^1_{x_n}(y-x_n)^{-3/4}d\mu(y)=4\paren{x_n^{1/4}+(1-x_n)^{1/4}}\le 8.
+            \end{align*}
+        \end{enumerate}
+        より，Vitaliの収束定理から従う．
+        \item 補題より，$\norm{T}=\sup_{f\in\partial B}\norm{Tf}_\infty$を求めれば良い．
+        \begin{enumerate}[(a)]
+            \item $f=1$のとき，$\norm{T}=2\sqrt{2}$である．実際，
+            \begin{align*}
+                (Tf)(x)&=\int^1_0\abs{x-y}^{-1/2}dy=2(\sqrt{x}+\sqrt{1-x})
+            \end{align*}
+            と計算出来るから，$\norm{Tf}_\infty=2\sqrt{2}$．
+            \item $\forall_{g\in\partial B}\;\norm{Tg}_\infty\le\norm{Tf}_\infty$である．
+            実際，任意の$g\in\partial B$について，$\norm{g}_\infty=\esssup\abs{g}=1$より，$g\le f\;\ae$
+            これから，
+            \[(Tg)(x)=\int^1_0\frac{g(y)}{\abs{x-y}^{1/2}}d\mu(y)\le\int^1_0\frac{f(y)}{\abs{x-y}^{1/2}}d\mu(y)=(Tf)(x).\]
+            両辺の上限を取って，$\norm{Tf}_\infty\ge\norm{Tg}_\infty$．
+        \end{enumerate}
+        \item $\forall_{f\in\partial B}\;\norm{Tf}_\infty=\norm{T}\norm{f}_\infty(=\norm{T})\Rightarrow f=1\;\ae$を示せば良い．
+        ここから，任意の$f\in X$について，$\norm{Tf}_\infty=\norm{f}_\infty\Norm{T\frac{f}{\norm{f}_\infty}}=\norm{f}_\infty\norm{T}$より$\Norm{T\frac{f}{\norm{f}_\infty}}=\norm{T}$が必要だから，$f=\norm{f}\;\ae$が従う．
+        
+        $f=1\in\partial B$のときに$\norm{Tf}_\infty=\norm{T}$が成立することは(2)で見たから，あとは，$\forall_{g\in\partial B}\;\norm{Tg}_\infty=\norm{T}\Rightarrow g=f\;\ae$を示せば良い．
+        $A:=\Brace{x\in[0,1]\mid f(x)\ne g(x)}$とおく．$\mu(A)\ne0$ならば，$A$の上で$\forall_{x\in A}\;\abs{g(x)}<\esssup\abs{g}=f(x)$が成り立つ．特に，$g(x)< f(x)\;\on A$である．
+        $\abs{x-y}^{-1/2}$は$\mu\dae y$で正だから，このとき，$\norm{Tf}_\infty>\norm{Tg}_\infty$が従うので矛盾．よって，$\mu(A)=0$である．
+    \end{enumerate}
+\end{proof}
+
+\subsection{確率統計学}
+
+\begin{theorem}[Rademacher-Men'shov]
+    $(X,\B,\mu)$を測度空間，$\{f_n\}\subset L^2(X;\C)$を$L^2$-有界な直交系とする．
+    このとき，$\sum_{n\in\N}\abs{c_n}^2(\log n)^2<\infty$を満たす任意の複素数列$\{c_n\}\subset\C$について，
+    $\sum_{n=1}^\infty c_nf_n$は概収束する．特に，Kroneckerの定理より
+    \[\forall_{\ep>0}\;\frac{1}{\sqrt{N}(\log N)^{3/2+\ep}}\sum_{n=1}^Nf_n\xrightarrow{N\to\infty}0\;\ae\]
+\end{theorem}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=B 第16問（確率論）]
+    $\{\ep_j\}_{j\in\N^+}\subset L(\Om)$を独立で同分布$N(0,1)$を持つ確率変数列とする．確率変数$X_j\;(j\in\N)$を次のように定める：
+    \[X_0=0,\quad X_j=\theta(X_{j-1}+\ep_j)\quad(j\in\N^+,0<\theta<1).\]
+    正の整数$n\in\N^+$に対して，$t\in(0,\infty)$の関数$l_n(t)$を
+    \[l_n(t)=-\frac{1}{2}\sum_{j=1}^n\paren{\frac{(X_j-tX_{j-1})^2}{t^2}+\log(t^2)}\]
+    で定義し，$(0,\infty)$においてこれを最大にする$t$を$\wh{\theta}_n$とする．
+    \begin{enumerate}
+        \item $\sup_{j\in\N^+}E[X_j^2]<\infty$を示せ．
+        \item $n\to\infty$のとき，$\frac{1}{n}\sum_{j=1}^nX_{j-1}\ep_j$が$0$へ確率収束することを示せ．
+        \item $\wh{\theta}_n$を$X_1,\cdots,X_n$を用いて表せ．
+        \item $n\to\infty$のとき，$\wh{\theta}_n$が$\theta$へ確率収束することを示せ．
+    \end{enumerate}
+\end{tcolorbox}
+\begin{proof}[\textbf{\underline{［解答例］}}]\mbox{}
+    \begin{enumerate}
+        \item $E[X_j]=E[\theta(X_{j-1}+\ep_j)]=\theta E[X_{j-1}]=\theta^jE[X_0]=0$に注意すると，
+        \[E[X_j^2]=E[\theta^2(X_{j-1}^2+2\ep X_{j-1}+\ep^2)]=\theta^2 E[X_{j-1}^2]+\theta^2\]
+        より，
+        \[E[X_j^2]-\frac{\theta^2}{1-\theta^2}=\theta^2\paren{E[X_{j-1}^2]-\frac{\theta^2}{1-\theta^2}}=\theta^{2j}\paren{E[X_{0}^2]-\frac{\theta^2}{1-\theta^2}}=-\frac{\theta^2}{1-\theta^2}\theta^{2j}.\]
+        したがって$E[X_j^2]=\frac{\theta^2}{1-\theta^2}(1-\theta^{2j})=\Var[X_j]$．
+        よって，$\sup_{j\in\N^+}E[X_j^2]\le\frac{\theta^2}{1-\theta^2}<\infty$．
+        \item 確率変数列$\{X_j\ep_{j+1}\}_{j\in\N}$は
+        \begin{enumerate}[(a)]
+            \item 直交系である．実際，$E[X_jX_{j-1}\ep_{j}\ep_{j+1}]=E[X_jX_{j-1}\ep_{j}]E[\ep_{j+1}]=0$．
+            \item $L^2$-有界である．実際，$E[X_j^2\ep_{j+1}^2]=E[X_j^2]\le\frac{\theta^2}{1-\theta^2}<\infty$．
+        \end{enumerate}
+        よって，Rademacher-Men'shovの定理から，$\sum_{j\in\N^+}\frac{X_{j-1}\ep_j}{j}$は概収束する．よって，Kronecherの補題から，$\frac{1}{n}\sum_{j=1}^nX_{j-1}\ep_j$は$0$に概収束するから，特に確率収束する．
+        \item 
+    \end{enumerate}
+\end{proof}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=B 第17問（数理統計学）]
+    $\ep_1,\cdots,\ep_n\in L(\Om)$を独立同分布列とする．
+    \[X_i=\theta+\ep_i\quad(\theta\in\R,i\in[n]).\]
+    \begin{enumerate}
+        \item $\ep_1\sim N(1,1)$とする．このとき，$X_1,\cdots,X_n$に基づく$\theta$の最尤推定量$\wh{\theta}_n$を求めよ．さらに，$\wh{\theta}_n$が$\theta$の不偏推定量であるかを判定せよ．
+        \item $\ep_1$の分布が，次の$f:\R\to\R_+$を確率密度関数に持つとする：
+        \[f(x)=\exp(-x-e^{-x})\quad(x\in\R).\]
+        このとき，$X_1,\cdots,X_n$に基づく$\theta$の最尤推定量$\wh{\theta}_n$を求め，期待値$E[e^{-\wh{\theta}_n}]$を計算せよ．さらに，$\wh{\theta}_n$が$\theta$の不偏推定量であるかを判定せよ．
+        \item $\ep_1$の分布が，次の$f:\R\to\R_+$を確率密度関数に持つとする：
+        \[f(x)=1_{\Brace{x\ge0}}e^{-x}.\]
+        このとき，$X_1,\cdots,X_n$に基づく$\theta$の最尤推定量$\wh{\theta}_n$を求め，$\wh{\theta}_n$の分布の確率密度関数を計算せよ．さらに，$\wh{\theta}_n$が$\theta$の不偏推定量であるかを判定せよ．
+    \end{enumerate}
+\end{tcolorbox}
+\begin{proof}[\textbf{\underline{［解答例］}}]\mbox{}
+    \begin{enumerate}
+        \item 
+    \end{enumerate}
+\end{proof}
+
+\subsection{おまけ：A問題（必答）}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=A 第1問（必答）]
+    $2$以上の整数$n\ge2$に対して，$2n$次単位行列を$I$で表す．相異なる実数$x,y\in\R$に対して，$2n$次実正方行列$A=(a_{ij})_{i,j\in[2n]}\in M_{2n}(\R)$を次のように定める：
+    \[a_{ij}=\begin{cases}
+        x&(i+j\text{が偶数のとき})\\
+        y&(i+j\text{が奇数のとき})
+    \end{cases}\]
+    \begin{enumerate}
+        \item 行列$A$の階数を求めよ．
+        \item 行列$A$の固有値$0$に属する固有空間の基底を一組求めよ．
+        \item 行列$A$の特性多項式$\Phi_A(t)=\det(tI-A)$を求めよ．
+    \end{enumerate}
+\end{tcolorbox}
+\begin{proof}[\textbf{\underline{［解答例］}}]\mbox{}
+    \begin{enumerate}
+        \item 
+    \end{enumerate}
+\end{proof}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=A 第2問（必答）]
+    \begin{enumerate}
+        \item $0\le y\le\pi/2$に対して，$\cos y\ge1-y^2/2$を示せ．
+        \item $R>0$に対し，$\R^2$の閉領域$D_R$を
+        \[D_R=\Brace{(r\cos\theta,r\sin\theta)\in\R^2\;\middle|\; 0\le r\le R\;\text{かつ}\;0\le\theta\le\frac{\pi}{R^2}}\]
+        で定め，$I_R$を次で定める：
+        \[I_R=\iint_{D_R}\frac{x^2\cos y}{x^2+y^2+1}dxdy.\]
+        極限$\lim_{R\to\infty}I_R$を求めよ．
+        \item $R>0$に対し，$J_R$を次で定める：
+        \[J_R=\int^R_0\paren{\int^{x\tan\frac{\pi}{R^2}}_0\frac{x^2\cos y}{x^2+y^2+1}dy}dx.\]
+        極限$\lim_{R\to\infty}J_R$を求めよ．
+    \end{enumerate}
+\end{tcolorbox}
+\begin{proof}[\textbf{\underline{［解答例］}}]\mbox{}
+    \begin{enumerate}
+        \item 関数$g(y):=\cos y-1+y^2/2$が$[0,\pi/2]$上非負値であることを示せば良い．
+        \[g'(y)=-\sin y+y,\quad g''(y)=-\cos y+1.\]
+        ここで$g''(y)\ge0\;\on[0,\pi/2]$より，$g'(0)=0$と併せて$g'(y)\ge0\;\on[0,\pi/2]$を得る．同様に，$g(0)=0$と併せると$g(y)\ge0\;\on[0,\pi/2]$を得る．
+        \item $k(\theta)=O(\theta^n)\;(n\in\Z)$を$\limsup_{\theta\to0}\frac{k(\theta)}{\theta^n}<\infty$を意味することとする．
+        すると，$D_R$上で$0\le\theta\le\pi/R^2$が成り立つため，
+        \begin{align*}
+            I_R&=\iint_{D_R}\frac{r^2\cos^2\theta\cos(r\sin\theta)}{r^2+1}rdrd\theta
+            =\iint_{D_R}\frac{r^3}{r^2+1}\cos^2\theta\cos(r\sin\theta)drd\theta\\
+            &=\iint_{D_R}\frac{r^3}{r^2+1}\paren{1-O(\theta^2)}^2\paren{1-O(r^2\sin^2\theta)}drd\theta
+            =\iint_{D_R}\frac{r^3}{r^2+1}\paren{1-O\paren{\frac{1}{R^4}}}^2\paren{1-O\paren{\frac{1}{R^2}}}drd\theta\\
+            &=\iint_{D_R}\frac{r^3}{r^2+1}\paren{1-O(R^{-2})}drd\theta
+            =\frac{\pi}{R^2}\int^R_0\frac{r^3}{r^2+1}dr-O(R^{-4})\int^R_0\frac{r^3}{r^2+1}dr\\
+            &=\frac{\pi}{R^2}\frac{1}{2}\Square{r^2-\log(1+r^2)}^R_0-O(R^{-2})\xrightarrow{R\to\infty}\frac{\pi}{2}.
+        \end{align*}
+    \end{enumerate}
+\end{proof}
+
+\subsection{おまけ：A問題（解析）}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=A 第4問]
+    $\R^n$のEuclidノルムを$\abs{\cdot}$で表す．写像$f:\R^n\to\R^n$が
+    \[\forall_{x,y\in\R^n}\;\abs{x-y}=\abs{f(x)-f(y)}\]
+    を満たすとき，$f$を等長変換という．$\{f_k\}\subset\Map(\R^n,\R^n)$を等長変換の族とし，$\forall_{k\in\N^+}\;\abs{f_k(0)}\le1$が成り立つとする．
+    \begin{enumerate}
+        \item $x\in\R^n$を任意に取る．このとき，$\R^n$の点列$\{f_k(x)\}$は収束部分列を持つことを示せ．
+        \item $\{f_k\}$の適当な部分列を取れば，$\R^n$のある等長変換に広義一様収束することを示せ．
+    \end{enumerate}
+\end{tcolorbox}
+\begin{theorem}[Ascoli-Arzelà]
+    $X$を可分距離空間，$Y$を完備距離空間とする．$\F\subset C(X;Y)$が各点全有界で同程度連続な関数族ならば，$C(X;Y)$のコンパクト開位相について相対点列コンパクトである．
+\end{theorem}
+\begin{proof}[\textbf{\underline{［解答例］}}]\mbox{}
+    \begin{enumerate}
+        \item 任意の$x\in\R^n$と$k\in\N$について，
+        \[\abs{f_k(x)}\le\abs{f_k(x)-f_k(0)}+\abs{f_k(0)}\le\abs{x}+1.\]
+        よって，集合$\{f_k(x)\}_{k\in\N^+}$は有界であるから，Bolzano-Weierstrassの定理より，収束する部分列を持つ．
+        \item 族$\{f_k\}_{k\in\N^+}$は，任意の$x,y\in\R^n$について$\abs{x-y}<\ep$を満たすならば，任意の$k\in\N^+$について$\abs{f_k(x)-f_k(y)}=\abs{x-y}<\ep$を満たすから，同程度連続である．
+        よって(1)の結果から各点で有界であることと併せると，Ascoli-Arzelàの定理より，$\{f_{k}\}$は広義一様収束する部分列$\{f_{k_m}\}_{m\in\N^+}$を持つ．
+        あとは，この広義一様収束極限が等長写像であることを示せば良いが，$\forall_{x,y\in\R^n}\;\abs{f_{k_m}(x)-f_{k_m}(y)}=\abs{x-y}$という関係は明らかに$m\to\infty$の極限でも満たされる．
+    \end{enumerate}
+\end{proof}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=A 第5問]
+    $\R$上の関数$f_t\;(t>0)$を次の条件で定義する．$f_t$は周期$4t$を持つ周期関数であり，
+    \[f_t(x)=\begin{cases}
+        1&x\in[0,t)\cup[3t,4t),\\
+        -1&x\in[t,3t).
+    \end{cases}\]
+    広義積分$I(t)$を次で定義する：
+    \[I(t)=\int^\infty_1\frac{f_t(x)}{\log(1+x)}dx.\]
+    \begin{enumerate}
+        \item $\R$上の関数$g_t$を次で定義する：
+        \[g_t(x)=\int^x_0f_t(y)dt\quad(x\in\R).\]
+        $g_t$は周期$4t$を持つ周期関数であることを示せ．
+        \item 広義積分$I(t)$は収束することを示せ．
+        \item $n\in\N^+$について，極限$\lim_{n\to\infty}(4n+1)I\paren{\frac{1}{4n+1}}$を求めよ．
+    \end{enumerate}
+\end{tcolorbox}
+\begin{proof}[\textbf{\underline{［解答例］}}]\mbox{}
+    \begin{enumerate}
+        \item 
+    \end{enumerate}
+\end{proof}
+
+\section{2021年度(令和3年)実施}
+
+\subsection{実解析}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=B 第9問（実解析）]
+    $X$を集合，$f_1,\cdots,f_n\;(n\in\N^+)$を$X$上の実数値関数の列とする．
+    $f_1,\cdots,f_n$をすべて可測にするような$X$上の$\sigma$-加法族のうち最小のものを$\F_n$と表す．
+    \begin{enumerate}
+        \item $g:X\to\R$が$\F_1$-可測ならば，あるBorel可測関数$\phi:\R\to\R$が存在して$g=\phi\circ f_1$となることを示せ．
+        \item $h:X\to\R$が$\F_n$-可測ならば，あるBorel可測関数$\psi:\R^n\to\R$が存在して$h=\psi\circ(f_1,f_2,\cdots,f_n)$となることを示せ．ただし，$(f_1,\cdots,f_n):X\to\R^n$は$(f_1,\cdots,f_n)(x):=(f_1(x),\cdots,f_n(x))$で定めた．
+    \end{enumerate}
+\end{tcolorbox}
+\begin{proof}[\textbf{\underline{［解答例］}}]\mbox{}
+    \begin{enumerate}
+        \item 
+    \end{enumerate}
+\end{proof}
+
+\subsection{関数解析}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=B 第11問（関数解析）]
+    $\{\ep_n\}_{n\in\N^+}\subset\R_+$を非負実数列とする．$1\le p<\infty$に対して
+    \[\S=\Brace{x\in l^p(\N^+)\mid\forall_{n\in\N^+}\;\abs{x_n}\le\ep_n}\]
+    と定める．$\S$が$l^p$内のコンパクト集合であるための，数列$\{\ep_n\}_{n\in\N^+}$に対する必要十分条件を求めよ．
+\end{tcolorbox}
+\begin{proof}[\textbf{\underline{［解答例］}}]\mbox{}
+    \begin{enumerate}
+        \item 
+    \end{enumerate}
+\end{proof}
+
+\subsection{確率論}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=B 第18問（確率論）]
+    任意の確率変数$X,Y\in L(\Om)$に対して，
+    \[\rho(X,Y)=\sup_{x\in\R}\abs{P[X\le x]-P[Y\le x]}\]
+    と定める．$X_1,X_2,\cdots\in L(\Om;\R^+)$を正値確率変数列として，
+    \[Y_n=\sqrt{n}(X_n-1),\quad T_n=2n(X_n-\log X_n-1)\quad(n\in\N^+)\]
+    とおく．ある確率変数$Z\in L(\Om)$が存在して，$\rho(Y_n,Z)\xrightarrow{n\to\infty}0$が成り立つと仮定する．
+    また，関数$F:\R\to[0,1]$を$F(x)=P[Z\le x]\;(x\in\R)$で定める．
+    \begin{enumerate}
+        \item 任意の確率変数$X,Y\in L(\Om)$と実数$x\in\R$について，次を示せ：
+        \[\abs{P[X<x]-P[Y<x]}\le\rho(X,Y).\]
+        \item $\rho(Y_n^2,Z^2)\xrightarrow{n\to\infty}0$を示せ．
+        \item $n(X_n-1)^3$は$n\to\infty$の極限で$0$に確率収束することを示せ．
+        \item $F$が連続ならば，$\rho(T_n,Z^2)\xrightarrow{n\to\infty}0$が成り立つことを示せ．
+        \item $F$が連続でないならば，(4)の収束が成り立つとは限らないことを示せ．
+    \end{enumerate}
+\end{tcolorbox}
+\begin{proof}[\textbf{\underline{［解答例］}}]\mbox{}
+    \begin{enumerate}
+        \item 
+    \end{enumerate}
+\end{proof}
+
+\section{2020年度(令和2年)実施}
+
+\subsection{実解析}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=B 第9問（実解析）]
+    $(\Om,\F,\mu)$を$\mu(\Om)=1$を満たす測度空間とする．ある$p>0$に対して$\norm{f}_p<\infty$を満たす実数値可測関数$f$について，次に答えよ．
+    \begin{enumerate}
+        \item $\varphi(q)=\norm{f}_q\;(0<q\le p)$は広義単調増加連続関数であることを示せ．
+        \item $f:\Om\to\R^+$を正値可測関数とする．積分$\int_\Om\log f(x)d\mu(x)$は確定し，
+        \[-\infty\le\int_\Om\log f(x)d\mu(x)<\infty\]
+        となることを示せ．さらに，任意の$p>0$に対して，$\norm{f}_p<\infty$だが，$\int_\Om\log f(x)d\mu(x)=-\infty$となる$(\Om,\F,\mu),f$の例をあげよ．
+        \item $f:\Om\to\R^+$を正値可測関数，$\int_\Om\log f(x)d\mu(x)$は有限とする．
+        \[\lim_{q\to+0}\frac{1}{q}\paren{\int_\Om(f(x)^q-1-q\log f(x))d\mu(x)}=0.\]
+        を示せ．
+        \item $f:\Om\to\R^+$を正値可測関数とする．
+        \[\lim_{q\to+0}\norm{f}_q=\exp\paren{\int_\Om\log f(x)d\mu(x)}\]
+        を示せ．ただし，$\int_\Om\log f(x)d\mu(x)=-\infty$のときは，右辺は$0$とする．
+    \end{enumerate}
+\end{tcolorbox}
+\begin{proof}[\textbf{\underline{［解答例］}}]\mbox{}
+    \begin{enumerate}
+        \item 
+    \end{enumerate}
+\end{proof}
+
+\subsection{関数解析}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=B 第10問（関数解析）]
+    \[D=\Brace{(x,y)\in\R^2\mid x,y\ge0,x+y\le 1}\]
+    上のLebesgue可積分関数のなすBanach空間$L^1(D)$上の線型作用素$T,S$を次で定義する：
+    \[(Tf)(x,y)=\int^{1-y}_0f(t,y)dt\]
+    \[(Sf)(x,y)=\int^{1-x}_0f(X,s)ds\]
+    \begin{enumerate}
+        \item $T$は$L^1(D)$上の有界線型作用素であることを示し，作用素ノルム$\norm{T}$を求めよ．
+        \item 線型作用素$ST$の固有値で正のものを全て求めよ．
+    \end{enumerate}
+\end{tcolorbox}
+\begin{proof}[\textbf{\underline{［解答例］}}]\mbox{}
+    \begin{enumerate}
+        \item 
+    \end{enumerate}
+\end{proof}
+
+\subsection{確率論}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=B 第18問（確率論）]
+    $\{X_n\}_{n\in\N^+}\subset L(\Om)$を独立な確率変数列で，
+    \[E[X_n]=0,\quad E[X_n^2]=1,\quad E[X_n^4]=a<\infty\quad(a\in\R,n=1,2,\cdots)\]
+    を満たすものとする．
+    \[\gamma_m(h)=\frac{1}{n}\sum_{j=1}^nX_jX_{j+h}\quad(n\in\N^+,h\in\N)\]
+    と定め，
+    また，$\{m_n\}_{n\in\N^+}\subset\R^+$を$m_n/n\xrightarrow{n\to\infty}0$を満たす正整数列とする．
+    \begin{enumerate}
+        \item $n\in\N^+,h\in\N$に対して，$E[\gamma_n(h)],\Var[\gamma_n(h)]$を求めよ．
+        \item $P[\gamma_n(0)\le 1/2]\xrightarrow{n\to\infty}0$を示せ．
+        \item $\max_{h\in[m_n]}\gamma_n(h)$が$n\to\infty$のとき$0$に確率収束することを示せ．
+        \item $\wh{h}_n$を$\{0,1,\cdots,m_n\}$-値確率変数で
+        \[\gamma_n(\wh{h}_n)=\max_{h\in m_n+1}\gamma_n(h)\]
+        を満たすものとする．$P[\wh{h}_n=0]\xrightarrow{n\to\infty}1$を示せ．
+    \end{enumerate}
+\end{tcolorbox}
+\begin{proof}[\textbf{\underline{［解答例］}}]\mbox{}
+    \begin{enumerate}
+        \item 
+    \end{enumerate}
+\end{proof}
+
+
+\section{2019年度(令和元年)実施}
+
+\subsection{実解析}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=B 第9問（実解析）]
+    $\Om\subset\R$を有界開集合，$\{f_n\}\subset L^1(\Om),f\in L^1(\Om)$をいずれもLebesgue可積分とする．
+    Lebesgue可測集合$E$に対して$\abs{E}$でそのLebesgue測度を表すこととする．
+    \begin{enumerate}
+        \item 任意の正数$\ep>0$に対して，次の性質(A)を満たす正数$\delta>0$が存在することを示せ．
+        \begin{quote}
+            (A) $\abs{E}<\delta$を満たす$\Om$内の任意のLebesgue可測集合$E$に対して$\Abs{\int_Ef(x)dx}<\ep$が成立する．
+        \end{quote}
+        \item $\lim_{n\to\infty}\int_\Om\abs{f_n(x)-f(x)}dx=0$が成立したとする．このとき，任意の正数$\ep>0$に対して，次の性質(B)を満たす正数$\delta>0$が存在することを示せ．
+        \begin{quote}
+            (B) $\abs{E}<\delta$を満たす$\Om$内の任意のLebesgue可測集合$E$に対して$\forall_{n\in\N^+}\;\Abs{\int_Ef_n(x)dx}<\ep$が成り立つ．
+        \end{quote}
+        \item $\forall_{x\in\Om}\;\lim_{n\to\infty}f_n(x)=f(x)$を仮定する．さらに，任意の$\ep>0$に対して，上記の性質(B)を満たす正数$\delta>0$が存在したとする．このとき，次を示せ：
+        \[\lim_{n\to\infty}\int_\Om\abs{f_n(x)-f(x)}dx=0.\]
+    \end{enumerate}
+\end{tcolorbox}
+\begin{proof}[\textbf{\underline{［解答例］}}]\mbox{}
+    \begin{enumerate}
+        \item 
+    \end{enumerate}
+\end{proof}
+
+\subsection{関数解析}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=B 第12問（関数解析）]
+    正規直交基底$\{e_n\}_{n\in\N}$を持つ$\C$上のHilbert空間$H$を考える．$\{\theta_n\}_{n\in\N}\subset[0,\pi/2]$を数列とし，$H$内の単位ベクトルの列$\{x_n\}_{n\in\N},\{y_n\}_{n\in\N}$を
+    \[\begin{cases}
+        x_n=e_{2n},\\
+        y_n=(\cos\theta_n)e_{2n}+(\sin\theta_n)e_{2n+1}
+    \end{cases}\]
+    で定める．$X$を$\{e_n\}_{n\in\N}$の張る閉部分空間，$Y$を$\{y_n\}_{n\in\N}$の張る閉部分空間とする．次の問に答えよ．
+    \begin{enumerate}
+        \item 次の不等式を示せ．
+        \[\sqrt{2}\paren{1-\sup_{n\in\N}\cos\theta_n}^{1/2}\le\inf\Brace{\norm{x-y}\in\R_+\;\middle|\;x\in X,y\in Y,\norm{x}=\norm{y}=1}.\]
+        \item $\sup_{n\in\N}\cos\theta_n<1$のとき，$X+Y$は閉であることを示せ．
+    \end{enumerate}
+\end{tcolorbox}
+\begin{proof}[\textbf{\underline{［解答例］}}]
+    
+\end{proof}
+
+\subsection{確率論}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=B 第18問（確率論）]
+    $\{Z_n\}_{n\in\Np}\subset L(\Om)$は独立確率変数列で
+    \[E[Z_n]=1,\quad E[Z^2_n]=v\qquad(n\in\Np,v\in\R_+)\]
+    を満たすとする．確率変数列$\{X_n\}_{n\in\N}\subset L(\Om)$を次のように定める．
+    \[X_0=0,\quad X_n=(\theta X_{n-1}+1)Z_n\qquad(n\in\Np,\theta\in\R).\]
+    ただし，$0<\abs{\theta}<v^{-1/2}$を満たすとする．このとき，以下の問に答えよ．
+    \begin{enumerate}
+        \item $v\ge1$を示せ．
+        \item $n\in\Np$に対して，$X_n$の期待値$E[X_n]$を求めよ．
+        \item $m,n\in\Np$に対して，$v,\theta$に依存する定数$C$が存在して，$\forall_{m,n\in\Np}\;\abs{\Cov[X_m,X_n]}\le C\abs{\theta}^{\abs{n-m}}$が成り立つことを示せ．
+        \item $M_n$を
+        \[M_n=\frac{1}{n}\sum^n_{j=1}X_j\]
+        とし，$T_n$を
+        \[T_n=\begin{cases}
+            1-\frac{1}{M_n}&(M_n\ne0\text{のとき})\\
+            0&(M_n=0\text{のとき})
+        \end{cases}\]
+        とする．このとき，$T_n$が確率収束することを示せ．
+    \end{enumerate}
+\end{tcolorbox}
+\begin{proof}[\textbf{\underline{［解答例］}}]
+    
+\end{proof}
+
+\section{2018年度(平成30年)実施}
+
+\subsection{実解析}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=B 第12問（実解析）]
+    $I=[0,1]$とし，$I$上のLebesgue可測集合の全体を$\M$，Lebesgue測度を$\mu$で表す．
+    \begin{enumerate}
+        \item $\mu(A)>0$を満たす$A\in\M$について，$\mu(A\cap[0,t])=\frac{1}{2}\mu(A)$を満たす$t\in I$が存在することを示せ．
+        \item $\mu(A)>0$を満たす$A\in\M$について，次の全てを満たす列$\{B_n\}_{n\in\N^+}\subset\M$が存在することを示せ：
+        \[\forall_{n\in\N^+}\;\mu(B_n)>0,\quad\forall_{n\ne m\in\N^+}\;B_n\cap B_m=\emptyset,\quad A=\bigcup_{n\in\N^+}B_n.\]
+        \item $f\in L(I;\o{\R_+})$について，次の2条件は同値であることを示せ：
+        \begin{enumerate}[(a)]
+            \item $f(x)=\infty\;\ae$
+            \item 任意の$\mu(A)>0$を満たす$A\in\M$について，$\int_Af(x)\mu(dx)\ge1$．
+        \end{enumerate}
+        \item 任意の$A\in\M$と$f\in L^2(I;\R)$について，次の不等式が成り立つことを示せ：
+        \[\paren{\int_Af(x)\mu(dx)}^2\le\mu(A)\int_Af(x)^2\mu(dx).\]
+    \end{enumerate}
+\end{tcolorbox}
+\begin{proof}[\textbf{\underline{［解答例］}}]\mbox{}
+    \begin{enumerate}
+        \item 関数$f:I\to I$を$f(t):=\mu(A\cap[0,t])$と定めると，$f(0)=0,f(1)=\mu(A)>0$を満たす連続関数である．
+        実際，$t\in I$に収束する$I$の列$(t_n)$に対して，集合列$(A\cap [0,t])$も収束するから，有界測度の連続性より，$\lim_{n\to\infty}f(t_n)=\lim_{n\to\infty}\mu(A\cap [0,t_n])=\mu(A\cap[0,t])=f(t)$．
+        よって結論は，中間値の定理から従う．
+        \item (1)より，任意の$n\in\N^+$に対して，$f(t)=\paren{\frac{1}{2}+\frac{1}{4}+\cdots\frac{1}{2^n}}\mu(A)$を満たす$t\in I$が存在する．これを$t_n$と定める．$t_0=0$とすると，$(t_n)_{n\in\N}$は単調増加列である．
+        これを用いて，$B_n:=A\cap(t_{n-1},t_n]$と定めると，これは条件を満たす．
+        互いに素であることは明らか．測度が正であることは，$\mu(B_n)=\mu(A\cap[0,t_n]\setminus A\cap[0,t_{n-1}])=1/2^n>0$より．
+        集合列$((t_{n-1},t_n])_{n\in\N}$は$I$を被覆するから，3つ目の条件も従う．
+        \item $f(E)=\{\infty\},\mu(E)=1$を満たす集合$E\in\M$を1つ取る．
+        \begin{description}
+            \item[(a)$\Rightarrow$(b)] 任意の$\mu(A)>0$を満たす$A\in\M$について，$\mu(A\cap E)=\mu(A\cap E)+\mu(A\cap E^\comp)=\mu(A)>0$であるから，
+            \[\int_Af(x)\mu(dx)\ge\int_{A\cap E}f(x)\mu(dx)=\infty.\]
+            \item[(b)$\Rightarrow$(a)] ある$\mu(A)>0$を満たす$A\in\M$上で$\forall_{x\in A}\;f(x)<\infty$が成り立つと仮定して矛盾を導く．
+            任意にとった$t>0$について，$B:=f^{-1}([0,t])\in\M$より，
+            \[\int_Af(x)\mu(dx)\le\int_{A\cap B}f(x)\mu(dx)\le t\mu(A\cap B).\]
+            $\mu(A\cap B)=0$のときは(b)に矛盾．$\mu(A\cap B)>0$のときも，$t>0$にあわせて$0<\mu(A\cap B\cap[0,s])<1/t$を満たす$s\in\R^+$が選べるから，やはり仮定(b)に矛盾．
+        \end{description}
+        \item Cauchy-Schwarzの不等式より，
+        \[\paren{\int_I1_Afd\mu}^2\le\int_I1^2_Ad\mu\int_I1_Af^2d\mu.\]
+        これは整理すれば所与の不等式に等しい．
+        \item (3)より，任意の$A\in\M$について，$\mu(A)>0\Rightarrow\int_A\sum_{n=1}^\infty e_n(x)^2\mu(dx)\ge1$を示せば良い．任意の$N\in\N^+$について，
+        \begin{align*}
+            \int_A\sum_{n=1}^Ne_n(x)^2d\mu(x)&=\sum_{n=1}^N\int_Ae_n(x)^2d\mu(x)\\
+            &=\sum_{n=1}^N\mu(A)=\mu(A)N.
+        \end{align*}
+        よって，単調収束定理より，$\int_A\sum^\infty_{n=1}e_n(x)^2d\mu(x)=\infty$．
+    \end{enumerate}
+\end{proof}
+
+\subsection{関数解析}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=B 第9問（関数解析）]
+    $\varphi\in C^1(\R_+;\R_+)$は$\inf_{x\in\R^+}\varphi'(x)>0$を満たすとする．
+    これに対して，作用素$T:\Map(\R_+;\R)\to\Map(\R_+;\R)$を$T(f):=f\circ\varphi$で定める．
+    \begin{enumerate}
+        \item $T$は$L^2(\R_+)$上に有界線型作用素を定めることを示せ．
+        \item 
+    \end{enumerate}
+\end{tcolorbox}
+\begin{proof}[\textbf{\underline{［解答例］}}]\mbox{}
+    \begin{enumerate}
+        \item \begin{description}
+            \item[$T(L^2(\R_+))\subset L^2(\R_+)$である] $u=\varphi(x)$と変数変換することより，
+            \[\int_{\R_+}f(\varphi(x))^2dx=\int_{\R_+}\frac{f(x)}{\varphi'(x)}dx\le\frac{1}{\inf_{x\in\R_+}\varphi'(x)}\int_{\R_+}f(x)^2dx<\infty.\]
+            \item[有界性] 線型性は明らかだから，有界性を示す．上の計算を見ると，$c:=\frac{1}{\inf_{x\in\R_+}\varphi'(x)}$とおけば，$\norm{Tf}^2\le c\norm{f}^2$を満たすことがわかる．
+        \end{description}
+        \item 
+    \end{enumerate}
+\end{proof}
+
+\subsection{確率論}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=B 第13問（確率論）]
+    $\{X_n\}_{n\in\N_{>0}}\subset L(\Om)$を，$N(0,1)$に従う独立同分布列とする．
+    $\{a_n\}_{n\in\N_{>0}}\subset l^2(\N;\R_{>0})$を正数列とし，$S_n:=\sum_{i=1}^na_i(X_i^2-1)$とする．
+    \begin{enumerate}
+        \item 確率変数$X_1^2-1$の平均と分散と，分布の確率密度関数を求めよ．
+        \item 実数値確率変数$X\in L(\Om)$の分布の台を
+        \[\supp(X)=\Brace{a\in\R\mid\forall_{\ep>0}\;P[\abs{X-a}<\ep]>0}\]
+        と定める．確率変数$S_2$の分布の台を求めよ．
+        \item 確率変数$S$が存在して，$(S_n)$はこれに$L^2$-収束することを示せ．
+        \item $\supp(S)=\R$となるための必要十分条件を求めよ．
+    \end{enumerate}
+\end{tcolorbox}
+\begin{proof}[\textbf{\underline{［解答例］}}]\mbox{}
+    \begin{enumerate}
+        \item \begin{description}
+            \item[平均] $E[X_1^2-1]=E[X_1^2]-1=0$．
+            \item[分散] $\Var[X_1^2-1]=\Var[X_1^2]=E[X_1^4]-1=3-1=2$．
+            \item[確率密度関数] まず，$X_1^2$の確率分布関数は，$x\le0$と$x\le 0$の場合に分けて$y=x^2$と変数変換することで，
+            \begin{align*}
+                E[X_1^2]&=\frac{1}{\sqrt{2\pi}}\int^\infty_{-\infty}x^2e^{-\frac{x^2}{2}}\\
+                &=\frac{1}{\sqrt{2\pi}}2\int^\infty_0ye^{-\frac{y}{2}}\frac{dy}{2\sqrt{y}}
+            \end{align*}
+            と表せるから，
+            $X_1^2$の確率密度関数は$g(y)=\frac{1}{2\pi}y^{-\frac{1}{2}}e^{-\frac{y}{2}}1_{\Brace{y>0}}$．
+            $X_1^2-1$の確率密度関数は，$y\mapsto g(y+1)$．
+        \end{description}
+        \item \begin{enumerate}[(a)]
+            \item まず$X_1^2$の分布の台が$\supp(X_1^2)=[-1,\infty)$であることを示す．
+            任意の$a\ge-1$と$\ep>0$に対して，$X_1^2$の確率密度関数$g$は$(-1)\lor(a-\ep)<y\le a+\ep$上で正であるから，
+            \[P[\abs{X_1^2-a}<\ep]=\int^{a+\ep}_{(-1)\lor(a-\ep)}g(y)dy>0.\]
+            同様にして，$\supp(X_2^2)=[-1,\infty)$．
+            \item $\supp(a_1X_1^2+a_2X_2^2)=[-a_1-a_2,\infty)$を示す．
+            任意の$b\ge-a_1-a_2$について，$b=b_1+b_2\;(b_1\ge-a_1,b_2\ge-a_2)$を満たす分解を1つ取る．
+            するとこのとき，任意の$\ep>0$に対して，
+            \[P[\abs{a_1X_1^2+a_2X_2^2-b}<\ep]\ge P[\abs{a_1X_1^2-b_1}<\ep/2,\abs{a_2X_2^2-b_2}<\ep/2]=P[\abs{a_1X_1^2-b_1}<\ep/2]P[\abs{a_2X_2^2-b_2}<\ep/2]>0.\]
+            \item $\supp(S_2)=[-2a_1-2a_2,\infty)$である．実際，任意の$b\ge-2a_1-2a_2$に対して，$\abs{S_2-b}<\ep$と$\abs{a_1X_1^2+a_2X_2^2-(b-a_1-a_2)<\ep}$は同値で，$b-a_1-a_2\ge -a_1-a_2$を満たす．
+        \end{enumerate}
+        \item $(S_n)$が$L^2$-Cauchy列であることを示せば良い．任意の$m\ge n$について，次の評価が成り立つ：
+        \begin{align*}
+            \norm{S_n-S_m}^2&=E\Square{\Abs{\sum^m_{i=n}a_i(X_i^2-1)}^2}=E\Square{\Abs{\sum^m_{i=n}a_iX_i^2-\sum^m_{i=n}a_i}^2}\\
+            &=E\Square{\Abs{\paren{\sum^m_{i=n}a_iX_i^2}^2-2\paren{\sum^m_{i=n}a_i}\paren{\sum^m_{i=n}a_iX_i^2}+\paren{\sum^m_{i=n}a_i}^2}}\\
+            &\le E\Square{\paren{\sum^m_{i=n}a_iX_i^2}^2}-2\paren{\sum^m_{i=n}a_i}\sum_{i=n}^ma_iE[X_i^2]+\paren{\sum^m_{i=n}a_i}^2\\
+            &=\sum^m_{i=n}a_i^2E[X_i^4]+\sum_{n\le ij\le m,i\ne j}a_ia_jE[X_i^2X_j^2]-2\paren{\sum^m_{i=n}a_i}^2\\
+            &=2\sum_{i=n}^ma_i^2
+        \end{align*}
+        いま，級数$\sum^n_{i=0}a_i$は収束するから，特にCauchy列を定めるから，右辺は$\xrightarrow{n\to\infty}0$．
+        \item 必要十分条件は$\sum_{i\in\N}a_i$が発散することであることを示す．
+        \begin{description}
+            \item[$\sum_{i\in\N}a_i=\infty\Rightarrow\supp(S)=\R$] (2)の論法を帰納的に繰り返すことで，$\supp(S_n)=\left[-\sum_{i=1}^na_i,\infty\right)$を得る．
+            このとき，$\supp(S)=\R$である．実際，任意の$a\in\R$を取ると，仮定から
+            $\exists_{N\in\N}\;\forall_{n\ge N}\;a\in\supp(S_n)$すなわち$\forall_{\ep>0}\;P[\abs{S_n-a}<\ep/2]>0$が成り立つ．
+            このとき，さらに$\forall_{n\ge N}\;\norm{S-S_n}_1\le\norm{S-S_n}_2<\ep/2$も満たすように$N\in\N$を十分大きく取ると，
+            \[\ep/2>E[\abs{S-S_n}]>E[\abs{S-S_n}1_{\Brace{\abs{S-S_n}\ge\ep/2}}]\ge\ep/2P[\abs{S-S_n}\ge\ep/2]\]
+            より$P[\abs{S-S_n}<\ep/2]>0$でもあるから，この$N\in\N$に関して$n\ge N$を満たす$n\in\N$について
+            \[0<P[\abs{S_n-S}<\ep/2,\abs{S_n-a}<\ep/2]\le P[\abs{S-a}<\ep].\]
+            よって，$a\in\supp(S)$．
+            \item[$\supp(S)=\R\Rightarrow\sum_{i\in\N}a_i=\infty$] 仮に$\sum_{i\in\N}a_i=M<\infty$とすると，$\Im(S_n)\ge\inf_{\om\in\Om}\sum_{i=1}^na_iX_i^2-M\ge-M$より，$\Im(S)\ge-M$が従う．これは矛盾．
+        \end{description}
+    \end{enumerate}
+\end{proof}
+
+\section{2017年度(平成29年)実施}
+
+\subsection{実解析}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=B 第9問（関数解析）]
+    $(X,\F,\mu)$を測度空間，$1<p<\infty,q:=p/(p-1)$として，この上の$p,q$-乗可積分な実関数の空間$L^p(X),L^q(X)$を考える．
+    $\{f_n\}\subset L^p(X)$は$f\in L^p(X)$に弱収束するとする．また，集合$V\subset L^p(X)$を次のように定める：
+    \[V:=\Brace{\sum_{n=1}^Na_nf_n\in L^p(X)\;\middle|\;N\in\N,a_1,\cdots,a_N\in\R}.\]
+    標準的なペアリングを$(-|-):L^p(X)\times L^q(X)\to\R$で表す：
+    \[(f|g)=\int_Xfgd\mu.\]
+    \begin{enumerate}
+        \item $\norm{f}_p=\sup_{g\in\partial B\subset L^q(X)}(f|g)$を示せ．
+        \item $\liminf_{n\to\infty}\norm{f_n}_p\ge\norm{f}_p$を示せ．
+        \item $p=2$とする．$\lim_{n\to\infty}\norm{f_n}_2=\norm{f}_2$ならば，$(f_n)$は$f$に$L^2$-収束することを示せ．
+        \item $p=2$とする．$f\in\o{V}$を示せ．ただし，$\o{V}$は$V$の$L^2(X)$における閉包とする．
+    \end{enumerate}
+\end{tcolorbox}
+\begin{proof}[\textbf{\underline{［解答例］}}]\mbox{}
+    \begin{enumerate}
+        \item Hölderの不等式より$\forall_{g\in\partial B}\;(f|g)\le\norm{f}_p$．あとは，この等号が達成されることを示せば良い．
+        $g:=\paren{\frac{\abs{f}}{\norm{f}}}^{p-2}\frac{f}{\norm{f}}$とすると，明らかに$g\in\partial B$で，
+        \[\paren{f\middle|\paren{\frac{\abs{f}}{\norm{f}}}^{p-2}\frac{f}{\norm{f}}}=\frac{1}{\norm{f}^{p-1}}\int_X\abs{f}^pd\mu=\norm{f}_p.\]
+        \item $\forall_{g\in L^q(X)}\;(f_n|g)\to(f|g)$であるから，Hölderの不等式$(f_n|g)\le\norm{f_n}\norm{g}$の両辺の$\liminf_{n\to\infty}$を取ると，$(f|g)\le\norm{g}\liminf_{n\to\infty}\norm{f_n}$．さらに，$g\in\partial B$の範囲で両辺の上限を取れば，$\norm{f}_p\le\liminf_{n\to\infty}\norm{f_n}$．
+        \item 仮定より，
+        \[\norm{f_n-f}_2^2=(f_n-f|f_n-f)=\norm{f_n}^2+\norm{f}^2-2(f|f_n)\xrightarrow{n\to\infty}0.\]
+        \item $V$の点列で$f$に弱収束するものが存在するから，$f$は$V$の弱閉包の元である．$V$は凸集合であるため，弱閉包とノルム閉包とは一致する．
+    \end{enumerate}
+\end{proof}
+\begin{feels*}
+    (1)はどうしてもBanach空間の同型$L^p(X)\simeq(L^q(X))^*$を用いて作用素ノルムから攻めたくなってしまったが，$\partial B$は弱コンパクトとは限らず，$\abs{(f|g)}$と絶対値がついているわけでもないので，どうやら筋が悪い．
+    というかそもそも$X$は局所コンパクトハウスドルフとは限らない．
+\end{feels*}
+
+\subsection{関数解析}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=B 第11問（関数解析）]
+    Hilbert空間$H$内の$0$でない部分Hilbert空間$H_1,H_2$に対して，$H_1,H_2$への直交射影作用素をそれぞれ$P_1,P_2$とする．
+    これに対して$H_1$と$H_2$とのなす角$\theta\in[0,\pi/2]$を
+    \[\cos\theta:=\sup_{\xi_1\in H_1\cap\partial B,\xi_2\in H_2\cap\partial B}\abs{(\xi_1|\xi_2)}\]
+    と定める．
+    $A:=P_1+P_2$として，この二乗根作用素$B\ge0$を$B^2=A$を満たすものとする．
+    \begin{enumerate}
+        \item 次の2条件は同値であることを示せ：
+        \begin{enumerate}[(a)]
+            \item $A$は直交射影作用素である．
+            \item $\theta=\pi/2$である．
+        \end{enumerate}
+        \item $L$を$H_1,H_2$により張られるHilbert空間とする．$\Im B$は$L$の中で稠密であることを示せ．
+        \item 次の不等式を示せ：$A\le 1+\cos\theta$．
+    \end{enumerate}
+\end{tcolorbox}
+\begin{proof}[\textbf{\underline{［解答例］}}]\mbox{}
+    \begin{enumerate}
+        \item \begin{description}
+            \item[(a)$\Rightarrow$(b)] $A$が直交射影作用素，すなわち自己共役な冪等作用素であるとき，乗法の劣乗法性より$\norm{A}=\norm{A^2}\ge\norm{A}^2$から，$\norm{A}\le1$を得る．
+            よって任意の$x\in H_1$について，
+            \[\norm{x}^2\ge\norm{(P_1+P_2)x}^2=\norm{x+P_2x}^2=\norm{x}^2+3(x|P_2x).\]
+            射影作用素は正作用素で，$(x|P_2x)\ge0$に注意すると，$(x|P_2x)=0$すなわち$x\in\Ker P_2=H_2^\perp$を得る．
+            以上より$H_1\subset H_2^\perp$だから，$\cos\theta=0$．
+            \item[(b)$\Rightarrow$(a)] $A$の自己共役性は，$*$-作用素の共役線型性から明らか．よって冪等性を示せば良い．
+            いま，仮定より$H_1\perp H_2$に注意すれば，$\forall_{x,y\in H}\;(P_1P_2x|y)=(P_2x|P_1y)=0$．よって，$P_1P_2=0$．同様にして$P_2P_1=0$も得る．
+            よって，
+            \[A^2=(P_1+P_2)^2=P_1^2+P_1P_2+P_2P_1+P_2^2=P_1+P_2=A.\]
+        \end{description}
+        \item $A(H)=B^2(H)=B(\Im B)$より，$\Im A\subset\Im B$．よって，$L=\o{\Im A}\subset\o{\Im B}$．
+        \item 
+    \end{enumerate}
+\end{proof}
+
+\subsection{確率論}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=B 第14問（確率論）]
+    $\{X_n\}_{n\in\N_{>0}},\{S_k\}_{k\in\N_{>0}}\subset L(\Om)$を確率変数とし，$S_k$の分布は確率密度関数
+    \[g_k(x)=\frac{1}{(k-1)!}k^kx^{k-1}e^{-kx}1_{\Brace{x>0}}\]
+    を持つとする．また，次を仮定する：
+    \[\forall_{\ep>0}\;\forall_{k\in\N}\;\exists_{N\in\N}\;\forall_{m,n\ge N}\;\sup_{x\in\R}\Abs{P[X_nS_k>x]-P[X_mS_k>x]}<\ep.\]
+    \begin{enumerate}
+        \item $S_k$の期待値と分散を求めよ．
+        \item $S_k$が確率収束することを示せ．
+        \item $X_nS_k$が任意の$k\in\N$に対して$n\to\infty$のとき法則収束することを示せ．
+        \item $X_n$が法則収束することを示せ．
+    \end{enumerate}
+\end{tcolorbox}
+\begin{proof}[\textbf{\underline{［解答例］}}]\mbox{}
+    \begin{enumerate}
+        \item \begin{align*}
+            E[S_k]&=\int^\infty_0xg_k(x)dx=\frac{k^k}{(k-1)!}\int^\infty_0x^ke^{-kx}dx=1.\\
+            E[S_k^2]&=\int^\infty_0x^2g_k(x)dx=\frac{k^k}{(k-1)!}\int^\infty_0x^{k+1}e^{-kx}dx=\frac{k^k}{(k-1)!}\frac{(k+1)!}{k^{k+1}}\frac{1}{k}=1+\frac{1}{k}.
+        \end{align*}
+        よって，分散は$\Var[S_k]=E[S_k^2]-(E[S_k])^2=1/k$．
+        \item Markovの不等式より，
+        \[\forall_{\ep>0}\;P[\abs{S_k-1}\ge\ep]\le\frac{E[\abs{S_k-1}]}{\ep}\le\frac{1}{k\ep}\xrightarrow{k\to\infty}0.\]
+        \item 確率変数$X_nS_k$の累積分布関数を$F_n^k$と表すと，問題の仮定は，分布関数の列$\{F_n^k\}_{n\in\N_{>0}}$が$k\in\N_{>0}$に依らず一様ノルムに関するCauchy列をなすことを含意する．
+        これより，極限$F^k$は分布関数となり，これに$\{F_n^k\}$が一様収束することが従う．
+        実際，$F^k$は単調増加で，分布関数の一様収束極限であることから右連続性が保たれ，$x\to\pm\infty$に関する極限も
+        \[\lim_{x\to-\infty}\lim_{n\to\infty}F_n^k(x)=\lim_{n\to\infty}\lim_{x\to-\infty}F^k_n(x)=0,\]
+        \[\lim_{x\to+\infty}\lim_{n\to\infty}F_n^k(x)=\lim_{n\to\infty}\lim_{x\to+\infty}F^k_n(x)=1,\]
+        というように保たれる．
+        よってPortmanteau定理より，$X_nS_k$は法則収束する．
+        \item (1)での計算結果より，$\{S_k\}\subset L^2(\Om)$は$L^2$-ノルムについて有界であるから，特に一様可積分である．
+        
+    \end{enumerate}
+\end{proof}
+
+\section{2016年度(平成28年)実施}
+
+\subsection{実解析}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=B 第9問（実解析）]
+    $(X,\B,\mu)$を測度空間，$1<p<\infty$とする．可測関数の列$\{f_n\}_{n\in\N^+}\subset L(X)$は次を満たすとする．
+    \begin{enumerate}[(i)]
+        \item $\forall_{x\in X}\;\lim_{n\to\infty}f_n(x)=0$．
+        \item $\sup_{n\in\N^+}\int_X\abs{f_n(x)}^pd\mu(x)<\infty$．
+    \end{enumerate}
+    $g\in L(X)$は$\norm{g}_{\frac{p}{p-1}}<\infty$を満たすとする．
+    \begin{enumerate}
+        \item $M>0,n\in\N^+$に対して，可測集合$A_{M,n}\in\B$を
+        \[A_{M,n}=\Brace{x\in X\mid\abs{f_n(x)}^{p-1}\le M\abs{g(x)}}\]
+        と定める．このとき，次の成立を証明せよ：
+        \[\lim_{n\to\infty}\int_{A_{M,n}}\abs{f_n(x)g(x)}d\mu(x)=0.\]
+        \item 次の成立を証明せよ：
+        \[\lim_{n\to\infty}\int_X\abs{f_n(x)g(x)}d\mu(x)=0.
+        \]
+    \end{enumerate}
+\end{tcolorbox}
+\begin{proof}[\textbf{\underline{［解答例］}}]\mbox{}
+    \begin{enumerate}
+        \item 
+    \end{enumerate}
+\end{proof}
+
+\subsection{関数解析}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=B 第11問（関数解析）]
+    以下で考えるBanach空間は実数体上で定義されるものとする．$\R$の開区間からなる集合$\{(a,a+1)\subset\R\mid a\in\Q\}$の全ての元に番号をつけ，それらを$I_1,I_2,I_3,\cdots$と表す．
+    各$n\in\N$に対して$\chi_n:\R\to\{0,1\}$で$I_n$の定義関数を表す．有界線型作用素$T:l^1(\N)\to L^1(\R)$を次で定義する：
+    \[T\xi=\sum_{n=1}^\infty\xi_n\chi_n,\quad\xi=(\xi_n)_{n=1}^\infty\in l^1(\N).\]
+    \begin{enumerate}
+        \item $T$の共役作用素$T^*:L^1(\R)^*\to l^1(\N)^*$は全射でないことを示せ．
+        \item 線型作用素$\sigma:L^1(\R)\to L^1(\R)$を$(\sigma f)(x)=f(x-1)\;(f\in L^1(\R),x\in\R)$で定める．任意の$\varphi\in\Ker T^*,f\in L^1(\R)$に対して$\varphi(\sigma f)=\varphi(f)$を示せ．
+    \end{enumerate}
+\end{tcolorbox}
+\begin{proof}[\textbf{\underline{［解答例］}}]\mbox{}
+    \begin{enumerate}
+        \item 
+    \end{enumerate}
+\end{proof}
+
+\subsection{確率論}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+title=B 第13問（確率論）]
+    $\theta>0,p\ge1$とする．
+    $X_1,X_2,\cdots,N_1,N_2,\cdots\in L(\Om)$は独立で，$X_1,X_2,\cdots$の分布は
+    \[\frac{1}{\theta}\exp\paren{-\frac{x}{\theta}}1_{\Brace{x>0}}\]
+    を確率密度関数にもち，$N_k$は
+    \[P[N_k=y]=2^{-y}\quad(k,y\in\N_{>0})\]
+    を満たすとする．$M_n:=\max_{1\le k\le n}N_k,S_n=\frac{\sum^{M_n}_{j=1}X_j}{M_n}$とする．
+    \begin{enumerate}
+        \item $P[\lim_{n\to\infty}M_n=\infty]=1$を示せ．
+        \item $S_n$は概収束かつ$L^p$-収束することを示せ．また，概収束極限を$S_\infty$としたときの$\sqrt{M_n}(S_n-S_\infty)$の極限分布を求めよ．
+        \item 関数$F_n:\R_{>0}\to\R$を
+        \[F_n(t)=\prod^n_{k=1}\paren{\prod^{N_k}_{j=1}\frac{1}{t}\exp\paren{-\frac{X_j}{t}}}\quad(n\in\N_{>0})\]
+        で定め，これを最大化する$t>0$の値を$T_n>0$で表す．
+        $T_n$は概収束かつ$L^p$-収束することを示せ．
+    \end{enumerate}
+\end{tcolorbox}
+
+\section{2015年度(平成27年)実施}
+
+\subsection{実解析}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=B 第11問（実解析）]
+    $(X,\B,\mu)$を測度空間，$f,f_n\in L^1(X;\R_+)$を可積分非負値可測関数とする．
+    \begin{enumerate}
+        \item 次を示せ：
+        \[\lim_{K\to\infty}\int_{\Brace{x\in X\mid f(x)\ge K}}f(x)d\mu(x)=0.\]
+        \item $\mu(X)<\infty$であり，$\lim_{n\to\infty}f_n(x)=f(x)\;\mu\dae x$かつ
+        \[\lim_{n\to\infty}\int_Xf_n(x)d\mu(x)=\int_Xf(x)d\mu(x)\]
+        を満たすとする．このとき，次を示せ：
+        \[\lim_{K\to\infty}\sup_{n\ge1}\int_{\Brace{x\in X\mid f_n(x)\ge K}}f_n(x)d\mu(x)=0.\]
+    \end{enumerate}
+\end{tcolorbox}
+\begin{proof}[\textbf{\underline{［解答例］}}]\mbox{}
+    \begin{enumerate}
+        \item 
+    \end{enumerate}
+\end{proof}
+
+\subsection{関数解析}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=B 第12問（関数解析）]
+    $L^\infty(\R)$で$\R$上のLebesgue測度$\mu$に関して本質的有界かつLebesgue可測な複素数値関数の空間，$C_b(\R)$で$\R$上の複素数値有界連続関数のなす空間とする．
+    \begin{enumerate}
+        \item 有界線型汎関数$f:L^\infty(\R)\to\C$であって，$\forall_{\varphi C_b(\R)}\;f(\varphi)=\varphi(0)$を満たすものの存在を証明せよ．ただし，$\varphi\in C_b(\R)$は自然な仕方で$L^\infty(\R)$の要素とみなしている．
+        \item $f$を(1)で得られた有界線型汎関数とする．このとき，$\R$上の複素数値Lebesgue可積分関数$v\in L^1(\R)$であって，次の条件を満たすものは存在しないことを示せ．
+        \[\forall_{u\in L^\infty(\R)}\quad f(u)=\int_\R u(x)v(x)d\mu(x).\]
+    \end{enumerate}
+\end{tcolorbox}
+\begin{proof}[\textbf{\underline{［解答例］}}]\mbox{}
+    \begin{enumerate}
+        \item 
+    \end{enumerate}
+\end{proof}
+
+\subsection{確率論}
+
+\begin{tcolorbox}[colframe=ForestGreen, colback=ForestGreen!10!white,breakable,colbacktitle=ForestGreen!40!white,coltitle=black,fonttitle=\bfseries\sffamily,
+    title=B 第14問（確率論）]
+    $\{X_j,Y_j\}_{j\in\N}$は独立に$\Pois(\lambda)\;(\lambda>0)$に従うとする：
+    \[P[X_j=k]=P[Y_j=k]=\frac{\lambda^k}{k!}e^{-\lambda}\quad(k\in\N).\]
+    確率変数を
+    \[S_n=\frac{1}{n}\sum_{j=0}^{n-1}U_j,\quad U_j(\om)=Y_{X_j(\om)}(\om)\]
+    で定める．
+    \begin{enumerate}
+        \item $\forall_{p\in\N^+}\;E[Y_j^p]<\infty$を示せ．
+        \item $\forall_{p\in\N^+}\;E[U_j^p]<\infty$を示せ．
+        \item $E[U_j]$を求めよ．
+        \item $(S_n)$は$L^2$-収束することを示せ．
+        \item 極限$\lim_{n\to\infty}E[S_n^4]$は存在するか？
+    \end{enumerate}
+\end{tcolorbox}
+\begin{proof}[\textbf{\underline{［解答例］}}]\mbox{}
+    \begin{enumerate}
+        \item $E[Y^p_j]=\sum_{k=0}^\infty\frac{\lambda^k}{k!}e^{-\lambda}$であるが，二項間の比が
+        \[\frac{\frac{\lambda^{k+1}}{(k+1)!}e^{-\lambda}}{\frac{\lambda^k}{k!}e^{-\lambda}}=\paren{1+\frac{1}{k}}^p\frac{\lambda}{k+1}\xrightarrow{k\to\infty}0\]
+        と収束するから，この級数も収束する．
+        \item 確率変数$U_j$の$p$乗は
+        \[U_j^p=\sum_{k=0}^\infty Y^p_k1_{\Brace{X_j=k}}\]
+        とも表せ，この右辺は各$\om\in\Om$について有限和(1つの項しか零でない値を持たない)であることに注意すれば，$X_k,Y_k$の独立性より，
+        \begin{align*}
+            E[U_j^p]&=\sum_{k=0}^\infty E[Y_k^p]E[1_{\Brace{X_j=k}}]=\sum_{k=0}^\infty E[Y_1^p]P[X_j=k]=E[Y_1^p]
+        \end{align*}
+        よって結論が(1)から従う．
+        \item (2)の議論を踏まえて，
+        \[E[U_j]=E[Y_1]=\sum_{k\in\N}k\frac{\lambda^k}{k!}e^{-\lambda}=\lambda e^{-\lambda}\sum_{n\in\N}\frac{\lambda^k}{k!}=\lambda e^{-\lambda}e^\lambda=\lambda.\]
+        \item 
+    \end{enumerate}
+\end{proof}
+
+\end{document}
